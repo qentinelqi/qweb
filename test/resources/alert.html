@@ -1,0 +1,23 @@
+<html>
+  <head>Alert popup
+  </head>
+  <body>
+    <p>This page is used to test alert popups</p>
+    <button onclick="myFunction()">Show alert</button>
+    <button onclick="myOtherFunction()">Show alert with input field</button>
+
+<script>
+function myFunction() {
+    alert("Hello! I am an alert box!");
+}
+
+function myOtherFunction() {
+    var name = prompt("Tell me your name", "John Doe");
+    if (name !== "John Doe") {
+      document.querySelector('p').innerText = name + " is written on this page."
+    }
+}
+
+</script>
+  </body>
+</html>

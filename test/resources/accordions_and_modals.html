@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .accordion {
+            background-color: #FFFAF0;
+            color: blue;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border-bottom: 2px solid;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.5s;
+        }
+        .modalbutton {
+            background-color: #FFFAF0;
+            color: green;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: 1px solid;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.5s;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            color: red;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            text-align:center;
+            font-size: 25px;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+        }
+
+        .active, .accordion:hover {
+            background-color: #ccc;
+        }
+
+        .active, .modalbutton:hover {
+            background-color: #ccc;
+        }
+
+        .panel1 {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-out;
+        }
+        .panel2 {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Accordion and modal elements</h1>
+
+<button class="accordion">Accordion Element 1</button>
+<div class="panel1">
+    <p>I am the faster one!</p>
+    <p>
+        <i>Lorem</i> ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+        sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br>
+        <A href=text.html>LinkToText</A>
+    </p>
+</div>
+
+<button class="accordion">Accordion Element 2</button>
+<div class="panel2">
+    <p>I am the slower one!</p>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sodales finibus neque et imperdiet. Quisque sed dolor
+        dignissim, maximus augue et, blandit ligula. Aenean dapibus ante auctor purus volutpat, ac tincidunt lectus convallis.
+        Nullam auctor quam vel urna facilisis porta. Aliquam tortor ipsum, scelerisque sed molestie eget, tristique sagittis
+        ligula. Maecenas fringilla justo vulputate augue porttitor congue. Nulla cursus ex quis metus euismod luctus. Donec at
+        sodales lorem. Phasellus facilisis odio in libero ornare, a posuere est lacinia. Ut lobortis lorem turpis, in feugiat
+        dui feugiat vel. Cras id massa eget quam scelerisque fringilla semper in dolor. Phasellus a porta risus.</p>
+    <p>
+        Phasellus enim leo, consectetur tempor magna ac, luctus molestie purus. Ut dapibus euismod libero sit amet volutpat.
+        Sed euismod nibh ac luctus auctor. Nulla in urna vel ipsum aliquam vestibulum vitae non tortor. Aenean mattis dolor at
+        nisi dignissim, at semper eros maximus. Etiam tristique quam lacus, in ullamcorper enim porta vel. Phasellus neque
+        justo, tincidunt vitae laoreet et, viverra sit amet tellus. Mauris id bibendum neque. Aenean rhoncus sollicitudin odio,
+        sed semper lorem scelerisque maximus.</p>
+
+    <p>
+        Curabitur faucibus, orci non faucibus auctor, magna velit fermentum magna, sed aliquet dolor arcu suscipit orci. Etiam
+        eu purus vitae purus suscipit scelerisque. Vivamus egestas fermentum nibh, et dignissim justo pulvinar sit amet. Etiam
+        fringilla odio eu interdum feugiat. Sed auctor vitae erat id consectetur. Nullam sollicitudin ligula nunc, ac bibendum
+        lectus pellentesque at. Phasellus iaculis tellus dolor, fringilla tincidunt erat sagittis ac. Curabitur et tincidunt
+        nisi. Quisque vel vehicula velit, eget ornare mauris. Nullam ac sem eget est varius porttitor sed sit amet turpis. Cras
+        lobortis viverra turpis, vel pharetra sapien. In sagittis lobortis ultrices. Suspendisse ut pharetra nulla. Maecenas
+        iaculis quam id libero placerat, vel venenatis quam ultrices. Sed odio magna, vestibulum eu tincidunt quis, faucibus ac
+        velit.</p>
+    <p>
+        Fusce lobortis malesuada nulla sed congue. Donec fermentum lacus ac justo facilisis, vitae pellentesque ex dignissim.
+        Vestibulum molestie porttitor gravida. Cras quis pretium eros, sit amet tempor ligula. Sed rhoncus congue consequat. In
+        sed nisl et lorem venenatis mattis a vitae odio. Aliquam sed ante in nunc lobortis lacinia. Integer condimentum
+        dignissim elit, pulvinar placerat nunc bibendum vel. Morbi imperdiet mattis leo quis ultrices. Nulla nec leo enim.
+        Nullam at rutrum libero. Suspendisse potenti. Nam id dolor sit amet justo faucibus dapibus maximus non nulla. Morbi a
+        ex sit amet libero placerat tincidunt. Donec tempus congue aliquet.</p>
+    <p>
+        Nam viverra felis nec pretium hendrerit. Sed quis viverra massa. Vestibulum ultrices, magna eu pretium ultrices, nunc
+        ex luctus mauris, eu dapibus erat lacus ac tellus. Sed auctor nunc non elit cursus luctus. Morbi accumsan urna quis
+        fringilla fringilla. Etiam id nibh orci. Maecenas a lorem nisl. Nunc quis interdum sem, at varius lectus.</p>
+    <br>
+    <A href=text.html>OtherLinkToText</A>
+    </p>
+</div>
+
+<button class="modalbutton">Modal Element 1</button>
+<div id="modal_element" class="modal">
+    <div class="modal-content">
+        <p>Click this text to close me!</p>
+    </div>
+</div>
+
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var modalbtn = document.getElementsByClassName("modalbutton")[0];
+    var modal = document.getElementById("modal_element");
+    var close = modal.querySelector('p');
+
+    modalbtn.addEventListener("click", function(){
+        modal.style.display = "block";
+    });
+
+    close.addEventListener("click", function(){
+        modal.style.display = "none";
+    });
+
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight){
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

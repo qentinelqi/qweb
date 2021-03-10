@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dropdown menu test page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Page for testing SelectDropDown keyword">
+</head>
+<body>
+    <div style="display:block;">
+        <select id="dropdown1" onchange="displaySelected()">
+            <option>test1</option>
+            <option>test2</option>
+            <option>test3</option>
+            <option>test4</option>
+        </select>
+        <select id="dropdown2" name="Dropdown2" onchange="dropdown2Selected()">
+            <optgroup label="Dropdown2">
+                <option value="     ">Dropdown2</option>
+            </optgroup>
+            <option>test2.1</option>
+            <option>test2.2</option>
+            <option>test2.3</option>
+            <option>test2.4</option>
+       </select>
+        <select id="drop" onchange="displaySelected()">
+            <option>test1</option>
+            <option>test2</option>
+            <option>test3</option>
+            <option>test4</option>
+        </select>
+
+
+    </div>
+    <h1 id="text">
+        Test page
+    </h1>
+    <p>
+        Dropdownit tekstin perusteella:
+    </p>
+    <p>Kolmas:<br>
+        <select id="dropdown3" onchange="dropdown3Selected()">
+            <option>Foo</option>
+            <option>Bar</option>
+        </select>
+    </p>
+
+    <p>
+        <br>
+        <br>
+        <br>
+    <h3>Ankkurien avulla</h3>
+    </p>
+
+    <p>Kolmas:<br>
+        <select id="dropdown4" onchange="dropdown4Selected()">
+            <option>Qentinel</option>
+            <option>Rules</option>
+        </select>
+    </p>
+	
+	<div>
+	<label for="dropdown5">label with for:</label><br>
+        <select id="dropdown5" onchange="dropdown4Selected()">
+            <option>Qentinel</option>
+            <option>Rules</option>
+        </select>
+	</div>
+	<div>
+	<label>label without for:</label><br>
+        <select id="dropdown6" onchange="dropdown4Selected()">
+            <option>Qentinel</option>
+            <option>Rules</option>
+			<option>OK</option>
+        </select>
+	</div>
+    <div>
+        <h3>Delayed dropdown</h3>
+        <form>
+        <br>
+        <input type="button" value="Show dropdown" onclick="setTimeout('showDropdown()', 2000);" />
+         <!-- HIDDEN DIV SET TO DISPLAY AFTER 2 SECONDS - THIS CAN BE CHANGED BELOW  -->
+            <label id="hidelabel" style="visibility: hidden">hidden:</label><br>
+        <select style="visibility: hidden" id="dropdown7" onchange="dropdown7Selected()">
+            <option>Helsinki</option>
+            <option>Stockholm</option>
+			<option>Oslo</option>
+        </select>
+    </input>
+
+    <script type="text/javascript">
+        function showDropdown() {
+            document.getElementById("dropdown7").style.visibility = "visible";
+            document.getElementById("hidelabel").style.visibility = "visible";
+        }
+    </script>
+    </div>
+
+    </p>
+    <script>
+        function displaySelected(){
+            var dropdown = document.getElementById("dropdown1");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown1-" + selection
+        }
+
+        function dropdown2Selected(){
+            var dropdown = document.getElementById("dropdown2");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown2-" + selection
+        }
+
+        function dropdown3Selected(){
+            var dropdown = document.getElementById("dropdown3");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown3-" + selection
+        }
+
+        function dropdown4Selected(){
+            var dropdown = document.getElementById("dropdown4");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown4-" + selection
+        }
+		function dropdown5Selected(){
+            var dropdown = document.getElementById("dropdown4");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown5-" + selection
+        }
+		function dropdown6Selected(){
+            var dropdown = document.getElementById("dropdown4");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown6-" + selection
+        }
+        function dropdown7Selected(){
+            var dropdown = document.getElementById("dropdown4");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown7-" + selection
+        }
+        function dropdown9Selected(){
+            var dropdown = document.getElementById("dropdown9");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown9-" + selection
+        }
+        function dropdown10Selected(){
+            var dropdown = document.getElementById("dropdown10");
+            var selection = dropdown.options[dropdown.selectedIndex].value;
+            var text = document.getElementById("text");
+            text.innerHTML = "Dropdown10-" + selection
+        }
+    </script>
+
+<div>
+    Typex
+    <select id="dropdown8">
+            <option>---</option>
+            <option>Flow</option>
+            <option>Stuff</option>
+        </select>
+    <br><br><br>
+</div>
+<div>
+    Flow
+    <select id="dropdown9" onchange="dropdown9Selected()">
+            <option>---</option>
+            <option>optionx</option>
+            <option>abcd</option>
+            <option>ffffff</option>
+        </select>
+    <br>
+</div>
+    <br><br>
+<div>
+    <select>
+        <option>Foo</option>
+        <option>Bar</option>
+    </select>
+  <div><div><div><label>Foobar</label></div></div></div>
+</div>
+</body>
+
+<div>
+    Joulupukki
+    <select id="dropdown10" onchange="dropdown10Selected()">
+        <option value="cat">jeejoojaa</option>
+        <option value="dog">jaajeejoo</option>
+        <option value="boar">jiijuujxx</option>
+        <option value="bear">dingdongdang</option>
+    </select>
+</div>
+</body>
+
+
+</html>

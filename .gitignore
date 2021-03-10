@@ -1,0 +1,29 @@
+# Compiled python code files
+*pyc
+
+# Robot framework log files
+log.html
+output.xml
+report.html
+*.log
+source_*.html
+screenshots/
+
+# doc output
+docs/build
+
+# package build output
+build
+dist
+QWeb.egg-info
+
+# Pycharm & virtual envs
+env/
+venv/
+!.idea/
+.idea/*
+!.idea/runConfigurations
+.tox/
+
+# vscode settings
+.vscode/

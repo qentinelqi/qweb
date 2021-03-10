@@ -1,0 +1,222 @@
+<html>
+  <head>Table acceptance
+  <style>
+  .Q td{
+	width:150px;
+	height: 30px;
+  }
+  select,input{
+	width:150px;
+	height: 30px;
+  }
+  </style>
+  </head>
+  <body>
+    <p>Lorem ipsum</p>
+    <table>
+      <caption>Sample</caption>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Age</th>
+        <th>Date</th>
+      </tr>
+      <tr>
+        <td>Jill</td>
+        <td>Smith</td>
+        <td>50</td>
+        <td>2017-03-12</td>
+      </tr>
+      <tr>
+        <td>Eve</td>
+        <td>Jackson</td>
+        <td>94</td>
+        <td>2018-03-12</td>
+      </tr>
+    </table>
+    <table>
+      <caption>Stars</caption>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Age</th>
+        <th>Date</th>
+      </tr>
+      <tr>
+        <td>Jimi</td>
+        <td>Hendrix</td>
+        <td>27</td>
+        <td>1970-09-18</td>
+      </tr>
+      <tr>
+        <td>Buddy</td>
+        <td>Holly</td>
+        <td>22</td>
+        <td>1959-02-03</td>
+      </tr>
+	  <tr>
+        <td><input type="text" style="width:60px"></td>
+        <td><input type="text" style="width:60px"></td>
+        <td><input type="text" style="width:20px"></td>
+        <td><input type="text" style="width:80px"></td>
+      </tr>
+    </table>
+	<br><br>
+	<div>
+	<h2> Click infinity pic to add rows </h2>
+<table>
+	<tr><th>Row with anykind of stuff in it</th><th>Random text</th><th>Random input</th><th>Random dd</th></tr>
+	<tr>
+		<td>one: This is nasty nested table which is pretty typical in erp systems</td>
+		<td>Robot Automation</td><td><input type="text"></input></td>
+	<td><select>
+		<option>Foo</option>
+		<option>bar</option>
+		<option>baz</option>
+		</select>
+	</td>
+	</tr>
+	<tr>
+		<td>two: These could be quite difficult to automate
+		</td><td>Qentinel</td><td><input type="text"></input></td>
+	<td><select>
+		<option>Foo</option>
+		<option>bar</option>
+		<option>baz</option>
+		</select>
+	</td>
+	</tr>
+	<div>
+		<tr>
+			<td>
+	<table class="Q" summary="Qentiro">
+      <tr>
+        <td><input type="radio" title=""></input></td>
+        <td><input type="text"></input></td>
+        <td><input type="text"></input></td>
+        <td>
+		<select>
+		<option>Helsinki</option>
+		<option>Espoo</option>
+		<option>Vantaa</option>
+		<option>Juupajoki</option>
+		</select>
+		</td>
+		<td>
+		<select>
+		<option>Suomi</option>
+		<option>Ruotsi</option>
+		<option>Venäjä</option>
+		<option>Norja</option>
+		<option>Turku</option>
+		</select>
+		</td>
+		<td>
+		<select>
+		<option>Yes</option>
+		<option>No</option>
+		</select>
+		</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" title=""></td>
+        <td>Qentiro</td>
+        <td>Robot</td>
+        <td>
+		<select>
+		<option>Helsinki</option>
+		<option>Espoo</option>
+		<option>Vantaa</option>
+		<option>Juupajoki</option>
+		</select>
+		</td>
+		<td>
+		<select>
+		<option>Suomi</option>
+		<option>Ruotsi</option>
+		<option>Venäjä</option>
+		<option>Norja</option>
+		<option>Turku</option>
+		</select>
+		</td>
+		<td>
+		<select>
+		<option>Yes</option>
+		<option>No</option>
+		</select>
+		</td>
+      </tr>
+	  <tr>
+        <td><input type="checkbox" title=""></td>
+        <td>Qentiro</td>
+        <td><input type="checkbox" title=""></td>
+        <td>
+		<input></input>
+		</td>
+		<td>
+		Some Text
+		</td>
+		<td>
+		<select>
+		<option>Yes</option>
+		<option>No</option>
+		</select>
+		</td>
+      </tr>
+	  <tr>
+	  <td><select>
+		<option>Suomi</option>
+		<option>Ruotsi</option>
+		<option>Venäjä</option>
+		<option>Norja</option>
+		<option>Turku</option>
+		</select>
+		</td><td></td><td><input type="file" id="myFile1" >
+      </td><td></td><td>Random text</td><td></td>
+	  </tr>
+	  <tr>
+	  <td></td><td></td><td>Text Node</td><td></td><td></td>
+	  <td><img src="pics_and_icons/infinity-8x.png" style="height:30px"></td>
+		  <td>
+			<table>
+				<tr><td>Some text inside of child</td></tr>
+			</table>
+		</td>
+	  </tr>
+
+    </table>
+	</td></tr></div>
+</table>
+	</div>
+	<script>
+	document.addEventListener('DOMContentLoaded', function(){
+		var radio = document.querySelector('[type="radio"]');
+		var button = document.querySelector('img').parentNode;
+		radio.addEventListener("click", function(event){
+			if (radio.attributes['title'].value != 'true') { 
+				radio.checked = true
+				radio.setAttribute('title', 'true')
+			}else {
+				radio.setAttribute('title', 'false')
+				radio.checked = false
+			}
+		});
+		button.addEventListener("click", function(e){
+		    var dd = "<select style=width:70px><option>default</option><option>Robot</option><option>Qentinel</option></select>"
+            var input = "<input type=text style=width:70px></input>"
+            var cb = "<input type=checkbox style=width:30px title=''>"
+			var table = document.querySelector('table[summary="Qentiro"]');
+			var row = table.insertRow(table.length);
+			row.insertCell(0).innerHTML = "Added Line"
+			row.insertCell(1).innerHTML = dd + cb;
+			for (var i=2; i < 4; i++){
+				    row.insertCell(i).innerHTML = input + input
+			}
+			row.insertCell(4).innerHTML = dd + dd;
+			row.insertCell(5).innerHTML = cb+ cb;
+		});
+	})
+	
+	</script>
+  </body>
+</html>

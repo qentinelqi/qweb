@@ -1,0 +1,8 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <button onclick="var oReq = new XMLHttpRequest();oReq.onreadystatechange = function() {if (this.readyState == 4 && this.status == 200) {document.getElementsByTagName('p')[0].innerText = this.responseText;}};oReq.open('GET', 'http://127.0.0.1:5000/xhrapi');oReq.send();">Load xhr</button>
+    <p></p>
+  </body>
+</html>

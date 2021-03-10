@@ -1,0 +1,86 @@
+<html>
+  <head>
+  <style>
+  iframe, frame {border:solid 5px yellow}
+  </style>
+  </head>
+  <body>
+    <form action="" id="form">
+        <input type="checkbox" id="ch1" name="vehicle" value="Bike" />
+        <label for="ch1">I have a bike</label>
+        <br>
+        <input type="checkbox" id="ch2" name="vehicle" value="Car" />
+        <label for="ch2">I have a car</label>
+        <br>
+        <input type="checkbox" id="ch3" name="vehicle" value="Sample" disabled />
+        <label for="ch3">I should be disabled</label>
+    </form>
+  <table>
+      <tr>
+          <th>CheckBox</th>
+          <th>Label</th>
+      </tr>
+      <tr>
+          <td><input type="checkbox" id="ch_t1" /></td>
+          <td>Sample text</td>
+      </tr>
+  </table>
+    <br>
+    <br>
+    <!-- -->
+    <br>
+    <br>
+  <div>
+      <input type="checkbox" id="ch_1_1" name="block" value="Blue" />
+       <label for="ch_1_1">Blue</label>
+      <input type="checkbox" id="ch_1_2" name="block" value="Red" />
+       <label for="ch_1_2">Red</label>
+      <input type="checkbox" id="ch_1_3" name="block" value="Blue" />
+      <label for="ch_1_3">Blue</label>
+      <input type="checkbox" id="ch_1_4" name="block" value="Blue" />
+      <label for="ch_1_4">Blue:</label>
+      <input type="checkbox" id="ch_1_5" name="block" value="Blue" />
+      <label for="ch_1_5">Bl</label>
+  </div>
+  <div>
+    <form>
+        <br>
+        <input type="button" value="Show checkbox" onclick="setTimeout('showCheckBox()', 2000);" />
+         <!-- HIDDEN DIV SET TO DISPLAY AFTER 2 SECONDS - THIS CAN BE CHANGED BELOW  -->
+    <input id="hide" style="visibility: hidden" type="checkbox" label="asdf" id="uridh" value="hiddenbox">
+    </input>
+        <label id="hide2" style="visibility: hidden" for="uridh">Hiddenbox</label>
+
+    <script type="text/javascript">
+        function showCheckBox() {
+            document.getElementById("hide").style.visibility = "visible";
+            document.getElementById("hide2").style.visibility = "visible";
+        }
+    </script>
+        <br>
+        <br>
+    </form>
+  </div>
+  <h2> Dropdowns are in iframe inside of checkbox doc:</h2>
+  <iframe src="./dropdown.html" width="1000px" height="600px"></iframe>
+  <table class="detailList" border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+      <tr>
+          <td class="data2Col  first  last " colspan="2"><span id="page:theForm:pageblock:configSection:configTablePanel"><span id="page:theForm:pageblock:configSection:messages"></span><div id="page:theForm:pageblock:configSection:listConfigFooterPanel" style="text-align:left;margin:0 0 0 33%;"><input id="exportTarget" type="hidden" value=""><input id="page:theForm:pageblock:configSection:DeleteSelectedButton" type="submit" name="page:theForm:pageblock:configSection:DeleteSelectedButton" value="Delete" style="margin-right:5px;" title="Delete" class="btn btnDisabled" disabled=""><input class="btn btnDisabled" id="page:theForm:pageblock:configSection:ExportToJsonButton" name="page:theForm:pageblock:configSection:ExportToJsonButton" onclick="A4J.AJAX.Submit('page:theForm',event,{'similarityGroupingId':'page:theForm:pageblock:configSection:ExportToJsonButton','containerId':'page:theForm:pageblock:actionRegionCriteriaDetails','oncomplete':function(request,event,data){doExport();},'parameters':{'page:theForm:pageblock:configSection:ExportToJsonButton':'page:theForm:pageblock:configSection:ExportToJsonButton'} } );return false;" value="Export To JSON" title="Export to JSON" type="button" disabled=""></div><table class="tableClass" id="page:theForm:pageblock:configSection:listConfig" border="0" cellpadding="0" cellspacing="12"><colgroup span="6"></colgroup><thead class=""><tr><th scope="col" colspan="1" id="page:theForm:pageblock:configSection:listConfig:selectorColumnheader"><div id="page:theForm:pageblock:configSection:listConfig:selectorColumnheader:sortDiv"> <input onclick="toggleAll(this);" type="checkbox"></div></th><th scope="col" colspan="1" id="page:theForm:pageblock:configSection:listConfig:counterColumnheader"><div id="page:theForm:pageblock:configSection:listConfig:counterColumnheader:sortDiv"></div></th><th scope="col" colspan="1" id="page:theForm:pageblock:configSection:listConfig:keyColumnheader"><div id="page:theForm:pageblock:configSection:listConfig:keyColumnheader:sortDiv">Key</div></th><th scope="col" colspan="1" id="page:theForm:pageblock:configSection:listConfig:descriptionColumnheader"><div id="page:theForm:pageblock:configSection:listConfig:descriptionColumnheader:sortDiv">Description</div></th><th scope="col" colspan="1" id="page:theForm:pageblock:configSection:listConfig:typeColumnheader"><div id="page:theForm:pageblock:configSection:listConfig:typeColumnheader:sortDiv">Type</div></th><th scope="col" colspan="1" id="page:theForm:pageblock:configSection:listConfig:deleteButtonColumnheader"><div id="page:theForm:pageblock:configSection:listConfig:deleteButtonColumnheader:sortDiv"></div></th></tr></thead><tbody id="page:theForm:pageblock:configSection:listConfig:tb"><tr class="odd">
+              <td id="page:theForm:pageblock:configSection:listConfig:0:selectorColumn" colspan="1"><input id="page:theForm:pageblock:configSection:listConfig:0:configselector" type="checkbox" name="page:theForm:pageblock:configSection:listConfig:0:configselector" onclick="setConfigListButtons();"><input id="page:theForm:pageblock:configSection:listConfig:0:configCheckboxHighlight" type="checkbox" name="page:theForm:pageblock:configSection:listConfig:0:configCheckboxHighlight" style="display:none;"></td>
+              <td id="page:theForm:pageblock:configSection:listConfig:0:counterColumn" colspan="1"><span id="page:theForm:pageblock:configSection:listConfig:0:counterOutputText">1</span>.</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:0:keyColumn" colspan="1">mnptye</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:0:descriptionColumn" colspan="1">subscription_change_request__r.mnp_type__c<br>Subscription Change Request [Subscription Change Request] : MNP_Type</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:0:typeColumn" colspan="1">STRING</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:0:deleteButtonColumn" colspan="1"><a href="#" id="page:theForm:pageblock:configSection:listConfig:0:deleteCommandLink" name="page:theForm:pageblock:configSection:listConfig:0:deleteCommandLink" onclick="A4J.AJAX.Submit('page:theForm',event,{'similarityGroupingId':'page:theForm:pageblock:configSection:listConfig:0:deleteCommandLink','containerId':'page:theForm:pageblock:actionRegionCriteriaDetails','oncomplete':function(request,event,data){refreshViews();},'parameters':{'rowNumToDelete':'1','page:theForm:pageblock:configSection:listConfig:0:deleteCommandLink':'page:theForm:pageblock:configSection:listConfig:0:deleteCommandLink'} } );return false;"> Delete</a></td></tr><tr class="even">
+              <td id="page:theForm:pageblock:configSection:listConfig:1:selectorColumn" colspan="1"><input id="page:theForm:pageblock:configSection:listConfig:1:configselector" type="checkbox" name="page:theForm:pageblock:configSection:listConfig:1:configselector" onclick="setConfigListButtons();"><input id="page:theForm:pageblock:configSection:listConfig:1:configCheckboxHighlight" type="checkbox" name="page:theForm:pageblock:configSection:listConfig:1:configCheckboxHighlight" style="display:none;"></td>
+              <td id="page:theForm:pageblock:configSection:listConfig:1:counterColumn" colspan="1"><span id="page:theForm:pageblock:configSection:listConfig:1:counterOutputText">2</span>.</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:1:keyColumn" colspan="1">subscription</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:1:descriptionColumn" colspan="1">subscription__c<br>Subscription - Custom [Subscription]</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:1:typeColumn" colspan="1">REFERENCE</td>
+              <td id="page:theForm:pageblock:configSection:listConfig:1:deleteButtonColumn" colspan="1"><a href="#" id="page:theForm:pageblock:configSection:listConfig:1:deleteCommandLink" name="page:theForm:pageblock:configSection:listConfig:1:deleteCommandLink" onclick="A4J.AJAX.Submit('page:theForm',event,{'similarityGroupingId':'page:theForm:pageblock:configSection:listConfig:1:deleteCommandLink','containerId':'page:theForm:pageblock:actionRegionCriteriaDetails','oncomplete':function(request,event,data){refreshViews();},'parameters':{'rowNumToDelete':'2','page:theForm:pageblock:configSection:listConfig:1:deleteCommandLink':'page:theForm:pageblock:configSection:listConfig:1:deleteCommandLink'} } );return false;"> Delete</a></td></tr>
+    </tbody>
+</table>
+              <iframe src="./upload.html" width="1000px" height="600px"></iframe>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+h1,h3, img{
+    margin-left:20px;
+}
+</style>
+</head>
+<body>
+
+<h1>Items</h1>
+<br>
+<table>
+    <tr>
+        <td><img src="{{url_for('static', filename='monitor-8x.png')}}"/></td>
+    </tr>
+	<tr>
+        
+        <td><a href="download" type="application/pdf">
+			<img src ="{{url_for('static', filename='monitor-8x.png')}}" data-icon="screen"></a></td>
+        <td><a href="download" type="application/pdf" download="dummy.pdf">
+            Click here to download PDF </a></td>
+    </tr>
+</table>
+<h3><i>This is place for attribute value</i></h3>
+
+<script>
+
+    var items = document.querySelectorAll('img');
+    items.forEach(item => {
+        item.addEventListener('click', print, false);
+    });
+
+    function print(event){
+        document.querySelector('h3').textContent = this.attributes[1].value + " is my " + this.attributes[1].name + " value!";
+    }
+</script>
+
+</body>
+</html>
+

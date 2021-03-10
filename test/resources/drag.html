@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+#div1 {
+  width: 500px;
+  height: 400px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+#random2 {
+  font-size: 8px;
+  width: 30px;
+  height: 10px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+#div2 {
+  width: 500px;
+  height: 400px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+#random4 {
+  font-size: 8px;
+  width: 30px;
+  height: 10px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+</style>
+<script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+</script>
+</head>
+<body>
+
+<p>Drag the W3Schools image into the rectangle:</p>
+
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">Put element to this div</div>
+<br>
+<img id="drag1" src="pics_and_icons\q_logo.png" alt="Qentinel" draggable="true" ondragstart="drag(event)" width="120" height="120">
+<h3 id="random1" draggable="true" ondragstart="drag(event)"> Draggable Text </h3>
+<p id="random2" draggable="true" ondragstart="drag(event)"> Smaller text </p>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h3>The other drag</h3>
+<br>
+<br>
+<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)">Put element to this box</div>
+<br>
+<img id="drag2" src="pics_and_icons\q_logo.png" alt="Qbox" draggable="true" ondragstart="drag(event)" width="120" height="120">
+<h3 id="random3" draggable="true" ondragstart="drag(event)"> Draagable Text </h3>
+<p id="random4" draggable="true" ondragstart="drag(event)"> Smaaaller text </p>
+<p>Page ends here</p>
+
+</body>
+</html>

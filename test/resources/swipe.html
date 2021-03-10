@@ -1,0 +1,61 @@
+   <!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>Swipe test</title>
+  <style>
+  body{
+    width: auto;
+  }
+  #items{
+  overflow-x: scroll;
+  width: 6000px;
+  }
+  .item{
+     display: inline-block;
+     width: 1600px;
+     height: 600px;
+     border:5px solid;
+  }
+
+  img {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+  }
+  </style>
+ </head>
+ <body>
+
+        <div id="items">
+           <div class="item">
+             Foo
+               <img src="pics_and_icons/icons/person.png" alt="Person">
+           </div>
+           <div class="item">
+             Test text 123
+               <img src="pics_and_icons/icons/screen.png" alt="Screen">
+           </div>
+           <div class="item">
+               <img src="pics_and_icons/icons/power.png" alt="Power">
+           </div>
+           <div class="swipe1">
+             Foo
+           </div>
+           <div class="item">
+             Test text 487
+           </div>
+           <div class="item">
+             Foo
+           </div>
+           <div class="item">
+             Foo
+           </div>
+           <div class="item">
+             Foo
+               <img src="pics_and_icons/icons/lock.png" alt="Lock">
+           </div>
+        </div>
+
+ </body>
+</html>
