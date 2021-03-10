@@ -186,7 +186,7 @@ Apache 2.0 License. See [LICENSE](./LICENSE).
 
 
 ---
-[build-badge]: https://pace.qentinel.com/masters/master-ox36ary2sa/buildStatus/icon?job=QWeb_GitHub%2Fmain
+[build-badge]: https://pace.qentinel.com/masters/master-ox36ary2sa/buildStatus/icon?job=QWeb_GitHub%2Fmaster
 [pace-url]: https://pace.qentinel.com
 [pace-badge]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue
 [changelog]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue

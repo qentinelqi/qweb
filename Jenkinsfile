@@ -81,7 +81,7 @@ pipeline {
                             }
                         }
                         stage('Firefox Linux') {
-                            when {expression { return env.GIT_BRANCH == 'main' } }                            
+                            when {expression { return env.GIT_BRANCH == 'master' } }                            
                             environment {
                                 BROWSER = "firefox"
                             }
@@ -143,7 +143,7 @@ pipeline {
                             }
                         }
                         stage('Firefox Windows') {
-                            when {expression { return env.GIT_BRANCH == 'main' } }                            
+                            when {expression { return env.GIT_BRANCH == 'master' } }                            
                             environment {
                                 BROWSER = "firefox"
                             }
