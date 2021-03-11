@@ -6,9 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+
+
+## [1.0.1] - 2021-03-11
+### Changed
+- Bumped versions for pillow, scikit-image and opencv-python dependencies
+- Changed default BrowserStack Chrome version identifier to 'latest'
+
+### Added
 - Added keyword documentation to ./docs/QWeb.html
-- Upped versions for pillow, scikit-image and opencv-python dependencies
-- Changed Browserstack Chrome version identifier to 'latest'
 
 ## [1.0.0] - 2021-03-09
 ### Changed

@@ -67,3 +67,11 @@ Get Cell Value to variable
     Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*
     ...   GetInputValue     r2c1   timeout=1
     Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*   GetCellText   r4c5   timeout=1
+
+Row count
+    UseTable                Sample
+    ${amount}               GetTableRow             //last
+    Should Be Equal         '${amount}'             '5'
+    # exluding headers:
+    ${content}              GetTableRow             //last      skip_header=True
+    Should Be Equal         '${content}'            '4'

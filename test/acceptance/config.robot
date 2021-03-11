@@ -99,7 +99,3 @@ Test WindowFind Config
     ResetConfig  WindowFind
     ${VAL}=      GetConfig     WindowFind
     ShouldBeEqual    ${VAL}    ${False}
-
-Test Log all configs
-    ${config}=    GetConfig
-    Log           ${config}     console=True

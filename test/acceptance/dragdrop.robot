@@ -3,7 +3,7 @@ Documentation     Tests for Drag and Drop keyword
 Library           QWeb
 Suite Setup       OpenBrowser    file://${CURDIR}/../resources/drag.html    ${BROWSER}
 Suite Teardown    CloseBrowser
-#Test Setup        SetConfig       WindowSize    1920x1080
+Test Setup        SetConfig       WindowSize    1920x1080
 Test Timeout      1min
 Test Teardown     Refresh Page
 

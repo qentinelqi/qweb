@@ -376,3 +376,23 @@ TypeTexts and VerifyInputValues fail
     Run Keyword And Expect Error        ${message}
     ...    TypeTexts    gfhfghkojfghoigfh298354234
 
+TypeText multiple anchors fail
+    [Documentation]         Use non-unique anchor to find input and expect failure
+    [Tags]                  multipleanchors
+    ${message}=             Set Variable    QWebValueError: Text "anchor" matched * Needs to be unique
+    Run Keyword And Expect Error    ${message}
+    ...    TypeText    Address    Null pointer street 0x0    anchor    timeout=2s
+
+TypeText multiple anchors enabled
+    [Documentation]         Use non-unique anchor to find input successfully
+    [Tags]                  multipleanchors
+    SetConfig               MultipleAnchors    True
+    VerifyNoText            Backstreet alley 10
+    TypeText                Address    Backstreet alley 10    anchor
+    # Verify that text is in the first exact match
+    VerifyInputValue        Address    Backstreet alley 10    3    timeout=2s
+    VerifyNoText            My way or highway 66
+    TypeText                Address    My way or highway 66    anchortext
+    # Verify that text is in the first partial match
+    VerifyInputValue        Address    My way or highway 66    1    timeout=2s
+    [Teardown]              SetConfig    MultipleAnchors    False

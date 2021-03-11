@@ -34,7 +34,7 @@ Capture icons and verify them
 
 Click icons
     [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
-    #SetConfig               WindowSize          1920x1080
+    SetConfig               WindowSize          1920x1080
     ClickIcon               person
     VerifyText              person is my tooltip value!
     ClickIcon               lock
