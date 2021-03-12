@@ -140,7 +140,7 @@ ClickItem       Increment quantity
 #### Working with tables
 
 Consider the following table as an example:
-![Example table](https://github.com/qentinelqi/qweb/raw/main/images/example_table.png)
+![Example table](./images/example_table.png)
 
 ```
 # First focus on a table using any text in it (column header etc.)
