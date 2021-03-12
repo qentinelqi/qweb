@@ -1,8 +1,11 @@
-<img id="qweb" src="https://github.com/qentinelqi/qweb/raw/main/images/qweb.png" alt="QWeb">
+<img id="qweb" src="./images/qweb.png" alt="QWeb">
 
 > Keyword based test automation for the web.
 
 ---
+![License][license-badge]
+![Python versions][python-versions-badge]
+![Release][pypi-badge]
 ![Build Status][build-badge]
 [![Tested with][pace-badge]][pace-url]
 
@@ -40,11 +43,24 @@ Python 3.6+ and Robot Framework 3.2.2+. Browser drivers need to be installed sep
 
 ## Installation
 
+### Windows
 ```bash
     pip install QWeb
 ```
 
-Running this command installs also supported Selenium and Robot Framework versions + other dependencies, but you still need to install `browser drivers` separately. Please refer to [Selenium documentation](https://www.selenium.dev/selenium/docs/api/py/index.html#drivers) for more information on how to install browser drivers manually OR use 3rd party packages like [WebDriverManager](https://pypi.org/project/webdrivermanager/).
+### Linux/Mac
+```bash
+    python3 -m pip install QWeb
+```
+
+In some environments you might need to upgrade pip first:
+
+```bash
+    python3 -m pip install –upgrade pip
+```
+
+
+Running the above command installs also supported Selenium and Robot Framework versions + other dependencies, but you still need to install `browser drivers` separately. Please refer to [Selenium documentation](https://www.selenium.dev/selenium/docs/api/py/index.html#drivers) for more information on how to install browser drivers manually OR use 3rd party packages like [WebDriverManager](https://pypi.org/project/webdrivermanager/).
 
 
 [Back To The Top](#qweb)
@@ -56,7 +72,10 @@ Running this command installs also supported Selenium and Robot Framework versio
 ## Usage
 
 ### Keyword documentation
-See list of keywords and their usage on [keyword documentation](https://help.pace.qentinel.com/pacewords-reference/current/pacewords/all.html)
+See list of keywords and their usage on 
+
+* [Keyword documentation](https://qentinelqi.github.io/qweb/QWeb.html)
+* [Qentinel support pages](https://help.pace.qentinel.com/pacewords-reference/current/pacewords/all.html) 
 
 [Back To The Top](#qweb)
 
@@ -186,7 +205,9 @@ Apache 2.0 License. See [LICENSE](./LICENSE).
 
 
 ---
+[license-badge]: https://img.shields.io/github/license/qentinelqi/qweb
 [build-badge]: https://pace.qentinel.com/masters/master-ox36ary2sa/buildStatus/icon?job=QWeb_GitHub%2Fmaster
 [pace-url]: https://pace.qentinel.com
 [pace-badge]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue
-
+[python-versions-badge]: https://img.shields.io/pypi/pyversions/QWeb
+[pypi-badge]: https://img.shields.io/pypi/v/QWeb?color=green
