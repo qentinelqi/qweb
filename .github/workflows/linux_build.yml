@@ -1,0 +1,70 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Linux CI
+
+on:
+  push:
+    #branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        browser: [chrome, firefox]
+        #python-version: [3.6]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        sudo apt-get install matchbox scrot
+        python -m pip install --upgrade pip
+        python -m pip install flake8 pytest coverage
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Display Python version
+      run: |
+        python -c "import sys; print(sys.version)"
+    # - name: Display resolution
+    #   run: |
+    #     python -c "import pyautogui; print(pyautogui.size())"
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        xvfb-run --auto-servernum pytest -v --junit-xml=unittests.xml --cov=QWeb
+    - name: Acceptance tests Chrome
+      if: matrix.browser == 'chrome'
+      run: |
+        export DISPLAY=:88
+        Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
+        matchbox-window-manager -use_titlebar no &
+        python -c "import pyautogui; print(pyautogui.size())"
+        python -m robot --exitonfailure -e jailed -e WITH_DEBUGFILE -v BROWSER:Chrome -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance/icon.robot
+    - name: Acceptance tests Firefox
+      if: matrix.browser == 'firefox'
+      run: |
+        export DISPLAY=:88
+        Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
+        matchbox-window-manager -use_titlebar no &
+        python -c "import pyautogui; print(pyautogui.size())"
+        python -m robot --exitonfailure -e jailed -e WITH_DEBUGFILE -e PROBLEM_IN_FIREFOX -v BROWSER:Firefox -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance/icon.robot
+    - name: Archive Robot Framework Tests Report
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v1
+      with:
+        name: acceptance-tests-report-${{ matrix.browser }}-${{ runner.os }}-${{ matrix.python-version }}
+        path: ./output_${{ matrix.browser }}

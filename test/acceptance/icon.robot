@@ -12,6 +12,17 @@ ${BROWSER}                  chrome
 ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}icons
 
 *** Test Cases ***
+Click icons
+    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    SetConfig               WindowSize          1920x1080
+    Sleep                   2
+    ClickIcon               person
+    VerifyText              person is my tooltip value!
+    ClickIcon               lock
+    VerifyText              Lock is my title value!
+    ClickIcon               screen
+    VerifyText              screen is my data-icon value!
+
 Verify icons
     [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
     VerifyIcon              person
@@ -31,16 +42,6 @@ Capture icons and verify them
     CaptureIcon             /html/body/table/tbody/tr[1]/td[6]/img      ${BASE_IMAGE_PATH}
     ...                     capture_icon_3.png
     VerifyIcon              capture_icon_3
-
-Click icons
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
-    SetConfig               WindowSize          1920x1080
-    ClickIcon               person
-    VerifyText              person is my tooltip value!
-    ClickIcon               lock
-    VerifyText              Lock is my title value!
-    ClickIcon               screen
-    VerifyText              screen is my data-icon value!
 
 IsIcon True
     [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
