@@ -6,7 +6,9 @@
 ![License][license-badge]
 ![Python versions][python-versions-badge]
 ![Release][pypi-badge]
-![Build Status][build-badge]
+![Windows Acceptance][win_ci_badge]
+![Linux Acceptance][linux_ci_badge]
+![MacOS Acceptance][macos_ci_badge]
 [![Tested with][pace-badge]][pace-url]
 
 ### Table of Contents
@@ -206,7 +208,9 @@ Apache 2.0 License. See [LICENSE](./LICENSE).
 
 ---
 [license-badge]: https://img.shields.io/github/license/qentinelqi/qweb
-[build-badge]: https://pace.qentinel.com/masters/master-ox36ary2sa/buildStatus/icon?job=QWeb_GitHub%2Fmaster
+[linux_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/linux_acceptance.yml/badge.svg
+[win_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/win_acceptance.yml/badge.svg
+[macos_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/mac_acceptance.yml/badge.svg
 [pace-url]: https://pace.qentinel.com
 [pace-badge]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue
 [python-versions-badge]: https://img.shields.io/pypi/pyversions/QWeb

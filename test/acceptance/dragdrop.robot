@@ -12,7 +12,7 @@ ${BROWSER}    chrome
 
 *** Test Cases ***
 Drag and Drop all elements to box
-    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     VerifyText          Put element to this div
     ExecuteJavaScript   return document.getElementById('div1').childElementCount  $childnodes
     ShouldBeEqual       '${childnodes}'     '0'
@@ -25,7 +25,7 @@ Drag and Drop all elements to box
     ShouldBeEqual       '${childnodes}'     '3'
 
 Drag and Drop use xpath locator
-    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     VerifyText          Put element to this div
     ExecuteJavaScript   return document.getElementById('div1').childElementCount  $childnodes
     ShouldBeEqual       '${childnodes}'     '0'
@@ -34,7 +34,7 @@ Drag and Drop use xpath locator
     ShouldBeEqual       '${childnodes}'     '1'
 
 Drag and Drop use index locator
-    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     VerifyText          Put element to this div
     ExecuteJavaScript   return document.getElementById('div1').childElementCount  $childnodes
     ShouldBeEqual       '${childnodes}'     '0'
@@ -47,7 +47,7 @@ Drag and Drop draggable not found
     ...     DragDrop            Foo         Bar     timeout=2
 
 Drag further in screen
-    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     ScrollText          Page ends here
     VerifyText          Put element to this box
     ExecuteJavaScript   return document.getElementById('div2').childElementCount  $childnodes2
@@ -61,7 +61,7 @@ Drag further in screen
     ShouldBeEqual       '${childnodes2}'     '3'
 
 DragVelocity
-    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     ScrollText          Drag the W3Schools image into the rectangle:
     VerifyText          Put element to this div
     ExecuteJavaScript   return document.getElementById('div1').childElementCount  $childnodes
@@ -71,7 +71,7 @@ DragVelocity
     ShouldBeEqual       '${childnodes}'     '1'
 
 Offset
-    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX
+    [tags]              PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     VerifyText          Put element to this div
     ExecuteJavaScript   return document.getElementById('div1').childElementCount  $childnodes
     ShouldBeEqual       '${childnodes}'     '0'

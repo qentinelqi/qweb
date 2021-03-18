@@ -43,6 +43,7 @@ Automatic frame search input elements
     ${value}                GetInputValue           Misplaced input
     ShouldBeEqual           ${value}                I'am at wrong place!!
     TypeText                Some text               I'am catching you too..
+    Sleep                   2                       # takes time in Mac on CI machines
     ${value}                GetInputValue           Some text
     ShouldbeEqual           ${value}                I'am catching you too..
 

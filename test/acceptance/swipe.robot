@@ -12,7 +12,7 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 
 *** Test Cases ***
 Swipe and verify images
-    [Tags]          PROBLEM_IN_WINDOWS	    PROBLEM_IN_FIREFOX
+    [Tags]          PROBLEM_IN_WINDOWS	    PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     SetConfig       WindowSize   1600x900
     SwipeRight      3
     VerifyIcon      power
