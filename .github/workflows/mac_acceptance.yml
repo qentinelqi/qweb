@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8]
-        browser: [chrome, safari]
+        browser: [chrome, firefox]
 
     steps:
     - uses: actions/checkout@v2
@@ -47,10 +47,10 @@ jobs:
       if: matrix.browser == 'chrome'
       run: |
         python -m robot --exitonfailure -e jailed -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -e WITH_DEBUGFILE -v BROWSER:Chrome -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
-    - name: Acceptance tests Safari
-      if: matrix.browser == 'safari'
+    - name: Acceptance tests Firefox
+      if: matrix.browser == 'firefox'
       run: |
-        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_SAFARI -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -e WITH_DEBUGFILE -e PROBLEM_IN_FIREFOX -v BROWSER:Firefox -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_FIREFOX -e PROBLEM_IN_SAFARI -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -e WITH_DEBUGFILE -v BROWSER:firefox -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v1
