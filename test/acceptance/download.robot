@@ -70,15 +70,15 @@ Download Suite Setup
 Download Suite Teardown
     CloseAllBrowsers
     Terminate All Processes
-    Remove Directory    %{HOME}/TmpDownloads    ${true}
+    Remove Directory    ~/TmpDownloads    ${true}
 
 Remove Small and Large Files
-    Remove File   %{HOME}/Downloads/small.csv
-    Remove File   %{HOME}/Downloads/large.csv
-    Remove File   %{HOME}/Downloads/large (1).csv
-    Remove File   %{HOME}/Downloads/small (1).csv
+    Remove File   ~/Downloads/small.csv
+    Remove File   ~/Downloads/large.csv
+    Remove File   ~/Downloads/large (1).csv
+    Remove File   ~/Downloads/small (1).csv
     Run Keyword And Ignore Error    Remove Crdownload
 
 Remove Crdownload
     Sleep    2s
-    Remove File   %{HOME}/Downloads/large.csv.crdownload
+    Remove File   ~/Downloads/large.csv.crdownload

@@ -50,7 +50,7 @@ FooBarBaz
     ${foo}                GetInputValue      jeuda
     TypeText              jeuda              ${foo}
     TypeText              field5             Qentinel
-    VerifyInputValue      field4             chrome      timeout=1
+    VerifyInputValue      field4             ${BROWSER}      timeout=1
     VerifyInputValue      field5             Qentinel
     ${TEXT}               GetInputValue      field5      between=???nel
     ShouldBeEqual         ${TEXT}            Qenti

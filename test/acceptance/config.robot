@@ -84,8 +84,8 @@ Test ClearKey Config
     SetConfig    ClearKey      {CONTROL + A}
     ${VAL}=      GetConfig     ClearKey
     ShouldBeEqual    ${VAL}    {CONTROL + A}
-    #Reset single parameter
-    ResetConfig  ClearKey
+    # Set ClearKey back to None
+    SetConfig  ClearKey        None
     ${VAL}=      GetConfig     ClearKey
     ShouldBeEqual    ${VAL}    ${None}
 

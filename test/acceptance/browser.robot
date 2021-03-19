@@ -41,19 +41,21 @@ Open Browser With Options
     [Teardown]     CloseAllBrowsers
 
 Open Browser with Environment Chromeargs
+    [tags]          PROBLEM_IN_SAFARI
     Close All Browsers
     Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu, disable-impl-side-painting
     OpenBrowser    about:blank    ${BROWSER}
     [Teardown]     Close Browsers And Remove CHROME_ARGS
 
 Open Browser with Options and Environment Chromeargs
+    [tags]          PROBLEM_IN_SAFARI
     Close All Browsers
     Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu
     OpenBrowser    about:blank    ${BROWSER}    disable-impl-side-painting
     [Teardown]     Close Browsers And Remove CHROME_ARGS
 
 Open Browser with experimental args
-    [tags]          exp
+    [tags]          exp             PROBLEM_IN_SAFARI
     Close All Browsers
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="download.prompt_for_download": "False", "plugins.always_open_pdf_externally": "True"
@@ -63,20 +65,20 @@ Open Browser with experimental args
     OpenBrowser     about:blank     ${BROWSER}   prefs="ps.*,*.p": "1"
 
 Open Browser with options and experimental args
-    [tags]          exp
+    [tags]          exp             PROBLEM_IN_SAFARI
     Close All Browsers
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="download.prompt_for_download": "False", "plugins.always_open_pdf_externally": "True"
 
 Open Browser with invalid experimental args string
-    [tags]          exp
+    [tags]          exp             PROBLEM_IN_SAFARI
     Run Keyword And Expect Error    QWebUnexpectedConditionError: Invalid argument*
     ...     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs=Foobar, "anotherone":"false"
     Close Browsers And Remove CHROME_ARGS
 
 Open Browser with dictionary prefs
-    [tags]          exp
+    [tags]          exp             PROBLEM_IN_SAFARI
     Close All Browsers
     ${prefsdict}=   Create Dictionary    download.prompt_for_download    False
     ...             plugins.always_open_pdf_externally    True

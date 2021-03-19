@@ -92,7 +92,7 @@ VerifyTextCountFail
     ...                     VerifyTextCount         Counttextyjku    4   timeout=1s
 
 VerifyTextCountDelay
-    [Tags]                  VerifyTextCount
+    [Tags]                  VerifyTextCount     PROBLEM_IN_SAFARI
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyTextCount         Counttextyjku    3
     ClickText               Counttextyjku    anchorcount

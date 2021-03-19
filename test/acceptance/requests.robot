@@ -9,6 +9,7 @@ Test Setup        Start Flask Server
 Test Teardown     Terminate All Processes
 Suite Teardown    CloseAllBrowsers
 Test Timeout      1min
+Force Tags        FLASK
 
 *** Variables ***
 ${BROWSER}    chrome

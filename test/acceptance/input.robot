@@ -300,7 +300,7 @@ Test Input kw:s when traverse limit is false
 
 Test ClearKey Parameter
     [documentation]         Use optional clear key
-    [tags]                  PROBLEM_IN_FIREFOX
+    [tags]                  PROBLEM_IN_FIREFOX      PROBLEM_IN_MACOS
     TypeText                The Brave             Kalakalle
     VerifyInputValue        The Brave             Kalakalle
     TypeText                The Brave             Kalakalle     clear_key={NULL}
@@ -310,6 +310,7 @@ Test ClearKey Parameter
 
 PressKey test hotkeys
     [documentation]         Use keyboard shortcuts with press key
+    [tags]                  PROBLEM_IN_MACOS
     RefreshPage
     TypeText                The Brave             Kalakalle
     VerifyInputValue        The Brave             Kalakalle

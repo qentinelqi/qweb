@@ -44,6 +44,7 @@ Test VerifyApp
     Remove File                    ${OUTPUT_DIR}/verifyapp/Test_VerifyApp_verifyapp_ref.png
 
 Test VerifyApp Accuracy
+    [Tags]         RESOLUTION_DEPENDENCY
     Go To          file://${CURDIR}/../resources/text.html
     SetConfig      VerifyAppAccuracy        0.0001
     VerifyApp      acctest

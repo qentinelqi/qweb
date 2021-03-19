@@ -33,7 +33,7 @@ Automatic frame search text elements
     ScrollText              Input fields with
 
 Automatic frame search input elements
-    [tags]                  inputs
+    [tags]                  inputs                  PROBLEM_IN_SAFARI
     TypeText                First input             Robot
     TypeText                Second input            QENROB
     TypeText                Cell 1 input            20022019
@@ -43,6 +43,7 @@ Automatic frame search input elements
     ${value}                GetInputValue           Misplaced input
     ShouldBeEqual           ${value}                I'am at wrong place!!
     TypeText                Some text               I'am catching you too..
+    Sleep                   2                       # takes time in Mac on CI machines
     ${value}                GetInputValue           Some text
     ShouldbeEqual           ${value}                I'am catching you too..
 
@@ -101,18 +102,19 @@ Automatic frame search back and forth between frames
     ScrollText              Input fields with
 
 IsText in different frame
-    [Tags]                  istext
+    [Tags]                  istext                 PROBLEM_IN_SAFARI
     ClickCheckbox           I have a bike          on
     ${found}=               IsText                 Last name:
     Should Be Equal         ${found}               ${TRUE}
 
 IsNoText in different frame
-    [Tags]                  istext
+    [Tags]                  istext                 PROBLEM_IN_SAFARI
     ClickCheckbox           I have a bike          on
     ${notfound}=            IsNoText               Last name:    0.1s
     Should Be Equal         ${notfound}            ${FALSE}
 
 Upload files with index
+    [Tags]              PROBLEM_IN_SAFARI
     UploadFile          1                       test1.txt
     ExecuteJavaScript   return document.querySelector('#myFile1').value   $value
     ShouldBeEqual       ${value}                C:\fakepath\test1.txt
@@ -121,6 +123,7 @@ Upload files with index
     ShouldBeEqual       ${value}                C:\fakepath\test2.txt
 
 Upload files with locator
+    [Tags]              PROBLEM_IN_SAFARI
     UploadFile          Uploadme                       test1.txt
     ExecuteJavaScript   return document.querySelector('#myFile1').value   $value
     ShouldBeEqual       ${value}                       C:\fakepath\test1.txt

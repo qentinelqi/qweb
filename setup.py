@@ -44,7 +44,7 @@ setup(
                       "robotframework-debuglibrary==2.2.1",
                       "selenium>=3.141.0",
                       "msedge-selenium-tools==3.141.2",
-                      "Pillow==7.1.0",
+                      "Pillow==8.1.1",
                       "scipy==1.4.1",
                       "scikit-image==0.16.2",
                       "ply",

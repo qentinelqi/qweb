@@ -56,6 +56,7 @@ ElementNotFound
     ...                             ClickElement    //*[id\='qwerty']   timeout=2
 
 DoubleClick Element
+    [Tags]          PROBLEM_IN_SAFARI
     VerifyNoText    doubleclick test clicked!
     SetConfig       DoubleClick     On
     ClickElement    //*[@id\="doubleclick test"]
