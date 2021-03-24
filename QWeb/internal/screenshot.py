@@ -24,7 +24,7 @@ from selenium.common.exceptions import UnexpectedAlertPresentException, \
 from QWeb.internal.exceptions import QWebDriverError
 from QWeb.internal import browser
 from QWeb.keywords import config
-from skimage.measure import compare_ssim
+from skimage.metrics import structural_similarity
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.utils import get_link_path
@@ -95,7 +95,7 @@ def compare_screenshots(filename, accuracy):
         ref_image_c = cv2.imread(filepath_ref, cv2.IMREAD_COLOR)
         new_image = cv2.imread(filepath_cmp, cv2.IMREAD_GRAYSCALE)
 
-        (score, diff) = compare_ssim(ref_image, new_image, full=True)
+        (score, diff) = structural_similarity(ref_image, new_image, full=True)
         if score > accuracy:
             logger.info('Images match with score: {}'.format(score))
             log_screenshot_file(filepath_cmp)

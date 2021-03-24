@@ -21,10 +21,12 @@ setup(
     long_description_content_type='text/markdown',
     zip_safe=False,
     packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test"]),
+
     classifiers=[
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'License :: OSI Approved :: Apache Software License',
         'Framework :: Robot Framework',
         'Framework :: Robot Framework :: Library'
@@ -33,7 +35,7 @@ setup(
     keywords='test automation robot framework',
     author='Qentinel Group',
     author_email='libraries@qentinel.com',
-
+    python_requires= ">=3.6,<4.0",
     install_requires=["setuptools",
                       "pyautogui>=0.9.38",
                       "pynput>=1.6.7",
@@ -45,8 +47,9 @@ setup(
                       "selenium>=3.141.0",
                       "msedge-selenium-tools==3.141.2",
                       "Pillow==8.1.1",
-                      "scipy==1.4.1",
-                      "scikit-image==0.16.2",
+                      "scipy==1.5.*",
+                      "scikit-image==0.17.2;python_version=='3.6'",
+                      "scikit-image==0.18.0;python_version>'3.6'",
                       "ply",
                       "opencv-python==3.4.13.47",
                       "slate3k>=0.5.3"],

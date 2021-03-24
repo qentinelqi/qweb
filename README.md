@@ -41,7 +41,7 @@ See [examples](#examples).
 
 ---
 ## Requirements
-Python 3.6-3.8 and Robot Framework 3.2.2+. Browser drivers need to be installed separately.
+Python 3.6-3.9 and Robot Framework 3.2.2+. Browser drivers need to be installed separately.
 
 ## Installation
 
