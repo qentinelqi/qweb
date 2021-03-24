@@ -54,7 +54,7 @@ Python **3.6-3.9** and Robot Framework 3.2.2. Browser drivers need to be install
 
 ### Linux/Mac
 ```bash
-    python3 -m pip install –upgrade pip
+    python3 -m pip install -U pip
     python3 -m pip install QWeb
 ```
 
