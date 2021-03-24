@@ -26,7 +26,7 @@
 
 ## Introduction
 
-QWeb is an open source web automation interface in [Robot Framework](https://robotframework.org/). It makes automation **rapid, robust, and fun**.
+QWeb is an open source web automation interface in [Robot Framework](https://robotframework.org/). It makes automation **rapid, robust, and fun**.
 
 QWeb aims to make web automation easy and maintainable by:
 * providing high level keywords for accessing any web page element
@@ -41,7 +41,9 @@ See [examples](#examples).
 
 ---
 ## Requirements
-Python 3.6-3.9 and Robot Framework 3.2.2+. Browser drivers need to be installed separately.
+Python **3.6-3.9** and Robot Framework 3.2.2. Browser drivers need to be installed separately.
+
+(Note that support on Mac excludes Apple based silicon (M1), since all dependencies are not yet available for it.)
 
 ## Installation
 
@@ -52,13 +54,8 @@ Python 3.6-3.9 and Robot Framework 3.2.2+. Browser drivers need to be installed 
 
 ### Linux/Mac
 ```bash
-    python3 -m pip install QWeb
-```
-
-In some environments you might need to upgrade pip first:
-
-```bash
     python3 -m pip install –upgrade pip
+    python3 -m pip install QWeb
 ```
 
 
