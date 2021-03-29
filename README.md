@@ -1,4 +1,4 @@
-<img id="qweb" src="./images/qweb.png" alt="QWeb">
+<img id="qweb" src="https://github.com/qentinelqi/qweb/raw/master/images/qweb.png" alt="QWeb">
 
 > Keyword based test automation for the web.
 
@@ -127,7 +127,7 @@ ClickItem       Increment quantity                   # alt text
 QWeb includes keywords to interact with table data easily.
 
 Consider the following table as an example:
-![Example table](./images/example_table.png)
+<img src="https://github.com/qentinelqi/qweb/raw/master/images/example_table.png" alt="Example table">
 
 ```RobotFramework
 UseTable    Firstname
@@ -162,19 +162,19 @@ More examples on [QWeb tutorial](https://github.com/qentinelqi/qweb_workshop).
 
 ## Changelog
 
-See [RELEASE.md](./RELEASE.md)
+See [RELEASE.md](https://github.com/qentinelqi/qweb/blob/master/RELEASE.md)
 
 [Back To The Top](#qweb)
 
 ## Contribute
 
-Found an bug? Want to propose a new feature or improve documentation? Please start by checking our [contribution guide](./CONTRIBUTING.md)
+Found an bug? Want to propose a new feature or improve documentation? Please start by checking our [contribution guide](https://github.com/qentinelqi/qweb/blob/master/CONTRIBUTING.md)
 
 [Back To The Top](#qweb)
 
 ## License
 
-Apache 2.0 License. See [LICENSE](./LICENSE).
+Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master/LICENSE).
 
 
 [Back To The Top](#qweb)
