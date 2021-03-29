@@ -1,4 +1,4 @@
-<img id="qweb" src="./images/qweb.png" alt="QWeb">
+<img id="qweb" src="https://github.com/qentinelqi/qweb/raw/master/images/qweb.png" alt="QWeb">
 
 > Keyword based test automation for the web.
 
@@ -84,95 +84,77 @@ See list of keywords and their usage on
 
 The preferred way to interact with web elements is using their **text** property. Most elements like input fields and dropdowns can also be found by closest label (text).
 
-```
+```RobotFramework
 *** Settings ***
 Library    QWeb     # Import library
 
 *** Test Cases ***
 Basic interaction
     OpenBrowser         https://qentinelqi.github.io/shop      chrome   # Open chrome and goto given url
-    VerifyText          The animal friendly clothing company    # Assert heading text
-    ClickText           Scar the Lion   # Click link text
-    ClickText           Add to cart     # Click *button* with specific text
-    DropDown            Size            Large  # Select value (Large) from dropdown (Size)
+    VerifyText          The animal friendly clothing company            # Assert heading text
+    ClickText           Scar the Lion                                   # Click link text
+    ClickText           Add to cart                                     # Click *button* with specific text
+    DropDown            Size            Large                           # Select value (Large) from dropdown (Size)
 
 ```
 
 #### Timeouts and anchors
 
-```
-# TIMEOUTS
-# By default QWeb tries to locate the element 10 seconds (time can be configured)
-ClickText   Sign-in  # Tries to locate and click text "Sign-in" until 10 seconds has passed or until element is found.
+By default QWeb tries to locate the element 10 seconds (default time can be configured). Timeout can also be individually given for each keyword as an argument.
 
-# Timeout can be controlled using argument
-# Below example re-tries to find element until it's found or 30 seconds has passed. If element is not found after timeout, test will fail.
-ClickText   Sign-in     timeout=30  
+When text to be found is not unique, an 'anchor' argument can be given to pinpoint which instance of text we want to interact with. Anchor can be either another text nearby or index.
 
-# ANCHORS
-# When multiple elements with same text are found, 
-# QWeb can be guided to interact with specific element
-# using anchors and indexes
+```RobotFramework
+ClickText   Sign-in
+ClickText   Sign-in     timeout=30
 
-# clicks "Sign-in" text closest to text "Email"
-ClickText   Sign-in     anchor=Email   
-
-# clicks the third "Sign-in" on a page
+ClickText   Sign-in     anchor=Email
 ClickText   Sign-in     index=3
 ```
 
 #### Other locators
 
-```
-# ClickElement
-# xpaths and css selectors are supported. 
-# Note that equal sign must be escaped
-ClickElement    xpath\=//button[@class="my_class"]
+Non-textual locators can be used with `ClickElement`and `ClickItem`keywords.
 
-# ClickItem
-# ClickItem finds element based on any unique attribute,
-# in this particular case ALT texts
-ClickItem       Increment quantity
+```RobotFramework
+ClickElement    xpath\=//button[@class="my_class"]   # xpath
+ClickItem       Increment quantity                   # alt text
 
 ```
 
 #### Working with tables
 
-Consider the following table as an example:
-![Example table](./images/example_table.png)
+QWeb includes keywords to interact with table data easily.
 
-```
-# First focus on a table using any text in it (column header etc.)
+Consider the following table as an example:
+<img src="https://github.com/qentinelqi/qweb/raw/master/images/example_table.png" alt="Example table">
+
+```RobotFramework
 UseTable    Firstname
 
-# Get row number based on content (or last row)
 ${row}=     GetTableRow     //last                        # returns 5
 ${row}=     GetTableRow     //last    skip_header=True    # returns 4
 ...
 ${row}=     GetTableRow     Jim                           # returns 4
 ${row}=     GetTableRow     Jim    skip_header=True       # returns 3
 
-# Get value in specific cell
-${cell_value}=     GetCellText     r1c2  # Returns "John", first name is column 2.
+${cell_value}=     GetCellText     r1c2                   # Returns "John", first name is column 2.
 
-# Negative numbers as row number will count from the end of table
-${cell_value}=     GetCellText     r-1/c2  # Returns "Tina", -1 points to last row
-${cell_value}=     GetCellText     r-2/c2  # Returns "Jim", -2 points to second last row
+${cell_value}=     GetCellText     r-1/c2                 # Returns "Tina", -1 points to last row
+${cell_value}=     GetCellText     r-2/c2                 # Returns "Jim", -2 points to second last row
 ```
 
 #### Changing configuration
+QWeb's behavior can be changed with SetConfig keyword.
 
-```
-# QWeb's behavior can be configured with SetConfig keyword
+```RobotFramework
 
-# Highlight all found elements with blue rectangle
-SetConfig     SearchMode     Draw
+SetConfig     SearchMode     Draw       # Highlight all found elements with blue rectangle
 
-# Set automatic timeout time
 SetConfig     DefaultTimeout    60s     # change default/automatic timeout for all keywords
-VerifyText    User account created   # Re-tries to find text "User account created" 60 seconds and then fails, if text is not visible
+VerifyText    User account created      # Re-tries to find text "User account created" 60 seconds and then fails, if text is not visible
 ```
-
+More examples on [QWeb tutorial](https://github.com/qentinelqi/qweb_workshop).
 
 [Back To The Top](#qweb)
 
@@ -180,26 +162,26 @@ VerifyText    User account created   # Re-tries to find text "User account creat
 
 ## Changelog
 
-See [RELEASE.md](./RELEASE.md)
+See [RELEASE.md](https://github.com/qentinelqi/qweb/blob/master/RELEASE.md)
 
 [Back To The Top](#qweb)
 
 ## Contribute
 
-Found an bug? Want to propose a new feature or improve documentation? Please start by checking our [contribution guide](./CONTRIBUTING.md)
+Found an bug? Want to propose a new feature or improve documentation? Please start by checking our [contribution guide](https://github.com/qentinelqi/qweb/blob/master/CONTRIBUTING.md)
 
 [Back To The Top](#qweb)
 
 ## License
 
-Apache 2.0 License. See [LICENSE](./LICENSE).
+Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master/LICENSE).
 
 
 [Back To The Top](#qweb)
 
-## More info
-* [Qentinel.com: QWeb intro](https://qentinel.com/qweb-open-source/)
-* [QWeb Workshop/tutorial repository](https://github.com/qentinelqi/qweb_workshop)
+## Resources
+* [QWeb home page](https://qentinel.com/qweb-open-source/)
+* [QWeb tutorial](https://github.com/qentinelqi/qweb_workshop)
 
 
 
