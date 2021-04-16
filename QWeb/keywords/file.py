@@ -126,7 +126,7 @@ def get_file_text(**kwargs):
     return ACTIVE_FILE.get(**kwargs)
 
 
-def verify_pdf_text(text):
+def verify_pdf_text(text, normalize=False):
     """Verify text from pdf file.
 
     Examples
@@ -139,12 +139,15 @@ def verify_pdf_text(text):
     ----------
     text : str
         Text to verify
+
+    normalize : bool
+        Remove extra newlines (\n)
     """
     _file_exists()
-    ACTIVE_FILE.verify(text)
+    ACTIVE_FILE.verify(text, normalize)
 
 
-def verify_file_text(text):
+def verify_file_text(text, normalize=False):
     """Verify text from pdf file.
 
     Examples
@@ -157,12 +160,15 @@ def verify_file_text(text):
     ----------
     text : str
         Text to verify
+    
+    normalize : bool
+        Remove extra newlines (\n)
     """
     _file_exists()
-    ACTIVE_FILE.verify(text)
+    ACTIVE_FILE.verify(text, normalize)
 
 
-def verify_no_pdf_text(text):
+def verify_no_pdf_text(text, normalize=False):
     """Verify text not exists in pdf-file.
 
     Examples
@@ -175,16 +181,19 @@ def verify_no_pdf_text(text):
     ----------
     text : str
         Text that should not exist.
+    
+    normalize : bool
+        Remove extra newlines (\n)
     """
     _file_exists()
     try:
-        if ACTIVE_FILE.verify(text) is True:
+        if ACTIVE_FILE.verify(text, normalize) is True:
             raise QWebUnexpectedConditionError('Text {} exists in pdf file'.format(text))
     except QWebValueMismatchError:
         return
 
 
-def verify_no_file_text(text):
+def verify_no_file_text(text, normalize=False):
     """Verify text not exists in pdf-file.
 
     Examples
@@ -197,10 +206,13 @@ def verify_no_file_text(text):
     ----------
     text : str
         Text that should not exist.
+
+    normalize : bool
+        Remove extra newlines (\n)
     """
     _file_exists()
     try:
-        if ACTIVE_FILE.verify(text) is True:
+        if ACTIVE_FILE.verify(text, normalize) is True:
             raise QWebUnexpectedConditionError('Text {} exists in file'.format(text))
     except QWebValueMismatchError:
         return

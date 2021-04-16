@@ -66,8 +66,9 @@ class File:
             return util.get_substring(self.content, **kwargs)
         return self.content
 
-    def verify(self, text):
-        if text in self.content:
+    def verify(self, text, normalize=False):
+        txt_content = self._normalize_text(self.content) if normalize else self.content
+        if text in txt_content:
             return True
         raise QWebValueMismatchError('File did not contain the text "{}"'.format(text))
 
@@ -81,3 +82,6 @@ class File:
                 index += len(text)
             return index
         raise QWebValueMismatchError('File did not contain the text "{}"'.format(text))
+
+    def _normalize_text(self, text):
+        return " ".join(text.replace("\n", " ").split())
