@@ -87,3 +87,9 @@ verifyfile
     VerifyFile      test3.txt
     VerifyFile      dummy.pdf
     VerifyFile      infinity.png
+
+Multiline pdf text
+    [tags]          verify  normalize
+    UsePdf              sample-pdf-file.pdf
+    Run Keyword And Expect Error    QWebValueMismatchError:*      VerifyPdfText       Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
+    VerifyPdfText       Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book   normalize=True
