@@ -160,7 +160,7 @@ def verify_file_text(text, normalize=False):
     ----------
     text : str
         Text to verify
-    
+
     normalize : bool
         Remove extra newlines (\n)
     """
@@ -181,7 +181,7 @@ def verify_no_pdf_text(text, normalize=False):
     ----------
     text : str
         Text that should not exist.
-    
+
     normalize : bool
         Remove extra newlines (\n)
     """

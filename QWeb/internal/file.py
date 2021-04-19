@@ -83,5 +83,6 @@ class File:
             return index
         raise QWebValueMismatchError('File did not contain the text "{}"'.format(text))
 
-    def _normalize_text(self, text):
+    @staticmethod
+    def _normalize_text(text):
         return " ".join(text.replace("\n", " ").split())
