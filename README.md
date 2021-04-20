@@ -41,7 +41,7 @@ See [examples](#examples).
 
 ---
 ## Requirements
-Python **3.6-3.9** and Robot Framework 3.2.2. Browser drivers need to be installed separately.
+Python **3.6-3.9** and Robot Framework 3.2.2 or above. Browser drivers need to be installed separately.
 
 (Note that support on Mac excludes Apple based silicon (M1), since all dependencies are not yet available for it.)
 
