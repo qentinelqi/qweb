@@ -538,6 +538,7 @@ def set_config(par, val):
     Examples
     --------
     .. code-block:: robotframework
+
         # Wait 0.5 seconds before any Paceword is executed:
         SetConfig    Delay             0.5s
         # One time use - Wait 1s before given Paceword is executed:

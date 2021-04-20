@@ -31,3 +31,4 @@ tox
 pipdeptree
 importlib-metadata == 0.23
 msedge.selenium_tools == 3.141.2
+duty == 0.6.0
