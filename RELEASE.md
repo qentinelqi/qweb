@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Added Robot fw 4.0 to pipeline tests
+- Added Robot FW 4.x support to setup.py
+- Added duty file for local development tasks
+- Added 'pylint' back to pipeline
+- Fixed issue #6: added argument 'normalize' to verifypdftext/verifyfiletext
 
 ## [1.0.2] - 2021-03-24
 ### Added

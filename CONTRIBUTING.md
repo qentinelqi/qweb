@@ -64,17 +64,19 @@ You should be all set up for making your changes now.
 
 Once you have made your changes, please validate the quality of your changes. Linting, unit tests and acceptance tests will be automatically run when you issue a new Pull Request, but to save everyone's time it is best to run these locally on your platform prior to issuing a PR.
 
+#### Local development tasks
+
+We use excellent [duty](https://github.com/pawamoy/duty) python package to run development tasks locally. You can see all defined development tasks with command:
+
+```bash
+duty --list
+```
+
 ##### Linting
 We use both *pylint* and *flake8* for linting. To run these locally, run:
 
 ```bash
-pylint QWeb
-```
-
-and
-
-```bash
-flake8 QWeb
+duty lint
 ```
 
 ...on repo root.
@@ -83,32 +85,14 @@ flake8 QWeb
 
 We use **pytest** for unit tests. Unit tests are located in `/test/unit` folder. You can run unit test locally by running command:
 
-```python -m pytest```
+```duty unit-tests```
 
 
 ##### Acceptance tests
 
 We use **Robot Framework** for acceptance tests. Acceptance tests are located in `/test/acceptance` folder. You can run acceptance test locally by running command:
 
-###### Linux / Chrome
-```bash
-robot --exitonfailure -e jailed -e WITH_DEBUGFILE -v BROWSER:chrome -L TRACE test/acceptance
-```
-
-###### Linux / Firefox
-```bash
-robot --exitonfailure -e jailed -e WITH_DEBUGFILE -e PROBLEM_IN_FIREFOX -v BROWSER:firefox -L TRACE test/acceptance'
-```
-
-###### Windows / Chrome
-```bash
-robot --exitonfailure -e jailed -e PROBLEM_IN_WINDOWS -e WITH_DEBUGFILE -v browser:chrome -v -L TRACE test/acceptance'
-```
-
-###### Windows / Firefox
-```bash
-robot --exitonfailure -e jailed -e PROBLEM_IN_WINDOWS -e WITH_DEBUGFILE -e PROBLEM_IN_FIREFOX -v BROWSER:firefox L TRACE test/acceptance
-```
+```duty acceptance-tests```
 
 #### Commit, push and open a pull request
 

@@ -12,6 +12,10 @@ screenshots/
 # doc output
 docs/build
 
+# unit test artifacts
+.coverage
+unittests.xml
+
 # package build output
 build
 dist

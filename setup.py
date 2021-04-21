@@ -42,7 +42,7 @@ setup(
                       "pyperclip==1.7.0",
                       "pyparsing==2.2.2",
                       'requests>=2.22.0',
-                      "robotframework==3.2.2",
+                      "robotframework>=3.2.2",
                       "robotframework-debuglibrary==2.2.1",
                       "selenium>=3.141.0",
                       "msedge-selenium-tools==3.141.2",

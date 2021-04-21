@@ -100,8 +100,7 @@ def set_line_break(key):
             key = ''
             input_handler.line_break_key = key
             logger.info('\n\\ue000 line break does not work with Firefox, using empty string'
-                        ' instead. It is recommended to use None instead of \\ue000.',
-                        also_console=True)
+                        ' instead. It is recommended to use None instead of \\ue000.')
         else:
             input_handler.line_break_key = key
     elif key.lower() in ('none', 'empty', 'null'):
