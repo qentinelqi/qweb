@@ -1,20 +1,28 @@
 # -*- coding: utf-8 -*-
 # --------------------------
-# Copyright © 2014 - 2020 Qentinel Group. All rights reserved.
+# Copyright © 2014 -            Qentinel Group.
 #
-# The software code and any other material contained in this file are property
-# of Qentinel Group and protected by international copyright laws.
-# Any copying, re-licensing, re-distribution, development of
-# derivative works, or reverse engineering are prohibited.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 # ---------------------------
+
 import time
+import QWeb.config as config
 
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
 from QWeb.internal import element, frame, xhr
-from QWeb import config
 
 
 class SanomaWeb(object):
