@@ -134,13 +134,14 @@ def verify_pdf_text(text, normalize=False):
     .. code-block:: robotframework
 
         VerifyPdfText     Test Automation
+        VerifyPdfText     Test Automation    normalize=True
 
     Parameters
     ----------
     text : str
         Text to verify
     normalize : bool
-        Remove extra newlines (\\n)
+        Remove extra newlines (\\\\n)
     """
     _file_exists()
     ACTIVE_FILE.verify(text, normalize)
@@ -160,7 +161,7 @@ def verify_file_text(text, normalize=False):
     text : str
         Text to verify
     normalize : bool
-        Remove extra newlines (\\n)
+        Remove extra newlines (\\\\n)
     """
     _file_exists()
     ACTIVE_FILE.verify(text, normalize)
@@ -180,7 +181,7 @@ def verify_no_pdf_text(text, normalize=False):
     text : str
         Text that should not exist.
     normalize : bool
-        Remove extra newlines (\\n)
+        Remove extra newlines (\\\\n)
     """
     _file_exists()
     try:
@@ -204,7 +205,7 @@ def verify_no_file_text(text, normalize=False):
     text : str
         Text that should not exist.
     normalize : bool
-        Remove extra newline (\\n)
+        Remove extra newline (\\\\n)
     """
     _file_exists()
     try:
