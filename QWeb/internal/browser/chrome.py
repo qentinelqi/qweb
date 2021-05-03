@@ -89,7 +89,7 @@ def open_browser(executable_path="chromedriver", chrome_args=None,
                 CONFIG.set_value('Headless', True)
             for item in chrome_args:
                 options.add_argument(item.lstrip())
-        options.add_argument("start-maximized")
+        # options.add_argument("start-maximized")
         options.add_argument("--disable-notifications")
         if 'headless' in kwargs:
             CONFIG.set_value('Headless', True)
