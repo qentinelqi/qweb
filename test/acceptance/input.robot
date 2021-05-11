@@ -280,9 +280,9 @@ Secret Without Debug Logs When Debugfile Option Used
     TypeSecret3             First input           223423423423423432
     TypeText                Second input          View this text in debug file
     ${TextFileContent}      Get File              ${DEBUG FILE}
-    Should Contain          ${TextFileContent}    START KW: QWeb.Type Secret
-    Should Contain          ${TextFileContent}    START KW: QWeb.Type Secret3
-    Should Contain          ${TextFileContent}    START KW: QWeb.Type Text
+    Should Contain          ${TextFileContent}    QWeb.Type Secret
+    Should Contain          ${TextFileContent}    QWeb.Type Secret3
+    Should Contain          ${TextFileContent}    QWeb.Type Text
     Should Not Contain      ${TextFileContent}    fdfsdf98723fdkjc9vsdv22
     Should Not Contain      ${TextFileContent}    223423423423423432
     Should Contain          ${TextFileContent}    DEBUG - Preferred text: "View this text in debug file"
