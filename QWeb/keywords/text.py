@@ -296,6 +296,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
 
         ClickText    Canis    3     # clicks the third "Canis" on the page
         ClickText    Canis    Dog   # clicks the "Canis" near to the word "Dog"
+        ClickText    Canis    3     anchor_type=text   # clicks the "Canis" next text "3" (handles numbers as textual anchors)
 
     If you want to specify how long ClickText tries, you need to add both anchor
     and timeout.
