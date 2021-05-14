@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Added argument 'anchor_type'. This can be set to 'text' if all numeric values in anchors should be handled as textual anchors and not as indices.
+- Added keywords GetUrl and VerifyUrl
+- Added keywords GetTitle and VerifyTitle
 
 ## [1.0.3] - 2021-05-3
 ### Added
