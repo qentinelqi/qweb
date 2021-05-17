@@ -931,6 +931,8 @@ def verify_any(texts_to_verify, timeout=0):
     Verify that at least one of the texts is found. Useful for handling
     session dependent states, such as logins or popups.
 
+    Note: multiple texts need to be given as one list or as strings separated by ",".
+
     Other Parameters
     ----------------
     <other_parameters>
@@ -939,7 +941,12 @@ def verify_any(texts_to_verify, timeout=0):
     --------
     .. code-block:: robotframework
 
-        VerifyAny    Login    Front Page
+        # as strings separated with ","
+        VerifyAny    Login,Front Page
+
+        # as list
+        ${texts}=    Create List     abc    def
+        VerifyAny    ${texts}
 
         # Follow up to check which state
         ${login}=    IsText       Login
