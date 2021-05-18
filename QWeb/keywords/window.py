@@ -296,12 +296,15 @@ def verify_url(url, timeout=0):  # pylint: disable=unused-argument
      .. code-block:: robotframework
 
         VerifyUrl      https://www.google.com
+        VerifyUrl      https://www.google.com     timeout=5
 
 
     Parameters
     ----------
     url : str
         The expected url
+    timeout : str | int
+        How long we wait for url to change before failing.
 
     Raises
     ------
@@ -350,12 +353,15 @@ def verify_title(title, timeout=0):  # pylint: disable=unused-argument
      .. code-block:: robotframework
 
         VerifyTitle      Google
+        VerifyTitle      Google     timeout=3
 
 
     Parameters
     ----------
     title : str
         The expected title
+    timeout : str | int
+        How long we wait for title to change before failing.
 
     Raises
     ------
