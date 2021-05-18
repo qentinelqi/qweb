@@ -287,7 +287,7 @@ def get_url():
 
 
 @decorators.timeout_decorator
-def verify_url(url, timeout=0): # pylint: disable=unused-argument
+def verify_url(url, timeout=0):  # pylint: disable=unused-argument
     """Verifies that current page url/location matches expected url.
 
 
@@ -341,7 +341,7 @@ def get_title():
 
 
 @decorators.timeout_decorator
-def verify_title(title, timeout=0): # pylint: disable=unused-argument
+def verify_title(title, timeout=0):  # pylint: disable=unused-argument
     """Verifies that current page's title matches expected title.
 
 
