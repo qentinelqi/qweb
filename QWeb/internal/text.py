@@ -208,7 +208,8 @@ def get_element_using_anchor(elements, anchor, **kwargs):
         # Element was not unique and anchor was not used.
         raise QWebValueError(
             'Found {} elements. Use anchor to determine which is wanted'.format(len(elements)))
-    if anchor.isdigit():  # Select by index
+    # Select by index unless anchor type is text
+    if anchor.isdigit() and kwargs.get("anchor_type", "auto").lower() != "text":
         anchor = int(anchor) - 1
         if anchor < len(elements):
             return elements[anchor]

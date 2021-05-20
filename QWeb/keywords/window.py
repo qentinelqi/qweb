@@ -264,6 +264,120 @@ def maximize_window():
     logger.debug("Window size set to {}x{}".format(size["width"], size["height"]))
 
 
+def get_url():
+    """Gets current url/location.
+
+
+    Examples
+    --------
+     .. code-block:: robotframework
+
+        ${url}=   GetUrl
+
+
+    Parameters
+    ----------
+    None
+    """
+    driver = browser.get_current_browser()
+    if driver is None:
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
+                              " to open browser first")
+    return driver.current_url
+
+
+@decorators.timeout_decorator
+def verify_url(url, timeout=0):  # pylint: disable=unused-argument
+    """Verifies that current page url/location matches expected url.
+
+
+    Examples
+    --------
+     .. code-block:: robotframework
+
+        VerifyUrl      https://www.google.com
+        VerifyUrl      https://www.google.com     timeout=5
+
+
+    Parameters
+    ----------
+    url : str
+        The expected url
+    timeout : str | int
+        How long we wait for url to change before failing.
+
+    Raises
+    ------
+    QWebValueError
+        If the expected url differs from current url
+    """
+    driver = browser.get_current_browser()
+    if driver is None:
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
+                              " to open browser first")
+    current = driver.current_url
+
+    if current.lower() != url.lower():
+        raise QWebValueError(f"Current url '{current}'' does not match expected url '{url}'")
+
+
+def get_title():
+    """Gets the title of current page/window.
+
+
+    Examples
+    --------
+     .. code-block:: robotframework
+
+        ${title}=   GetTitle
+
+
+    Parameters
+    ----------
+    None
+    """
+    driver = browser.get_current_browser()
+    if driver is None:
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
+                              " to open browser first")
+    return driver.title
+
+
+@decorators.timeout_decorator
+def verify_title(title, timeout=0):  # pylint: disable=unused-argument
+    """Verifies that current page's title matches expected title.
+
+
+    Examples
+    --------
+     .. code-block:: robotframework
+
+        VerifyTitle      Google
+        VerifyTitle      Google     timeout=3
+
+
+    Parameters
+    ----------
+    title : str
+        The expected title
+    timeout : str | int
+        How long we wait for title to change before failing.
+
+    Raises
+    ------
+    QWebValueError
+        If the expected title differs from actual page title
+    """
+    driver = browser.get_current_browser()
+    if driver is None:
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
+                              " to open browser first")
+    actual = driver.title
+
+    if actual != title:
+        raise QWebValueError(f"Page title '{actual}'' does not match expected '{title}'")
+
+
 def swipe_down(times='1', start=None):
     """Swipes down on the screen.
 

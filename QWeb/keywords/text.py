@@ -296,6 +296,8 @@ def click_text(text, anchor="1", timeout=0, parent=None,
 
         ClickText    Canis    3     # clicks the third "Canis" on the page
         ClickText    Canis    Dog   # clicks the "Canis" near to the word "Dog"
+        # handling numeric anchors as text, not index
+        ClickText    Canis    3     anchor_type=text   # clicks the "Canis" next text "3"
 
     If you want to specify how long ClickText tries, you need to add both anchor
     and timeout.
@@ -930,6 +932,8 @@ def verify_any(texts_to_verify, timeout=0):
     Verify that at least one of the texts is found. Useful for handling
     session dependent states, such as logins or popups.
 
+    Note: multiple texts need to be given as one list or as strings separated by ",".
+
     Other Parameters
     ----------------
     <other_parameters>
@@ -938,7 +942,12 @@ def verify_any(texts_to_verify, timeout=0):
     --------
     .. code-block:: robotframework
 
-        VerifyAny    Login    Front Page
+        # as strings separated with ","
+        VerifyAny    Login,Front Page
+
+        # as list
+        ${texts}=    Create List     abc    def
+        VerifyAny    ${texts}
 
         # Follow up to check which state
         ${login}=    IsText       Login

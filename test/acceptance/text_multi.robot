@@ -29,3 +29,14 @@ Nonexisting index
 Hover multi
     HoverText       Hover Dropdown
     VerifyText      Hover Link1
+
+Numeric anchors as text
+    GoTo            file://${CURDIR}/../resources/num_anchor.html
+    Run Keyword and Expect Error
+    ...     QWebInstanceDoesNotExistError: Found 2 elements. Given anchor was 456
+    ...     ClickText       LINK        456
+
+    # anchor_type argument
+    ClickText       LINK        456     anchor_type=text
+    VerifyAlertText          correct link was clicked
+    CloseAlert      ACCEPT
