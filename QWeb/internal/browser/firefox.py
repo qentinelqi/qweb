@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from QWeb.internal import browser, util
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.exceptions import QWebValueError
 from robot.api import logger
 
 LOGGER = logging.getLogger(__name__)
@@ -49,11 +50,12 @@ def open_browser(profile_dir=None,
                     '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"')
         options.add_argument('-headless')
         CONFIG.set_value("Headless", True)
-    if profile_dir:
-        logger.warn('Deprecated.\n'
-                    'Profile directory can be selected like any other firefox option:\n'
-                    '"OpenBrowser   https://qentinel.com   ${BROWSER}  -profile /path/to/profile"')
-        options.add_argument('-profile {}'.format(profile_dir))
+    # if profile_dir:
+    #     logger.warn('Deprecated.\n'
+    #                 'Profile directory can be selected like any other firefox option:\n'
+    #                 '"OpenBrowser   https://site.com   ${BROWSER}  -profile /path/to/profile"')
+    #     # options.add_argument('-profile {}'.format(profile_dir))
+
     options.set_preference("browser.helperApps.neverAsk.saveToDisk", browser.MIME_TYPES)
     options.set_preference("extensions.update.enabled", False)
     options.set_preference("app.update.enabled", False)
@@ -77,11 +79,25 @@ def open_browser(profile_dir=None,
             CONFIG.set_value("Headless", True)
         for option in firefox_args:
             option = option.strip()
-            options.add_argument(option)
+            if option.startswith("-profile"):
+                profile_dir = _get_profile_dir(option)
+            else:
+                options.add_argument(option)
     driver = webdriver.Firefox(executable_path=executable_path, proxy=proxy, firefox_binary=binary,
-                               desired_capabilities=capabilities, options=options, timeout=timeout,
-                               log_path=log_path)
+                               desired_capabilities=capabilities, options=options,
+                               firefox_profile=profile_dir, timeout=timeout, log_path=log_path)
     if os.name == 'nt':  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)
     return driver
+
+
+def _get_profile_dir(option_str):
+    try:
+        profile = option_str.split()[1]
+        if not os.path.isdir(profile):
+            raise QWebValueError("Profile path is not a valid path!!")
+    except IndexError:
+        profile = None
+
+    return profile
