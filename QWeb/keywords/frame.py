@@ -92,6 +92,22 @@ def refresh_page():
     driver.refresh()
 
 
+def back():
+    """Navigates back in the current window.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+       Back
+
+
+    """
+    frame.wait_page_loaded()
+    driver = browser.get_current_browser()
+    driver.back()
+
+
 def log_page():
     """Save and log current html.
 
