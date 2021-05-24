@@ -499,6 +499,18 @@ def set_config(par, val):
         SetConfig    ClickToFocus         False   # Handle TypeText without clicks(default)
 
     ---
+    Parameter: DoubleClick
+
+    Sets double-click the default action for all Click* keywords.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    DoubleClick          True    # All Click keywords perform double-click action
+        SetConfig    DoubleClick          False   # Single-click action(default)
+
+    ---
     Parameter: HandleAlerts
 
     Option for handling alerts boxes, on by default.

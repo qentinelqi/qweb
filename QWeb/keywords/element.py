@@ -34,6 +34,13 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
         ClickElement          //*[@id\="click_me"]
         ClickElement          xpath\=//*[@id\="click_me"]
 
+    To double-click element, use SetConfig
+
+    .. code-block:: robotframework
+
+        SetConfig             DoubleClick           On
+        ClickElement          double_click_me       tag=button
+
     Parameters
     ----------
     xpath : str
