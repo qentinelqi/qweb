@@ -309,8 +309,8 @@ def verify_links(url='current', log_all=False):
                 if status == 405:
                     r = requests.get(url, headers=headers)
                     status = r.status_code
-            except requests.exceptions.ConnectionError:
-                logger.error("{} can't be reached.".format(url))
+            except requests.exceptions.ConnectionError as e:
+                logger.error("{} can't be reached. Error message: {}".format(url, e))
                 broken.append(url)
                 continue
             if 399 < status < 600:
