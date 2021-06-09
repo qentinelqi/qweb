@@ -155,12 +155,17 @@ class Table:
         return cell
 
     def get_clickable_cell(self, coordinates, anchor, index=1, **kwargs):
-        index = int(index) - 1
+        if int(index) < 1:
+            raise QWebValueError(
+                'Index should be greater than 0.')
         table_cell = self.get_table_cell(coordinates, anchor)
         if 'tag' in kwargs:
             clickable_child = element.get_element_from_childnodes(
                 table_cell, kwargs.get('tag'), dom_traversing=False)
-            return clickable_child[index]
+            if int(index) > len(clickable_child):
+                raise QWebValueError(
+                    'Index exceeds the number of clickable elements in cell.')
+            return clickable_child[int(index) - 1]
         return table_cell
 
     def get_cell_by_locator(self, locator):
