@@ -236,3 +236,17 @@ Get first empty row
     VerifyInputValue        r?EMPTY/c?Age           19
     VerifyInputValue        r?EMPTY/c?Date          2000-01-01
     SetConfig               PartialMatch            True
+
+Multiple clickable elements inside a cell
+    UseTable                Leijonat
+    ClickCell               r?Olli/c3               index=2    tag=input
+    VerifyCheckboxValue     r?Olli/c3               off        index=1
+    VerifyCheckboxValue     r?Olli/c3               on         index=2
+    VerifyCheckboxValue     r?Olli/c3               off        index=3
+    ClickCell               r?Jussi/c3              index=1    tag=input
+    VerifyCheckboxValue     r?Jussi/c3              on         index=1
+    ClickCell               r?Jussi/c3              index=1    tag=input
+    ClickCell               r?Jussi/c3              index=3    tag=input
+    VerifyCheckboxValue     r?Jussi/c3              off        index=1
+    VerifyCheckboxValue     r?Jussi/c3              off        index=2
+    VerifyCheckboxValue     r?Jussi/c3              on         index=3
