@@ -185,7 +185,7 @@ def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint
        ClickCell    r?SomeText/c3           #Click cell 3 in row that contains text SomeText
        ClickCell    r?Robot/c3      Hello   #Click cell 3 in row with words Robot and Hello in it
        ClickCell    r1c1            tag=a   #Clicks first child element with a tag
-       ClickCell    r?Robot/c3      index=2    tag=input   #Clicks the second child element of cell 3
+       ClickCell    r?Robot/c3      index=2  tag=input  #Clicks the second child element of cell 3
 
     Parameters
     ----------
@@ -200,7 +200,7 @@ def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint
        How long we search before failing. Default = Search Strategy default timeout (10s)
     index : int
        Use index when table cell contains more than one clickable element and preferred one
-       is not the first one. Requires the use of tag and value should be greater than 0, default = 1.
+       is not the first one. Requires the use of tag and value should be > 0, default = 1.
 
     Raises
     ------
