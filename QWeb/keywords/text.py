@@ -211,11 +211,15 @@ def verify_text_count(text, expected_count, timeout=0, **kwargs):  # pylint: dis
     """
     expected_count = int(expected_count)
     kwargs['css'] = False
-    webelements = internal_text.get_all_text_elements(text, **kwargs)
-    element_count = len(webelements)
+    try:
+        webelements = internal_text.get_all_text_elements(text, **kwargs)
+        element_count = len(webelements)
+    except QWebElementNotFoundError:
+        element_count = 0
 
     if element_count == expected_count:
         return
+
     raise QWebValueError('Page contained {0} texts instead of {1} after timeout'
                          .format(element_count, expected_count))
 
