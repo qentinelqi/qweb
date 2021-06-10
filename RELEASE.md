@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updates for ClickCell keyword: checks for index value and more descriptive documentation
+- Fixed DoubleClick argument usage consistency between keywords
 
 ## [1.0.4] - 2021-05-24
 ### Added
