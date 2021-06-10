@@ -34,7 +34,12 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
         ClickElement          //*[@id\="click_me"]
         ClickElement          xpath\=//*[@id\="click_me"]
 
-    To double-click element, use SetConfig
+    To double-click element, use argument doubleclick=True
+    .. code-block:: robotframework
+
+        ClickText             double_click_me       doubleclick=True
+
+    Or use SetConfig
 
     .. code-block:: robotframework
 
@@ -67,7 +72,7 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
             kwargs.get('tag'), xpath, **kwargs)[index]
     else:
         web_element = element.get_unique_element_by_xpath(xpath)
-    if actions.execute_click_and_verify_condition(web_element, timeout=timeout, js=js):
+    if actions.execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
 

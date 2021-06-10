@@ -318,7 +318,12 @@ def click_text(text, anchor="1", timeout=0, parent=None,
 
         ClickText   Canis     js=true     #Use Javascript click instead of Selenium
 
-    To double-click element, use SetConfig
+    To double-click text, use argument doubleclick=True
+    .. code-block:: robotframework
+
+        ClickText   Canis       doubleclick=True
+
+    Or use SetConfig
 
     .. code-block:: robotframework
 
@@ -348,7 +353,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
     anchor = str(anchor)
     web_element = internal_text.get_element_by_locator_text(
         text, anchor, parent=parent, child=child, **kwargs)
-    if execute_click_and_verify_condition(web_element, timeout=timeout, js=js):
+    if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
 
