@@ -522,12 +522,34 @@ Child and Parents - JS click child
     VerifyText              smiley clicked!
 
 Doubleclick
-    [tags]	PROBLEM_IN_FIREFOX
+    [tags]	PROBLEM_IN_FIREFOX                       Doubleclick
     VerifyNoText            doubleclick test clicked!
     SetConfig               DoubleClick     On
     ClickText               double-click test.
     VerifyText              doubleclick test clicked!
     SetConfig               DoubleClick     Off
+
+Doubleclick with arguments
+    [tags]	Doubleclick
+    RefreshPage
+    VerifyNoText            doubleclick test clicked!    
+    ClickText               double-click test.      doubleclick=True
+    VerifyText              doubleclick test clicked!
+
+Doubleclick element with arguments
+    [tags]	Doubleclick
+    RefreshPage
+    VerifyNoText            doubleclick test clicked!    
+    ClickElement            //*[@id\="doubleclick test"]      doubleclick=True
+    VerifyText              doubleclick test clicked!
+
+Doubleclick item with arguments
+    [tags]	Doubleclick
+    RefreshPage
+    VerifyNoText            doubleclick test clicked!    
+    ClickItem               doubleclick test      doubleclick=True
+    VerifyText              doubleclick test clicked!
+
 
 VerifyAll String Without Source File With All Found
     [tags]	PROBLEM_IN_FIREFOX      verify_all
