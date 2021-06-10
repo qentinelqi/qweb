@@ -12,7 +12,7 @@ ${BROWSER}    chrome
 InputElements
     [tags]                  inputsorder
     # Hover needed in ff 89
-    HoverText               Some text
+    HoverText               Second input
     TypeText                Cell 1          Qentinel
     VerifyInputValue        field7          Qentinel  timeout=3
     TypeText                Cell 1 input    Robot
