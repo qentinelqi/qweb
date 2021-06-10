@@ -29,7 +29,8 @@ import time
 import fnmatch
 from robot.api import logger
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import WebDriverException, NoSuchElementException
+from selenium.common.exceptions import WebDriverException, NoSuchElementException, \
+    MoveTargetOutOfBoundsException
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebValueError, \
     QWebUnexpectedConditionError, QWebInvalidElementStateError, QWebTimeoutError, \
     QWebTextNotFoundError
@@ -271,8 +272,12 @@ def hover_to(web_element, timeout=0):  # pylint: disable=unused-argument
     if driver.capabilities['browserName'].lower() in browser.firefox.NAMES:
         # use javascript to scroll
         driver.execute_script("arguments[0].scrollIntoView(true);", web_element)
-    hover = ActionChains(driver).move_to_element(web_element)
-    hover.perform()
+    try:
+        hover = ActionChains(driver).move_to_element(web_element)
+        hover.perform()
+    except MoveTargetOutOfBoundsException:
+        # chrome > 90, use javascript
+        driver.execute_script("arguments[0].scrollIntoView(true);", web_element)
 
 
 @decorators.timeout_decorator_for_actions
