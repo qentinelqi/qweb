@@ -84,6 +84,13 @@ VerifyTextCountIsZero
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyTextCount         Foobarbaz    0    timeout=1s
 
+VerifyTextCountIsZeroWithExpected
+    [Tags]                  VerifyTextCount
+    Go To                   file://${CURDIR}/../resources/text.html
+    ${error}=               Run Keyword And Expect Error
+    ...                     QWebValueError: Page contained 0 texts instead of 4 after timeout
+    ...                     VerifyTextCount         Foobarbaz    4    timeout=1s
+
 VerifyTextCountFail
     [Tags]                  VerifyTextCount
     Go To                   file://${CURDIR}/../resources/text.html
