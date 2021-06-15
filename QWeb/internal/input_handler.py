@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-rf
 # --------------------------
 # Copyright © 2014 -            Qentinel Group.
 #

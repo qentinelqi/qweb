@@ -61,10 +61,7 @@ class Config:
         if not self.is_value(_par):
             raise ValueError("Parameter {} doesn't exist".format(par))
         old_val, adapter_func = self.config[_par]
-        if adapter_func:
-            stored_value = adapter_func(value)
-        else:
-            stored_value = value
+        stored_value = adapter_func(value) if adapter_func else value
         self.config[_par] = (stored_value, adapter_func)
         return old_val
 
@@ -73,8 +70,17 @@ class Config:
         if par:
             _par = self._clean_string(par)
             self.config[_par] = copy.deepcopy(self._config_defaults[_par])
+            # trigger adapter func for clearkey
+            if "clearkey" in _par:
+                val, adapter_func = self.config[_par]
+                if adapter_func:
+                    adapter_func(str(val))
         else:
             self.config = copy.deepcopy(self._config_defaults)
+            # handle clearkey separately
+            _par = self._clean_string("ClearKey")
+            val, adapter_func = self.config[_par]
+            self.set_value(_par, str(val))
 
     def __getitem__(self, par):
         """ Allow accessing parameters in dictionary like syntax."""
