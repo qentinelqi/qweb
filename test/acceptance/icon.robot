@@ -38,8 +38,7 @@ Click icons new screenshot
     ClickIcon               person
     ClickIcon               power
     ClickText               Hide
-    Run Keyword And Expect Error   ClickIcon                   person   timeout=3
-    Should Not Be True      ${status}
+    Run Keyword And Expect Error    QWebElementNotFoundError:*   ClickIcon      person   timeout=3
 
 
 Capture icons and verify them

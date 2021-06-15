@@ -186,6 +186,12 @@ def save_screenshot(filename='screenshot_{}.png', folder=SCREEN_SHOT_DIR_NAME, p
     filepath = os.path.join(screen_shot_dir, filename)
 
     if pyautog is True or config.get_config("OSScreenshots"):
+        # try to remove image, needed for scrot > 0.9
+        try:
+            os.remove(filepath)
+        except OSError:
+            pass
+
         pyscreenshot(filepath)
         logger.info('Saved screenshot to {}'.format(filepath))
         return filepath
