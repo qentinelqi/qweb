@@ -18,7 +18,7 @@ h1,h3, img{
         <td><img src="pics_and_icons/lock-locked-8x.png" title="Lock"></td>
         <td><img src ="pics_and_icons/monitor-8x.png" data-icon="screen"></td>
         <td><img src="pics_and_icons/paperclip-8x.png" aria-label="paperclip"></td>
-        <td><img src="pics_and_icons/person-8x.png" tooltip="person"></td>
+        <td><img src="pics_and_icons/person-8x.png" id="person_icon" tooltip="person"></td>
         <td><img src="pics_and_icons/power-standby-8x.png" data-tooltip="Power"></td>
     </tr>
 	<tr>
@@ -26,7 +26,8 @@ h1,h3, img{
         <td><a href="../files/dummy.pdf" download>
 			<img src ="pics_and_icons/monitor-8x.png" data-icon="screen"></a></td>
         <td><a href="../files/dummy.pdf" download>
-			<p> Some Link </p></a></td>
+            <p> Some Link </p></a></td>
+        <td><a href="#" onclick="document.getElementById('person_icon').style.display = 'none'">Hide</a></td>
     </tr>
 </table>
 <h3><i>This is place for attribute value</i></h3>
