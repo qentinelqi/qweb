@@ -1,0 +1,377 @@
+==============================================================================
+20210615 20:45:03.590 - INFO - + START SUITE: Qweb [ ]
+==============================================================================
+20210615 20:45:03.605 - INFO - +- START SUITE: Qweb.Test [ ]
+==============================================================================
+20210615 20:45:03.672 - INFO - +-- START SUITE: Qweb.Test.Acceptance [ ]
+==============================================================================
+20210615 20:45:08.462 - INFO - +--- START SUITE: Qweb.Test.Acceptance.Icon [ ]
+==============================================================================
+20210615 20:45:08.487 - INFO - +---- START SETUP: QWeb.Open Browser [ about:blank | ${BROWSER} ]
+20210615 20:45:08.489 - DEBUG - args: ('about:blank', 'chrome'), kwargs: {}
+20210615 20:45:08.498 - INFO - 
+QWeb version number: 1.0.4
+20210615 20:45:08.576 - DEBUG - Options: []
+20210615 20:45:08.593 - DEBUG - opt: <selenium.webdriver.chrome.options.Options object at 0x7efeb5a4e970>
+20210615 20:45:08.642 - DEBUG - browser_reuse: False, session_id: None, executor_url:  None
+20210615 20:45:09.759 - DEBUG - POST http://127.0.0.1:60347/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": ["start-maximized", "--disable-notifications"]}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": ["start-maximized", "--disable-notifications"]}}}
+20210615 20:45:09.766 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:60347
+20210615 20:45:13.796 - DEBUG - http://127.0.0.1:60347 "POST /session HTTP/1.1" 200 718
+20210615 20:45:13.839 - DEBUG - Finished Request
+20210615 20:45:13.928 - DEBUG - {'acceptInsecureCerts': False, 'browserName': 'chrome', 'browserVersion': '91.0.4472.101', 'chrome': {'chromedriverVersion': '91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462})', 'userDataDir': '/tmp/.com.google.Chrome.EhvC3R'}, 'goog:chromeOptions': {'debuggerAddress': 'localhost:45849'}, 'networkConnectionEnabled': False, 'pageLoadStrategy': 'normal', 'platformName': 'linux', 'proxy': {}, 'setWindowRect': True, 'strictFileInteractability': False, 'timeouts': {'implicit': 0, 'pageLoad': 300000, 'script': 30000}, 'unhandledPromptBehavior': 'dismiss and notify', 'webauthn:extension:largeBlob': True, 'webauthn:virtualAuthenticators': True}
+20210615 20:45:13.937 - INFO - Browser: chrome
+20210615 20:45:13.955 - INFO - Browser version: 91.0.4472.101
+20210615 20:45:13.973 - INFO - Chromedriver version: 91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462})
+20210615 20:45:13.994 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/url {"url": "about:blank"}
+20210615 20:45:14.653 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/url HTTP/1.1" 200 14
+20210615 20:45:14.655 - DEBUG - Finished Request
+20210615 20:45:14.656 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:14.776 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 15
+20210615 20:45:14.785 - DEBUG - Finished Request
+20210615 20:45:14.787 - INFO - +---- END SETUP: QWeb.Open Browser (6299)
+------------------------------------------------------------------------------
+20210615 20:45:14.800 - INFO - +---- START TEST: Click icons new screenshot [ ]
+------------------------------------------------------------------------------
+20210615 20:45:14.811 - INFO - +----- START SETUP: QWeb.Go To [ file:///home/tuape/Documents/qweb/test/acceptance/../resources/items.html ]
+20210615 20:45:14.817 - DEBUG - Test timeout 1 minute active. 59.971 seconds left.
+20210615 20:45:14.823 - DEBUG - args: ('file:///home/tuape/Documents/qweb/test/acceptance/../resources/items.html',), kwargs: {}
+20210615 20:45:14.836 - DEBUG - Timeout is 10.0 sec
+20210615 20:45:14.837 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/url {"url": "file:///home/tuape/Documents/qweb/test/acceptance/../resources/items.html"}
+20210615 20:45:16.474 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/url HTTP/1.1" 200 14
+20210615 20:45:16.475 - DEBUG - Finished Request
+20210615 20:45:16.559 - INFO - +----- END SETUP: QWeb.Go To (1685)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20210615 20:45:16.589 - INFO - +----- START KEYWORD: QWeb.Click Icon [ person ]
+20210615 20:45:16.611 - DEBUG - Test timeout 1 minute active. 58.178 seconds left.
+20210615 20:45:16.631 - DEBUG - args: ('person',), kwargs: {}
+20210615 20:45:16.635 - DEBUG - Timeout is 10.0 sec
+20210615 20:45:16.635 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:16.673 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:16.674 - DEBUG - Finished Request
+20210615 20:45:16.674 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:16.674 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:16.712 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:16.712 - DEBUG - Finished Request
+20210615 20:45:16.712 - DEBUG - Readystate = True
+20210615 20:45:16.712 - DEBUG - ready_state True
+20210615 20:45:16.713 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:16.801 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 15
+20210615 20:45:16.802 - DEBUG - Finished Request
+20210615 20:45:16.802 - DEBUG - Unable to inject jQuery..
+20210615 20:45:16.804 - INFO - Downloads directory is /home/tuape/Downloads
+20210615 20:45:16.804 - DEBUG - /home/tuape/Documents/qweb/test/images/person.png
+20210615 20:45:16.810 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:16.840 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:16.842 - DEBUG - Finished Request
+20210615 20:45:16.842 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:16.842 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:16.915 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:16.915 - DEBUG - Finished Request
+20210615 20:45:16.915 - DEBUG - Readystate = True
+20210615 20:45:16.915 - DEBUG - ready_state True
+20210615 20:45:16.916 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:17.016 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:17.018 - DEBUG - Finished Request
+20210615 20:45:17.018 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return window.jQuery.active === 0;", "args": []}
+20210615 20:45:17.051 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:17.052 - DEBUG - Finished Request
+20210615 20:45:17.586 - DEBUG - STREAM b'IHDR' 16 13
+20210615 20:45:17.587 - DEBUG - STREAM b'sBIT' 41 3
+20210615 20:45:17.587 - DEBUG - b'sBIT' 41 3 (unknown)
+20210615 20:45:17.587 - DEBUG - STREAM b'IDAT' 56 8192
+20210615 20:45:17.652 - INFO - Saved screenshot to /home/tuape/Documents/qweb/screenshots/screenshot.png
+20210615 20:45:19.690 - INFO - _image_location Starts
+20210615 20:45:19.690 - DEBUG - Scale ratios to be used in order: [1.0, 0.75, 0.5, 0.86, 0.78, 0.58, 1.33, 0.67, 1.15]
+20210615 20:45:19.690 - DEBUG - Resampling loop Starts
+20210615 20:45:19.690 - DEBUG - resize starts: for scale 1.0
+20210615 20:45:19.690 - DEBUG - matchTemplate Starts:
+20210615 20:45:19.690 - DEBUG - _extract_points Starts:
+20210615 20:45:19.690 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.9999998807907104
+Highest max value location was (416, 279)
+All points: [(416, 279)]
+20210615 20:45:19.690 - DEBUG - Current best match location: (416, 279),
+max_value: 0.9999998807907104,
+scale_ratio: 1.0
+20210615 20:45:19.691 - DEBUG - Ready to return points:
+20210615 20:45:19.692 - DEBUG - Best match location: (416, 279), best correlation value: 0.9999998807907104, best scale ratio: 1.0
+20210615 20:45:19.700 - INFO - +----- END KEYWORD: QWeb.Click Icon (3117)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20210615 20:45:19.713 - INFO - +----- START KEYWORD: QWeb.Click Icon [ power ]
+20210615 20:45:19.715 - DEBUG - Test timeout 1 minute active. 55.074 seconds left.
+20210615 20:45:19.716 - DEBUG - args: ('power',), kwargs: {}
+20210615 20:45:19.718 - DEBUG - Timeout is 10.0 sec
+20210615 20:45:19.720 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:19.756 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:19.760 - DEBUG - Finished Request
+20210615 20:45:19.760 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:19.760 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:19.808 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:19.809 - DEBUG - Finished Request
+20210615 20:45:19.809 - DEBUG - Readystate = True
+20210615 20:45:19.809 - DEBUG - ready_state True
+20210615 20:45:19.810 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:19.838 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:19.845 - DEBUG - Finished Request
+20210615 20:45:19.848 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return window.jQuery.active === 0;", "args": []}
+20210615 20:45:19.886 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:19.887 - DEBUG - Finished Request
+20210615 20:45:19.889 - INFO - Downloads directory is /home/tuape/Downloads
+20210615 20:45:19.891 - DEBUG - /home/tuape/Documents/qweb/test/images/power.png
+20210615 20:45:19.891 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:19.915 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:19.916 - DEBUG - Finished Request
+20210615 20:45:19.916 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:19.916 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:19.948 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:19.948 - DEBUG - Finished Request
+20210615 20:45:19.949 - DEBUG - Readystate = True
+20210615 20:45:19.949 - DEBUG - ready_state True
+20210615 20:45:19.949 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:19.975 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:19.976 - DEBUG - Finished Request
+20210615 20:45:19.976 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return window.jQuery.active === 0;", "args": []}
+20210615 20:45:19.997 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:19.998 - DEBUG - Finished Request
+20210615 20:45:20.444 - DEBUG - STREAM b'IHDR' 16 13
+20210615 20:45:20.444 - DEBUG - STREAM b'sBIT' 41 3
+20210615 20:45:20.445 - DEBUG - b'sBIT' 41 3 (unknown)
+20210615 20:45:20.445 - DEBUG - STREAM b'IDAT' 56 8192
+20210615 20:45:20.512 - INFO - Saved screenshot to /home/tuape/Documents/qweb/screenshots/screenshot.png
+20210615 20:45:21.292 - INFO - _image_location Starts
+20210615 20:45:21.293 - DEBUG - Scale ratios to be used in order: [1.0, 0.75, 0.5, 0.86, 0.78, 0.58, 1.33, 0.67, 1.15]
+20210615 20:45:21.293 - DEBUG - Resampling loop Starts
+20210615 20:45:21.293 - DEBUG - resize starts: for scale 1.0
+20210615 20:45:21.293 - DEBUG - matchTemplate Starts:
+20210615 20:45:21.293 - DEBUG - _extract_points Starts:
+20210615 20:45:21.293 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.9999997615814209
+Highest max value location was (500, 278)
+All points: [(500, 278)]
+20210615 20:45:21.293 - DEBUG - Current best match location: (500, 278),
+max_value: 0.9999997615814209,
+scale_ratio: 1.0
+20210615 20:45:21.294 - DEBUG - Ready to return points:
+20210615 20:45:21.294 - DEBUG - Best match location: (500, 278), best correlation value: 0.9999997615814209, best scale ratio: 1.0
+20210615 20:45:21.317 - INFO - +----- END KEYWORD: QWeb.Click Icon (1589)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20210615 20:45:21.319 - INFO - +----- START KEYWORD: QWeb.Click Text [ Hide ]
+20210615 20:45:21.321 - DEBUG - Test timeout 1 minute active. 53.467 seconds left.
+20210615 20:45:21.323 - DEBUG - args: ('Hide',), kwargs: {}
+20210615 20:45:21.324 - DEBUG - Timeout is 10.0 sec
+20210615 20:45:21.325 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:21.368 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:21.369 - DEBUG - Finished Request
+20210615 20:45:21.369 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:21.370 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:21.394 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:21.395 - DEBUG - Finished Request
+20210615 20:45:21.395 - DEBUG - Readystate = True
+20210615 20:45:21.395 - DEBUG - ready_state True
+20210615 20:45:21.395 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:21.420 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:21.421 - DEBUG - Finished Request
+20210615 20:45:21.422 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return window.jQuery.active === 0;", "args": []}
+20210615 20:45:21.455 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:21.456 - DEBUG - Finished Request
+20210615 20:45:21.457 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:21.475 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:21.476 - DEBUG - Finished Request
+20210615 20:45:21.476 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n    var web_elements = function(locator){\n        var full = [];\n        var partial = [];\n        var candidates = [];\n        var text = \"\";\n        var elems = document.querySelectorAll('button, a, label,        *[type=\"submit\"], *[type=\"button\"], *[type=\"reset\"], li[data-value], input[type=\"radio\"],        *[role=\"tab\"], *[role=\"button\"], *[ng-click], *[data-ng-click],[href]');\n        for (var i = 0; i < elems.length; i++) {\n            if(elems[i].tagName.toLowerCase() === 'input'){\n                text = elems[i].value;\n            }\n            else {\n                text = elems[i].innerText;\n            }\n            if (text.trim() === locator){\n                full.push(elems[i]);\n            }\n            else if (text.trim().toLowerCase() === locator.toLowerCase()){\n                partial.push(elems[i]);\n            }\n        }\n        candidates = full.concat(partial);\n        return candidates;\n    }\n    return(web_elements('Hide'));", "args": []}
+20210615 20:45:21.515 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 90
+20210615 20:45:21.516 - DEBUG - Finished Request
+20210615 20:45:21.516 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        var visibility = function (elems) {\n        var elemObjects = [];\n        for (var i = 0; i < elems.length; i++) {\n            var obj = {}\n            var rects = elems[i].getBoundingClientRect();\n            var obj = {\n                elem: elems[i],\n                viewport: rects.top >= 0 && rects.top < window.innerHeight                     && rects.left >= 0 && rects.left < window.innerWidth,\n                css: getComputedStyle(elems[i]).display !== \"none\"                 && getComputedStyle(elems[i]).visibility !== \"hidden\",\n                offset: elems[i].offsetWidth > 0 || rects.width > 0\n            };\n            elemObjects.push(obj);\n        }\n        return elemObjects;\n        }\n        return(visibility(arguments[0]));\n        ", "args": [[{"ELEMENT": "c52c99e7-3d46-4b53-b49f-f541126c73a2", "element-6066-11e4-a52e-4f735466cecf": "c52c99e7-3d46-4b53-b49f-f541126c73a2"}]]}
+20210615 20:45:21.567 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 140
+20210615 20:45:21.568 - DEBUG - Finished Request
+20210615 20:45:21.568 - DEBUG - Checking visibility from all found elements: 1
+20210615 20:45:21.568 - DEBUG - Is element in viewport: True
+20210615 20:45:21.568 - DEBUG - CSS visibility is not hidden and display is not none: True
+20210615 20:45:21.568 - DEBUG - Element offsetWidth is > 0: True
+20210615 20:45:21.569 - DEBUG - found 1 visible elements and 0 hiding ones
+20210615 20:45:21.569 - DEBUG - Found elements by js: [<selenium.webdriver.remote.webelement.WebElement (session="0e7bc5364680c84abe348da6643fb968", element="c52c99e7-3d46-4b53-b49f-f541126c73a2")>]
+20210615 20:45:21.570 - DEBUG - time to run 10.0
+20210615 20:45:21.570 - DEBUG - GET http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/element/c52c99e7-3d46-4b53-b49f-f541126c73a2/enabled {"id": "c52c99e7-3d46-4b53-b49f-f541126c73a2"}
+20210615 20:45:21.624 - DEBUG - http://127.0.0.1:60347 "GET /session/0e7bc5364680c84abe348da6643fb968/element/c52c99e7-3d46-4b53-b49f-f541126c73a2/enabled HTTP/1.1" 200 14
+20210615 20:45:21.624 - DEBUG - Finished Request
+20210615 20:45:21.625 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/element/c52c99e7-3d46-4b53-b49f-f541126c73a2/click {"id": "c52c99e7-3d46-4b53-b49f-f541126c73a2"}
+20210615 20:45:21.958 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/element/c52c99e7-3d46-4b53-b49f-f541126c73a2/click HTTP/1.1" 200 14
+20210615 20:45:21.958 - DEBUG - Finished Request
+20210615 20:45:21.958 - DEBUG - element clicked
+20210615 20:45:22.028 - INFO - +----- END KEYWORD: QWeb.Click Text (677)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20210615 20:45:22.030 - INFO - +----- START KEYWORD: BuiltIn.Run Keyword And Expect Error [ QWebElementNotFoundError:* | ClickIcon | person | timeout=3 ]
+20210615 20:45:22.032 - INFO - +------ START KEYWORD: QWeb.Click Icon [ person | timeout=3 ]
+20210615 20:45:28.300 - INFO - +------- START KEYWORD: QWeb.Log Screenshot [ ]
+20210615 20:45:28.303 - DEBUG - Test timeout 1 minute active. 46.486 seconds left.
+20210615 20:45:28.303 - DEBUG - args: (), kwargs: {}
+20210615 20:45:28.311 - DEBUG - GET http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/screenshot {}
+20210615 20:45:28.906 - DEBUG - http://127.0.0.1:60347 "GET /session/0e7bc5364680c84abe348da6643fb968/screenshot HTTP/1.1" 200 35048
+20210615 20:45:28.907 - DEBUG - Finished Request
+20210615 20:45:28.913 - INFO - Saved screenshot to /home/tuape/Documents/qweb/screenshots/screenshot-Click_icons_new_screenshot-985f83d5-a397-42ce-9b20-6970f92e51e5.png
+20210615 20:45:28.934 - DEBUG - GET http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/url {}
+20210615 20:45:28.983 - DEBUG - http://127.0.0.1:60347 "GET /session/0e7bc5364680c84abe348da6643fb968/url HTTP/1.1" 200 72
+20210615 20:45:28.984 - DEBUG - Finished Request
+20210615 20:45:28.984 - INFO - Current url is: file:///home/tuape/Documents/qweb/test/resources/items.html#
+20210615 20:45:28.985 - INFO - <a href="screenshots/screenshot-Click_icons_new_screenshot-985f83d5-a397-42ce-9b20-6970f92e51e5.png"><img src="screenshots/screenshot-Click_icons_new_screenshot-985f83d5-a397-42ce-9b20-6970f92e51e5.png" width="800px"></a>
+20210615 20:45:28.996 - INFO - +------- END KEYWORD: QWeb.Log Screenshot (696)
+20210615 20:45:22.055 - DEBUG - Test timeout 1 minute active. 52.733 seconds left.
+20210615 20:45:22.056 - DEBUG - args: ('person',), kwargs: {'timeout': 3}
+20210615 20:45:22.067 - DEBUG - Timeout is 3.0 sec
+20210615 20:45:22.067 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:22.144 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:22.145 - DEBUG - Finished Request
+20210615 20:45:22.146 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:22.146 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:22.192 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:22.193 - DEBUG - Finished Request
+20210615 20:45:22.193 - DEBUG - Readystate = True
+20210615 20:45:22.193 - DEBUG - ready_state True
+20210615 20:45:22.194 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:22.223 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:22.224 - DEBUG - Finished Request
+20210615 20:45:22.224 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return window.jQuery.active === 0;", "args": []}
+20210615 20:45:22.248 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:22.250 - DEBUG - Finished Request
+20210615 20:45:22.250 - INFO - Downloads directory is /home/tuape/Downloads
+20210615 20:45:22.251 - DEBUG - /home/tuape/Documents/qweb/test/images/person.png
+20210615 20:45:22.251 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/frame {"id": null}
+20210615 20:45:22.268 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/frame HTTP/1.1" 200 14
+20210615 20:45:22.269 - DEBUG - Finished Request
+20210615 20:45:22.270 - DEBUG - Timeout for xhr:s = 30.0
+20210615 20:45:22.270 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return document.readyState === \"complete\"", "args": []}
+20210615 20:45:22.294 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:22.294 - DEBUG - Finished Request
+20210615 20:45:22.295 - DEBUG - Readystate = True
+20210615 20:45:22.295 - DEBUG - ready_state True
+20210615 20:45:22.295 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "\n        function inject(){\n            if (typeof(jQuery) === \"undefined\"){\n               var head = document.querySelector('head');\n               var script = document.createElement('script');\n               script.type = \"text/javascript\";\n               script.src = \"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"\n               head.appendChild(script);\n               if (typeof(jQuery) === \"undefined\"){\n                    return false;\n               }\n            }\n            return true;\n        }\n        return inject()", "args": []}
+20210615 20:45:22.319 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:22.320 - DEBUG - Finished Request
+20210615 20:45:22.320 - DEBUG - POST http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968/execute/sync {"script": "return window.jQuery.active === 0;", "args": []}
+20210615 20:45:22.348 - DEBUG - http://127.0.0.1:60347 "POST /session/0e7bc5364680c84abe348da6643fb968/execute/sync HTTP/1.1" 200 14
+20210615 20:45:22.348 - DEBUG - Finished Request
+20210615 20:45:22.736 - DEBUG - STREAM b'IHDR' 16 13
+20210615 20:45:22.737 - DEBUG - STREAM b'sBIT' 41 3
+20210615 20:45:22.737 - DEBUG - b'sBIT' 41 3 (unknown)
+20210615 20:45:22.738 - DEBUG - STREAM b'IDAT' 56 8192
+20210615 20:45:22.799 - INFO - Saved screenshot to /home/tuape/Documents/qweb/screenshots/screenshot.png
+20210615 20:45:28.297 - DEBUG - Got exception: Couldn't find the icon from the screen. Trying to retry..
+20210615 20:45:28.299 - DEBUG - Traceback (most recent call last):
+  File "/home/tuape/Documents/qweb/QWeb/__init__.py", line 74, in inner
+    return keyword_method(*args, **kwargs)
+  File "/home/tuape/Documents/qweb/QWeb/internal/decorators.py", line 93, in get_elements_from_dom_content
+    raise QWebElementNotFoundError(
+QWeb.internal.exceptions.QWebElementNotFoundError: Unable to find element for locator person in 3.0 sec
+20210615 20:45:29.017 - INFO - _image_location Starts
+20210615 20:45:29.018 - DEBUG - Scale ratios to be used in order: [1.0, 0.75, 0.5, 0.86, 0.78, 0.58, 1.33, 0.67, 1.15]
+20210615 20:45:29.018 - DEBUG - Resampling loop Starts
+20210615 20:45:29.018 - DEBUG - resize starts: for scale 1.0
+20210615 20:45:29.018 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.018 - DEBUG - _extract_points Starts:
+20210615 20:45:29.018 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.5527382493019104
+Highest max value location was (152, 271)
+All points: []
+20210615 20:45:29.018 - DEBUG - Current best match location: (152, 271),
+max_value: 0.5527382493019104,
+scale_ratio: 1.0
+20210615 20:45:29.018 - DEBUG - resize starts: for scale 0.75
+20210615 20:45:29.018 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.018 - DEBUG - _extract_points Starts:
+20210615 20:45:29.018 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.4786699414253235
+Highest max value location was (160, 270)
+All points: []
+20210615 20:45:29.018 - DEBUG - resize starts: for scale 0.5
+20210615 20:45:29.018 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.018 - DEBUG - _extract_points Starts:
+20210615 20:45:29.018 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.6294310092926025
+Highest max value location was (1872, 41)
+All points: []
+20210615 20:45:29.018 - DEBUG - Current best match location: (1872, 41),
+max_value: 0.6294310092926025,
+scale_ratio: 0.5
+20210615 20:45:29.018 - DEBUG - resize starts: for scale 0.86
+20210615 20:45:29.018 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.019 - DEBUG - _extract_points Starts:
+20210615 20:45:29.019 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.5595853924751282
+Highest max value location was (156, 280)
+All points: []
+20210615 20:45:29.019 - DEBUG - resize starts: for scale 0.78
+20210615 20:45:29.019 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.019 - DEBUG - _extract_points Starts:
+20210615 20:45:29.019 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.4822380542755127
+Highest max value location was (160, 268)
+All points: []
+20210615 20:45:29.019 - DEBUG - resize starts: for scale 0.58
+20210615 20:45:29.019 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.019 - DEBUG - _extract_points Starts:
+20210615 20:45:29.019 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.49709004163742065
+Highest max value location was (1866, 37)
+All points: []
+20210615 20:45:29.019 - DEBUG - resize starts: for scale 1.33
+20210615 20:45:29.019 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.019 - DEBUG - _extract_points Starts:
+20210615 20:45:29.019 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.40154239535331726
+Highest max value location was (140, 249)
+All points: []
+20210615 20:45:29.020 - DEBUG - resize starts: for scale 0.67
+20210615 20:45:29.020 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.020 - DEBUG - _extract_points Starts:
+20210615 20:45:29.020 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.4331062138080597
+Highest max value location was (166, 273)
+All points: []
+20210615 20:45:29.020 - DEBUG - resize starts: for scale 1.15
+20210615 20:45:29.020 - DEBUG - matchTemplate Starts:
+20210615 20:45:29.020 - DEBUG - _extract_points Starts:
+20210615 20:45:29.020 - DEBUG - Extracted points.
+Coordinate ratio was 1.0
+Highest max value was 0.4765661656856537
+Highest max value location was (146, 261)
+All points: []
+20210615 20:45:29.020 - DEBUG - Ready to return points:
+20210615 20:45:29.020 - DEBUG - Best match location: (1872, 41), best correlation value: 0.6294310092926025, best scale ratio: 0.5
+20210615 20:45:29.027 - FAIL - QWebElementNotFoundError: Unable to find element for locator person in 3.0 sec
+20210615 20:45:29.028 - DEBUG - Traceback (most recent call last):
+  File "/home/tuape/Documents/qweb/QWeb/__init__.py", line 107, in create_xpath
+    return keyword_method(*args, **kwargs)
+  File "/home/tuape/Documents/qweb/QWeb/__init__.py", line 74, in inner
+    return keyword_method(*args, **kwargs)
+  File "/home/tuape/Documents/qweb/QWeb/internal/decorators.py", line 93, in get_elements_from_dom_content
+    raise QWebElementNotFoundError(
+20210615 20:45:29.029 - INFO - +------ END KEYWORD: QWeb.Click Icon (6997)
+20210615 20:45:29.038 - INFO - +----- END KEYWORD: BuiltIn.Run Keyword And Expect Error (7006)
+------------------------------------------------------------------------------
+20210615 20:45:29.040 - INFO - +---- END TEST: Click icons new screenshot (14250)
+------------------------------------------------------------------------------
+20210615 20:45:29.047 - INFO - +---- START TEARDOWN: QWeb.Close Browser [ ]
+20210615 20:45:29.048 - DEBUG - args: (), kwargs: {}
+20210615 20:45:29.056 - INFO - ${BROWSER_REUSE} = False
+20210615 20:45:29.057 - DEBUG - DELETE http://127.0.0.1:60347/session/0e7bc5364680c84abe348da6643fb968 {}
+20210615 20:45:29.277 - DEBUG - http://127.0.0.1:60347 "DELETE /session/0e7bc5364680c84abe348da6643fb968 HTTP/1.1" 200 14
+20210615 20:45:29.286 - DEBUG - Finished Request
+20210615 20:45:29.380 - INFO - +---- END TEARDOWN: QWeb.Close Browser (335)
+==============================================================================
+20210615 20:45:29.451 - INFO - +--- END SUITE: Qweb.Test.Acceptance.Icon (25707)
+==============================================================================
+20210615 20:45:29.472 - INFO - +-- END SUITE: Qweb.Test.Acceptance (25831)
+==============================================================================
+20210615 20:45:29.492 - INFO - +- END SUITE: Qweb.Test (25888)
+==============================================================================
+20210615 20:45:29.548 - INFO - + END SUITE: Qweb (26056)
+==============================================================================

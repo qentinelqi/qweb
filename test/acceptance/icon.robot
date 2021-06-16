@@ -32,6 +32,15 @@ Verify icons
     VerifyIcon              Lock
     VerifyIcon              screen
 
+
+Click icons new screenshot
+    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
+    ClickIcon               person
+    ClickIcon               power
+    ClickText               Hide
+    Run Keyword And Expect Error    QWebElementNotFoundError:*   ClickIcon      person   timeout=3
+
+
 Capture icons and verify them
     [Tags]                  PROBLEM_IN_WINDOWS  PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     [Teardown]              RemoveFiles

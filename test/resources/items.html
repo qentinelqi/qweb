@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-h1,h3, img{
-    margin-left:20px;
-}
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        h1,
+        h3,
+        img {
+            margin-left: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Items</h1>
-<br>
-<table>
-    <tr>
-        <td><img src="pics_and_icons/infinity-8x.png" alt="Infinity"></td>
-        <td><img src="pics_and_icons/lock-locked-8x.png" title="Lock"></td>
-        <td><img src ="pics_and_icons/monitor-8x.png" data-icon="screen"></td>
-        <td><img src="pics_and_icons/paperclip-8x.png" aria-label="paperclip"></td>
-        <td><img src="pics_and_icons/person-8x.png" tooltip="person"></td>
-        <td><img src="pics_and_icons/power-standby-8x.png" data-tooltip="Power"></td>
-    </tr>
-	<tr>
-        
-        <td><a href="../files/dummy.pdf" download>
-			<img src ="pics_and_icons/monitor-8x.png" data-icon="screen"></a></td>
-        <td><a href="../files/dummy.pdf" download>
-			<p> Some Link </p></a></td>
-    </tr>
-</table>
-<h3><i>This is place for attribute value</i></h3>
+    <h1>Items</h1>
+    <br>
+    <table>
+        <tr>
+            <td><img src="pics_and_icons/infinity-8x.png" alt="Infinity"></td>
+            <td><img src="pics_and_icons/lock-locked-8x.png" title="Lock"></td>
+            <td><img src="pics_and_icons/monitor-8x.png" data-icon="screen"></td>
+            <td><img src="pics_and_icons/paperclip-8x.png" aria-label="paperclip"></td>
+            <td><img src="pics_and_icons/person-8x.png" tooltip="person" id="person_icon"></td>
+            <td><img src="pics_and_icons/power-standby-8x.png" data-tooltip="Power"></td>
+        </tr>
+        <tr>
 
-<script>
+            <td><a href="../files/dummy.pdf" download>
+                    <img src="pics_and_icons/monitor-8x.png" data-icon="screen"></a></td>
+            <td><a href="../files/dummy.pdf" download>
+                    <p> Some Link </p>
+                </a></td>
+            <td><a href="#" onclick="document.getElementById('person_icon').style.display = 'none'">Hide</a></td>
+        </tr>
+    </table>
+    <h3><i>This is place for attribute value</i></h3>
 
-    var items = document.querySelectorAll('img');
-    items.forEach(item => {
-        item.addEventListener('click', print, false);
-    });
+    <script>
 
-    function print(event){
-        document.querySelector('h3').textContent = this.attributes[1].value + " is my " + this.attributes[1].name + " value!";
-    }
-</script>
+        var items = document.querySelectorAll('img');
+        items.forEach(item => {
+            item.addEventListener('click', print, false);
+        });
+
+        function print(event) {
+            document.querySelector('h3').textContent = this.attributes[1].value + " is my " + this.attributes[1].name + " value!";
+        }
+    </script>
 
 </body>
-</html>
 
+</html>
