@@ -407,3 +407,146 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
     if web_elements:
         return web_elements
     raise QWebElementNotFoundError('No matching element found')
+
+
+@decorators.timeout_decorator
+def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, **kwargs):
+    r"""Get attribute value of an element.
+
+    Examples
+    --------
+    Using attributes or xpaths like with ClickElement etc. kw:s without specified
+    element_type. If element_type is not specified end result is a type of list:
+
+    .. code-block:: robotframework
+
+        ${attribute_value}  GetAttribute            click_me     id         tag=button
+        ${attribute_value}  GetAttribute            //*[@id\="click_me"]    id
+        ${attribute_value}  GetAttribute            xpath\=//*[@id\="click_me"] name
+
+    GetAttribute using element_type attribute to locate element.
+    Text elements works as ClickText, VerifyText, GetText etc.:
+
+    .. code-block:: robotframework
+
+        ${attribute_value}   GetAttribute     Log In    type    element_type=text
+        ${attribute_value}   GetAttribute     Contact   id      element_type=text  anchor=Qentinel
+        ${attribute_value}   GetAttribute     Contact   class   parent=div
+
+    Item, Input, Dropdown, Checkbox elements:
+
+    .. code-block:: robotframework
+
+        ${attribute_value}  GetAttribute          Log In    id              element_type=item
+        ${attribute_value}  GetAttribute          Username  placeholder     element_type=input
+        ${attribute_value}  GetAttribute          Country   value           element_type=dropdown
+        ${attribute_value}  GetAttribute          Gender    checked         element_type=checkbox
+
+    All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
+    in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
+
+    Parameters
+    ----------
+    locator : str
+        Visible text, attribute value or Xpath expression with or without xpath= prefix.
+        The equal sign "=" must be escaped with a "\".
+    attribute: str
+        Attribute which value we want to get.
+    anchor : int
+        Used when element_type is defined. Default=1 (first match)
+    element_type : string
+        Define element type/preferred searching method
+        (available types: text, input, checkbox, item, dropdown).
+    timeout : int
+        How long we wait element to appear. Default=10 sec
+    kwargs :
+        |  Accepted kwargs:
+        |       Any available for picked searching method.
+        |       See interacting with text, item, input etc. elements from
+        |       documentation
+    Returns
+    -------
+    value : Value of attribute (true if attribute exist but does not have value)
+    """
+    webelement = get_webelement(locator, anchor, element_type, timeout, **kwargs)
+
+    if not webelement:
+        raise QWebElementNotFoundError('Could not find element {} with attribute {}'
+                                       .format(locator, attribute))
+    if not isinstance(webelement, list):
+        return webelement.get_attribute(attribute)
+
+    if len(webelement) == 1:
+        return webelement[0].get_attribute(attribute)
+
+    raise QWebValueError('Found {} occurences of locator {}. '
+                         'Use index etc. to uniquely identify the element'
+                         .format(len(webelement), locator))
+
+
+@decorators.timeout_decorator
+def verify_attribute(locator, attribute, value, anchor='1', element_type=None, timeout=0, **kwargs):
+    r"""Verify attribute value of an element.
+
+    Examples
+    --------
+    Using attributes or xpaths like with ClickElement etc. kw:s without specified
+    element_type. If element_type is not specified end result is a type of list:
+
+    .. code-block:: robotframework
+
+        VerifyAttribute     click_me                        id    my_button   tag=button
+        VerifyAttribute     //*[@id\="click_me"]            name    click_here
+        VerifyAttribute     xpath\=//*[@id\="click_me"]     name    click_here
+
+    GetAttribute using element_type attribute to locate element.
+    Text elements works as ClickText, VerifyText, GetText etc.:
+
+    .. code-block:: robotframework
+
+        VerifyAttribute     Log In    id    login       element_type=text
+        VerifyAttribute     Contact   value abc         element_type=text  anchor=Qentinel
+        VerifyAttribute     Contact   name  contact1    parent=div
+
+    Item, Input, Dropdown, Checkbox elements:
+
+    .. code-block:: robotframework
+
+        VerifyAttribute     Log In    id    login   element_type=item
+        VerifyAttribute     Username  placeholder   username    element_type=input
+        VerifyAttribute     Country   value     Finland         element_type=dropdown
+        VerifyAttribute     Gender    checked   checked         element_type=checkbox
+
+    All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
+    in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
+
+    Parameters
+    ----------
+    locator : str
+        Visible text, attribute value or Xpath expression with or without xpath= prefix.
+        The equal sign "=" must be escaped with a "\".
+    attribute: str
+        Attribute which value we want to get.
+    value: str
+        Expected attribute value to verify against.
+    anchor : int
+        Used when element_type is defined. Default=1 (first match)
+    element_type : string
+        Define element type/preferred searching method
+        (available types: text, input, checkbox, item, dropdown).
+    timeout : int
+        How long we wait element to appear. Default=10 sec
+    kwargs :
+        |  Accepted kwargs:
+        |       Any available for picked searching method.
+        |       See interacting with text, item, input etc. elements from
+        |       documentation
+    Returns
+    -------
+    value : Value of attribute (true if attribute exist but does not have value)
+    """
+    attr_val = get_attribute(locator, attribute, anchor, element_type, timeout, **kwargs)
+
+    if attr_val != value:
+        raise QWebValueError("Expected attribute value differs from real value: {}/{}"
+                             .format(value, attr_val))

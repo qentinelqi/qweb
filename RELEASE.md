@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Acceptance tests for multiple clickable elements in a cell
+- Added keywords GetAttribute and VerifyAttribute
 
 ### Changed
 - Updates for ClickCell keyword: checks for index value and more descriptive documentation
