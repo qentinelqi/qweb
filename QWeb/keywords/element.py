@@ -464,7 +464,7 @@ def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, 
         |       Any available for picked searching method.
         |       See interacting with text, item, input etc. elements from
         |       documentation
-    
+
     Returns
     -------
     value : Value of attribute (true if attribute exist but does not have value)
