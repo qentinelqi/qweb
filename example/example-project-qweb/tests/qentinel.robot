@@ -9,7 +9,7 @@ Test Timeout        2min
 *** Test Cases ***
 
 Contact Us
-    [Documentation]    Regisration to Qentinel contact form
+    [Documentation]    Registration to Qentinel contact form
     [tags]      ok
     Appstate    Qentinel
     ClickText   Contact us
