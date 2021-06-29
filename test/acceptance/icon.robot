@@ -15,7 +15,7 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 Click icons
     [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
     SetConfig               WindowSize          1920x1080
-    Sleep                   2
+    Sleep                   5
     ClickIcon               person
     VerifyText              person is my tooltip value!
     ClickIcon               lock
