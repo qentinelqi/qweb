@@ -20,7 +20,7 @@ Save file using icon as a locator
     VerifyItem      screen
     Run keyword and expect error    QWebFileNotFoundError:*
     ...             UsePdf      unnamediddqd11222333544485923.pdf
-    SaveFile        screen      anchor=2
+    SaveFile        screen      unnamed.pdf     anchor=2
     UsePdf          unnamed.pdf
     VerifyPdfText   Simple PDF File
     RemovePdf
