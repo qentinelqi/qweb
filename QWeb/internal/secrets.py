@@ -58,7 +58,11 @@ def _filtered_start_keyword(keyword):
     LOGGER._started_keywords += 1
     LOGGER.log_message = LOGGER._log_message
     for logger in LOGGER.start_loggers:
-        logger.start_keyword(keyword)
+        try:
+            logger.start_keyword(keyword)
+        except AttributeError:
+            # AttributeError is raised on RFW 4.x under debugger
+            pass
     if apply_filter:
         b = BuiltIn()
         # Disable logging and store previous log level
