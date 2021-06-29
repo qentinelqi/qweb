@@ -5,6 +5,8 @@
 log.html
 output.xml
 report.html
+debug.txt
+*.png
 *.log
 source_*.html
 screenshots/
