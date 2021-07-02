@@ -415,7 +415,8 @@ def set_config(par, val):
     .. code-block:: robotframework
 
         SetConfig    SearchMode      debug  #Highlights element, but won't put action on it
-        SetConfig    SearchMode      draw   #Highlights element and then executes kw
+        SetConfig    SearchMode      draw   #Highlights element and then executes kw (default)
+        SetConfig    SearchMode      None   #Turns off highlighting element
 
     ---
     Parameter: WindowFind

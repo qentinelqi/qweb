@@ -69,7 +69,7 @@ CONFIG_DEFAULTS = {
     "DoubleClick": (False, util.par2bool),
     "LimitTraverse": (True, util.par2bool),
     "PartialMatch": (True, util.par2bool),
-    "SearchMode": (None, None),
+    "SearchMode": ("draw", None),
     "MultipleAnchors": (False, util.par2bool),
     "WindowFind": (False, util.par2bool),
     "ClickToFocus": (False, util.par2bool),

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Fixed TypeSecret not working on debugger under RFW 4.x
+- Changed SearchMode default value to "Draw". Blue rectangle is now by default drawn over found elements
 
 ## [1.0.5] - 2021-06-16
 ### Added
