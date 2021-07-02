@@ -21,8 +21,12 @@ from QWeb.internal.element import _overlap, \
                                   _get_closest_ortho_element, \
                                   get_closest_element, \
                                   get_unique_element_by_xpath
+from QWeb.keywords.config import  set_config
 from unittest.mock import patch, MagicMock
 
+def setup_function():
+    # we can't draw rectangle to mocked objects
+    set_config("SearchMode", None)
 
 @patch('QWeb.internal.element._get_corners_locations')
 def test_no_overlap(patch_corners):
