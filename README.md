@@ -10,6 +10,7 @@
 ![Linux Acceptance][linux_ci_badge]
 ![MacOS Acceptance][macos_ci_badge]
 [![Tested with][pace-badge]][pace-url]
+[![Slack][slack-badge]][slack-url]
 
 ### Table of Contents
 
@@ -194,3 +195,5 @@ Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master
 [pace-badge]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue
 [python-versions-badge]: https://img.shields.io/pypi/pyversions/QWeb
 [pypi-badge]: https://img.shields.io/pypi/v/QWeb?color=green
+[slack-badge]: https://img.shields.io/badge/Slack-Robot%20Framework/QWeb-blue?style=flat-square&logo=Slack
+[slack-url]: https://robotframework.slack.com/archives/C029L0N3N81
