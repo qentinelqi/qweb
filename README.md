@@ -21,6 +21,7 @@
   - [Examples](#examples)
 - [Changelog](#changelog)
 - [Contribute](#contribute)
+- [Community](#community)
 - [License](#license)
 
 ---
@@ -173,6 +174,12 @@ Found an bug? Want to propose a new feature or improve documentation? Please sta
 
 [Back To The Top](#qweb)
 
+## Community
+
+Want to join the community at Slack? On the official Robot Framework workspace, there is a QWeb channel where you can discuss with others about keywords, issues and improvements. [Join Now](https://robotframework.slack.com/archives/C029L0N3N81)
+
+[Back To The Top](#qweb)
+
 ## License
 
 Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master/LICENSE).
@@ -195,5 +202,5 @@ Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master
 [pace-badge]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue
 [python-versions-badge]: https://img.shields.io/pypi/pyversions/QWeb
 [pypi-badge]: https://img.shields.io/pypi/v/QWeb?color=green
-[slack-badge]: https://img.shields.io/badge/Slack-Robot%20Framework/QWeb-blue?style=flat-square&logo=Slack
+[slack-badge]: https://img.shields.io/badge/Slack-QWeb-blue?style=flat-square&logo=Slack
 [slack-url]: https://robotframework.slack.com/archives/C029L0N3N81
