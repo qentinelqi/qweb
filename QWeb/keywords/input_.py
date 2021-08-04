@@ -168,6 +168,9 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         |       - Shortcut to switch CheckInputValue on or off for one time use.
         |       - If CheckInputValue is used, use expected parameter when expected value
         |       is different than written value. Expected: str | int
+        |       click : bool(True/False)
+        |       - Shortcut to switch ClickToFocus on or off for one time use.
+        |       - If click is set to True, input field is focused by clicking it before typing.
         |       - CheckInputValue defines if TypeText verifies input field value after it is typed.
         |       - Default is Off. Valid parameters are On, True, Off and False.
         |       limit_traverse : False. If limit traverse is set to false we are heading up to
