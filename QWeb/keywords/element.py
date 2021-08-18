@@ -20,7 +20,7 @@
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
 from QWeb.internal import element, decorators, actions, text, input_,\
     dropdown, checkbox
-
+from selenium.webdriver.remote.webelement import WebElement
 
 @decorators.timeout_decorator
 def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
@@ -33,8 +33,12 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
         ClickElement          click_me      tag=button
         ClickElement          //*[@id\="click_me"]
         ClickElement          xpath\=//*[@id\="click_me"]
+        # using WebElement instance
+        ${elem}=              GetWebElement    Click Me    element_type=text
+        ClickElement          ${elem}
 
-    To double-click element, use argument doubleclick=True
+    To double-click element, use argument **doubleclick=True**
+
     .. code-block:: robotframework
 
         ClickText             double_click_me       doubleclick=True
@@ -48,9 +52,10 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
 
     Parameters
     ----------
-    xpath : str
+    xpath : str | selenium.webdriver.remote.webelement.WebElement
         Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
         with a "\".
+        Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     timeout : int
         How long we wait before failing.
     js : boolean
@@ -65,13 +70,16 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
     """
-    index = int(index) - 1
-    kwargs['element_kw'] = True
-    if 'tag' in kwargs:
-        web_element = element.get_elements_by_attributes(
-            kwargs.get('tag'), xpath, **kwargs)[index]
+    if isinstance(xpath, WebElement):
+        web_element = xpath
     else:
-        web_element = element.get_unique_element_by_xpath(xpath)
+        index = int(index) - 1
+        kwargs['element_kw'] = True
+        if 'tag' in kwargs:
+            web_element = element.get_elements_by_attributes(
+                kwargs.get('tag'), xpath, **kwargs)[index]
+        else:
+            web_element = element.get_unique_element_by_xpath(xpath)
     if actions.execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
@@ -129,9 +137,10 @@ def hover_element(xpath, timeout=0, index=1, **kwargs):  # pylint: disable=unuse
 
     Parameters
     ----------
-    xpath : str
+    xpath : str | selenium.webdriver.remote.webelement.WebElement
         Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
         with a "\".
+        Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     timeout : int
         How long we wait before failing.
     index : int
@@ -144,13 +153,17 @@ def hover_element(xpath, timeout=0, index=1, **kwargs):  # pylint: disable=unuse
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
     """
-    index = int(index) - 1
-    kwargs['element_kw'] = True
-    if 'tag' in kwargs:
-        web_element = element.get_elements_by_attributes(
-            kwargs.get('tag'), xpath, **kwargs)[index]
+    if isinstance(xpath, WebElement):
+        web_element = xpath
     else:
-        web_element = element.get_unique_element_by_xpath(xpath)
+        index = int(index) - 1
+        kwargs['element_kw'] = True
+        if 'tag' in kwargs:
+            web_element = element.get_elements_by_attributes(
+                kwargs.get('tag'), xpath, **kwargs)[index]
+        else:
+            web_element = element.get_unique_element_by_xpath(xpath)
+    
     actions.hover_to(web_element, timeout=timeout)
 
 

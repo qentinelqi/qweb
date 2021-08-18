@@ -21,11 +21,26 @@ Hover Element by xpath
     HoverElement                xpath\=//*[@id\="hover_me"]
     VerifyText                  Hover Link
 
+Hover Element by WebElement instance
+    [Tags]                      WebElement
+    HoverText                   Button4                     # make sure we're not hovering already
+    VerifyNoText                Hover Link
+    ${elem}=                    GetWebElement               hover_me                        element_type=item
+    HoverElement                ${elem}
+    VerifyText                  Hover Link
+
 Click Element by xpath
     ClickElement                //*[@value\="Button3"]
     VerifyText                  Button3 was clicked
 
 Click Element by xpath 2
+    ClickElement                xpath\=//*[@value\="Button4"]
+    VerifyText                  Button4 was clicked
+
+Click Element by WebElement instance
+    [Tags]                      WebElement
+    Go To                       file://${CURDIR}/../resources/text.html
+    ${elem}=                    GetWebElement               Button4                        element_type=text
     ClickElement                xpath\=//*[@value\="Button4"]
     VerifyText                  Button4 was clicked
 

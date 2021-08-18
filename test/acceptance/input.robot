@@ -95,6 +95,11 @@ Verify Input Status Enabled
 Verify Input Status Enabled when CSS used
     VerifyInputStatus       row1column1             Enabled
 
+Verify Input Value by WebElement instance
+    TypeText                xpath\=//*[@id\="jeuda"]                park
+    ${input}=               GetWebElement          xpath\=//*[@id\="jeuda"]
+    VerifyInputValue        ${input}[0]            park
+
 Verify Input Status Enabled Actually Disabled when CSS used
     Run Keyword and Expect Error       QWebValueError: The input field was disabled   VerifyInputStatus
     ...   row3column3   Enabled     timeout=2

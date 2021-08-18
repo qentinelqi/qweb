@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+### Changed
+- TypeText, HoverElement, ClickElement and VerifyInputValue now optionally take a WebElement instance as a locator.
+- Added deprecation warning to **ScanClick** and **SkimClick**
+- Added "click" argument description to TypeText docstring
+
 ## [1.0.6] - 2021-07-02
 ### Changed
 - Fixed TypeSecret not working on debugger under RFW 4.x
