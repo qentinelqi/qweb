@@ -291,8 +291,9 @@ def verify_links(url='current', log_all=False, header_only=True):
 
         VerifyLinks     header_only=False
 
-    The above example verifies that all links work on on the current website. Argument **header_only=False**
-    instructs QWeb to double-check 404/405's using GET method (by default only headers are checked).
+    The above example verifies that all links work on on the current website.
+    Argument **header_only=False** instructs QWeb to double-check 404/405's
+    using GET method (by default only headers are checked).
     Headers should normally return same code as GET, but in some cases header can be configured
     intentionally to return something else.
 

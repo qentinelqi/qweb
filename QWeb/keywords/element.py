@@ -22,6 +22,7 @@ from QWeb.internal import element, decorators, actions, text, input_,\
     dropdown, checkbox
 from selenium.webdriver.remote.webelement import WebElement
 
+
 @decorators.timeout_decorator
 def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
     r"""Click element specified by xpath.
@@ -163,7 +164,7 @@ def hover_element(xpath, timeout=0, index=1, **kwargs):  # pylint: disable=unuse
                 kwargs.get('tag'), xpath, **kwargs)[index]
         else:
             web_element = element.get_unique_element_by_xpath(xpath)
-    
+
     actions.hover_to(web_element, timeout=timeout)
 
 

@@ -25,7 +25,7 @@ from QWeb.internal.dropdown import get_dd_elements_from_all_documents
 
 @decorators.timeout_decorator
 def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, **kwargs):
-    """Select an option from dropdown menu/list.
+    r"""Select an option from dropdown menu/list.
 
     Examples
     --------
@@ -96,7 +96,8 @@ def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, *
 
     Related keywords
     ----------------
-    \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
+    \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`,
+    \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(locator, anchor, index=index, **kwargs)
     if actions.select_option(select, option, timeout=timeout, unselect=unselect):
@@ -105,7 +106,8 @@ def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, *
 
 @decorators.timeout_decorator
 def verify_selected_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
-    """Verify that an option is selected from dropdown menu/list. Note: with multiselection dropdown verify each option individually.
+    r"""Verify that an option is selected from dropdown menu/list.
+    Note: with multiselection dropdown verify each option individually.
 
     Examples
     --------
@@ -155,7 +157,7 @@ def verify_selected_option(locator, expected_option, anchor='1', timeout=0, inde
 
 @decorators.timeout_decorator
 def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
-    """Get selected option to variable from dropdown menu/list.
+    r"""Get selected option to variable from dropdown menu/list.
 
     Examples
     --------
@@ -193,11 +195,13 @@ def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
     Returns
     -------
     selected: str
-        With multiselection dropdowns returns a string containing all values separated by comma (",")
-    
+        With multiselection dropdowns returns a string containing all values
+        separated by comma (",")
+
     Related keywords
     ----------------
-    \`DropDown\`, \`GetDropDownValues\`, \`VerifyOption\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
+    \`DropDown\`, \`GetDropDownValues\`, \`VerifyOption\`,
+    \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -206,7 +210,7 @@ def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
 
 @decorators.timeout_decorator
 def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
-    """Verify that option exist in dropdown menu/list.
+    r"""Verify that option exist in dropdown menu/list.
 
     Examples
     --------
@@ -244,7 +248,8 @@ def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kw
 
     Related keywords
     ----------------
-    \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
+    \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`,
+    \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -328,7 +333,7 @@ def verify_no_option(locator, option, anchor='1', timeout=0, index=1, **kwargs):
         |       fifth parent element if needed when finding relative input element for some label.
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
-    
+
     Related keywords
     ----------------
     \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`, \`VerifySelectedOption\`

@@ -174,6 +174,7 @@ def checkbox_set(checkbox_element, locator_element, value,
                     checkbox_element)
 
 
+# pylint: disable=too-many-branches
 @decorators.timeout_decorator_for_actions
 def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=unused-argument
     """Click and optionally verify condition after click.
@@ -184,6 +185,8 @@ def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=
         Instance of Select class
     option : str
         Text to select
+    unselect : bool
+        Select (False, default) or unselect (True) given option
     """
     option_list = []
     value_list = []
@@ -191,16 +194,25 @@ def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=
         option = option.strip('[]')
         if option.isdigit():
             try:
-                select.deselect_by_index(option) if unselect else select.select_by_index(option) 
+                if unselect:
+                    select.deselect_by_index(option)
+                else:
+                    select.select_by_index(option)
                 return True
             except TypeError:
                 raise QWebValueMismatchError('Index out of range')
     try:
-        select.deselect_by_visible_text(option) if unselect else select.select_by_visible_text(option)
+        if unselect:
+            select.deselect_by_visible_text(option)
+        else:
+            select.select_by_visible_text(option)
         return True
     except NoSuchElementException:
         try:
-            select.deselect_by_value(option) if unselect else select.select_by_value(option)
+            if unselect:
+                select.deselect_by_value(option)
+            else:
+                select.select_by_value(option)
             return True
         except NoSuchElementException:
             if select:

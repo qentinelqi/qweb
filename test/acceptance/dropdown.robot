@@ -175,7 +175,6 @@ Select and unselect in multiselection dropdown
     Should Not Contain          ${selected}                 Scimitar
 
 Unselect on single selection dropdown
-    Select and unselect in multiselection dropdown
     [Documentation]             Test that error is raised when unselect is used with single select dropdown
     RefreshPage
     Dropdown                    label with                  Rules
