@@ -263,7 +263,7 @@ def close_all_browsers():
     CONFIG.set_value('Headless', False)
 
 
-def verify_links(url='current', log_all=False):
+def verify_links(url='current', log_all=False, header_only=True):
     """Verify that all links on a given website return good HTTP status codes.
 
     Examples
@@ -286,6 +286,25 @@ def verify_links(url='current', log_all=False):
         VerifyLinks
 
     The above example verifies that all links work on on the current website.
+
+    .. code-block:: robotframework
+
+        VerifyLinks     header_only=False
+
+    The above example verifies that all links work on on the current website. Argument **header_only=False**
+    instructs QWeb to double-check 404/405's using GET method (by default only headers are checked).
+    Headers should normally return same code as GET, but in some cases header can be configured
+    intentionally to return something else.
+
+    Parameters
+    ----------
+    url : str
+        URL of the website that will be opened.
+    log_all : bool
+        Browser name. For example chrome, firefox or ie.
+    header_only : bool
+        True: check headers only (default)
+        False: In case of header returning 404 or 405, double-check with GET
     """
     if url == 'current':
         driver = browser.get_current_browser()
@@ -306,7 +325,7 @@ def verify_links(url='current', log_all=False):
             try:
                 r = requests.head(url, headers=headers)
                 status = r.status_code
-                if status == 405:
+                if not header_only and status in [404, 405]:
                     r = requests.get(url, headers=headers)
                     status = r.status_code
             except requests.exceptions.ConnectionError as e:

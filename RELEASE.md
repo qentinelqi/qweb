@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added "click" argument description to TypeText docstring
 - Multiselection dropdown support with adding argument "unselect=True" to **DropDown**
 - Multiselection support to **GetSelected** too. If there are multiple options selected, each selection will be separated by comma (,)
+- Added argument **header_only** to **VerifyLinks**. Even if header and get normally return the same status, server can be configured to return different code from header.
 
 ## [1.0.6] - 2021-07-02
 ### Changed
