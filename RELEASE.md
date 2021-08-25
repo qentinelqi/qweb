@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed rare timeout issue when reload happens while searching for frames. This happened from time to time especially with Firefox.
 
 ### Changed
 - TypeText, HoverElement, ClickElement and VerifyInputValue now optionally take a WebElement instance as a locator.
