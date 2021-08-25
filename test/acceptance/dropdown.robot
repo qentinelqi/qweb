@@ -115,16 +115,16 @@ Get Selected values from dropdowns
 
 Dropdown Text not found
     Run Keyword And Expect Error                            QWebElementNotFoundError: Unable to find element*
-    ...                         Dropdown                    nothere                     notfound                   1            0.1s
+    ...                         Dropdown                    nothere                     notfound                   1                0.1s
 
     Run Keyword And Expect Error                            QWebValueError: Option "notfound" is not in the options list.*
-    ...                         Dropdown                    Dropdown2                   notfound                   1            0.1s
+    ...                         Dropdown                    Dropdown2                   notfound                   1                0.1s
 
     Run Keyword And Expect Error                            QWebElementNotFoundError: Unable to find element*
-    ...                         DropDown                    xpath\=//*[@id\="dropdown99"]                          qwerty       1       0.1s
+    ...                         DropDown                    xpath\=//*[@id\="dropdown99"]                          qwerty           1       0.1s
 
     Run Keyword And Expect Error                            QWebValueError: Option "qwerty" is not in the options list.*
-    ...                         DropDown                    xpath\=//*[@id\="dropdown1"]                           qwerty       1       0.1s
+    ...                         DropDown                    xpath\=//*[@id\="dropdown1"]                           qwerty           1       0.1s
 
 Dropdown with same locator than other dropdown option
     [tags]                      PROBLEM_IN_FIREFOX
@@ -162,7 +162,7 @@ Locate dropdowns with anchor 2
     VerifyInputValue            //*[@id\="dropdown6"]       Rules
 
 Select and unselect in multiselection dropdown
-    [Documentation]             Locator is the default option of the dropdown and anchor is text
+    [Documentation]             Test for multiple selection dropdowns
     RefreshPage
     DropDown                    Choose a spacecraft         USS Defiant
     DropDown                    Choose a spacecraft         Scimitar
@@ -173,5 +173,13 @@ Select and unselect in multiselection dropdown
     DropDown                    Choose a spacecraft         Scimitar                    unselect=True
     ${selected}=                GetSelected                 Choose a spacecraft
     Should Not Contain          ${selected}                 Scimitar
+
+Unselect on single selection dropdown
+    Select and unselect in multiselection dropdown
+    [Documentation]             Test that error is raised when unselect is used with single select dropdown
+    RefreshPage
+    Dropdown                    label with                  Rules
+    Run Keyword And Expect Error                            *You may only deselect options of a multi-select*
+    ...                         Dropdown                    label with                  Rules                      unselect=True
 
 
