@@ -77,6 +77,8 @@ Test Dropdown Keyword With Index
     VerifyText                  cat
 
 Find Dropdowns by Text
+    RefreshPage
+    HoverText                   Test page
     Dropdown                    Kolmas                      Bar
     VerifyText                  Dropdown3-Bar
     ${foo}=                     GetDropDownValues           Kolmas
