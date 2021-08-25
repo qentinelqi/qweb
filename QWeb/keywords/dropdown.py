@@ -24,7 +24,7 @@ from QWeb.internal.dropdown import get_dd_elements_from_all_documents
 
 
 @decorators.timeout_decorator
-def drop_down(locator, option, anchor='1', timeout=0, index=1, **kwargs):
+def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, **kwargs):
     """Select an option from dropdown menu/list.
 
     Examples
@@ -93,15 +93,19 @@ def drop_down(locator, option, anchor='1', timeout=0, index=1, **kwargs):
     ------
     QWebElementNotFoundErr
         Dropdown element not found
+
+    Related keywords
+    ----------------
+    \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(locator, anchor, index=index, **kwargs)
-    if actions.select_option(select, option, timeout=timeout):
+    if actions.select_option(select, option, timeout=timeout, unselect=unselect):
         return
 
 
 @decorators.timeout_decorator
 def verify_selected_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
-    """Verify selected option from dropdown menu/list.
+    """Verify that an option is selected from dropdown menu/list. Note: with multiselection dropdown verify each option individually.
 
     Examples
     --------
@@ -138,6 +142,10 @@ def verify_selected_option(locator, expected_option, anchor='1', timeout=0, inde
         |       fifth parent element if needed when finding relative input element for some label.
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Related keywords
+    ----------------
+    \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`, \`VerifyNoOption\`
     """
     select = get_dd_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -181,6 +189,15 @@ def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
         |       fifth parent element if needed when finding relative input element for some label.
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Returns
+    -------
+    selected: str
+        With multiselection dropdowns returns a string containing all values separated by comma (",")
+    
+    Related keywords
+    ----------------
+    \`DropDown\`, \`GetDropDownValues\`, \`VerifyOption\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -224,6 +241,10 @@ def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kw
         |       fifth parent element if needed when finding relative input element for some label.
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Related keywords
+    ----------------
+    \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -264,6 +285,10 @@ def get_drop_down_values(locator, anchor='1', timeout=0, index=1, **kwargs):
         |       fifth parent element if needed when finding relative input element for some label.
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Related keywords
+    ----------------
+    \`DropDown\`, \`GetSelected\`, \`VerifyOption\`, \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(locator, anchor, index=index, **kwargs)
     return actions.get_select_options(select, timeout=timeout)
@@ -303,6 +328,10 @@ def verify_no_option(locator, option, anchor='1', timeout=0, index=1, **kwargs):
         |       fifth parent element if needed when finding relative input element for some label.
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+    
+    Related keywords
+    ----------------
+    \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`, \`VerifySelectedOption\`
     """
     select = get_dd_elements_from_all_documents(locator, anchor, index=index, **kwargs)
     if actions.is_not_in_dropdown(select, option, timeout=timeout):

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeText, HoverElement, ClickElement and VerifyInputValue now optionally take a WebElement instance as a locator.
 - Added deprecation warning to **ScanClick** and **SkimClick**
 - Added "click" argument description to TypeText docstring
+- Multiselection dropdown support with adding argument "unselect=True" to **DropDown**
+- Multiselection support to **GetSelected** too. If there are multiple options selected, each selection will be separated by comma (,)
 
 ## [1.0.6] - 2021-07-02
 ### Changed

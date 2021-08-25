@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Dropdown menu test page</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Page for testing SelectDropDown keyword">
 </head>
+
 <body>
     <div style="display:block;">
         <select id="dropdown1" onchange="displaySelected()">
@@ -22,7 +24,7 @@
             <option>test2.2</option>
             <option>test2.3</option>
             <option>test2.4</option>
-       </select>
+        </select>
         <select id="drop" onchange="displaySelected()">
             <option>test1</option>
             <option>test2</option>
@@ -58,98 +60,98 @@
             <option>Rules</option>
         </select>
     </p>
-	
-	<div>
-	<label for="dropdown5">label with for:</label><br>
+
+    <div>
+        <label for="dropdown5">label with for:</label><br>
         <select id="dropdown5" onchange="dropdown4Selected()">
             <option>Qentinel</option>
             <option>Rules</option>
         </select>
-	</div>
-	<div>
-	<label>label without for:</label><br>
+    </div>
+    <div>
+        <label>label without for:</label><br>
         <select id="dropdown6" onchange="dropdown4Selected()">
             <option>Qentinel</option>
             <option>Rules</option>
-			<option>OK</option>
+            <option>OK</option>
         </select>
-	</div>
+    </div>
     <div>
         <h3>Delayed dropdown</h3>
         <form>
-        <br>
-        <input type="button" value="Show dropdown" onclick="setTimeout('showDropdown()', 2000);" />
-         <!-- HIDDEN DIV SET TO DISPLAY AFTER 2 SECONDS - THIS CAN BE CHANGED BELOW  -->
+            <br>
+            <input type="button" value="Show dropdown" onclick="setTimeout('showDropdown()', 2000);" />
+            <!-- HIDDEN DIV SET TO DISPLAY AFTER 2 SECONDS - THIS CAN BE CHANGED BELOW  -->
             <label id="hidelabel" style="visibility: hidden">hidden:</label><br>
-        <select style="visibility: hidden" id="dropdown7" onchange="dropdown7Selected()">
-            <option>Helsinki</option>
-            <option>Stockholm</option>
-			<option>Oslo</option>
-        </select>
-    </input>
+            <select style="visibility: hidden" id="dropdown7" onchange="dropdown7Selected()">
+                <option>Helsinki</option>
+                <option>Stockholm</option>
+                <option>Oslo</option>
+            </select>
+            </input>
 
-    <script type="text/javascript">
-        function showDropdown() {
-            document.getElementById("dropdown7").style.visibility = "visible";
-            document.getElementById("hidelabel").style.visibility = "visible";
-        }
-    </script>
+            <script type="text/javascript">
+                function showDropdown() {
+                    document.getElementById("dropdown7").style.visibility = "visible";
+                    document.getElementById("hidelabel").style.visibility = "visible";
+                }
+            </script>
     </div>
 
     </p>
     <script>
-        function displaySelected(){
+        function displaySelected() {
             var dropdown = document.getElementById("dropdown1");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown1-" + selection
         }
 
-        function dropdown2Selected(){
+        function dropdown2Selected() {
             var dropdown = document.getElementById("dropdown2");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown2-" + selection
         }
 
-        function dropdown3Selected(){
+        function dropdown3Selected() {
             var dropdown = document.getElementById("dropdown3");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown3-" + selection
         }
 
-        function dropdown4Selected(){
+        function dropdown4Selected() {
             var dropdown = document.getElementById("dropdown4");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown4-" + selection
         }
-		function dropdown5Selected(){
+        function dropdown5Selected() {
             var dropdown = document.getElementById("dropdown4");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown5-" + selection
         }
-		function dropdown6Selected(){
+        function dropdown6Selected() {
             var dropdown = document.getElementById("dropdown4");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown6-" + selection
         }
-        function dropdown7Selected(){
+        function dropdown7Selected() {
             var dropdown = document.getElementById("dropdown4");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown7-" + selection
         }
-        function dropdown9Selected(){
+        function dropdown9Selected() {
             var dropdown = document.getElementById("dropdown9");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
             text.innerHTML = "Dropdown9-" + selection
         }
-        function dropdown10Selected(){
+        function dropdown10Selected() {
             var dropdown = document.getElementById("dropdown10");
             var selection = dropdown.options[dropdown.selectedIndex].value;
             var text = document.getElementById("text");
@@ -157,33 +159,37 @@
         }
     </script>
 
-<div>
-    Typex
-    <select id="dropdown8">
+    <div>
+        Typex
+        <select id="dropdown8">
             <option>---</option>
             <option>Flow</option>
             <option>Stuff</option>
         </select>
-    <br><br><br>
-</div>
-<div>
-    Flow
-    <select id="dropdown9" onchange="dropdown9Selected()">
+        <br><br><br>
+    </div>
+    <div>
+        Flow
+        <select id="dropdown9" onchange="dropdown9Selected()">
             <option>---</option>
             <option>optionx</option>
             <option>abcd</option>
             <option>ffffff</option>
         </select>
-    <br>
-</div>
+        <br>
+    </div>
     <br><br>
-<div>
-    <select>
-        <option>Foo</option>
-        <option>Bar</option>
-    </select>
-  <div><div><div><label>Foobar</label></div></div></div>
-</div>
+    <div>
+        <select>
+            <option>Foo</option>
+            <option>Bar</option>
+        </select>
+        <div>
+            <div>
+                <div><label>Foobar</label></div>
+            </div>
+        </div>
+    </div>
 </body>
 
 <div>
@@ -193,6 +199,20 @@
         <option value="dog">jaajeejoo</option>
         <option value="boar">jiijuujxx</option>
         <option value="bear">dingdongdang</option>
+    </select>
+</div>
+<div>
+    <h3>Multiselect dropdown</h3>
+    <label for="cars">Choose a spacecraft:</label>
+
+    <select name="spacecrafts" id="spacecrafts" multiple>
+        <option value="uss enterprise">USS Enterprise</option>
+        <option value="galileo">Galileo</option>
+        <option value="uss defiant">USS Defiant</option>
+        <option value="narada">The Narada</option>
+        <option value="discovery">USS Discovery</option>
+        <option value="scimitar">Scimitar</option>
+        <option value="voyager">USS Voyager</option>
     </select>
 </div>
 </body>
