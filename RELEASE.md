@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed rare timeout issue when reload happens while searching for frames. This happened from time to time especially with Firefox.
+
+### Changed
+- TypeText, HoverElement, ClickElement and VerifyInputValue now optionally take a WebElement instance as a locator.
+- Added deprecation warning to **ScanClick** and **SkimClick**
+- Added "click" argument description to TypeText docstring
+- Multiselection dropdown support with adding argument "unselect=True" to **DropDown**
+- Multiselection support to **GetSelected** too. If there are multiple options selected, each selection will be separated by comma (,)
+- Added argument **header_only** to **VerifyLinks**. Even if header and get normally return the same status, server can be configured to return different code from header.
+
 ## [1.0.6] - 2021-07-02
 ### Changed
 - Fixed TypeSecret not working on debugger under RFW 4.x

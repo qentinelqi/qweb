@@ -174,8 +174,9 @@ def checkbox_set(checkbox_element, locator_element, value,
                     checkbox_element)
 
 
+# pylint: disable=too-many-branches
 @decorators.timeout_decorator_for_actions
-def select_option(select, option, **kwargs):  # pylint: disable=unused-argument
+def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=unused-argument
     """Click and optionally verify condition after click.
 
     Parameters
@@ -184,6 +185,8 @@ def select_option(select, option, **kwargs):  # pylint: disable=unused-argument
         Instance of Select class
     option : str
         Text to select
+    unselect : bool
+        Select (False, default) or unselect (True) given option
     """
     option_list = []
     value_list = []
@@ -191,16 +194,25 @@ def select_option(select, option, **kwargs):  # pylint: disable=unused-argument
         option = option.strip('[]')
         if option.isdigit():
             try:
-                select.select_by_index(option)
+                if unselect:
+                    select.deselect_by_index(option)
+                else:
+                    select.select_by_index(option)
                 return True
             except TypeError:
                 raise QWebValueMismatchError('Index out of range')
     try:
-        select.select_by_visible_text(option)
+        if unselect:
+            select.deselect_by_visible_text(option)
+        else:
+            select.select_by_visible_text(option)
         return True
     except NoSuchElementException:
         try:
-            select.select_by_value(option)
+            if unselect:
+                select.deselect_by_value(option)
+            else:
+                select.select_by_value(option)
             return True
         except NoSuchElementException:
             if select:
@@ -239,13 +251,17 @@ def get_selected_value(select, expected=None, **kwargs):  # pylint: disable=unus
     expected : str
         Text to compare with selected value
     """
-    selected = select.first_selected_option.text
+    sel_elems = select.all_selected_options
+    selected = [ele.text for ele in sel_elems]
+
+    txt_selected = ",".join(selected)
+
     if expected:
-        if fnmatch.fnmatch(expected, selected) is True:
+        if expected in selected:
             return True
         raise QWebValueMismatchError('Expected value "{}" didn\'t match to real value "{}".'
-                                     .format(expected, selected))
-    return selected
+                                     .format(expected, txt_selected))
+    return txt_selected
 
 
 @decorators.timeout_decorator_for_actions

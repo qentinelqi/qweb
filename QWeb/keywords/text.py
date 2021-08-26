@@ -363,7 +363,9 @@ def click_text(text, anchor="1", timeout=0, parent=None,
 
 def scan_click(text, text_to_appear, anchor="1", timeout=0, interval=None,
                parent=None, child=None, js=False, **kwargs):  # pylint: disable=unused-argument
-    """Click text until a text appears.
+    """*DEPRECATED!!* Use keyword `ClickUntil` instead.
+
+    Click text until a text appears.
 
     This keyword is required on slow pages where it takes time for a button
     listener to start. This clicks button and waits until text appears.
@@ -412,7 +414,9 @@ def scan_click(text, text_to_appear, anchor="1", timeout=0, interval=None,
 
 def skim_click(text, text_to_disappear='', anchor="1", timeout=0, interval=None,
                parent=None, child=None, js=False, **kwargs):
-    """Click text until a text disappears.
+    """*DEPRECATED!!* Use keyword `ClickWhile` instead.
+
+    Click text until a text disappears.
 
     This keyword is required on slow pages where it takes time for a button
     listener to start. This clicks button and waits until text disappears.

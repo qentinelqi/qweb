@@ -24,6 +24,7 @@ from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
+from selenium.webdriver.remote.webelement import WebElement
 
 
 def set_input_handler(input_method):
@@ -135,8 +136,8 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
     When input field is found, it is first cleared of all text and after
     that the text is input.
 
-    Examples
-    --------
+    Simple Example
+    --------------
     .. code-block:: robotframework
 
          TypeText            username    Qentinel
@@ -144,11 +145,12 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
 
     Parameters
     ----------
-    locator : str
+    locator : str | selenium.webdriver.remote.webelement.WebElement
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use xpath by adding xpath= prefix
         and then the xpath. Error is raised if the xpath matches to multiple
         elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     input_text : str
         Text that will be written in the input field
     anchor : str
@@ -168,6 +170,9 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         |       - Shortcut to switch CheckInputValue on or off for one time use.
         |       - If CheckInputValue is used, use expected parameter when expected value
         |       is different than written value. Expected: str | int
+        |       click : bool(True/False)
+        |       - Shortcut to switch ClickToFocus on or off for one time use.
+        |       - If click is set to True, input field is focused by clicking it before typing.
         |       - CheckInputValue defines if TypeText verifies input field value after it is typed.
         |       - Default is Off. Valid parameters are On, True, Off and False.
         |       limit_traverse : False. If limit traverse is set to false we are heading up to
@@ -181,8 +186,8 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         |       - enclose special keys in curly brackets, for example {CONTROL + a} or {BACKSPACE}
         |       - corresponding configuration parameter is ClearKey
 
-    Examples
-    --------
+    Examples with settings
+    ----------------------
     .. code-block:: robotframework
 
          SetConfig          CheckInputValue     True
@@ -193,15 +198,17 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
     SetConfig LineBreak defines what kind of line break is typed after input text. Default is
     tab key.
 
-    Examples
-    --------
     .. code-block:: robotframework
 
-         SetConfig           LineBreak   None
-         TypeText            username    Qentinel
-         TypeText            someattr    Qentinel
+        SetConfig           LineBreak   None
+        TypeText            username    Qentinel
+        TypeText            someattr    Qentinel
 
-    With table(Pick table with use table keyword first):
+    Examples with table
+    -------------------
+
+
+    (Pick table with use table keyword first):
 
     .. code-block:: robotframework
 
@@ -209,8 +216,8 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         TypeText            r-1c-1      Qentinel  #last row, last cell
         TypeText            r?Robot/c3  Qentinel  #row that contains text Robot, cell c3
 
-    Examples
-    --------
+    More Examples
+    -------------
     .. code-block:: robotframework
 
         TypeText            company     Qentinel    clear_key={BACKSPACE}
@@ -220,9 +227,15 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         TypeText            company     Qentinel
         SetConfig           ClearKey    {CONTROL + a}
         TypeText            company     Qentinel
+        # using WebElement instance
+        ${elem}=            GetWebElement  //input[@title\="Search"]
+        TypeText            ${elem}     Text to search for
     """
-    input_element = input_.get_input_elements_from_all_documents(
-        locator, anchor, timeout=timeout, index=index, **kwargs)
+    if isinstance(locator, WebElement):
+        input_element = locator
+    else:
+        input_element = input_.get_input_elements_from_all_documents(
+            locator, anchor, timeout=timeout, index=index, **kwargs)
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 
@@ -312,8 +325,11 @@ def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1,
     ValueError
         If the input value is not the same
     """
-    input_element = input_.get_input_elements_from_all_documents(
-        locator, anchor, timeout=timeout, index=index, **kwargs)
+    if isinstance(locator, WebElement):
+        input_element = locator
+    else:
+        input_element = input_.get_input_elements_from_all_documents(
+            locator, anchor, timeout=timeout, index=index, **kwargs)
     actions.compare_input_values(input_element, expected_value, timeout=timeout)
 
 
