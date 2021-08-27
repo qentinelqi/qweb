@@ -55,6 +55,18 @@ class TestConfig:
         assert config.get_config("DefaultDocument") is False
         assert CONFIG["DefaultDocument"] is False
 
+        old_val = config.set_config("RunBefore", "text.verify_no_text('Loading')")
+        assert old_val == None
+        new_kw = ["VerifyText", "Test", "timeout=10"]
+        old_val = config.set_config("RunBefore", new_kw)
+        assert old_val == "text.verify_no_text('Loading')"
+        new_kw = "Verify Something"
+        old_val = config.set_config("RunBefore", new_kw)
+        assert old_val == ["VerifyText", "Test", "timeout=10"]
+        assert CONFIG["RunBefore"] == "Verify Something"
+        config.reset_config("RunBefore")
+        assert CONFIG["RunBefore"] == None
+
     @staticmethod
     def test_reset_config():
         old_val = config.set_config("ScreenshotType", "full_screen")

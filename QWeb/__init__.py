@@ -64,11 +64,17 @@ class QWeb:
                 logger.debug('args: {}, kwargs: {}'.format(args, kwargs))
             try:
                 time.sleep(timestr_to_secs(kwargs.get('delay', CONFIG['Delay'])))
-                run_before_kw = CONFIG['RunBefore']
+                run_before = CONFIG['RunBefore']
                 valid_pw = ['click', 'get_text', 'drop_down']
-                if run_before_kw and any(pw in str(keyword_method) for pw in valid_pw):
-                    logger.info('executing run before kw {}'.format(run_before_kw))
-                    eval(run_before_kw)  # pylint: disable=W0123
+                if run_before and any(pw in str(keyword_method) for pw in valid_pw):
+                    logger.info('executing run before kw {}'.format(run_before))
+                    # robot fw or python syntax
+                    if isinstance(run_before, list):
+                        BuiltIn().run_keyword(run_before[0], *run_before[1:])
+                    elif util.is_py_func(run_before):
+                        eval(run_before)  # pylint: disable=W0123
+                    else:
+                        BuiltIn().run_keyword(run_before)
                 logger.trace(keyword_method)
                 logger.trace(args, kwargs)
                 return keyword_method(*args, **kwargs)
