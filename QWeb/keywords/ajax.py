@@ -20,7 +20,7 @@ from QWeb.internal import decorators, ajax, util
 @decorators.timeout_decorator
 def save_file(locator, filename=None, anchor=1,
               timeout=0, path=None, **kwargs):  # pylint: disable=unused-argument
-    """Save file using http-request.
+    r"""Save file using http-request.
 
     Needs url of the downloadable content which usually is in element's href attribute.
     Text or tooltip can be used as a locator (Works as ClickText or ClickItem).
@@ -30,8 +30,8 @@ def save_file(locator, filename=None, anchor=1,
     url can be used as a locator too.
 
     Available element types without using tag attribute:
-    a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input*
-    (*submit buttons only).
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only).*
 
     Examples
     --------
@@ -79,6 +79,11 @@ def save_file(locator, filename=None, anchor=1,
         |       index : str: use index if there is multiple
         |       childs with same tag name
         |       headers : dict -Pass headers to http request
+
+    Related keywords
+    ----------------
+    \`ExpectFileDownload\`, \`UploadFile\`, \`UseFile\`,
+    \`VerifyFile\`, \`VerifyFileDownload\`
     """
     if locator.startswith('http'):
         url = locator

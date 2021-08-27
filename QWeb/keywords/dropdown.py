@@ -70,6 +70,12 @@ def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, *
 
         Dropdown    Canis       [[2]]
 
+    Unselect a selected option from multiselection dropdown:
+
+    .. code-block:: robotframework
+
+        Dropdown    Canis       Collie  unselect=True
+
     Parameters
     ----------
     locator : str

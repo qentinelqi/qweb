@@ -32,7 +32,7 @@ def verify_app(imagename):
 
 
 def log_screenshot(filename='screenshot_{}.png'):
-    """Log screenshot to Robot Framework log.
+    r"""Log screenshot to Robot Framework log.
 
     Examples
     --------
@@ -49,6 +49,10 @@ def log_screenshot(filename='screenshot_{}.png'):
     Returns
     -------
     filepath : full path to saved screenshot
+
+    Related keywords
+    ----------------
+    \`LogPage\`
     """
     filepath = None
     if CONFIG["LogScreenshot"]:

@@ -471,9 +471,10 @@ def set_config(par, val):
 
     Raises
     ------
-    ValueError
-        Unknown search strategy
+    ValueError: Unknown search strategy
+
     ---
+
     Parameter: MultipleAnchors
 
     Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to False,
@@ -487,6 +488,7 @@ def set_config(par, val):
         SetConfig    MultipleAnchors      False   # Raise error if anchor is not unique
 
     ---
+
     Parameter: ClickToFocus
 
     Clicks Input element before typing. This is sometimes needed to activate
@@ -500,6 +502,7 @@ def set_config(par, val):
         SetConfig    ClickToFocus         False   # Handle TypeText without clicks(default)
 
     ---
+
     Parameter: DoubleClick
 
     Sets double-click the default action for all Click* keywords.
@@ -512,6 +515,7 @@ def set_config(par, val):
         SetConfig    DoubleClick          False   # Single-click action(default)
 
     ---
+
     Parameter: HandleAlerts
 
     Option for handling alerts boxes, on by default.
@@ -523,6 +527,7 @@ def set_config(par, val):
         SetConfig    HandleAlerts       False
 
     ---
+
     Parameter: BlindReturn
 
     Return any value (even empty) from input element without waiting.
@@ -541,6 +546,7 @@ def set_config(par, val):
         ${VALUE}     GetInputValue     username     blind=True
 
     ---
+
     Parameter: Delay
 
     Set delay for Paceword.
@@ -558,6 +564,7 @@ def set_config(par, val):
         TypeText     username          QRobot   delay=1s
 
     ---
+
     Parameter: RetryInterval
 
     Set default interval for QWeb retry keywords.
@@ -573,6 +580,7 @@ def set_config(par, val):
         ClickUntil      Foo         button       interval=3
 
     ---
+
     Parameter: RunBefore
 
     Set a verificaton keyword to be run before any interaction

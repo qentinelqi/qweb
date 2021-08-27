@@ -183,7 +183,7 @@ def css_selectors(state):
 
 
 def check_input_value(state):
-    """*DEPRECATED!!* Use keyword `SetConfig  CheckInputValue` instead.
+    r"""*DEPRECATED!!* Use keyword `SetConfig  CheckInputValue` instead.
 
     Check that real value matches to preferred value after TypeText.
 
@@ -200,6 +200,10 @@ def check_input_value(state):
         CheckInputValue    True
         CheckInputValue    False
 
+    Related keywords
+    ----------------
+    \`GetInputValue\`, \`VerifyInputElement\`, \`VerifyInputStatus\`,
+    \`VerifyInputValue\`, \`VerifyInputValues\`
     """
     return config.set_config("CheckInputValue", state)
 

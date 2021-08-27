@@ -21,7 +21,7 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebUnexpectedCon
 
 
 def run_block(block, *args, timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Run Action word as decorated block.
+    r"""Run Action word as decorated block.
 
     Block (usually set of Pacewords) is handled as one
     independent action. If any keyword inside of block fails block
@@ -77,13 +77,17 @@ def run_block(block, *args, timeout=0, **kwargs):  # pylint: disable=unused-argu
         |       exp_handler : Use any Action Word as a teardown. If
         |       defined, this will be executed after every failed try
         |       before retrying
+
+    Related keywords
+    ----------------
+    \`Appstate\`, \`SetConfig\`
     """
     step = [{'paceword': block, 'args': args, 'kwargs': {}}]
     _execute_block(step, timeout=timeout, **kwargs)
 
 
 def appstate(block, *args):
-    """Appstate is a pre-condition of a test case.
+    r"""Appstate is a pre-condition of a test case.
 
     It sets Application(s) under test to correct, known state.
     First keyword of every test case is Appstate.
@@ -114,6 +118,10 @@ def appstate(block, *args):
         Action word/Block to execute
     args : any
         Possible args for block
+
+    Related keywords
+    ----------------
+    \`RunBlock\`, \`SetConfig\`
     """
     status, res = BuiltIn().run_keyword_and_ignore_error(block, *args)
     if status == 'FAIL':

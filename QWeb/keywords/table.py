@@ -71,6 +71,10 @@ def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=un
         For example level=2 means parent table of parent table etc.
     index : int
         If multiple childtables exists. Use index to pick correct one.
+
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`VerifyTable\`
     """
     global ACTIVE_TABLE  # pylint:disable=global-statement
     ACTIVE_TABLE = Table.from_table_instance(locator, anchor, parent, child,
@@ -79,7 +83,7 @@ def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=un
 
 @decorators.timeout_decorator
 def verify_table(coordinates, expected, anchor="1", timeout=0):
-    """Verify text in table coordinates.
+    r"""Verify text in table coordinates.
 
     Reads cell value from coordinates in active table and verifies it
     against expected value.
@@ -111,6 +115,10 @@ def verify_table(coordinates, expected, anchor="1", timeout=0):
     ------
     QWebValueMismatchErr
         If the table is not defined by UseTable keyword
+
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`UseTable\`
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
@@ -121,7 +129,7 @@ def verify_table(coordinates, expected, anchor="1", timeout=0):
 
 @decorators.timeout_decorator
 def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
-    """Get cell text to variable.
+    r"""Get cell text to variable.
 
     Locates cell by coordinates from active table and return value
 
@@ -158,6 +166,10 @@ def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
     ------
     QWebValueError
         If the table is not defined by UseTable keyword
+
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
@@ -172,7 +184,7 @@ def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
 
 @decorators.timeout_decorator
 def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
-    """Click table cell.
+    r"""Click table cell.
 
     Locates cell by coordinates or text from active table and clicks it
 
@@ -206,6 +218,10 @@ def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint
     ------
     QWebValueError
        If the table is not defined by UseTable keyword
+
+    Related keywords
+    ----------------
+    \`GetCellText\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
@@ -216,7 +232,7 @@ def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint
 
 @decorators.timeout_decorator
 def get_table_row(locator, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Get row (index) from current table.
+    r"""Get row (index) from current table.
 
     Get table row by some visible text or value.
 
@@ -244,6 +260,10 @@ def get_table_row(locator, anchor="1", timeout=0, **kwargs):  # pylint: disable=
     ------
     ValueError
        If the table is not defined by UseTable keyword
+
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`GetCellText\`, \`UseTable\`, \`VerifyTable\`
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:

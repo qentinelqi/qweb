@@ -27,7 +27,7 @@ import os
 @decorators.timeout_decorator
 def click_icon(image, template_res_w=1920, browser_res_w=1920,
                timeout=0):  # pylint: disable=unused-argument
-    """Click the icon on the screen.
+    r"""Click the icon on the screen.
 
     In case you want to click icons you always have to have reference images.
 
@@ -47,6 +47,11 @@ def click_icon(image, template_res_w=1920, browser_res_w=1920,
 
         ClickIcon                   plane
 
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`ClickCheckbox\`, \`ClickElement\`,
+    \`ClickItem\`, \`ClickList\`, \`ClickText\`,
+    \`ClickUntil\`, \`ClickWhile\`, \`VerifyIcon\`
     """
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
@@ -58,7 +63,7 @@ def click_icon(image, template_res_w=1920, browser_res_w=1920,
 
 
 def is_icon(image, template_res_w=1920, browser_res_w=1920):
-    """Check is the icon on the screen.
+    r"""Check is the icon on the screen.
 
     In case you want to use this keyword you always have to have reference images.
     If reference image are not in default folders (images, files, downloads) then
@@ -79,6 +84,9 @@ def is_icon(image, template_res_w=1920, browser_res_w=1920):
 
     ${status} will be True or False.
 
+    Related keywords
+    ----------------
+    \`CaptureIcon\`, \`ClickIcon\`, \`VerifyIcon\`
     """
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
@@ -91,7 +99,7 @@ def is_icon(image, template_res_w=1920, browser_res_w=1920):
 @decorators.timeout_decorator
 def verify_icon(image, template_res_w=1920, browser_res_w=1920,
                 timeout=0):  # pylint: disable=unused-argument
-    """Verify page contains icon.
+    r"""Verify page contains icon.
 
     In case you want to use this keyword you always have to have reference images.
     If reference image are not in default folders (images, files, downloads) then
@@ -109,6 +117,10 @@ def verify_icon(image, template_res_w=1920, browser_res_w=1920,
     .. code-block:: robotframework
 
         VerifyIcon                   plane
+
+    Related keywords
+    ----------------
+    \`CaptureIcon\`, \`ClickIcon\`, \`IsIcon\`
     """
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
@@ -145,6 +157,10 @@ def capture_icon(locator, folder='screenshots', filename='screenshot_{}.png',
         Optional filename.
     timeout : int
         How long we try to find the element for.
+
+    Related keywords
+    ----------------
+    \`ClickIcon\`, \`IsIcon\`, \`VerifyIcon\`
     """
     if util.xpath_validator(locator):
         web_element = element.get_unique_element_by_xpath(locator)

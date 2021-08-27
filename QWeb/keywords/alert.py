@@ -21,7 +21,7 @@ from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 
 
 def close_alert(action, timeout=0):
-    """Close popup alert.
+    r"""Close popup alert.
 
     Examples
     --------
@@ -41,13 +41,17 @@ def close_alert(action, timeout=0):
 
     timeout : str | int
         How long we wait for text to disappear before failing. Default 10 (seconds)
+
+    Related keywords
+    ----------------
+    \`IsAlert\`, \`TypeAlert\`, \`GetAlertText\`, \`VerifyAlertText\`
     """
     alert_ = alert.wait_alert(timeout=timeout)
     alert.close_alert(alert_, action)
 
 
 def is_alert(timeout="0.1s"):
-    """Return True/False if alert is found on the screen.
+    r"""Return True/False if alert is found on the screen.
 
     Used to get alert presence to variable. This keyword returns after alert is found.
 
@@ -65,6 +69,10 @@ def is_alert(timeout="0.1s"):
     ----------
     timeout : str | int
         How long we wait for text to disappear before failing. Default 10 (seconds)
+
+    Related keywords
+    ----------------
+    \`CloseAlert\`, \`TypeAlert\`, \`GetAlertText\`, \`VerifyAlertText\`
     """
     try:
         return bool(alert.wait_alert(timeout=timeout))
@@ -73,7 +81,7 @@ def is_alert(timeout="0.1s"):
 
 
 def type_alert(text, action="Accept", timeout=0):
-    """Type and close popup alert.
+    r"""Type and close popup alert.
 
     Examples
     --------
@@ -93,6 +101,10 @@ def type_alert(text, action="Accept", timeout=0):
         NOTHING: don't close alert
     timeout : str | int
         How long we wait for text to disappear before failing. Default 10 (seconds)
+
+    Related keywords
+    ----------------
+    \`CloseAlert\`, \`IsAlert\`, \`GetAlertText\`, \`VerifyAlertText\`
     """
     alert_ = alert.wait_alert(timeout=timeout)
     alert.type_alert(alert_, text, timeout=timeout)
@@ -100,7 +112,7 @@ def type_alert(text, action="Accept", timeout=0):
 
 
 def get_alert_text(timeout=0):
-    """Get alert text to variable.
+    r"""Get alert text to variable.
 
     Examples
     --------
@@ -112,13 +124,17 @@ def get_alert_text(timeout=0):
     ----------
     timeout : str | int
         How long we wait for text to disappear before failing. Default 10 (seconds)
+
+    Related keywords
+    ----------------
+    \`CloseAlert\`, \`IsAlert\`, \`TypeAlert\`, \`VerifyAlertText\`
     """
     alert_ = alert.wait_alert(timeout=timeout)
     return alert_.text
 
 
 def verify_alert_text(text, timeout=0):
-    """Verify alert text.
+    r"""Verify alert text.
 
     Examples
     --------
@@ -132,6 +148,10 @@ def verify_alert_text(text, timeout=0):
         Text to Verify
     timeout : str | int
         How long we wait for text to disappear before failing. Default 10 (seconds)
+
+    Related keywords
+    ----------------
+    \`CloseAlert\`, \`GetAlertText\`, \`IsAlert\`, \`TypeAlert\`
     """
     alert_ = alert.wait_alert(timeout=timeout)
     if text in alert_.text:

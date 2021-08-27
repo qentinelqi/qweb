@@ -77,7 +77,7 @@ def use_page():
 
 
 def refresh_page():
-    """Refresh the current window.
+    r"""Refresh the current window.
 
     Examples
     --------
@@ -85,7 +85,9 @@ def refresh_page():
 
        RefreshPage
 
-
+    Related keywords
+    ----------------
+    \`Back\`, \`GoTo\`, \`MaximizeWindow\`
     """
     frame.wait_page_loaded()
     driver = browser.get_current_browser()
@@ -93,13 +95,17 @@ def refresh_page():
 
 
 def back():
-    """Navigates back in the current window.
+    r"""Navigates back in the current window.
 
     Examples
     --------
     .. code-block:: robotframework
 
        Back
+
+    Related keywords
+    ----------------
+    \`GoTo\`, \`RefreshPage\`, \`MaximizeWindow\`
 
 
     """
@@ -109,7 +115,7 @@ def back():
 
 
 def log_page():
-    """Save and log current html.
+    r"""Save and log current html.
 
     The html content is saved as html file in the same folder where log is.
     The current page and the link to it are represented in the log in
@@ -129,6 +135,10 @@ def log_page():
     ----
     Replace relative paths in the src and href attributes. This way we get
     css properties and icons.
+
+    Related keywords
+    ----------------
+    \`LogScreenshot\`
     """
     raw_html = frame.get_raw_html()
     output_dir = frame.get_output_dir()
