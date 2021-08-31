@@ -25,7 +25,6 @@ def check_frames(driver, **kwargs):
         'return document.querySelectorAll("iframe, frame")')
     if not frames:
         frames = []
-    logger.info(f"Type js: {type(frames)}")
     frames += driver.find_elements_by_xpath("//iframe|//frame")
     visible_only = kwargs.get('visibility', True)
     if not visible_only:

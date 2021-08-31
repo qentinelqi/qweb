@@ -43,6 +43,7 @@ setup(
     author='Qentinel Group',
     author_email='libraries@qentinel.com',
     python_requires= ">=3.6,<4.0",
+    license= "Apache License 2.0",
     install_requires=["setuptools",
                       "pyautogui>=0.9.38",
                       "pynput>=1.6.7",
