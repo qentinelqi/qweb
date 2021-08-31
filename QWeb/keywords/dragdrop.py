@@ -29,7 +29,7 @@ def drag_drop(locator, target_locator, index=1, anchor="1",
               target_anchor="1", timeout=0, dragtime='0.5s',
               left=0, right=0, above=0, below=0):
     # pylint: disable=unused-argument
-    """Drag and drop element.
+    r"""Drag and drop element.
 
     Finds draggable element by it's visible text, tooltip attribute, index
     or xpath.
@@ -75,7 +75,7 @@ def drag_drop(locator, target_locator, index=1, anchor="1",
         one that is closest to it. (default 1)
     timeout : str | int
         How long we try to find elemenst before failing
-    dragtime : str |int
+    dragtime : str | int
         How long drag should take. Some applications need longer time
     right : int
        Offset how many pixels right of target center we drag
@@ -85,6 +85,10 @@ def drag_drop(locator, target_locator, index=1, anchor="1",
        Offset how many pixels above of target center we drag
     below : int
        Offset how many pixels below of target center we drag
+
+    Related keywords
+    ----------------
+    \`SwipeDown\`, \`SwipeLeft\`, \`SwipeRight\`, \`SwipeUp\`
     """
     pyautogui.FAILSAFE = False
     draggable = dragdrop.get_draggable_element(locator, index, anchor)

@@ -160,6 +160,10 @@ def get_index_of(text, locator, condition):
     raise QWebValueMismatchError('File did not contain the text "{}"'.format(locator))
 
 
+def is_py_func(text):
+    return bool("(" and ")" in text)
+
+
 def prefs_to_dict(prefs):
     if isinstance(prefs, dict):
         d = prefs
@@ -196,10 +200,16 @@ def _handle_old_style_prefs(prefs):
 
 
 def validate_run_before(value):
-    valid = ['verify_', 'verify_no']
-    if any(x in value for x in valid):
+    if isinstance(value, list):
+        if value[0].lower().startswith("verify"):
+            return value
+    elif is_py_func(value):
+        valid = ['verify_', 'verify_no']
+        if any(x in value for x in valid):
+            return value
+    elif value.lower().startswith("verify"):
         return value
-    logger.warn('Invalid value. Only Verify PW:s are accepted.')
+    logger.warn('Invalid value. Only Verify* keywords are accepted.')
     return None
 
 

@@ -27,7 +27,7 @@ from QWeb.internal import cookies
 
 
 def delete_all_cookies():
-    """Delete all cookies in browser.
+    r"""Delete all cookies in browser.
 
     Cookies can be only deleted when browser is open. Cookies are automatically
     deleted when you Close All Browsers
@@ -37,12 +37,16 @@ def delete_all_cookies():
     .. code-block:: robotframework
 
         DeleteAllCookies
+
+    Related keywords
+    ----------------
+    \`ListCookies\`, \`IsCookie\`
     """
     cookies.delete_all_cookies()
 
 
 def list_cookies():
-    """List all cookies in browser.
+    r"""List all cookies in browser.
 
     Cookies can be only listed when browser is open. Cookies are automatically
     deleted when you Close All Browsers
@@ -52,6 +56,10 @@ def list_cookies():
     .. code-block:: robotframework
 
         ListCookies
+
+    Related keywords
+    ----------------
+    \`DeleteAllCookies\`, \`IsCookie\`
     """
     cookies_list = cookies.get_cookies()
     logger.info(cookies_list)
@@ -59,7 +67,7 @@ def list_cookies():
 
 
 def is_cookie(name, value):
-    """Return True if cookie with name and value is found.
+    r"""Return True if cookie with name and value is found.
 
     Cookies are a good way to detect if user has already logged in.
     This keyword can be used in appstate.
@@ -77,6 +85,9 @@ def is_cookie(name, value):
     value : str
         Expected value for key name
 
+    Related keywords
+    ----------------
+    \`DeleteAllCookies\`, \`ListCookies\`
     """
     cookies_list = cookies.get_cookies()
     for cookie in cookies_list:

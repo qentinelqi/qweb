@@ -80,6 +80,10 @@ def click_checkbox(locator, value, anchor="1", timeout=0, index=1, **kwargs):
     ------
     QWebElementNotFoundErr
         CheckBox element not found
+
+    Related keywords
+    ----------------
+    \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`, \`VerifyCheckboxValue\`
     """
     checkbox_element, locator_element = checkbox.get_checkbox_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -144,6 +148,10 @@ def verify_checkbox_status(locator, status, anchor="1", timeout=0, index=1, **kw
     ------
     ValueError
         Checkbox interaction with the checkbox was not the same
+
+    Related keywords
+    ----------------
+    \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxValue\`
     """
     checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -210,6 +218,10 @@ def verify_checkbox_value(locator, value, anchor="1", timeout=0, index=1, **kwar
     Raises
     ------
     ValueError : The checkbox value is not the same
+
+    Related keywords
+    ----------------
+    \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`
     """
     checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)
@@ -226,7 +238,7 @@ def verify_checkbox_value(locator, value, anchor="1", timeout=0, index=1, **kwar
 
 @decorators.timeout_decorator
 def verify_checkbox(locator, anchor='1', timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
-    """Verify that checkbox element exist.
+    r"""Verify that checkbox element exist.
 
     Examples
     --------
@@ -267,6 +279,10 @@ def verify_checkbox(locator, anchor='1', timeout=0, index=1, **kwargs):  # pylin
     Raises
     ------
     NoSuchElementException: Checkbox element not found
+
+    Related keywords
+    ----------------
+    \`ClickCheckbox\`, \`VerifyCheckboxStatus\`, \`VerifyCheckboxValue\`
     """
     checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs)

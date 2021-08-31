@@ -37,7 +37,7 @@ import os
 
 @decorators.timeout_decorator
 def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unused-argument
-    """Verify page contains given text.
+    r"""Verify page contains given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
@@ -86,6 +86,13 @@ def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     Uses . (dot) in the xpath to represent the text in the node. Using dot
     instead of text() since text() does not handle cases where the text is
     in both the a parent node and in its child node.
+
+    Related keywords
+    ----------------
+    \`VerifyAlertText\`, \`VerifyAll\`, \`VerifyAny\`, \`VerifyAttribute\`, \`VerifyCheckbox\`,
+    \`VerifyElement\`, \`VerifyIcon\`, \`VerifyInputValue\`, \`VerifyItem\`, \`VerifyLinks\`,
+    \`VerifyNoText\`, \`VerifyOption\`, \`VerifyPdfText\`, \`VerifySelectedOption\`,
+    \`VerifyTable\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
     kwargs['css'] = False
     window_find = util.par2bool(kwargs.get('window_find', CONFIG['WindowFind']))
@@ -99,7 +106,7 @@ def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
 
 @decorators.timeout_decorator
 def verify_no_text(text, timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Verify that page does not contain given text.
+    r"""Verify that page does not contain given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
@@ -147,6 +154,10 @@ def verify_no_text(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
     Uses . (dot) in the xpath to represent the text in the node. Using dot
     instead of text() since text() does not handle cases where the text is
     in both the a parent node and in its child node.
+
+    Related keywords
+    ----------------
+    \`VerifyText\`
     """
     kwargs['css'] = False
     web_elements = internal_text.get_element_by_locator_text(
@@ -159,7 +170,7 @@ def verify_no_text(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
 
 @decorators.timeout_decorator
 def verify_text_count(text, expected_count, timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Verify page contains given text given times.
+    r"""Verify page contains given text given times.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
@@ -208,6 +219,10 @@ def verify_text_count(text, expected_count, timeout=0, **kwargs):  # pylint: dis
     Uses . (dot) in the xpath to represent the text in the node. Using dot
     instead of text() since text() does not handle cases where the text is
     in both the a parent node and in its child node.
+
+    Related keywords
+    ----------------
+    \`GetElementCount\`, \`GetTextCount\`
     """
     expected_count = int(expected_count)
     kwargs['css'] = False
@@ -226,7 +241,7 @@ def verify_text_count(text, expected_count, timeout=0, **kwargs):  # pylint: dis
 
 @decorators.timeout_decorator
 def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Get count of appearances for given text.
+    r"""Get count of appearances for given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
@@ -258,6 +273,10 @@ def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
     Accepted kwargs:
         css=False/off: Use this to bypass css search when finding elements
         by visible text
+
+    Related keywords
+    ----------------
+    \`GetElementCount\`, \`VerifyTextCount\`
     """
     kwargs['css'] = False
     web_elements = internal_text.get_all_text_elements(text, **kwargs)
@@ -267,7 +286,7 @@ def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
 @decorators.timeout_decorator
 def click_text(text, anchor="1", timeout=0, parent=None,
                child=None, js=None, **kwargs):
-    """Click text on web page.
+    r"""Click text on web page.
 
     Keyword looks for an exact match and if not found uses xpath defined in
     Search Strategy. If the given text corresponds to multiple elements, it
@@ -353,6 +372,10 @@ def click_text(text, anchor="1", timeout=0, parent=None,
     Accepted kwargs:
         css=False/off: Use this to bypass css search when finding elements
         by visible text
+
+    Related keywords
+    ----------------
+    \`ClickElement\`, \`ClickItem\`, \`GetText\`, \`RightClick\`, \`VerifyText\`
     """
     anchor = str(anchor)
     web_element = internal_text.get_element_by_locator_text(
@@ -471,7 +494,7 @@ def skim_click(text, text_to_disappear='', anchor="1", timeout=0, interval=None,
 
 @decorators.timeout_decorator
 def hover_text(text, anchor="1", timeout="0", **kwargs):  # pylint: disable=unused-argument
-    """Hover over text.
+    r"""Hover over text.
 
     Keyword will fail if text is not visible. You should use VerifyText before HoverText
     if you are not sure text is already visible.
@@ -509,7 +532,7 @@ def hover_text(text, anchor="1", timeout="0", **kwargs):  # pylint: disable=unus
 
 @decorators.timeout_decorator
 def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=unused-argument
-    """Hover over text.
+    r"""Hover over text.
 
     Hover over web element.
 
@@ -539,6 +562,10 @@ def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=u
     Accepted kwargs:
         css=False/off: Use this to bypass css search when finding elements
         by visible text
+
+    Related keywords
+    ----------------
+    \`HoverElement\`, \`HoverText\`, \`HoverTo\`, \`ScrollText\`, \`ScrollTo\`
     """
     web_element = internal_text.get_item_using_anchor(locator, anchor, **kwargs)
     hover_to(web_element, timeout=timeout)
@@ -546,7 +573,7 @@ def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=u
 
 @decorators.timeout_decorator
 def is_text(text, timeout="0.1s", **kwargs):
-    """Return True/False if text is found on the screen.
+    r"""Return True/False if text is found on the screen.
 
     Used to get text presence to variable. This keyword returns after text is found.
 
@@ -572,6 +599,10 @@ def is_text(text, timeout="0.1s", **kwargs):
     Returns
     -------
     Bool : True or False
+
+    Related keywords
+    ----------------
+    \`GetText\`, \`IsNoText\`, \`VerifyText\`
     """
     try:
         return text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
@@ -581,7 +612,7 @@ def is_text(text, timeout="0.1s", **kwargs):
 
 @decorators.timeout_decorator
 def is_no_text(text, timeout="2s", **kwargs):
-    """Return True/False if text is found on the screen.
+    r"""Return True/False if text is found on the screen.
 
     Used to get text presence info to variable. This keyword returns if text is not visible or
     when it disappears.
@@ -608,6 +639,10 @@ def is_no_text(text, timeout="2s", **kwargs):
     Returns
     -------
     Bool : True or False
+
+    Related keywords
+    ----------------
+    \`IsText\`, \`VerifyText\`
     """
     try:
         return text_appearance(text, text_appear=False, timeout=timeout, **kwargs)
@@ -641,6 +676,9 @@ def verify_element_text(locator, text_to_find, timeout=0, anchor="1", **kwargs):
         |  Accepted kwargs:
         |       strict : bool - Verify that the texts are an exact match.
 
+    Related keywords
+    ----------------
+    \`GetText\`, \`IsText\`, \`VerifyText\`
     """
     locator_text = get_text(locator, timeout, anchor, **kwargs)
     strict = util.par2bool(kwargs.get('strict', False))
@@ -677,6 +715,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
         GetText          someattr       tag=div     between=???Foo  from_start=5  exclude_post=False
         GetText          someattr       tag=div     int=True    #return integer
         GetText          someattr       tag=div     from_start=3    float=True  #return float
+
     Parameters
     ----------
     locator : str
@@ -695,9 +734,14 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
         |       exclude_post : False - Ending text is part of returned string
         |       int : True - Return integer instead of string
         |       float : int - Return float instead of string
+
     Returns
     -------
     text : Xpath value text
+
+    Related keywords
+    ----------------
+    \`Is Text\`, \`VerifyText\`
     """
     tag = kwargs.get('tag', None)
     if tag:
@@ -718,14 +762,14 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
 
 @decorators.timeout_decorator
 def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
-    """Click item (usually icon or picture) on webpage.
+    r"""Click item (usually icon or picture) on webpage.
 
     Finds webelement by it's tooltip text (title or alt) or some another
     attribute.
     Available attributes: any
     Available element types without using tag attribute:
-    a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input*
-    (*submit buttons only).
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (*submit buttons only).*
 
     Keyword tries to click element until it succeeds or timeout has passed.
     If timeout is not specified, it uses default timeout that can be adjusted
@@ -771,6 +815,11 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
         |           by some of it's attribute
         |       partial_match: False. If only full match is accepted set
         |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`ClickCheckbox\`, \`ClickIcon\`, \`ClickElement\`,
+    \`ClickList\`, \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`VerifyItem\`
     """
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
     if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
@@ -779,14 +828,14 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
 
 @decorators.timeout_decorator
 def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Verify Item (usually icon or picture) exist.
+    r"""Verify Item (usually icon or picture) exist.
 
     Finds webelement by it's tooltip text (title or alt) or some another
     attribute.
     Available attributes: any
     Available element types without using tag attribute:
-    a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input*
-    (*submit buttons only)
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only)*
 
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
@@ -817,13 +866,17 @@ def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unuse
         one that is closest to it. (default 1)
     timeout : str | int
         How long we wait for element to be ready for click
-     kwargs :
+    kwargs :
         |  Accepted kwargs:
-        |       tag : html tag of preferred element -
-        |           If tag is used then element is found
-        |           by some of it's attribute
-        |       partial_match: False. If only full match is accepted set
+        |       **tag:** html tag of preferred element -
+        |       If tag is used then element is found
+        |       by some of it's attribute
+        |       **partial_match: False**. If only full match is accepted set
         |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickItemUntil\`, \`ClickItemWhile\`, \`HoverItem\`, \`VerifyItem\`
     """
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
     if web_element:
@@ -832,14 +885,14 @@ def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unuse
 
 @decorators.timeout_decorator
 def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
-    """Verify Item (usually icon or picture) is not exist.
+    r"""Verify Item (usually icon or picture) is not exist.
 
     Finds webelement by it's tooltip text (title or alt) or some another
     attribute.
     Available attributes: any
     Available element types without using tag attribute:
-    a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input*
-    (*submit buttons only)
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only)*
 
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
@@ -863,13 +916,17 @@ def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=un
         Parameter not used with this kw.
     timeout : str | int
         How long we wait for element to be ready for click
-     kwargs :
+    kwargs :
         |  Accepted kwargs:
         |       tag : html tag of preferred element -
         |           If tag is used then element is found
         |           by some of it's attribute
         |       partial_match: False. If only full match is accepted set
         |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickItem\`, \`VerifyItem\`
     """
     kwargs['allow_non_existent'] = True
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
@@ -880,7 +937,7 @@ def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=un
 
 @decorators.timeout_decorator
 def scroll_text(text, anchor="1", timeout=0, **kwargs):
-    """Scroll page until text is on top.
+    r"""Scroll page until text is on top.
 
     Finds text on page and scrolls until it is on top. This is used with visual testing
     tools to align page properly.
@@ -895,13 +952,17 @@ def scroll_text(text, anchor="1", timeout=0, **kwargs):
 
         ScrollText       Address
         ScrollText       Address    Billing
+
+    Related keywords
+    ----------------
+    \`HoverElement\`, \`HoverItem\`, \`HoverText\`, \`HoverTo\`, \`ScrollTo\`
     """
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
     scroll(web_element, timeout=timeout)
 
 
 def write_text(text):
-    """Type text with single-character keys.
+    r"""Type text with single-character keys.
 
     Parameters
     ----------
@@ -913,6 +974,10 @@ def write_text(text):
     .. code-block:: robotframework
 
         WriteText    Hello World!
+
+    Related keywords
+    ----------------
+    \`PressKey\`, \`TypeText\`
     """
     if CONFIG.get_value("Headless") or os.getenv('QWEB_HEADLESS', None):
         raise QWebEnvironmentError(
@@ -947,7 +1012,7 @@ def verify_texts(texts_to_verify, timeout=0):
 
 @decorators.timeout_decorator
 def verify_any(texts_to_verify, timeout=0):
-    """Verify any of the given texts.
+    r"""Verify any of the given texts.
 
     Verify that at least one of the texts is found. Useful for handling
     session dependent states, such as logins or popups.
@@ -971,6 +1036,11 @@ def verify_any(texts_to_verify, timeout=0):
 
         # Follow up to check which state
         ${login}=    IsText       Login
+
+    Related keywords
+    ----------------
+    \`VerifyAll\`, \`VerifyFile\`, \`VerifyFileText\`,
+    \`VerifyPdfText\`, \`VerifyText\`
     """
     if isinstance(texts_to_verify, list):
         for text in texts_to_verify:
@@ -1007,7 +1077,7 @@ def verify_any(texts_to_verify, timeout=0):
 
 @decorators.timeout_decorator
 def verify_all(texts_to_verify, timeout=0):
-    """Verify page contains given texts.
+    r"""Verify page contains given texts.
 
     The texts should be separated with a comma.
 
@@ -1024,6 +1094,11 @@ def verify_all(texts_to_verify, timeout=0):
 
         ${cool_list}=    Create List    Cat    Mouse    Dog    Lion    iddqd66402
         VerifyTexts      ${cool_list}
+
+    Related keywords
+    ----------------
+    \`VerifyAny\`, \`VerifyFile\`, \`VerifyFileText\`,
+    \`VerifyPdfText\`, \`VerifyText\`
     """
     if isinstance(texts_to_verify, list):
         for text in texts_to_verify:
@@ -1048,7 +1123,7 @@ def verify_all(texts_to_verify, timeout=0):
 @decorators.timeout_decorator
 def scroll_to(text_to_find, locator=None, anchor='1', scroll_length=None,
               timeout=120, **kwargs):  # pylint: disable=unused-argument
-    """Scroll a dynamic web page or scrollbar.
+    r"""Scroll a dynamic web page or scrollbar.
 
     Parameters
     ----------
@@ -1091,6 +1166,11 @@ def scroll_to(text_to_find, locator=None, anchor='1', scroll_length=None,
 
     In the above example, a scrollbar located by a text "List of cats", is scrolled 2000 pixels
     per scroll until the text "Cat" is found.
+
+    Related keywords
+    ----------------
+    \`HoverElement\`, \`HoverItem\`, \`HoverText\`,
+    \`HoverTo\`, \`ScrollText\`
     """
     visible = is_text(text_to_find)
     if visible:
@@ -1128,7 +1208,7 @@ def copy_text(text):
 
 def click_while(text_to_disappear, text_to_click=None, anchor="1", timeout=0, interval=None,
                 parent=None, child=None, js=False, **kwargs):
-    """Click text until a text or element disappears.
+    r"""Click text until a text or element disappears.
 
     This keyword is required on slow pages where it takes time for a button
     listener to start. This clicks button and waits until certain text or
@@ -1175,6 +1255,10 @@ def click_while(text_to_disappear, text_to_click=None, anchor="1", timeout=0, in
         by visible text
         tag=html tag: Use this if element to disappear is not default type of item element.
         force_click=True: Use this to bypass checks (istext/isnotext) before click.
+
+    Related keywords
+    ----------------
+    \`ClickItemUntil\`, \`ClickItemWhile\`, \`ClickUntil\`
     """
     el = util.par2bool(kwargs.get('element', False))
     forced = util.par2bool(kwargs.get('force_click', False))
@@ -1199,7 +1283,7 @@ def click_while(text_to_disappear, text_to_click=None, anchor="1", timeout=0, in
 
 def click_until(text_to_appear, text_to_click, anchor="1", timeout=0, interval=None,
                 parent=None, child=None, js=False, **kwargs):
-    """Click text until a text appears.
+    r"""Click text until a text appears.
 
     This keyword is required on slow pages where it takes time for a button
     listener to start. This clicks button and waits until text appears.
@@ -1247,6 +1331,10 @@ def click_until(text_to_appear, text_to_click, anchor="1", timeout=0, interval=N
         by visible text
         tag=html tag: Use this if element to disappear is not default type of item element.
         force_click=True: Use this to bypass checks (istext/isnotext) before click.
+
+    Related keywords
+    ----------------
+    \`ClickItemUntil\`, \`ClickItemWhile\`, \`ClickWhile\`
     """
     el = util.par2bool(kwargs.get('element', False))
     forced = util.par2bool(kwargs.get('force_click', False))
@@ -1269,7 +1357,7 @@ def click_until(text_to_appear, text_to_click, anchor="1", timeout=0, interval=N
 
 def click_item_while(text_to_disappear, locator=None, anchor="1", timeout=0,
                      interval=None, js=False, **kwargs):
-    """Click Item until a text or element disappears.
+    r"""Click Item until a text or element disappears.
 
     This keyword is required on slow pages where it takes time for a button
     listener to start. This clicks button and waits until certain text or
@@ -1313,6 +1401,10 @@ def click_item_while(text_to_disappear, locator=None, anchor="1", timeout=0,
         by visible text
         tag=html tag: Use this if element to disappear is not default type of item element.
         force_click=True: Use this to bypass checks (istext/isnotext) before click.
+
+    Related keywords
+    ----------------
+    \`ClickItemUntil\`, \`ClickUntil\`, \`ClickWhile\`
     """
     kwargs['item'] = True
     el = kwargs.get('element', False)
@@ -1337,7 +1429,7 @@ def click_item_while(text_to_disappear, locator=None, anchor="1", timeout=0,
 
 def click_item_until(text_to_appear, locator, anchor="1", timeout=0,
                      interval=None, js=False, **kwargs):
-    """Click text until a text appears.
+    r"""Click text until a text appears.
 
     This keyword is required on slow pages where it takes time for a button
     listener to start. This clicks button and waits until text appears.
@@ -1379,6 +1471,10 @@ def click_item_until(text_to_appear, locator, anchor="1", timeout=0,
         by visible text
         tag=html tag: Use this if element to disappear is not default type of item element.
         force_click=True: Use this to bypass checks (istext/isnotext) before click.
+
+    Related keywords
+    ----------------
+    \`ClickItemWhile\`, \`ClickUntil\`, \`ClickWhile\`
     """
     kwargs['item'] = True
     el = kwargs.get('element', False)

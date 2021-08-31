@@ -471,9 +471,10 @@ def set_config(par, val):
 
     Raises
     ------
-    ValueError
-        Unknown search strategy
+    ValueError: Unknown search strategy
+
     ---
+
     Parameter: MultipleAnchors
 
     Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to False,
@@ -487,6 +488,7 @@ def set_config(par, val):
         SetConfig    MultipleAnchors      False   # Raise error if anchor is not unique
 
     ---
+
     Parameter: ClickToFocus
 
     Clicks Input element before typing. This is sometimes needed to activate
@@ -500,6 +502,7 @@ def set_config(par, val):
         SetConfig    ClickToFocus         False   # Handle TypeText without clicks(default)
 
     ---
+
     Parameter: DoubleClick
 
     Sets double-click the default action for all Click* keywords.
@@ -512,6 +515,7 @@ def set_config(par, val):
         SetConfig    DoubleClick          False   # Single-click action(default)
 
     ---
+
     Parameter: HandleAlerts
 
     Option for handling alerts boxes, on by default.
@@ -523,6 +527,7 @@ def set_config(par, val):
         SetConfig    HandleAlerts       False
 
     ---
+
     Parameter: BlindReturn
 
     Return any value (even empty) from input element without waiting.
@@ -541,6 +546,7 @@ def set_config(par, val):
         ${VALUE}     GetInputValue     username     blind=True
 
     ---
+
     Parameter: Delay
 
     Set delay for Paceword.
@@ -558,6 +564,7 @@ def set_config(par, val):
         TypeText     username          QRobot   delay=1s
 
     ---
+
     Parameter: RetryInterval
 
     Set default interval for QWeb retry keywords.
@@ -572,6 +579,43 @@ def set_config(par, val):
         # One time use:
         ClickUntil      Foo         button       interval=3
 
+    ---
+
+    Parameter: RunBefore
+
+    Set a verificaton keyword to be run before any interaction
+    keywords (click*, get_text, dropdown).
+
+    Most common use for this configuration is in applications, that have a custom
+    "spinner"/ loading indicator which needs to be waited even if
+    page itself is already in ReadyState.
+
+    Any custom robot fw keywords which start with word "Verify" can be used as RunBefore keyword.
+    A resource file defining this keyword must be imported prior to usage.
+
+
+    Supports giving keyword to run and parameters either in python or in robot framework syntax.
+    Robot fw syntax needs to be given in a variable due to handling of arguments.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        # Python syntax
+        SetConfig  RunBefore   element.verify_no_element('//html[contains(@class, "custom-busy")]')
+        ClickText  Foo
+        # Waits that custom spinner disappears before running other keywords
+
+        # Robot Framework syntax, needs to be in variable
+        ${run_bf}=   SetVariable    VerifyNoText    Loading....     timeout=5
+        SetConfig    RunBefore      ${run_bf}
+        ClickText    Foo
+        # Waits that text "Loading..." disappears before running other keywords
+
+    Related keywords
+    ----------------
+    \`GetConfig\`, \`ResetConfig\`
+
     """
     if not CONFIG.is_value(par):
         raise ValueError("Parameter {} doesn't exist".format(par))
@@ -579,7 +623,7 @@ def set_config(par, val):
 
 
 def get_config(par=None):
-    """Return value of given configuration parameter.
+    r"""Return value of given configuration parameter.
 
     If no parameter is given the GetConfig returns
     all configurations in a python dictionary of current configuration parameter names and their
@@ -598,6 +642,10 @@ def get_config(par=None):
         par : str
             Setting to be fetched
 
+    Related keywords
+    ----------------
+    \`ResetConfig\`, \`SetConfig\`
+
     """
     if par:
         if not CONFIG.is_value(par):
@@ -611,7 +659,7 @@ def get_config(par=None):
 
 
 def reset_config(par=None):
-    """Reset the value of given parameter to default value.
+    r"""Reset the value of given parameter to default value.
 
     If no parameter is given, reset all
     parameters configuration parameters to their defaults.
@@ -625,6 +673,10 @@ def reset_config(par=None):
 
         ${VAL}      ResetConfig    default timeout   # resets single parameter, and returns value
         ${VAL}      ResetConfig                      # Resets all parameters, and returns config
+
+    Related keywords
+    ----------------
+    \`GetConfig\`, \`SetConfig\`
 
     """
     if par:

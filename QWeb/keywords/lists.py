@@ -17,9 +17,9 @@
 
 """Keywords for table elements.
 
-Table elements are used to show many kinds of data. Tables have cells in
+List elements are used to show many kinds of data. Lists have cells in
 contain rows and columns. Cells can contain all kinds of elements. Cells
-are usually refenced by coordinates or unique neighbouring values.
+are usually referenced by coordinates or unique neighboring values.
 """
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError, \
     QWebValueError
@@ -64,6 +64,10 @@ def use_list(locator, anchor="1", timeout=0, parent=None, child=None, **kwargs):
         How long we search before failing. Default = Search Strategy default timeout (10s)
     kwargs :
         Accepted kwargs: tag = html_tag to identify if list is ordered or unordered one.
+
+    Related keywords
+    ----------------
+    \`ClickList\`, \`GetList\`, \`VerifyList\`
     """
     global ACTIVE_LIST  # pylint:disable=global-statement
     ACTIVE_LIST = List.from_list_instance(locator, anchor, parent=parent, child=child, **kwargs)
@@ -83,7 +87,7 @@ def verify_length(expected_length):
 
 @decorators.timeout_decorator
 def verify_list(text, index=None, timeout=0):  # pylint: disable=unused-argument
-    """Verify list contains given text.
+    r"""Verify list contains given text.
 
     Examples
     --------
@@ -92,6 +96,10 @@ def verify_list(text, index=None, timeout=0):  # pylint: disable=unused-argument
         UseList         Qentinel
         VerifyList      Pace Robot              #list contains given text (text can be anywhere)
         VerifyList      Test Automation     2   #List index 2 contains given text
+
+    Related keywords
+    ----------------
+    \`ClickList\`, \`GetList\`, \`UseList\`, \`VerifyNoList\`, \`VerifyLength\`
     """
     if _list_exists():
         active = ACTIVE_LIST.update_list()
@@ -104,7 +112,7 @@ def verify_list(text, index=None, timeout=0):  # pylint: disable=unused-argument
 
 @decorators.timeout_decorator
 def click_list(index, timeout=0, js=True, **kwargs):  # pylint: disable=unused-argument
-    """Click list element with in given index.
+    r"""Click list element with in given index.
 
     Examples
     --------
@@ -112,6 +120,10 @@ def click_list(index, timeout=0, js=True, **kwargs):  # pylint: disable=unused-a
 
         ClickList       1
         ClickList       1       tag=div
+
+    Related keywords
+    ----------------
+    \`GetList\`, \`UseList\`, \`VerifyList\`
     """
     if _list_exists():
         active = ACTIVE_LIST.update_list()
@@ -124,7 +136,7 @@ def click_list(index, timeout=0, js=True, **kwargs):  # pylint: disable=unused-a
 
 
 def verify_no_list(text, index=None):
-    """Verify that text is not in the list.
+    r"""Verify that text is not in the list.
 
     Examples
     --------
@@ -133,6 +145,10 @@ def verify_no_list(text, index=None):
         UseList         Qentinel
         VerifyNoList    Pace Robot              #Text is not in list
         VerifyNoList    Test Automation     2   #List index 2 not containing text
+
+    Related keywords
+    ----------------
+    \`VerifyList\`
     """
     if _list_exists():
         active = ACTIVE_LIST.update_list()
@@ -144,7 +160,7 @@ def verify_no_list(text, index=None):
 
 
 def get_list(index=None, **kwargs):
-    """Verify that text is not in the list.
+    r"""Verify that text is not in the list.
 
     Examples
     --------
@@ -158,9 +174,10 @@ def get_list(index=None, **kwargs):
 
     Parameters
     ----------
-    index : if given, gets text only from that index.
-    kwargs :
-        |  Accepted kwargs:
+    index:
+        if given, gets text only from that index.
+    kwargs:
+        |   Accepted kwargs:
         |       between : str/int - Start???End - Return all chars between texts Start and End.
         |       from_start : int - Return x amount of chars. Starting from first char
         |       from_end : int - Return x amount of chars. Starting from last char
@@ -168,6 +185,10 @@ def get_list(index=None, **kwargs):
         |       exclude_post : False - Ending text is part of returned string
         |       int : True - Return integer instead of string
         |       float : int - Return float instead of string
+
+    Related keywords
+    ----------------
+    \`ClickList\`, \`UseList\`, \`VerifyList\`
     """
     active = ACTIVE_LIST.update_list()
     if index:

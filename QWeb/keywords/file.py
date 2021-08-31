@@ -29,7 +29,7 @@ ACTIVE_FILE = None
 
 
 def use_pdf(filename):
-    """Define pdf file for all other pdf keywords.
+    r"""Define pdf file for all other pdf keywords.
 
     Sets active file for other keywords.
 
@@ -45,13 +45,17 @@ def use_pdf(filename):
     filename : str
         Default folders = users/downloads and project_dir/files.
         Path is not needed if file is in default folder.
+
+    Related keywords
+    ----------------
+    \`GetPdfText\`, \`RemovePdf\`, \`UseFile\`, \`VerifyPdfText\`
     """
     global ACTIVE_FILE  # pylint:disable=global-statement
     ACTIVE_FILE = File.create_pdf_instance(filename)
 
 
 def use_file(filename):
-    """Define text file for all other file keywords.
+    r"""Define text file for all other file keywords.
 
     Sets active file for other keywords.
 
@@ -59,21 +63,26 @@ def use_file(filename):
     --------
     .. code-block:: robotframework
 
-        UsePdf            foobar..txt
-        UsePdf            some/existing/path/file.txt
+        UseFile            foobar..txt
+        UseFile            some/existing/path/file.txt
 
     Parameters
     ----------
     filename : str
         Default folders = users/downloads and project_dir/files.
         Path is not needed if file is in default folder.
+
+    Related keywords
+    ----------------
+    \`GetFileText\`, \`RemoveFile\`, \`SaveFile\`, \`UploadFile\`,
+    \`VerifyAll\`, \`VerifyFileDownload\`, \`VerifyFileText\`
     """
     global ACTIVE_FILE  # pylint:disable=global-statement
     ACTIVE_FILE = File.create_text_file_instance(filename)
 
 
 def get_pdf_text(**kwargs):
-    """Get text from pdf file.
+    r"""Get text from pdf file.
 
     Examples
     --------
@@ -94,13 +103,17 @@ def get_pdf_text(**kwargs):
         if set to False returns chars after locator text.
     exclude_post : bool
         if set to False returned string includes post_text
+
+    Related keywords
+    ----------------
+    \`RemovePdf\`, \`UsePdf\`, \`VerifyPdfText\`
     """
     _file_exists()
     return ACTIVE_FILE.get(**kwargs)
 
 
 def get_file_text(**kwargs):
-    """Get text from pdf file.
+    r"""Get text from pdf file.
 
     Examples
     --------
@@ -121,13 +134,17 @@ def get_file_text(**kwargs):
         if set to False returns chars after locator text.
     exclude_post : bool
         if set to False returned string includes post_text
+
+    Related keywords
+    ----------------
+    \`RemoveFile\`, \`UseFile\`, \`VerifyFileText\`
     """
     _file_exists()
     return ACTIVE_FILE.get(**kwargs)
 
 
 def verify_pdf_text(text, normalize=False):
-    """Verify text from pdf file.
+    r"""Verify text from pdf file.
 
     Examples
     --------
@@ -142,19 +159,23 @@ def verify_pdf_text(text, normalize=False):
         Text to verify
     normalize : bool
         Remove extra newlines (\\\\n)
+
+    Related keywords
+    ----------------
+    \`GetPdfText\`,\`RemovePdf\`, \`UsePdf\`
     """
     _file_exists()
     ACTIVE_FILE.verify(text, normalize)
 
 
 def verify_file_text(text, normalize=False):
-    """Verify text from pdf file.
+    r"""Verify text from pdf file.
 
     Examples
     --------
     .. code-block:: robotframework
 
-        VerifyPdfText     Test Automation
+        VerifyFileText     Test Automation
 
     Parameters
     ----------
@@ -162,13 +183,17 @@ def verify_file_text(text, normalize=False):
         Text to verify
     normalize : bool
         Remove extra newlines (\\\\n)
+
+    Related keywords
+    ----------------
+    \`GetFileText\`,\`RemoveFile\`, \`UseFile\`
     """
     _file_exists()
     ACTIVE_FILE.verify(text, normalize)
 
 
 def verify_no_pdf_text(text, normalize=False):
-    """Verify text not exists in pdf-file.
+    r"""Verify text not exists in pdf-file.
 
     Examples
     --------
@@ -182,6 +207,10 @@ def verify_no_pdf_text(text, normalize=False):
         Text that should not exist.
     normalize : bool
         Remove extra newlines (\\\\n)
+
+    Related keywords
+    ----------------
+    \`VerifyPdfText\`,\`VerifyFileText\`
     """
     _file_exists()
     try:
@@ -192,7 +221,7 @@ def verify_no_pdf_text(text, normalize=False):
 
 
 def verify_no_file_text(text, normalize=False):
-    """Verify text not exists in pdf-file.
+    r"""Verify text not exists in pdf-file.
 
     Examples
     --------
@@ -206,6 +235,10 @@ def verify_no_file_text(text, normalize=False):
         Text that should not exist.
     normalize : bool
         Remove extra newline (\\\\n)
+
+    Related keywords
+    ----------------
+    \`VerifyFileText\`, \`VerifyPdfText\`
     """
     _file_exists()
     try:
@@ -216,7 +249,7 @@ def verify_no_file_text(text, normalize=False):
 
 
 def remove_file(file=None):
-    """Remove a file.
+    r"""Remove a file.
 
     Examples
     --------
@@ -226,6 +259,10 @@ def remove_file(file=None):
        RemoveFile
 
        RemoveFile    C:/Users/pace/Desktop/yoink.pdf
+
+    Related keywords
+    ----------------
+    \`MoveFiles\`, \`RemovePdf\`, \`SaveFile\`, \`VerifyFile\`
     """
     if not file:
         _file_exists()
@@ -236,7 +273,7 @@ def remove_file(file=None):
 
 
 def remove_pdf():
-    """Remove a file.
+    r"""Remove a file.
 
     Examples
     --------
@@ -246,6 +283,10 @@ def remove_pdf():
        RemoveFile
 
        RemoveFile    C:/Users/pace/Desktop/yoink.pdf
+
+    Related keywords
+    ----------------
+    \`MoveFiles\`, \`RemoveFile\`, \`SaveFile\`, \`UsePdf\`
     """
     _file_exists()
     ACTIVE_FILE.remove()
@@ -302,7 +343,7 @@ def zip_files(name_of_zip, files_to_zip):
 
 
 def move_files(files_to_move, destination_folder):
-    """Move files.
+    r"""Move files.
 
     Examples
     --------
@@ -317,6 +358,10 @@ def move_files(files_to_move, destination_folder):
         Files to move, separated by "," in case of multiple files.
     destination_folder : str
         Destination folder of the moved files.
+
+    Related keywords
+    ----------------
+    \`RemoveFile\`, \`SaveFile\`, \`UploadFile\`, \`VerifyFile\`
     """
     if not os.path.isdir(destination_folder):
         raise QWebValueError('Destination folder does not exist.')

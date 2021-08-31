@@ -70,6 +70,11 @@ def click_element(xpath, timeout=0, js=False, index=1, **kwargs):
         |           by some of it's attribute (xpath is not needed)
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Related keywords
+    ----------------
+    \`ClickCell\`, \`ClickCheckbox\`, \`ClickIcon\`, \`ClickItem\`, \`ClickList\`,
+    \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`RightClick\`, \`VerifyElement\`
     """
     if isinstance(xpath, WebElement):
         web_element = xpath
@@ -113,6 +118,10 @@ def right_click(xpath, timeout=0, index=1, **kwargs):  # pylint: disable=unused-
         |           by some of it's attribute (xpath is not needed)
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Related keywords
+    ----------------
+    \`ClickElement\`, \`ClickItem\`, \`ClickText\`
     """
     index = int(index) - 1
     kwargs['element_kw'] = True
@@ -153,6 +162,11 @@ def hover_element(xpath, timeout=0, index=1, **kwargs):  # pylint: disable=unuse
         |           by some of it's attribute (xpath is not needed)
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
+
+    Related keywords
+    ----------------
+    \`HoverItem\`, \`HoverText\`, \`HoverTo\`, \`Scroll\`,
+    \`ScrollText\`, \`ScrollTo\`
     """
     if isinstance(xpath, WebElement):
         web_element = xpath
@@ -175,7 +189,7 @@ def get_element_count(locator, timeout=0, **kwargs):  # pylint: disable=unused-a
     Keyword waits until timeout has passed. If timeout is not specified, it
     uses default timeout that can be adjusted with DefaultTimeout keyword.
 
-    GetTextCount does not require for the text to be unique.
+    GetElementCount does not require for the text to be unique.
 
     Examples
     --------
@@ -193,6 +207,10 @@ def get_element_count(locator, timeout=0, **kwargs):  # pylint: disable=unused-a
         How long we try to find text before failing. Default 10 (seconds)
     Accepted kwargs:
         tag=tagname: Needed when attribute value is used as a locator
+
+    Related keywords
+    ----------------
+    \`GetTextCount\`, \`GetWebElement\`
     """
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
@@ -206,7 +224,7 @@ def get_element_count(locator, timeout=0, **kwargs):  # pylint: disable=unused-a
 
 
 def is_element(xpath, timeout='0.1s', index=1, **kwargs):  # pylint: disable=unused-argument
-    """Return True if element is visible.
+    r"""Return True if element is visible.
 
     Examples
     --------
@@ -235,6 +253,11 @@ def is_element(xpath, timeout='0.1s', index=1, **kwargs):  # pylint: disable=unu
     Returns
     -------
     Bool : True or False
+
+    Related keywords
+    ----------------
+    \`ClickElement\`, \`GetAttribute\`, \`GetWebElement\`, \`GetElementCount\`,
+    \`IsAlert\`, \`IsIcon\`, \`IsText\`, \`VerifyElement\`
     """
     try:
         verify_element(xpath, timeout, **kwargs)
@@ -281,6 +304,11 @@ def verify_element(xpath, timeout=0, **kwargs):  # pylint: disable=unused-argume
     ------
     QWebElementNotFoundError
         Page did not contain element
+
+    Related keywords
+    ----------------
+    \`ClickElement\`, \`GetAttribute\`, \`GetWebElement\`, \`GetElementCount\`,
+    \`VerifyItem\`, \`VerifyText\`
     """
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
@@ -331,6 +359,10 @@ def verify_no_element(xpath, timeout=0, **kwargs):  # pylint: disable=unused-arg
     ------
     NoSuchElementException
         Page did contain the element
+
+    Related keywords
+    ----------------
+    \`VerifyElement\`
     """
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
@@ -398,6 +430,10 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
         |       Any available for picked searching method.
         |       See interacting with text, item, input etc. elements from
         |       documentation
+
+    Related keywords
+    ----------------
+    \`ClickElement\`, \`HoverElement\`, \`TypeText\`
     """
     kwargs['index'] = kwargs.get('index', 1)
     kwargs['timeout'] = timeout
@@ -482,6 +518,10 @@ def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, 
     Returns
     -------
     value : Value of attribute (true if attribute exist but does not have value)
+
+    Related keywords
+    ----------------
+    \`VerifyAttribute\`, \`VerifyElement\`
     """
     webelement = get_webelement(locator, anchor, element_type, timeout, **kwargs)
 
@@ -556,6 +596,10 @@ def verify_attribute(locator, attribute, value, anchor='1', element_type=None, t
         |       Any available for picked searching method.
         |       See interacting with text, item, input etc. elements from
         |       documentation
+
+    Related keywords
+    ----------------
+    \`GetAttribute\`, \`VerifyElement\`
     """
     attr_val = get_attribute(locator, attribute, anchor, element_type, timeout, **kwargs)
 

@@ -102,7 +102,7 @@ secrets.add_filter("Type Secret", 1, None)
 
 
 def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
-    """Type secret information such as password.
+    r"""Type secret information such as password.
 
     Logging in start_keyword and end_keyword is filtered,
     otherwise functionality is the same as TypeText.
@@ -121,6 +121,10 @@ def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
         # robot --variable PASSWD:mypass123 test.robot
         TypeSecret            password    ${PASSWD}
         TypeSecret            r1c1        ${PASSWD}  #table
+
+    Related keywords
+    ----------------
+    \`TypeText\`
     """
     type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
@@ -230,6 +234,10 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         # using WebElement instance
         ${elem}=            GetWebElement  //input[@title\="Search"]
         TypeText            ${elem}     Text to search for
+
+    Related keywords
+    ----------------
+    \`PressKey\`, \`TypeSecret\`, \`TypeTexts\`, \`WriteText\`
     """
     if isinstance(locator, WebElement):
         input_element = locator
@@ -241,7 +249,7 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
 
 @decorators.timeout_decorator
 def type_texts(input_texts, timeout='0'):
-    """Type text to multiple fields.
+    r"""Type text to multiple fields.
 
     Accepts a .txt file or Robot FW dictionary as a parameter. If using a text file, the locator
     and the text should be separated with a comma on each row.
@@ -256,6 +264,10 @@ def type_texts(input_texts, timeout='0'):
         ${cool_dict}=           Create Dictionary    Name=Jane    Email=janedoe@iddqd.com
         ...                     Phone=04049292243923     Address=Yellow street 33 C 44
         TypeTexts               ${cool_dict}
+
+    Related keywords
+    ----------------
+    \`PressKey\`, \`TypeSecret\`, \`TypeText\`, \`WriteText\`
     """
     if isinstance(input_texts, dict):
         for locator in input_texts:
@@ -314,16 +326,20 @@ def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1,
         If table cell contains more than one input elements or if there is some kind of
         nested structure inside of given input index may needed. Default = 1 (first)
     kwargs :
-    |  Accepted kwargs:
-    |       limit_traverse : False. If limit traverse is set to false we are heading up to
-    |       fifth parent element if needed when finding relative input element for some label.
-    |       partial_match: True. If element is found by it's attribute set partial_match
-    |       to True to allow partial match
+        |   Accepted kwargs :
+        |       limit_traverse : False. If limit traverse is set to false we are heading up to
+        |       fifth parent element if needed when finding relative input element for some label.
+        |       partial_match: True. If element is found by it's attribute set partial_match
+        |       to True to allow partial match
 
     Raises
     ------
     ValueError
         If the input value is not the same
+
+    Related keywords
+    ----------------
+    \`GetInputValue\`, \`VerifyInputElement\`, \`VerifyInputStatus\`, \`VerifyInputValues\`
     """
     if isinstance(locator, WebElement):
         input_element = locator
@@ -335,7 +351,7 @@ def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1,
 
 @decorators.timeout_decorator
 def verify_input_values(input_values, timeout='0'):
-    """Verify input fields have given values.
+    r"""Verify input fields have given values.
 
     Accepts a .txt file or Robot FW dictionary as a parameter. If using a text file, the locator
     and the expected value should be separated with a comma on each row.
@@ -350,6 +366,10 @@ def verify_input_values(input_values, timeout='0'):
         ${cool_dict}=           Create Dictionary    Name=Jane    Email=janedoe@iddqd.com
         ...                     Phone=04049292243923     Address=Yellow street 33 C 44
         VerifyInputValues       ${cool_dict}
+
+    Related keywords
+    ----------------
+    \`VerifyInputValue\`
     """
     if isinstance(input_values, dict):
         for locator in input_values:
@@ -424,6 +444,10 @@ def verify_input_status(locator, status, anchor="1", timeout=0, index=1, **kwarg
     ------
     QWebValueError
         If the field interaction is not the same
+
+    Related keywords
+    ----------------
+    \`GetInputValue\`, \`VerifyInputElement\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
     input_element = input_.get_input_elements_from_all_documents(
         locator, anchor, timeout=timeout, index=index, enable_check=True, **kwargs)
@@ -442,7 +466,7 @@ def verify_input_status(locator, status, anchor="1", timeout=0, index=1, **kwarg
 
 @decorators.timeout_decorator
 def verify_input_element(locator, anchor='1', timeout=0, index=1, **kwargs):
-    """Verify that input element exist.
+    r"""Verify that input element exist.
 
     Examples
     --------
@@ -486,6 +510,10 @@ def verify_input_element(locator, anchor='1', timeout=0, index=1, **kwargs):
     Raises
     ------
     NoSuchElementException: Checkbox element not found
+
+    Related keywords
+    ----------------
+    \`GetInputValue\`, \`VerifyInputStatus\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
     input_element = input_.get_input_elements_from_all_documents(
         locator, anchor, timeout=timeout, index=index, **kwargs)
@@ -546,6 +574,10 @@ def get_input_value(locator, anchor='1', timeout=0, index=1, **kwargs):
         |       partial_match: True. If element is found by it's attribute set partial_match
         |       to True to allow partial match
         |       blind : True - Return empty instead of error if input element is empty
+
+    Related keywords
+    ----------------
+    \`VerifyInputElement\`, \`VerifyInputStatus\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
     input_element = input_.get_input_elements_from_all_documents(
         locator, anchor, timeout=timeout, index=index, **kwargs)
@@ -555,7 +587,7 @@ def get_input_value(locator, anchor='1', timeout=0, index=1, **kwargs):
 
 @decorators.timeout_decorator
 def upload_file(locator, filename, anchor='1', timeout=0, index=1, **kwargs):
-    """Upload file.
+    r"""Upload file.
 
     Examples
     --------
@@ -596,6 +628,10 @@ def upload_file(locator, filename, anchor='1', timeout=0, index=1, **kwargs):
     Raises
     ------
     ValueError: File not found
+
+    Related keywords
+    ----------------
+    \`SaveFile\`
     """
     kwargs['css'] = kwargs.get('css', '[type="file"]')
     kwargs['upload'] = util.par2bool(kwargs.get('upload', True))
@@ -612,7 +648,7 @@ def upload_file(locator, filename, anchor='1', timeout=0, index=1, **kwargs):
 
 @decorators.timeout_decorator
 def press_key(locator, key, anchor=u"1", timeout='0', **kwargs):
-    """Simulate user pressing keyboard key on element identified by "locator".
+    r"""Simulate user pressing keyboard key on element identified by "locator".
 
     The parameter "key" is either a single character or a keyboard key surrounded by '{ }'.
 
@@ -627,6 +663,9 @@ def press_key(locator, key, anchor=u"1", timeout='0', **kwargs):
         PressKey    other_field    {CONTROL + V}    # Paste copied text
         PressKey    text_field     {PASTE}          # Paste copied text
 
+    Related keywords
+    ----------------
+    \`TypeSecret\`, \`TypeText\`, \`WriteText\`
     """
     try:
         input_element = input_.get_input_elements_from_all_documents(

@@ -28,7 +28,7 @@ from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
 
 
 def return_browser():
-    """Return browser instance.
+    r"""Return browser instance.
 
     Use this function if you need to expand QWeb and require direct browser access.
 
@@ -37,12 +37,17 @@ def return_browser():
      .. code-block:: robotframework
 
         ReturnBrowser
+
+
+    Related keywords
+    ----------------
+    \`GetWebElement\`
     """
     return browser.get_current_browser()
 
 
 def open_browser(url, browser_alias, options=None, **kwargs):
-    """Open new browser to given url.
+    r"""Open new browser to given url.
 
     Uses the Selenium2Library open_browser method if the browser is not Chrome.
 
@@ -116,7 +121,13 @@ def open_browser(url, browser_alias, options=None, **kwargs):
     Raises
     ------
     ValueError
-        Unkonown browser type
+        Unknown browser type
+
+    Related keywords
+    ----------------
+    \`Back\`, \`CloseAllBrowsers\`, \`CloseBrowser\`, \`GetTitle\`,
+    \`GetUrl\`, \`GoTo\`, \`RefreshPage\`, \`ReturnBrowser\`,
+    \`SwitchWindow\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
     try:
         logger.info('\nQWeb version number: {}'.format(pkg_resources.get_distribution
@@ -188,7 +199,7 @@ def _close_remote_browser_session(driver, close_only=False):
 
 
 def close_browser():
-    """Close current browser.
+    r"""Close current browser.
 
     This will also close remote browser sessions if open.
 
@@ -198,6 +209,9 @@ def close_browser():
 
         CloseBrowser
 
+    Related keywords
+    ----------------
+    \`CloseAllBrowsers\`, \`CloseRemoteBrowser\`, \`OpenBrowser\`
     """
     driver = browser.get_current_browser()
     if driver is not None:
@@ -212,7 +226,7 @@ def close_browser():
 
 
 def close_remote_browser():
-    """Close remote browser session which is connected to the target browser.
+    r"""Close remote browser session which is connected to the target browser.
 
     Closes only the remote browser session and leaves the target browser
     running. This makes it possible to continue using the existing browser
@@ -229,6 +243,9 @@ def close_remote_browser():
 
         CloseBrowserSession
 
+    Related keywords
+    ----------------
+    \`CloseAllBrowsers\`, \`CloseBrowser\`, \`OpenBrowser\`
     """
     driver = browser.get_current_browser()
     if driver is not None:
@@ -239,7 +256,7 @@ def close_remote_browser():
 
 
 def close_all_browsers():
-    """Close all opened browsers.
+    r"""Close all opened browsers.
 
     Examples
     --------
@@ -247,6 +264,9 @@ def close_all_browsers():
 
         CloseAllBrowsers
 
+    Related keywords
+    ----------------
+    \`CloseBrowser\`, \`CloseRemoteBrowser\`, \`OpenBrowser\`
     """
     drivers = browser.get_open_browsers()
     for driver in drivers:
@@ -264,7 +284,7 @@ def close_all_browsers():
 
 
 def verify_links(url='current', log_all=False, header_only=True):
-    """Verify that all links on a given website return good HTTP status codes.
+    r"""Verify that all links on a given website return good HTTP status codes.
 
     Examples
     --------
@@ -306,6 +326,10 @@ def verify_links(url='current', log_all=False, header_only=True):
     header_only : bool
         True: check headers only (default)
         False: In case of header returning 404 or 405, double-check with GET
+
+    Related keywords
+    ----------------
+    \`GoTo\`,\`VerifyTitle\`, \`VerifyUrl\`
     """
     if url == 'current':
         driver = browser.get_current_browser()

@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiselection dropdown support with adding argument "unselect=True" to **DropDown**
 - Multiselection support to **GetSelected** too. If there are multiple options selected, each selection will be separated by comma (,)
 - Added argument **header_only** to **VerifyLinks**. Even if header and get normally return the same status, server can be configured to return different code from header.
+- **RunBefore** made public and modified to accept Robot Framework syntax
+- Added **Related Keywords** section to documentation for most keywords
 
 ## [1.0.6] - 2021-07-02
 ### Changed

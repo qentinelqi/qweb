@@ -26,7 +26,7 @@ cur_mode = None
 
 
 def debug_on(mode='draw'):
-    """Start debugger with drawing mode and set default timeout down to 2 sec.
+    r"""Start debugger with drawing mode and set default timeout down to 2 sec.
 
     Examples
     --------
@@ -40,6 +40,10 @@ def debug_on(mode='draw'):
     mode : str
        debug(default) = Highlight(blink) element without executing kw
        draw = Highlight element and execute kw
+
+    Related keywords
+    ----------------
+    \`DebugOff\`
     """
     dbg = DebugLibrary()
     global cur_mode  # pylint: disable=global-statement
@@ -53,7 +57,7 @@ def debug_on(mode='draw'):
 
 
 def debug_off():
-    """Exit debugger. Set timeout and SearchMode back to default.
+    r"""Exit debugger. Set timeout and SearchMode back to default.
 
     Examples
     --------
@@ -61,6 +65,9 @@ def debug_off():
 
        debugoff
 
+    Related keywords
+    ----------------
+    \`DebugOn\`
     """
     CONFIG.set_value('SearchMode', cur_mode)
     CONFIG.set_value('DefaultTimeout', cur_timeout)

@@ -25,7 +25,7 @@ from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 
 
 def verify_file_download(timeout=0):
-    """Verify file has been downloaded and return file path.
+    r"""Verify file has been downloaded and return file path.
 
     Parameters
     ----------
@@ -40,6 +40,10 @@ def verify_file_download(timeout=0):
     Returns
     -------
     text : downloaded file path
+
+    Related keywords
+    ----------------
+    \`ExpectFileDownload\`, \`SaveFile\`, \`UploadFile\`
     """
     frame.wait_page_loaded()
     download_dir = download.get_downloads_dir()
@@ -75,9 +79,13 @@ def verify_file_download(timeout=0):
 
 
 def expect_file_download():
-    """Set the time after which the download should happen.
+    r"""Set the time after which the download should happen.
 
     Run this keyword everytime before VerifyFileDownload.
+
+    Related keywords
+    ----------------
+    \`SaveFile\`, \`UploadFile\`, \`VerifyFileDownload\`
     """
     now = time.time()
     logger.info('The time has been set to {}'

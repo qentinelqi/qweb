@@ -24,7 +24,7 @@ from QWeb.internal.config_defaults import CONFIG
 
 @decorators.timeout_decorator
 def go_to(url, timeout=0):  # pylint: disable=unused-argument
-    """Switch current page to given url.
+    r"""Switch current page to given url.
 
     Examples
     --------
@@ -42,6 +42,10 @@ def go_to(url, timeout=0):  # pylint: disable=unused-argument
     ------
     UnexpectedAlertPresentException
         If the page opens with alert popup
+
+    Related keywords
+    ----------------
+    \`CloseAllBrowsers\`, \`CloseBrowser\`, \`OpenBrowser\`, \`OpenWindow\`, \`SwitchWindow\`
     """
     driver = browser.get_current_browser()
     if driver is None:
@@ -51,7 +55,7 @@ def go_to(url, timeout=0):  # pylint: disable=unused-argument
 
 
 def open_window():
-    """Open new tab.
+    r"""Open new tab.
 
     Uses javascript to do this so javascript has to be enabled.
 
@@ -61,6 +65,10 @@ def open_window():
 
         OpenWindow
 
+    Related keywords
+    ----------------
+    \`CloseAllBrowsers\`, \`CloseBrowser\`, \`CloseOthers\`, \`GoTo\`,
+    \`OpenBrowser\`, \`SwitchWindow\`
     """
     script = 'window.open()'
     javascript.execute_javascript(script)
@@ -76,7 +84,7 @@ def open_window():
 
 
 def close_others():
-    """Close all windows except the first window.
+    r"""Close all windows except the first window.
 
     If you have a test that may open new windows, this keyword closes them
     and switches to the first window.
@@ -91,6 +99,10 @@ def close_others():
     ------
     NoSuchWindowException
         If other windows cannot been closed
+
+    Related keywords
+    ----------------
+    \`CloseBrowser\`, \`CloseWindow\`, \`GoTo\`, \`OpenWindow\`, \`SwitchWindow\`
     """
     window_handles = window.get_window_handles()
     logger.info("Current browser has {} tabs".format(len(window_handles)))
@@ -115,7 +127,7 @@ def close_others():
 
 
 def close_window():
-    """Close current tab and switch context to another window handle.
+    r"""Close current tab and switch context to another window handle.
 
     If you need to change to specific tab, use switch window keyword.
 
@@ -125,6 +137,9 @@ def close_window():
 
         CloseWindow
 
+    Related keywords
+    ----------------
+    \`CloseBrowser\`, \`CloseOthers\`, \`GoTo\`, \`OpenWindow\`, \`SwitchWindow\`
     """
     driver = browser.get_current_browser()
     window_handles = window.get_window_handles()
@@ -157,7 +172,7 @@ def close_window():
 
 @decorators.timeout_decorator
 def switch_window(index, timeout=0):  # pylint: disable=unused-argument
-    """Switch to another tab.
+    r"""Switch to another tab.
 
     Examples
     --------
@@ -179,6 +194,10 @@ def switch_window(index, timeout=0):  # pylint: disable=unused-argument
     ------
     ValueError
          If the window index is out of reach
+
+    Related keywords
+    ----------------
+    \`CloseBrowser\`, \`CloseWindow\`, \`CloseOthers\`, \`GoTo\`, \`OpenWindow\`
     """
     window_handles = window.get_window_handles()
     logger.info("Current browser contains {} tabs".format(len(window_handles)))
@@ -229,7 +248,7 @@ def set_window_size(width, height):
 
 
 def maximize_window():
-    """Maximizes current browser window.
+    r"""Maximizes current browser window.
 
     Note: This keyword will not fail if maximizing is prevented for some reason.
           This can happen for example if window manager is not installed or setup correctly.
@@ -244,6 +263,10 @@ def maximize_window():
     Parameters
     ----------
     None
+
+    Related keywords
+    ----------------
+    \`Back\`,\`RefreshPage\`, \`OpenWindow\`, \`SwitchWindow\`
     """
     driver = browser.get_current_browser()
     if driver is None:
@@ -265,7 +288,7 @@ def maximize_window():
 
 
 def get_url():
-    """Gets current url/location.
+    r"""Gets current url/location.
 
 
     Examples
@@ -278,6 +301,10 @@ def get_url():
     Parameters
     ----------
     None
+
+    Related keywords
+    ----------------
+    \`GetTitle\`,\`VerifyTitle\`, \`VerifyUrl\`
     """
     driver = browser.get_current_browser()
     if driver is None:
@@ -288,7 +315,7 @@ def get_url():
 
 @decorators.timeout_decorator
 def verify_url(url, timeout=0):  # pylint: disable=unused-argument
-    """Verifies that current page url/location matches expected url.
+    r"""Verifies that current page url/location matches expected url.
 
 
     Examples
@@ -310,6 +337,10 @@ def verify_url(url, timeout=0):  # pylint: disable=unused-argument
     ------
     QWebValueError
         If the expected url differs from current url
+
+    Related keywords
+    ----------------
+    \`GetTitle\`, \`GetUrl\`, \`VerifyTitle\`
     """
     driver = browser.get_current_browser()
     if driver is None:
@@ -322,7 +353,7 @@ def verify_url(url, timeout=0):  # pylint: disable=unused-argument
 
 
 def get_title():
-    """Gets the title of current page/window.
+    r"""Gets the title of current page/window.
 
 
     Examples
@@ -335,6 +366,10 @@ def get_title():
     Parameters
     ----------
     None
+
+    Related keywords
+    ----------------
+    \`GetUrl\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
     driver = browser.get_current_browser()
     if driver is None:
@@ -345,7 +380,7 @@ def get_title():
 
 @decorators.timeout_decorator
 def verify_title(title, timeout=0):  # pylint: disable=unused-argument
-    """Verifies that current page's title matches expected title.
+    r"""Verifies that current page's title matches expected title.
 
 
     Examples
@@ -367,6 +402,10 @@ def verify_title(title, timeout=0):  # pylint: disable=unused-argument
     ------
     QWebValueError
         If the expected title differs from actual page title
+
+    Related keywords
+    ----------------
+    \`GetTitle\`, \`GetUrl\`, \`VerifyUrl\`
     """
     driver = browser.get_current_browser()
     if driver is None:
@@ -379,7 +418,7 @@ def verify_title(title, timeout=0):  # pylint: disable=unused-argument
 
 
 def swipe_down(times='1', start=None):
-    """Swipes down on the screen.
+    r"""Swipes down on the screen.
 
     Examples
     --------
@@ -401,12 +440,16 @@ def swipe_down(times='1', start=None):
     ------
     ValueError
         If the swipe amount is not an integer.
+
+    Related keywords
+    ----------------
+    \`SwipeLeft\`, \`SwipeRight\`, \`SwipeUp\`
     """
     window.swipe('down', times, start)
 
 
 def swipe_up(times='1', start=None):
-    """Swipes up on the screen.
+    r"""Swipes up on the screen.
 
     Examples
     --------
@@ -428,12 +471,16 @@ def swipe_up(times='1', start=None):
     ------
     ValueError
         If the swipe amount is not an integer.
+
+    Related keywords
+    ----------------
+    \`SwipeDown\`, \`SwipeLeft\`, \`SwipeRight\`
     """
     window.swipe('up', times, start)
 
 
 def swipe_left(times='1', start=None):
-    """Swipes left on the screen.
+    r"""Swipes left on the screen.
 
     Examples
     --------
@@ -455,12 +502,16 @@ def swipe_left(times='1', start=None):
     ------
     ValueError
         If the swipe amount is not an integer.
+
+    Related keywords
+    ----------------
+    \`SwipeDown\`, \`SwipeRight\`, \`SwipeUp\`
     """
     window.swipe('left', times, start)
 
 
 def swipe_right(times='1', start=None):
-    """Swipes right on the screen.
+    r"""Swipes right on the screen.
 
     Examples
     --------
@@ -482,5 +533,9 @@ def swipe_right(times='1', start=None):
     ------
     ValueError
         If the swipe amount is not an integer.
+
+    Related keywords
+    ----------------
+    \`SwipeDown\`, \`SwipeLeft\`, \`SwipeUp\`
     """
     window.swipe('right', times, start)
