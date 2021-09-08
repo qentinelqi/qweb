@@ -1,3 +1,4 @@
+import platform
 from msedge.selenium_tools import Edge, EdgeOptions
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
@@ -27,6 +28,9 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     """
     options = EdgeOptions()
     options.use_chromium = True
+    if platform.system().lower() == "linux":
+        options.set_capability("platform", "LINUX")
+
     # If user wants to re-use existing browser session then
     # he/she has to set variable BROWSER_REUSE_ENABLED to True.
     # If enabled, then web driver connection details are written
