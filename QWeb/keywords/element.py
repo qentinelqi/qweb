@@ -287,7 +287,7 @@ def verify_element(xpath, timeout=0, **kwargs):  # pylint: disable=unused-argume
     Parameters
     ----------
     xpath : str
-        Xpath expression without xpath= prefix. The equal sign "=" must be escaped with a "\".
+        Xpath expression without xpath= prefix. The equal sign "=" must be escaped with a "\\".
     timeout : str | int
         Timeout for finding the element. If the element is not visible after
         given timeout, error is raised. The str is converted to integer
@@ -342,7 +342,7 @@ def verify_no_element(xpath, timeout=0, **kwargs):  # pylint: disable=unused-arg
     Parameters
     ----------
     xpath : str
-        Xpath expression without xpath= prefix. The equal sign "=" must be escaped with a "\".
+        Xpath expression without xpath= prefix. The equal sign "=" must be escaped with a "\\".
     timeout : str | int
         Timeout for the element to disappear. If the element is visible after
         given timeout, error is raised. The str is converted to integer
@@ -417,7 +417,7 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
     ----------
     locator : str
         Visible text, attribute value or Xpath expression with or without xpath= prefix.
-        The equal sign "=" must be escaped with a "\".
+        The equal sign "=" must be escaped with a "\\".
     anchor : int
         Used when element_type is defined. Default=1 (first match)
     element_type : string
@@ -499,7 +499,7 @@ def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, 
     ----------
     locator : str
         Visible text, attribute value or Xpath expression with or without xpath= prefix.
-        The equal sign "=" must be escaped with a "\".
+        The equal sign "=" must be escaped with a "\\".
     attribute: str
         Attribute which value we want to get.
     anchor : int
@@ -579,7 +579,7 @@ def verify_attribute(locator, attribute, value, anchor='1', element_type=None, t
     ----------
     locator : str
         Visible text, attribute value or Xpath expression with or without xpath= prefix.
-        The equal sign "=" must be escaped with a "\".
+        The equal sign "=" must be escaped with a "\\".
     attribute: str
         Attribute which value we want to get.
     value: str
