@@ -31,6 +31,9 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     if platform.system().lower() == "linux":
         options.set_capability("platform", "LINUX")
 
+    if platform.system().lower() == "darwin":
+        options.set_capability("platform", "MAC")
+
     # If user wants to re-use existing browser session then
     # he/she has to set variable BROWSER_REUSE_ENABLED to True.
     # If enabled, then web driver connection details are written
