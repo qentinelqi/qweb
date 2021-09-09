@@ -665,7 +665,7 @@ def verify_element_text(locator, text_to_find, timeout=0, anchor="1", **kwargs):
     ----------
     locator : str
         Visible text, some attribute of wanted element or Xpath expression without xpath= prefix.
-        When using XPaths, the equal sign "=" must be escaped with a "\".
+        When using XPaths, the equal sign "=" must be escaped with a "\\".
     text_to_find : str
         The text we are trying to verify from the element.
     timeout : int
@@ -720,7 +720,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     ----------
     locator : str
         Visible text, some attribute of wanted element or Xpath expression without xpath= prefix.
-        When using XPaths, the equal sign "=" must be escaped with a "\".
+        When using XPaths, the equal sign "=" must be escaped with a "\\".
     timeout : int
         How long we wait that element is found before failing.
     anchor : str

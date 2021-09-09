@@ -53,7 +53,7 @@ def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=un
         Text that locates the table. The table that is closest
         to the text is selected. Also one can use xpath by adding xpath= prefix
         and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     anchor : str
         Index number or text near the input field's locator element.
         If the page contains many places where the locator is then anchor is used

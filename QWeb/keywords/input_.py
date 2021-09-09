@@ -153,7 +153,7 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use xpath by adding xpath= prefix
         and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     input_text : str
         Text that will be written in the input field
@@ -311,7 +311,7 @@ def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1,
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use xpath by adding xpath= prefix
         and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     expected_value : str
         Text that the input field should contain.
     anchor : str
@@ -419,7 +419,7 @@ def verify_input_status(locator, status, anchor="1", timeout=0, index=1, **kwarg
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use xpath by adding xpath= prefix
         and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     status : str
         Status for the input field. Either enabled, readonly or disabled.
     anchor : str
@@ -548,7 +548,7 @@ def get_input_value(locator, anchor='1', timeout=0, index=1, **kwargs):
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use xpath by adding xpath= prefix
         and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     anchor : str
         Index number or text near the input field's locator element.
         If the page contains many places where the locator is then anchor is used

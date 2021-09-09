@@ -278,7 +278,7 @@ def get_drop_down_values(locator, anchor='1', timeout=0, index=1, **kwargs):
     dropdown menu Canis to a variable.
 
     This keyword can also be used with table cells and XPaths. When using XPaths, the equal sign "="
-    must be escaped with a "\".
+    must be escaped with a "\\".
 
     Parameters
     ----------
@@ -319,7 +319,7 @@ def verify_no_option(locator, option, anchor='1', timeout=0, index=1, **kwargs):
     from the Foobar dropdown menu/list.
 
     This keyword can also be used with table cells and XPaths. When using XPaths, the equal sign "="
-    must be escaped with a "\".
+    must be escaped with a "\\".
 
     Parameters
     ----------

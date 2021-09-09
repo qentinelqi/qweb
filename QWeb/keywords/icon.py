@@ -150,7 +150,7 @@ def capture_icon(locator, folder='screenshots', filename='screenshot_{}.png',
     ----------
     locator : str
         Locator for the element we are trying to capture, XPath or attribute value. When using
-        XPaths, the equal sign "=" must be escaped with a "\".
+        XPaths, the equal sign "=" must be escaped with a "\\".
     folder : str
         Optional folder path. Default value is the screenshots folder.
     filename : str

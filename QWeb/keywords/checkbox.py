@@ -58,7 +58,7 @@ def click_checkbox(locator, value, anchor="1", timeout=0, index=1, **kwargs):
         Text that locates the checkbox. The checkbox that is closest to the
         text is selected. Also one can use xpath by adding xpath= prefix and
         then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     value : str
         Value of the checkbox. On or off.
     anchor : str (default None)
@@ -126,7 +126,7 @@ def verify_checkbox_status(locator, status, anchor="1", timeout=0, index=1, **kw
         Text that locates the checkbox. The checkbox that is closest to the
         text is selected. Also one can use xpath by adding xpath= prefix and
         then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     status : str
         Status for the checkbox. Either enabled or disabled.
     anchor : str (default None)
@@ -197,7 +197,7 @@ def verify_checkbox_value(locator, value, anchor="1", timeout=0, index=1, **kwar
         Text that locates the checkbox. The checkbox that is closest to the
         text is selected. Also one can use xpath by adding xpath= prefix and
         then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\".
+        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
     value : str
         Value of the checkbox. On or off.
     anchor : str (default None)
