@@ -28,6 +28,10 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     """
     options = EdgeOptions()
     options.use_chromium = True
+
+    if platform.system().lower() == "windows":
+        options.set_capability("platform", "WINDOWS")
+
     if platform.system().lower() == "linux":
         options.set_capability("platform", "LINUX")
 
