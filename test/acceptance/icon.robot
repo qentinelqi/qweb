@@ -14,28 +14,28 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 *** Test Cases ***
 Click icons
     [Tags]                  ICON
-    ClickIcon               person
+    ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
-    ClickIcon               lock
+    ClickIcon               lock                  template_res_w=1920
     VerifyText              Lock is my title value!
-    ClickIcon               screen
+    ClickIcon               screen                template_res_w=1920
     VerifyText              screen is my data-icon value!
 
 Verify icons
     [Tags]                  ICON
-    VerifyIcon              person
-    VerifyIcon              power
-    VerifyIcon              paperclip
-    VerifyIcon              infinity
-    VerifyIcon              Lock
-    VerifyIcon              screen
+    VerifyIcon              person                template_res_w=1920
+    VerifyIcon              power                 template_res_w=1920
+    VerifyIcon              paperclip             template_res_w=1920
+    VerifyIcon              infinity              template_res_w=1920
+    VerifyIcon              Lock                  template_res_w=1920
+    VerifyIcon              screen                template_res_w=1920
 
 
 Click icons new screenshot
     [Tags]                  ICON
-    ClickIcon               person
-    ClickIcon               power
-    ClickText               Hide
+    ClickIcon               person                template_res_w=1920
+    ClickIcon               power                 template_res_w=1920
+    ClickText               Hide                  template_res_w=1920
     Run Keyword And Expect Error    QWebElementNotFoundError:*   ClickIcon      person   timeout=3
 
 
@@ -54,7 +54,7 @@ Capture icons and verify them
 
 IsIcon True
     [Tags]                  ICON
-    ${result}               isIcon                  paperclip
+    ${result}               isIcon                  paperclip                   template_res_w=1920
     Should Be True          ${result}
 
 IsIcon False
