@@ -18,6 +18,7 @@
 import pyautogui
 from QWeb.internal import icon, decorators, screenshot, util, text, element
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebIconNotFoundError
+from QWeb.internal.config_defaults import CONFIG
 from PIL import Image
 from robot.api import logger
 import io
@@ -25,7 +26,7 @@ import os
 
 
 @decorators.timeout_decorator
-def click_icon(image, template_res_w=1920, browser_res_w=1920,
+def click_icon(image, template_res_w=1920, browser_res_w=None,
                timeout=0):  # pylint: disable=unused-argument
     r"""Click the icon on the screen.
 
@@ -53,16 +54,22 @@ def click_icon(image, template_res_w=1920, browser_res_w=1920,
     \`ClickItem\`, \`ClickList\`, \`ClickText\`,
     \`ClickUntil\`, \`ClickWhile\`, \`VerifyIcon\`
     """
+    if not browser_res_w:
+        browser_res_w = util.get_monitor_width()  # pyautogui works on whole screen
+
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
     x, y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=True)
     if x == -1:
         raise QWebElementNotFoundError("Couldn't find the icon from the screen")
+    if CONFIG.get_value("RetinaDisplay"):
+        x = x * 0.5
+        y = y * 0.5
     pyautogui.moveTo(x, y)
-    pyautogui.click()
+    pyautogui.click(x, y)
 
 
-def is_icon(image, template_res_w=1920, browser_res_w=1920):
+def is_icon(image, template_res_w=1920, browser_res_w=None):
     r"""Check is the icon on the screen.
 
     In case you want to use this keyword you always have to have reference images.
@@ -88,16 +95,20 @@ def is_icon(image, template_res_w=1920, browser_res_w=1920):
     ----------------
     \`CaptureIcon\`, \`ClickIcon\`, \`VerifyIcon\`
     """
+    if not browser_res_w:
+        browser_res_w = util.get_browser_width()
+
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
     x, _y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=False)
+
     if x == -1:
         return False
     return True
 
 
 @decorators.timeout_decorator
-def verify_icon(image, template_res_w=1920, browser_res_w=1920,
+def verify_icon(image, template_res_w=1920, browser_res_w=None,
                 timeout=0):  # pylint: disable=unused-argument
     r"""Verify page contains icon.
 
@@ -118,11 +129,28 @@ def verify_icon(image, template_res_w=1920, browser_res_w=1920,
 
         VerifyIcon                   plane
 
+    Parameters
+    ----------
+    image : str
+        Image name with or without extension
+    template_res_w : int
+        Reference image resolution / width. 1920 by default and
+        image will be scaled to most common resolutions.
+    browser_res_w : int
+        Browser resolution / width. None (default) indicates
+        that QWeb will figure out current browser width.
+    timeout : int
+        How long we try to find the element for.
+
     Related keywords
     ----------------
     \`CaptureIcon\`, \`ClickIcon\`, \`IsIcon\`
     """
+    if not browser_res_w:
+        browser_res_w = util.get_browser_width()
+
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
+
     image_path = icon.get_full_image_path(image)
     x, _y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=False)
     if x == -1:

@@ -84,7 +84,8 @@ CONFIG_DEFAULTS = {
     "StayInCurrentFrame": (False, util.par2bool),
     "FrameTimeout": ("10s", SearchStrategies.default_timeout_validation),
     "AllTextNodes": (False, util.par2bool),
-    "OSScreenshots": (False, util.par2bool)
+    "OSScreenshots": (False, util.par2bool),
+    "RetinaDisplay": (util.is_retina(), util.par2bool)
 }
 
 CONFIG = Config(CONFIG_DEFAULTS)

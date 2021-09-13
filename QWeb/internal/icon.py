@@ -22,6 +22,7 @@ from pathlib import Path
 from QWeb.internal import frame, download
 from QWeb.internal.meas import MEAS
 from QWeb.internal.screenshot import save_screenshot
+from QWeb.internal.config_defaults import CONFIG
 
 
 class QIcon:
@@ -58,7 +59,7 @@ class QIcon:
         """
 
         scale_ratios = [1.00, 0.75, 0.50, 0.86, 0.78,
-                        0.58, 1.33, 0.67, 1.15]
+                        0.58, 1.33, 0.67, 1.15, 2.0]
 
         if device_res_w <= 0 or template_res_w <= 0:
             raise ValueError("Device resolution {} or template resolution {}"
@@ -252,10 +253,7 @@ class QIcon:
 
         print("*DEBUG* Resampling loop Starts")
         for scale_ratio in scale_ratios:
-            if scale_ratio > 1.0:
-                interpolation_method = cv2.INTER_LINEAR
-            else:
-                interpolation_method = cv2.INTER_AREA
+            interpolation_method = cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
 
             print(("*DEBUG* resize starts: for scale {}".format(scale_ratio)))
 
@@ -269,12 +267,23 @@ class QIcon:
             res = cv2.matchTemplate(image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
+
             print("*DEBUG* _extract_points Starts:")
-            _current_points, highest_max_val, highest_max_val_loc = self._extract_points(height,
-                                                                                         res,
-                                                                                         tolerance,
-                                                                                         width,
-                                                                                         ratio)
+            if CONFIG.get_value("RetinaDisplay"):
+                _current_points, highest_max_val, highest_max_val_loc = \
+                    self._extract_points(height * 2,
+                                         res,
+                                         tolerance,
+                                         width * 2,
+                                         ratio * 2)
+            else:
+                _current_points, highest_max_val, highest_max_val_loc = \
+                    self._extract_points(height,
+                                         res,
+                                         tolerance,
+                                         width,
+                                         ratio)
+
             if highest_max_val > best_highest_max_val:
                 best_highest_max_val = highest_max_val
                 best_highest_max_val_loc = highest_max_val_loc
@@ -290,6 +299,7 @@ class QIcon:
                 if best_highest_max_val > tolerance:
                     if draw == 1:
                         loc = np.where(res >= tolerance)
+
                         for pt in zip(*loc[::-1]):
                             cv2.rectangle(image, pt,
                                           (pt[0] + width, pt[1] + height),

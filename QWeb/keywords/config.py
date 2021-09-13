@@ -612,6 +612,20 @@ def set_config(par, val):
         ClickText    Foo
         # Waits that text "Loading..." disappears before running other keywords
 
+    ---
+    Parameter: RetinaDisplay
+
+    Is current monitor Retina display (True) or not (False). Will be automatically
+    set based on used monitor, but can be changed for testing purposes if needed.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    RetinaDisplay       False
+
+    ---
+
     Related keywords
     ----------------
     \`GetConfig\`, \`ResetConfig\`
