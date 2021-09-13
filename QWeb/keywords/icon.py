@@ -26,7 +26,7 @@ import os
 
 
 @decorators.timeout_decorator
-def click_icon(image, template_res_w=1920, browser_res_w=None,
+def click_icon(image, template_res_w=None, browser_res_w=None,
                timeout=0):  # pylint: disable=unused-argument
     r"""Click the icon on the screen.
 
@@ -57,6 +57,10 @@ def click_icon(image, template_res_w=1920, browser_res_w=None,
     if not browser_res_w:
         browser_res_w = util.get_monitor_width()  # pyautogui works on whole screen
 
+    # use current resolution by default
+    if not template_res_w:
+        template_res_w = browser_res_w
+
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
     x, y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=True)
@@ -69,7 +73,7 @@ def click_icon(image, template_res_w=1920, browser_res_w=None,
     pyautogui.click(x, y)
 
 
-def is_icon(image, template_res_w=1920, browser_res_w=None):
+def is_icon(image, template_res_w=None, browser_res_w=None):
     r"""Check is the icon on the screen.
 
     In case you want to use this keyword you always have to have reference images.
@@ -98,6 +102,10 @@ def is_icon(image, template_res_w=1920, browser_res_w=None):
     if not browser_res_w:
         browser_res_w = util.get_browser_width()
 
+    # use current resolution by default
+    if not template_res_w:
+        template_res_w = browser_res_w
+
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
     x, _y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=False)
@@ -108,7 +116,7 @@ def is_icon(image, template_res_w=1920, browser_res_w=None):
 
 
 @decorators.timeout_decorator
-def verify_icon(image, template_res_w=1920, browser_res_w=None,
+def verify_icon(image, template_res_w=None, browser_res_w=None,
                 timeout=0):  # pylint: disable=unused-argument
     r"""Verify page contains icon.
 
@@ -148,6 +156,10 @@ def verify_icon(image, template_res_w=1920, browser_res_w=None,
     """
     if not browser_res_w:
         browser_res_w = util.get_browser_width()
+
+    # use current resolution by default
+    if not template_res_w:
+        template_res_w = browser_res_w
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
 

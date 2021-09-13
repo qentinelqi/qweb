@@ -59,7 +59,7 @@ class QIcon:
         """
 
         scale_ratios = [1.00, 0.75, 0.50, 0.86, 0.78,
-                        0.58, 1.33, 0.67, 1.15, 2.0]
+                        0.58, 1.33, 0.67, 1.15, 2.00, 1.50, 1.25, 1.75]
 
         if device_res_w <= 0 or template_res_w <= 0:
             raise ValueError("Device resolution {} or template resolution {}"
@@ -67,6 +67,7 @@ class QIcon:
 
         if not round(device_res_w / template_res_w, 2) in scale_ratios:
             scale_ratios.insert(0, round(device_res_w / template_res_w, 2))
+        
         return scale_ratios
 
     @staticmethod
@@ -269,20 +270,20 @@ class QIcon:
             ratio = device_res_w / hay_w
 
             print("*DEBUG* _extract_points Starts:")
-            if CONFIG.get_value("RetinaDisplay"):
-                _current_points, highest_max_val, highest_max_val_loc = \
-                    self._extract_points(height * 2,
-                                         res,
-                                         tolerance,
-                                         width * 2,
-                                         ratio * 2)
-            else:
-                _current_points, highest_max_val, highest_max_val_loc = \
-                    self._extract_points(height,
-                                         res,
-                                         tolerance,
-                                         width,
-                                         ratio)
+            # if CONFIG.get_value("RetinaDisplay"):
+            #     _current_points, highest_max_val, highest_max_val_loc = \
+            #         self._extract_points(height * 2,
+            #                              res,
+            #                              tolerance,
+            #                              width * 2,
+            #                              ratio * 2)
+            #else:
+            _current_points, highest_max_val, highest_max_val_loc = \
+                self._extract_points(height * scale_ratio,
+                                     res,
+                                     tolerance,
+                                     width,
+                                     ratio * scale_ratio)
 
             if highest_max_val > best_highest_max_val:
                 best_highest_max_val = highest_max_val
