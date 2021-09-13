@@ -13,9 +13,7 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 
 *** Test Cases ***
 Click icons
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
-    SetConfig               WindowSize          1920x1080
-    Sleep                   5
+    [Tags]                  ICON
     ClickIcon               person
     VerifyText              person is my tooltip value!
     ClickIcon               lock
@@ -24,7 +22,7 @@ Click icons
     VerifyText              screen is my data-icon value!
 
 Verify icons
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     VerifyIcon              person
     VerifyIcon              power
     VerifyIcon              paperclip
@@ -34,7 +32,7 @@ Verify icons
 
 
 Click icons new screenshot
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     ClickIcon               person
     ClickIcon               power
     ClickText               Hide
@@ -42,8 +40,10 @@ Click icons new screenshot
 
 
 Capture icons and verify them
-    [Tags]                  PROBLEM_IN_WINDOWS  PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     [Teardown]              RemoveFiles
+    SetConfig               SearchMode          None
+    
     CaptureIcon             person     ${BASE_IMAGE_PATH}     capture_icon_1.png
     VerifyIcon              capture_icon_1
     CaptureIcon             power      ${BASE_IMAGE_PATH}     capture_icon_2.png
@@ -53,12 +53,12 @@ Capture icons and verify them
     VerifyIcon              capture_icon_3
 
 IsIcon True
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     ${result}               isIcon                  paperclip
     Should Be True          ${result}
 
 IsIcon False
-    [Tags]                  PROBLEM_IN_WINDOWS  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     ${result}               isIcon                  plane
     Should Not Be True      ${result}
 
