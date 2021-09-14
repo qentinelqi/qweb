@@ -21,6 +21,7 @@ from QWeb.internal.exceptions import QWebValueMismatchError, QWebUnexpectedCondi
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 import json
+import platform
 import re
 import subprocess
 
@@ -166,11 +167,15 @@ def is_py_func(text):
 
 
 def is_retina():
-    if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
-                       shell=True,
-                       stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL) == 0:
-        return True
+    if platform.system().lower() == "darwin":
+        if "arm" in platform.machine().lower():
+            return True
+
+        if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
+                            shell=True,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL) == 0:
+            return True
     return False
 
 
