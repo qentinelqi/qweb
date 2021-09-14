@@ -269,21 +269,18 @@ class QIcon:
 
             ratio = device_res_w / hay_w
 
-            print("*DEBUG* _extract_points Starts:")
             if CONFIG.get_value("RetinaDisplay"):
-                 _current_points, highest_max_val, highest_max_val_loc = \
-                     self._extract_points(height * scale_ratio,
-                                          res,
-                                          tolerance,
-                                          width * scale_ratio,
-                                          ratio * 2)
-            else:
-                _current_points, highest_max_val, highest_max_val_loc = \
-                    self._extract_points(height * scale_ratio,
-                                         res,
-                                         tolerance,
-                                         width,
-                                         ratio * scale_ratio)
+                ratio = ratio * 2
+            elif ratio < 1.1:
+                ratio = 1.0
+
+            print("*DEBUG* _extract_points Starts:")
+            _current_points, highest_max_val, highest_max_val_loc = \
+                self._extract_points(height * scale_ratio,
+                                     res,
+                                     tolerance,
+                                     width * scale_ratio,
+                                     ratio)
 
             if highest_max_val > best_highest_max_val:
                 best_highest_max_val = highest_max_val
