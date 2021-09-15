@@ -18,8 +18,8 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
-        browser: [chrome, firefox]
+        python-version: [3.8, 3.9]
+        browser: [chrome, firefox, edge]
 
     steps:
     - uses: actions/checkout@v2
@@ -65,6 +65,10 @@ jobs:
       if: matrix.browser == 'firefox'
       run: |
         python -m robot --exitonfailure -e jailed -e PROBLEM_IN_WINDOWS -e FLASK -e PROBLEM_IN_FIREFOX -v BROWSER:Firefox -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+    - name: Acceptance tests Edge
+      if: matrix.browser == 'edge'
+      run: |
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_WINDOWS -e FLASK -v BROWSER:edge -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v1
