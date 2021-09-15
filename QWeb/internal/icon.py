@@ -18,11 +18,14 @@
 import cv2
 import numpy as np
 import math
+import os
 from pathlib import Path
 from QWeb.internal import frame, download
 from QWeb.internal.meas import MEAS
-from QWeb.internal.screenshot import save_screenshot
+from QWeb.internal.screenshot import save_screenshot, log_screenshot_file, SCREEN_SHOT_DIR_NAME
 from QWeb.internal.config_defaults import CONFIG
+from robot.libraries.BuiltIn import BuiltIn
+from uuid import uuid4
 
 
 class QIcon:
@@ -67,7 +70,7 @@ class QIcon:
 
         if not round(device_res_w / template_res_w, 2) in scale_ratios:
             scale_ratios.insert(0, round(device_res_w / template_res_w, 2))
-        
+
         return scale_ratios
 
     @staticmethod
@@ -396,7 +399,12 @@ class QIcon:
                  (loc[0] + max_left_w - int(ws / 2), loc[1] + int(hs / 2)),
                  (0, 0, 255), 2)
 
-        cv2.imwrite('temp_matched_image.png', result)
+        if CONFIG.get_value("LogMatchedIcons"):
+            output = BuiltIn().get_variable_value('${OUTPUT DIR}')
+            filename = "temp_matched_image-{}".format(uuid4()) + ".png"
+            filepath = os.path.join(output, SCREEN_SHOT_DIR_NAME, filename)
+            cv2.imwrite(filepath, result)
+            log_screenshot_file(filepath)
 
 
 def image_recognition(image_path, template_res_w, browser_res_w, pyautog):

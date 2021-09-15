@@ -123,6 +123,8 @@ def verify_icon(image, template_res_w=None, browser_res_w=None,
     In case you want to use this keyword you always have to have reference images.
     If reference image are not in default folders (images, files, downloads) then
     BASE_IMAGE_PATH should be defined in a robot file before using this keyword.
+    LogMatchedIcons configuration is used to log screenshots of matched images
+    to logs. By default matched images are not logged.
 
     Examples
     --------
@@ -135,6 +137,7 @@ def verify_icon(image, template_res_w=None, browser_res_w=None,
 
     .. code-block:: robotframework
 
+        SetConfig                    LogMatchedIcons    True  # Log matched image to logsß
         VerifyIcon                   plane
 
     Parameters

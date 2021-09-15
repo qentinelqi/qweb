@@ -625,6 +625,18 @@ def set_config(par, val):
         SetConfig    RetinaDisplay       False
 
     ---
+    Parameter: LogMatchedIcons
+
+    When True, highlights where icon was found on the screen and adds a sceenshot
+    to logs. Default = False (Screenshots are not added to the logs).
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    LogMatchedIcons       True
+
+    ---
 
     Related keywords
     ----------------

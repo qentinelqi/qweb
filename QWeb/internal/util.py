@@ -172,9 +172,9 @@ def is_retina():
             return True
 
         if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
-                            shell=True,
-                            stdout=subprocess.DEVNULL,
-                            stderr=subprocess.DEVNULL) == 0:
+                           shell=True,
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) == 0:
             return True
     return False
 

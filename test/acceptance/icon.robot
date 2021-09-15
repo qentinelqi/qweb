@@ -23,12 +23,14 @@ Click icons
 
 Verify icons
     [Tags]                  ICON
+    SetConfig               LogMatchedIcons       True
     VerifyIcon              person                template_res_w=1920
     VerifyIcon              power                 template_res_w=1920
     VerifyIcon              paperclip             template_res_w=1920
     VerifyIcon              infinity              template_res_w=1920
     VerifyIcon              Lock                  template_res_w=1920
     VerifyIcon              screen                template_res_w=1920
+    SetConfig               LogMatchedIcons       False
 
 
 Click icons new screenshot

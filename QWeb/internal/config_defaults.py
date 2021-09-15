@@ -85,7 +85,8 @@ CONFIG_DEFAULTS = {
     "FrameTimeout": ("10s", SearchStrategies.default_timeout_validation),
     "AllTextNodes": (False, util.par2bool),
     "OSScreenshots": (False, util.par2bool),
-    "RetinaDisplay": (util.is_retina(), util.par2bool)
+    "RetinaDisplay": (util.is_retina(), util.par2bool),
+    "LogMatchedIcons": (False, util.par2bool)
 }
 
 CONFIG = Config(CONFIG_DEFAULTS)
