@@ -105,13 +105,33 @@ def back():
 
     Related keywords
     ----------------
-    \`GoTo\`, \`RefreshPage\`, \`MaximizeWindow\`
+    \`Forward\`, \`GoTo\`, \`RefreshPage\`, \`MaximizeWindow\`
 
 
     """
     frame.wait_page_loaded()
     driver = browser.get_current_browser()
     driver.back()
+
+
+def forward():
+    r"""Navigates forward in the current window.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+       Forward
+
+    Related keywords
+    ----------------
+    \`Back\`, \`GoTo\`, \`RefreshPage\`, \`MaximizeWindow\`
+
+
+    """
+    frame.wait_page_loaded()
+    driver = browser.get_current_browser()
+    driver.forward()
 
 
 def log_page():
