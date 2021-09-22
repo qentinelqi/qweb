@@ -93,7 +93,7 @@ Find Dropdowns by CSS label for
     VerifySelectedOption        label with                  Rules
 
 Find Dropdowns by CSS label without for
-    [tags]                      PROBLEM_IN_FIREFOX
+    [tags]
     Dropdown                    label without               Rules
     VerifyOption                label without               Rules
     VerifyNoOption              label without               Ruless
@@ -107,7 +107,7 @@ Delayed Dropdown
     VerifyText                  Dropdown7-Rules
 
 Get Selected values from dropdowns
-    [tags]                      PROBLEM_IN_FIREFOX
+    [tags]
     Dropdown                    label with                  Rules
     Dropdown                    label without               Qentinel
     ${FIRST}                    GetSelected                 label without
