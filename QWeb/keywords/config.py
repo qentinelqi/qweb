@@ -612,6 +612,32 @@ def set_config(par, val):
         ClickText    Foo
         # Waits that text "Loading..." disappears before running other keywords
 
+    ---
+    Parameter: RetinaDisplay
+
+    Is current monitor Retina display (True) or not (False). Will be automatically
+    set based on used monitor, but can be changed for testing purposes if needed.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    RetinaDisplay       False
+
+    ---
+    Parameter: LogMatchedIcons
+
+    When True, highlights where icon was found on the screen and adds a sceenshot
+    to logs. Default = False (Screenshots are not added to the logs).
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    LogMatchedIcons       True
+
+    ---
+
     Related keywords
     ----------------
     \`GetConfig\`, \`ResetConfig\`
