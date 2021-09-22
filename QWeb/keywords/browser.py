@@ -172,6 +172,31 @@ def open_browser(url, browser_alias, options=None, **kwargs):
     xhr.setup_xhr_monitor()
 
 
+def switch_browser(index):
+    r"""Switches to another browser instance in browser cache.
+
+
+    Examples
+    --------
+     .. code-block:: robotframework
+
+        OpenBrowser     about:chrome                chrome
+        OpenBrowser     https://www.github.com      firefox
+        OpenBrowser     https://www.google.com      edge
+        SwitchBrowser   1       # following keywords will interact with chrome instance
+        ...
+        SwitchBrowser   NEW     # following keywords will interact with latest opened browser (edge)
+        ...
+        SwitchBrowser   2       # following keywords will interact with firefox instance
+
+
+    Related keywords
+    ----------------
+     \`OpenBrowser\,  \`CloseBrowser\,  \`SwitchWindow\, \`GetWebElement\`
+    """
+    browser.set_current_browser(index)
+
+
 def _sessions_open():
     sessions = browser.get_open_browsers()
     return len(sessions)

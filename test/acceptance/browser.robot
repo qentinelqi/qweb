@@ -35,6 +35,21 @@ ScrollText
     ScrollText      UpDown
     [Teardown]      CloseAllBrowsers
 
+SwitchBrowser
+    GoTo            file://${CURDIR}/../resources/multielement_text.html
+    OpenBrowser     file://${CURDIR}/../resources/dropdown.html     chrome
+    OpenBrowser     file://${CURDIR}/../resources/frame.html        firefox
+    VerifyText      Text in frame
+    SwitchBrowser   1
+    VerifyText      Lorem ipsum dolor sit amet
+    SwitchBrowser   2
+    VerifyText      Delayed dropdown
+    Run Keyword and Expect Error    QWebValueError: *index starts at 1*    SwitchBrowser   0
+    Run Keyword and Expect Error    QWebDriverError: *Tried to select browser with index*    SwitchBrowser   7
+    Run Keyword and Expect Error    QWebValueError: *is not a digit or NEW*    SwitchBrowser   my_fake_browser
+
+    [Teardown]      CloseAllBrowsers
+
 Open Browser With Options
     Close All Browsers
     OpenBrowser    about:blank    ${BROWSER}    no-sandbox, disable-gpu, disable-impl-side-painting

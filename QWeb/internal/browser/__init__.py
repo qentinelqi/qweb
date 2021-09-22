@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 
-
+from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 # These mime types were retrieved from
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 MIME_TYPES = (
@@ -87,6 +87,29 @@ _open_browsers = []
 
 def get_current_browser():
     return _current_browser
+
+
+def set_current_browser(index):
+    # pylint: disable=global-statement
+    global _current_browser
+    # pylint: disable=global-statement
+    global _open_browsers
+    if index.isdigit():
+        if int(index) == 0:
+            raise QWebValueError('SwitchBrowser index starts at 1.')
+
+        i = int(index) - 1
+
+        if i < len(_open_browsers):
+            _current_browser = _open_browsers[i]
+        else:
+            raise QWebDriverError(f'Tried to select browser with index {index} but there are \
+                                  {len(_open_browsers)} browsers open')
+    elif index == "NEW":
+        _current_browser = _open_browsers[-1]
+    else:
+        raise QWebValueError(
+            'Given argument "{}" is not a digit or NEW'.format(index))
 
 
 def get_open_browsers():

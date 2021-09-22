@@ -136,7 +136,7 @@ def get_dropdown_element_by_css_selector(locator, anchor, index, **kwargs):
         locator_element = text.get_text_using_anchor(locator, anchor)
         # if this is option, return parent select immediately
         if locator_element.tag_name.lower() == "option":
-             return javascript.execute_javascript("return arguments[0].parentNode;", locator_element)
+            return javascript.execute_javascript("return arguments[0].parentNode;", locator_element)
         dropdown_elements = list(dict.fromkeys(element.get_element_from_childnodes(
             locator_element, css, **kwargs) + partial_matches))
     except QWebElementNotFoundError:
