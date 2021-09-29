@@ -1,11 +1,11 @@
-#How to install QWeb to a Mac with Apple silicon (ARM/M1)
+# How to install QWeb to a Mac with Apple silicon (ARM/M1)
 
 QWeb requires some packages that are hardware dependent and don't install on M1 based Mac using pip. 
 Here are instructions on how to do a custom installation for those packages.
 
 Prerequisites: Command Line Tools and [Homebrew](https://docs.brew.sh/Installation) installed.
 
-##1. Install Miniforge
+## 1. Install Miniforge
 
 Go to [Miniforge](https://github.com/conda-forge/miniforge) page and download installer for OS X *arm64 (Apple Silicon)*.
 You should now have the installer in *Downloads* folder.
@@ -31,7 +31,7 @@ Last step is to make sure we use the preferred channel with conda.
 ```
 Now you should have Miniforge3 installed.
 
-##2. Create Python 3.9 environment
+## 2. Create Python 3.9 environment
 
 Using the conda command from Miniforge3 create a new environment and activate it.
 ```bash
@@ -39,28 +39,28 @@ Using the conda command from Miniforge3 create a new environment and activate it
     conda activate qweb_env
 ```
 
-##3. Install ffmpeg
+## 3. Install ffmpeg
 QWeb uses ffmpeg for handling screenshots. It is not available by default and needs to be installed separately using
 Homebrew. Open new terminal window and type:
 ```bash
     brew install ffmpeg
 ```
 
-##4. Install scipy
+## 4. Install scipy
 Go back to terminal where you have Python 3.9 environment activated. Use conda to install correct version of scipy
 package:
 ```bash
     conda install scipy=1.5.*
 ```
 
-##5. Clone QWeb (but don't install yet!)
+## 5. Clone QWeb (but don't install yet!)
 Go to your project folder and clone QWeb from GitHub:
 ```bash
     git clone https://github.com/qentinelqi/qweb.git
 ```
 If git is not found you can install it with Homebrew.
 
-##6. Install opencv-python and change version requirement
+## 6. Install opencv-python and change version requirement
 Install opencv-python with conda:
 ```bash
     conda install opencv-python
@@ -72,7 +72,7 @@ Use pip to check the version of opencv-python package:
 Open *qweb/requirements.txt* and *qweb/setup.py* files to editor and find lines where opencv-python is mentioned.
 Change the version to the one you have in your environment.
 
-##7. Install scikit-image and change version requirement
+## 7. Install scikit-image and change version requirement
 Install scikit-image with conda:
 ```bash
     conda install scikit-image
@@ -84,7 +84,7 @@ Use pip to check the version of scikit-image package:
 Open *qweb/requirements.txt* and *qweb/setup.py* files to editor and find lines where scikit-image is mentioned for
 Python versions greater than 3.6. Change the version to the one you have in your environment.
 
-##8. Install QWeb
+## 8. Install QWeb
 Now QWeb can be installed to the environment. Installation needs to happen from the local clone where requirements
 were modified in previous steps:
  ```bash
@@ -92,7 +92,7 @@ were modified in previous steps:
     pip install -e .
 ```
 
-##9. Install browser driver
+## 9. Install browser driver
 The last step is to use webdriver manager to install chromedriver. Install webdriver manager using pip:
  ```bash
     pip install webdrivermanager
