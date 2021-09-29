@@ -19,12 +19,14 @@
 
 import pyautogui
 from DebugLibrary import DebugLibrary
+from robot.api.deco import keyword
 from QWeb.internal.config_defaults import CONFIG
 
 cur_timeout = 0
 cur_mode = None
 
 
+@keyword(tags=("Debug", "Error handling"))
 def debug_on(mode='draw'):
     r"""Start debugger with drawing mode and set default timeout down to 2 sec.
 
@@ -56,6 +58,7 @@ def debug_on(mode='draw'):
     dbg.debug()
 
 
+@keyword(tags=("Debug", "Error handling"))
 def debug_off():
     r"""Exit debugger. Set timeout and SearchMode back to default.
 

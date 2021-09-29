@@ -18,12 +18,14 @@
 import time
 
 from robot.api import logger
+from robot.api.deco import keyword
 from robot.utils import timestr_to_secs
 
 from QWeb.internal import download, frame
 from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 
 
+@keyword(tags=("Browser", "Verification"))
 def verify_file_download(timeout=0):
     r"""Verify file has been downloaded and return file path.
 
@@ -78,6 +80,7 @@ def verify_file_download(timeout=0):
     raise ValueError('Could not find any modified files after {}s'.format(timeout_int))
 
 
+@keyword(tags=("Browser", "Verification"))
 def expect_file_download():
     r"""Set the time after which the download should happen.
 

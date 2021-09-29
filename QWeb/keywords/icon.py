@@ -21,10 +21,12 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebIconNotFoundE
 from QWeb.internal.config_defaults import CONFIG
 from PIL import Image
 from robot.api import logger
+from robot.api.deco import keyword
 import io
 import os
 
 
+@keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
 def click_icon(image, template_res_w=None, browser_res_w=None,
                timeout=0):  # pylint: disable=unused-argument
@@ -73,6 +75,7 @@ def click_icon(image, template_res_w=None, browser_res_w=None,
     pyautogui.click(x, y)
 
 
+@keyword(tags=("Icon", "Verification"))
 def is_icon(image, template_res_w=None, browser_res_w=None):
     r"""Check is the icon on the screen.
 
@@ -115,6 +118,7 @@ def is_icon(image, template_res_w=None, browser_res_w=None):
     return True
 
 
+@keyword(tags=("Icon", "Verification"))
 @decorators.timeout_decorator
 def verify_icon(image, template_res_w=None, browser_res_w=None,
                 timeout=0):  # pylint: disable=unused-argument
@@ -173,6 +177,7 @@ def verify_icon(image, template_res_w=None, browser_res_w=None,
     return True
 
 
+@keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
 def capture_icon(locator, folder='screenshots', filename='screenshot_{}.png',
                  timeout=0, **kwargs):  # pylint: disable=unused-argument

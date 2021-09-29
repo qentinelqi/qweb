@@ -20,11 +20,13 @@
 
 Checkboxes are those that can be checked/selected and unchecked/unselected.
 """
+from robot.api.deco import keyword
 from QWeb.internal import checkbox, actions, decorators
 import QWeb.internal.element
 from QWeb.internal.exceptions import QWebValueError
 
 
+@keyword(tags=("Checkbox", "Interaction"))
 @decorators.timeout_decorator
 def click_checkbox(locator, value, anchor="1", timeout=0, index=1, **kwargs):
     r"""Check or uncheck a checkbox.
@@ -94,6 +96,7 @@ def click_checkbox(locator, value, anchor="1", timeout=0, index=1, **kwargs):
             actions.checkbox_set(checkbox_element, locator_element, value=False, timeout=timeout)
 
 
+@keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
 def verify_checkbox_status(locator, status, anchor="1", timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
     r"""Verify checkbox is enabled or disabled.
@@ -166,6 +169,7 @@ def verify_checkbox_status(locator, status, anchor="1", timeout=0, index=1, **kw
         raise QWebValueError('Unkown status: "{}"'.format(status))
 
 
+@keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
 def verify_checkbox_value(locator, value, anchor="1", timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
     r"""Verify checkbox is on (checked) or off (unchecked).
@@ -236,6 +240,7 @@ def verify_checkbox_value(locator, value, anchor="1", timeout=0, index=1, **kwar
         raise QWebValueError('Unkown value: "{}"'.format(value))
 
 
+@keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
 def verify_checkbox(locator, anchor='1', timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
     r"""Verify that checkbox element exist.

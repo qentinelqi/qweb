@@ -15,8 +15,10 @@
 # limitations under the License.
 # ---------------------------
 from QWeb.internal import decorators, ajax, util
+from robot.api.deco import keyword
 
 
+@keyword(tags=["Logging"])
 @decorators.timeout_decorator
 def save_file(locator, filename=None, anchor=1,
               timeout=0, path=None, **kwargs):  # pylint: disable=unused-argument

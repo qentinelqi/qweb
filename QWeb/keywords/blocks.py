@@ -15,15 +15,17 @@
 # limitations under the License.
 # ---------------------------
 from robot.api import logger
+from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from QWeb.internal import decorators, blocks
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebUnexpectedConditionError
 
 
+@keyword(tags=("Config", "Error handling"))
 def run_block(block, *args, timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Run Action word as decorated block.
 
-    Block (usually set of Pacewords) is handled as one
+    Block (usually set of keywords) is handled as one
     independent action. If any keyword inside of block fails block
     will retry itself until it passes or given time is up. Retrying is
     starting from first line of executable block.
@@ -86,6 +88,7 @@ def run_block(block, *args, timeout=0, **kwargs):  # pylint: disable=unused-argu
     _execute_block(step, timeout=timeout, **kwargs)
 
 
+@keyword(tags=("Config", "Error handling"))
 def appstate(block, *args):
     r"""Appstate is a pre-condition of a test case.
 

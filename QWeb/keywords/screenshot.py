@@ -18,6 +18,7 @@
 from QWeb.internal import screenshot
 from QWeb.internal.config_defaults import CONFIG
 from robot.api import logger
+from robot.api.deco import keyword
 
 
 def verify_app(imagename):
@@ -31,6 +32,7 @@ def verify_app(imagename):
         raise Exception('Images differ')
 
 
+@keyword(tags=["Logging"])
 def log_screenshot(filename='screenshot_{}.png'):
     r"""Log screenshot to Robot Framework log.
 

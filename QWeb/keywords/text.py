@@ -32,9 +32,11 @@ from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import QWebValueError, QWebEnvironmentError, QWebTimeoutError,\
     QWebElementNotFoundError, QWebDriverError
 from robot.api import logger
+from robot.api.deco import keyword
 import os
 
 
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unused-argument
     r"""Verify page contains given text.
@@ -104,6 +106,7 @@ def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
         return
 
 
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def verify_no_text(text, timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Verify that page does not contain given text.
@@ -168,6 +171,7 @@ def verify_no_text(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
         text))
 
 
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def verify_text_count(text, expected_count, timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Verify page contains given text given times.
@@ -239,6 +243,7 @@ def verify_text_count(text, expected_count, timeout=0, **kwargs):  # pylint: dis
                          .format(element_count, expected_count))
 
 
+@keyword(tags=("Text", "Getters"))
 @decorators.timeout_decorator
 def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Get count of appearances for given text.
@@ -283,6 +288,7 @@ def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
     return len(web_elements)
 
 
+@keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def click_text(text, anchor="1", timeout=0, parent=None,
                child=None, js=None, **kwargs):
@@ -492,6 +498,7 @@ def skim_click(text, text_to_disappear='', anchor="1", timeout=0, interval=None,
         click_while(text_to_disappear, text, anchor, timeout, interval, parent, child, js, **kwargs)
 
 
+@keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def hover_text(text, anchor="1", timeout="0", **kwargs):  # pylint: disable=unused-argument
     r"""Hover over text.
@@ -530,9 +537,10 @@ def hover_text(text, anchor="1", timeout="0", **kwargs):  # pylint: disable=unus
     hover_to(web_element, timeout=timeout)
 
 
+@keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
 def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=unused-argument
-    r"""Hover over text.
+    r"""Hover over item.
 
     Hover over web element.
 
@@ -571,6 +579,7 @@ def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=u
     hover_to(web_element, timeout=timeout)
 
 
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def is_text(text, timeout="0.1s", **kwargs):
     r"""Return True/False if text is found on the screen.
@@ -610,6 +619,7 @@ def is_text(text, timeout="0.1s", **kwargs):
         return False
 
 
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def is_no_text(text, timeout="2s", **kwargs):
     r"""Return True/False if text is found on the screen.
@@ -650,6 +660,7 @@ def is_no_text(text, timeout="2s", **kwargs):
         return False
 
 
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def verify_element_text(locator, text_to_find, timeout=0, anchor="1", **kwargs):
     r"""Verify that element contains specified text.
@@ -691,6 +702,7 @@ def verify_element_text(locator, text_to_find, timeout=0, anchor="1", **kwargs):
     raise QWebValueError(f'"{text_to_find}" not in "{locator_text}"')
 
 
+@keyword(tags=("Text", "Getters"))
 @decorators.timeout_decorator
 def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unused-argument
     r"""Get text from element specified by xpath.
@@ -760,6 +772,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     return util.get_substring(text, **kwargs)
 
 
+@keyword(tags=("Item", "Interaction"))
 @decorators.timeout_decorator
 def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
     r"""Click item (usually icon or picture) on webpage.
@@ -826,6 +839,7 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
         return
 
 
+@keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
 def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Verify Item (usually icon or picture) exist.
@@ -883,6 +897,7 @@ def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unuse
         return
 
 
+@keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
 def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Verify Item (usually icon or picture) is not exist.
@@ -935,6 +950,7 @@ def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=un
     raise QWebValueError('Element with attribute value {} still exists'.format(text))
 
 
+@keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def scroll_text(text, anchor="1", timeout=0, **kwargs):
     r"""Scroll page until text is on top.
@@ -961,6 +977,7 @@ def scroll_text(text, anchor="1", timeout=0, **kwargs):
     scroll(web_element, timeout=timeout)
 
 
+@keyword(tags=("input", "Text", "Interaction"))
 def write_text(text):
     r"""Type text with single-character keys.
 
@@ -1010,6 +1027,7 @@ def verify_texts(texts_to_verify, timeout=0):
             verify_text(clean_text, timeout)
 
 
+@keyword(tags=("File", "Text", "Verification"))
 @decorators.timeout_decorator
 def verify_any(texts_to_verify, timeout=0):
     r"""Verify any of the given texts.
@@ -1075,6 +1093,7 @@ def verify_any(texts_to_verify, timeout=0):
                              f'{texts}')
 
 
+@keyword(tags=("File", "Text", "Verification"))
 @decorators.timeout_decorator
 def verify_all(texts_to_verify, timeout=0):
     r"""Verify page contains given texts.
@@ -1120,6 +1139,7 @@ def verify_all(texts_to_verify, timeout=0):
             verify_text(clean_text, timeout)
 
 
+@keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def scroll_to(text_to_find, locator=None, anchor='1', scroll_length=None,
               timeout=120, **kwargs):  # pylint: disable=unused-argument
@@ -1184,6 +1204,7 @@ def scroll_to(text_to_find, locator=None, anchor='1', scroll_length=None,
         scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout)
 
 
+@keyword(tags=("Text", "Interaction"))
 def copy_text(text):
     """Perform a copy.
 
@@ -1206,6 +1227,7 @@ def copy_text(text):
     pyperclip.copy(text)
 
 
+@keyword(tags=("Text", "Interaction"))
 def click_while(text_to_disappear, text_to_click=None, anchor="1", timeout=0, interval=None,
                 parent=None, child=None, js=False, **kwargs):
     r"""Click text until a text or element disappears.
@@ -1281,6 +1303,7 @@ def click_while(text_to_disappear, text_to_click=None, anchor="1", timeout=0, in
         raise err or orig_err
 
 
+@keyword(tags=("Text", "Interaction"))
 def click_until(text_to_appear, text_to_click, anchor="1", timeout=0, interval=None,
                 parent=None, child=None, js=False, **kwargs):
     r"""Click text until a text appears.
@@ -1355,6 +1378,7 @@ def click_until(text_to_appear, text_to_click, anchor="1", timeout=0, interval=N
         raise err or orig_err
 
 
+@keyword(tags=("Item", "Interaction"))
 def click_item_while(text_to_disappear, locator=None, anchor="1", timeout=0,
                      interval=None, js=False, **kwargs):
     r"""Click Item until a text or element disappears.
@@ -1427,6 +1451,7 @@ def click_item_while(text_to_disappear, locator=None, anchor="1", timeout=0,
         raise err or orig_err
 
 
+@keyword(tags=("Item", "Interaction"))
 def click_item_until(text_to_appear, locator, anchor="1", timeout=0,
                      interval=None, js=False, **kwargs):
     r"""Click text until a text appears.
