@@ -15,9 +15,11 @@
 # limitations under the License.
 # ---------------------------
 
+from robot.api.deco import keyword
 from QWeb.internal.config_defaults import CONFIG
 
 
+@keyword(tags=["Config"])
 def set_config(par, val):
     r"""Set configuration parameter to given value. Return previous value.
 
@@ -612,6 +614,32 @@ def set_config(par, val):
         ClickText    Foo
         # Waits that text "Loading..." disappears before running other keywords
 
+    ---
+    Parameter: RetinaDisplay
+
+    Is current monitor Retina display (True) or not (False). Will be automatically
+    set based on used monitor, but can be changed for testing purposes if needed.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    RetinaDisplay       False
+
+    ---
+    Parameter: LogMatchedIcons
+
+    When True, highlights where icon was found on the screen and adds a sceenshot
+    to logs. Default = False (Screenshots are not added to the logs).
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    LogMatchedIcons       True
+
+    ---
+
     Related keywords
     ----------------
     \`GetConfig\`, \`ResetConfig\`
@@ -622,6 +650,7 @@ def set_config(par, val):
     return CONFIG.set_value(par, val)
 
 
+@keyword(tags=("Config", "Getters"))
 def get_config(par=None):
     r"""Return value of given configuration parameter.
 
@@ -658,6 +687,7 @@ def get_config(par=None):
     return current_config
 
 
+@keyword(tags=["Config"])
 def reset_config(par=None):
     r"""Reset the value of given parameter to default value.
 

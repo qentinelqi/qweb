@@ -22,6 +22,7 @@ contain rows and columns. Cells can contain all kinds of elements. Cells
 are usually refenced by coordinates or unique neighbouring values.
 """
 
+from robot.api.deco import keyword
 from QWeb.internal import decorators, actions, util
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, \
     QWebTimeoutError
@@ -31,6 +32,7 @@ from QWeb.internal.table import Table
 ACTIVE_TABLE = None
 
 
+@keyword(tags=["Tables"])
 @decorators.timeout_decorator
 def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=unused-argument
               child=None, level=1, index=1):
@@ -81,6 +83,7 @@ def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=un
                                              level, index)
 
 
+@keyword(tags=("Tables", "Verification"))
 @decorators.timeout_decorator
 def verify_table(coordinates, expected, anchor="1", timeout=0):
     r"""Verify text in table coordinates.
@@ -127,6 +130,7 @@ def verify_table(coordinates, expected, anchor="1", timeout=0):
     actions.get_element_text(table_cell, expected=expected, timeout=timeout)
 
 
+@keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
 def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
     r"""Get cell text to variable.
@@ -182,6 +186,7 @@ def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
         return ""
 
 
+@keyword(tags=("Tables", "Interaction"))
 @decorators.timeout_decorator
 def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
     r"""Click table cell.
@@ -230,6 +235,7 @@ def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint
     actions.execute_click_and_verify_condition(table_cell, **kwargs)
 
 
+@keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
 def get_table_row(locator, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Get row (index) from current table.

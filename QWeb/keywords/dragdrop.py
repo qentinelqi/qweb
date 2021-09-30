@@ -18,12 +18,14 @@
 """Keywords for draggable elements."""
 import pyautogui
 from robot.api import logger
+from robot.api.deco import keyword
 from robot.utils import timestr_to_secs
 from QWeb.internal import element, decorators, dragdrop
 from QWeb.internal import text as internal_text
 from QWeb.internal import javascript
 
 
+@keyword(tags=["Interaction"])
 @decorators.timeout_decorator
 def drag_drop(locator, target_locator, index=1, anchor="1",
               target_anchor="1", timeout=0, dragtime='0.5s',

@@ -15,13 +15,15 @@
 # limitations under the License.
 # ---------------------------
 
-from QWeb.internal import browser
+from QWeb.internal import browser, javascript
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebUnexpectedConditionError
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 import json
+import platform
 import re
+import subprocess
 
 
 def par2bool(s):
@@ -162,6 +164,29 @@ def get_index_of(text, locator, condition):
 
 def is_py_func(text):
     return bool("(" and ")" in text)
+
+
+def is_retina():
+    if platform.system().lower() == "darwin":
+        if "arm" in platform.machine().lower():
+            return True
+
+        if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
+                           shell=True,
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) == 0:
+            return True
+    return False
+
+
+def get_browser_width():
+    driver = browser.get_current_browser()
+    size = driver.get_window_size()
+    return size["width"]
+
+
+def get_monitor_width():
+    return javascript.execute_javascript("return screen.width")
 
 
 def prefs_to_dict(prefs):

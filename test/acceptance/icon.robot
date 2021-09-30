@@ -13,37 +13,39 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 
 *** Test Cases ***
 Click icons
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
-    SetConfig               WindowSize          1920x1080
-    Sleep                   5
-    ClickIcon               person
+    [Tags]                  ICON
+    ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
-    ClickIcon               lock
+    ClickIcon               lock                  template_res_w=1920
     VerifyText              Lock is my title value!
-    ClickIcon               screen
+    ClickIcon               screen                template_res_w=1920
     VerifyText              screen is my data-icon value!
 
 Verify icons
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
-    VerifyIcon              person
-    VerifyIcon              power
-    VerifyIcon              paperclip
-    VerifyIcon              infinity
-    VerifyIcon              Lock
-    VerifyIcon              screen
+    [Tags]                  ICON
+    SetConfig               LogMatchedIcons       True
+    VerifyIcon              person                template_res_w=1920
+    VerifyIcon              power                 template_res_w=1920
+    VerifyIcon              paperclip             template_res_w=1920
+    VerifyIcon              infinity              template_res_w=1920
+    VerifyIcon              Lock                  template_res_w=1920
+    VerifyIcon              screen                template_res_w=1920
+    SetConfig               LogMatchedIcons       False
 
 
 Click icons new screenshot
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
-    ClickIcon               person
-    ClickIcon               power
-    ClickText               Hide
+    [Tags]                  ICON
+    ClickIcon               person                template_res_w=1920
+    ClickIcon               power                 template_res_w=1920
+    ClickText               Hide                  template_res_w=1920
     Run Keyword And Expect Error    QWebElementNotFoundError:*   ClickIcon      person   timeout=3
 
 
 Capture icons and verify them
-    [Tags]                  PROBLEM_IN_WINDOWS  PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     [Teardown]              RemoveFiles
+    SetConfig               SearchMode          None
+    
     CaptureIcon             person     ${BASE_IMAGE_PATH}     capture_icon_1.png
     VerifyIcon              capture_icon_1
     CaptureIcon             power      ${BASE_IMAGE_PATH}     capture_icon_2.png
@@ -53,12 +55,12 @@ Capture icons and verify them
     VerifyIcon              capture_icon_3
 
 IsIcon True
-    [Tags]                  PROBLEM_IN_WINDOWS	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
-    ${result}               isIcon                  paperclip
+    [Tags]                  ICON
+    ${result}               isIcon                  paperclip                   template_res_w=1920
     Should Be True          ${result}
 
 IsIcon False
-    [Tags]                  PROBLEM_IN_WINDOWS  RESOLUTION_DEPENDENCY
+    [Tags]                  ICON
     ${result}               isIcon                  plane
     Should Not Be True      ${result}
 

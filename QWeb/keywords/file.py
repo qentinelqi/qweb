@@ -24,10 +24,12 @@ from os.path import basename
 import os
 import shutil
 from robot.api import logger
+from robot.api.deco import keyword
 
 ACTIVE_FILE = None
 
 
+@keyword(tags=["File"])
 def use_pdf(filename):
     r"""Define pdf file for all other pdf keywords.
 
@@ -54,6 +56,7 @@ def use_pdf(filename):
     ACTIVE_FILE = File.create_pdf_instance(filename)
 
 
+@keyword(tags=["File"])
 def use_file(filename):
     r"""Define text file for all other file keywords.
 
@@ -81,6 +84,7 @@ def use_file(filename):
     ACTIVE_FILE = File.create_text_file_instance(filename)
 
 
+@keyword(tags=("File", "Getters"))
 def get_pdf_text(**kwargs):
     r"""Get text from pdf file.
 
@@ -112,6 +116,7 @@ def get_pdf_text(**kwargs):
     return ACTIVE_FILE.get(**kwargs)
 
 
+@keyword(tags=("File", "Getters"))
 def get_file_text(**kwargs):
     r"""Get text from pdf file.
 
@@ -143,6 +148,7 @@ def get_file_text(**kwargs):
     return ACTIVE_FILE.get(**kwargs)
 
 
+@keyword(tags=("File", "Verification"))
 def verify_pdf_text(text, normalize=False):
     r"""Verify text from pdf file.
 
@@ -168,6 +174,7 @@ def verify_pdf_text(text, normalize=False):
     ACTIVE_FILE.verify(text, normalize)
 
 
+@keyword(tags=("File", "Verification"))
 def verify_file_text(text, normalize=False):
     r"""Verify text from pdf file.
 
@@ -192,6 +199,7 @@ def verify_file_text(text, normalize=False):
     ACTIVE_FILE.verify(text, normalize)
 
 
+@keyword(tags=("File", "Verification"))
 def verify_no_pdf_text(text, normalize=False):
     r"""Verify text not exists in pdf-file.
 
@@ -220,6 +228,7 @@ def verify_no_pdf_text(text, normalize=False):
         return
 
 
+@keyword(tags=("File", "Verification"))
 def verify_no_file_text(text, normalize=False):
     r"""Verify text not exists in pdf-file.
 
@@ -248,6 +257,7 @@ def verify_no_file_text(text, normalize=False):
         return
 
 
+@keyword(tags=("File", "Interaction"))
 def remove_file(file=None):
     r"""Remove a file.
 
@@ -272,6 +282,7 @@ def remove_file(file=None):
             os.remove(file)
 
 
+@keyword(tags=("File", "Interaction"))
 def remove_pdf():
     r"""Remove a file.
 
@@ -302,6 +313,7 @@ def _file_exists(file_path=None):
     return True
 
 
+@keyword(tags=("File", "Interaction"))
 def zip_files(name_of_zip, files_to_zip):
     """Zip files.
 
@@ -342,6 +354,7 @@ def zip_files(name_of_zip, files_to_zip):
                 .format(str(files), name_of_zip), also_console=True)
 
 
+@keyword(tags=("File", "Interaction"))
 def move_files(files_to_move, destination_folder):
     r"""Move files.
 
@@ -371,6 +384,7 @@ def move_files(files_to_move, destination_folder):
         shutil.move(file, destination_folder)
 
 
+@keyword(tags=("File", "Verification"))
 def verify_file(filename):
     """Verify file exists.
 

@@ -23,9 +23,11 @@ in a list. This list can be searched for key - value pairs.
 """
 
 from robot.api import logger
+from robot.api.deco import keyword
 from QWeb.internal import cookies
 
 
+@keyword(tags=("Browser", "Interaction"))
 def delete_all_cookies():
     r"""Delete all cookies in browser.
 
@@ -45,6 +47,7 @@ def delete_all_cookies():
     cookies.delete_all_cookies()
 
 
+@keyword(tags=("Browser", "Getters"))
 def list_cookies():
     r"""List all cookies in browser.
 
@@ -66,6 +69,7 @@ def list_cookies():
     return cookies_list
 
 
+@keyword(tags=("Browser", "Verification"))
 def is_cookie(name, value):
     r"""Return True if cookie with name and value is found.
 

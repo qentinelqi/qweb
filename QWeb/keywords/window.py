@@ -16,12 +16,14 @@
 # ---------------------------
 
 from robot.api import logger
+from robot.api.deco import keyword
 from selenium.common.exceptions import NoSuchWindowException
 from QWeb.internal import browser, javascript, xhr, window, decorators
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 from QWeb.internal.config_defaults import CONFIG
 
 
+@keyword(tags=("Browser", "Interaction"))
 @decorators.timeout_decorator
 def go_to(url, timeout=0):  # pylint: disable=unused-argument
     r"""Switch current page to given url.
@@ -54,6 +56,7 @@ def go_to(url, timeout=0):  # pylint: disable=unused-argument
     driver.get(url)
 
 
+@keyword(tags=("Browser", "Interaction", "Window"))
 def open_window():
     r"""Open new tab.
 
@@ -83,6 +86,7 @@ def open_window():
         logger.debug('XHR monitor threw exception. Bypassing jQuery injection')
 
 
+@keyword(tags=("Browser", "Interaction", "Window"))
 def close_others():
     r"""Close all windows except the first window.
 
@@ -126,6 +130,7 @@ def close_others():
             'Expected 1 window open, found {0}'.format(number_of_handles))
 
 
+@keyword(tags=("Browser", "Interaction", "Window"))
 def close_window():
     r"""Close current tab and switch context to another window handle.
 
@@ -170,6 +175,7 @@ def close_window():
             window.get_url()))
 
 
+@keyword(tags=("Browser", "Interaction", "Window"))
 @decorators.timeout_decorator
 def switch_window(index, timeout=0):  # pylint: disable=unused-argument
     r"""Switch to another tab.
@@ -247,6 +253,7 @@ def set_window_size(width, height):
     driver.set_window_size(width, height)
 
 
+@keyword(tags=("Browser", "Interaction", "Window"))
 def maximize_window():
     r"""Maximizes current browser window.
 
@@ -287,6 +294,7 @@ def maximize_window():
     logger.debug("Window size set to {}x{}".format(size["width"], size["height"]))
 
 
+@keyword(tags=("Browser", "Getters"))
 def get_url():
     r"""Gets current url/location.
 
@@ -313,6 +321,7 @@ def get_url():
     return driver.current_url
 
 
+@keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
 def verify_url(url, timeout=0):  # pylint: disable=unused-argument
     r"""Verifies that current page url/location matches expected url.
@@ -352,6 +361,7 @@ def verify_url(url, timeout=0):  # pylint: disable=unused-argument
         raise QWebValueError(f"Current url '{current}'' does not match expected url '{url}'")
 
 
+@keyword(tags=("Browser", "Getters"))
 def get_title():
     r"""Gets the title of current page/window.
 
@@ -378,6 +388,7 @@ def get_title():
     return driver.title
 
 
+@keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
 def verify_title(title, timeout=0):  # pylint: disable=unused-argument
     r"""Verifies that current page's title matches expected title.
@@ -417,6 +428,7 @@ def verify_title(title, timeout=0):  # pylint: disable=unused-argument
         raise QWebValueError(f"Page title '{actual}'' does not match expected '{title}'")
 
 
+@keyword(tags=("Browser", "Interaction"))
 def swipe_down(times='1', start=None):
     r"""Swipes down on the screen.
 
@@ -448,6 +460,7 @@ def swipe_down(times='1', start=None):
     window.swipe('down', times, start)
 
 
+@keyword(tags=("Browser", "Interaction"))
 def swipe_up(times='1', start=None):
     r"""Swipes up on the screen.
 
@@ -479,6 +492,7 @@ def swipe_up(times='1', start=None):
     window.swipe('up', times, start)
 
 
+@keyword(tags=("Browser", "Interaction"))
 def swipe_left(times='1', start=None):
     r"""Swipes left on the screen.
 
@@ -510,6 +524,7 @@ def swipe_left(times='1', start=None):
     window.swipe('left', times, start)
 
 
+@keyword(tags=("Browser", "Interaction"))
 def swipe_right(times='1', start=None):
     r"""Swipes right on the screen.
 

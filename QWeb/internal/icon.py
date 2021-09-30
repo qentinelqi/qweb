@@ -18,10 +18,14 @@
 import cv2
 import numpy as np
 import math
+import os
 from pathlib import Path
 from QWeb.internal import frame, download
 from QWeb.internal.meas import MEAS
-from QWeb.internal.screenshot import save_screenshot
+from QWeb.internal.screenshot import save_screenshot, log_screenshot_file, SCREEN_SHOT_DIR_NAME
+from QWeb.internal.config_defaults import CONFIG
+from robot.libraries.BuiltIn import BuiltIn
+from uuid import uuid4
 
 
 class QIcon:
@@ -58,7 +62,7 @@ class QIcon:
         """
 
         scale_ratios = [1.00, 0.75, 0.50, 0.86, 0.78,
-                        0.58, 1.33, 0.67, 1.15]
+                        0.58, 1.33, 0.67, 1.15, 2.00, 1.50, 1.25, 1.75]
 
         if device_res_w <= 0 or template_res_w <= 0:
             raise ValueError("Device resolution {} or template resolution {}"
@@ -66,6 +70,7 @@ class QIcon:
 
         if not round(device_res_w / template_res_w, 2) in scale_ratios:
             scale_ratios.insert(0, round(device_res_w / template_res_w, 2))
+
         return scale_ratios
 
     @staticmethod
@@ -252,10 +257,7 @@ class QIcon:
 
         print("*DEBUG* Resampling loop Starts")
         for scale_ratio in scale_ratios:
-            if scale_ratio > 1.0:
-                interpolation_method = cv2.INTER_LINEAR
-            else:
-                interpolation_method = cv2.INTER_AREA
+            interpolation_method = cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
 
             print(("*DEBUG* resize starts: for scale {}".format(scale_ratio)))
 
@@ -269,12 +271,20 @@ class QIcon:
             res = cv2.matchTemplate(image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
+
+            if CONFIG.get_value("RetinaDisplay"):
+                ratio = ratio * 2
+            elif ratio < 1.1:
+                ratio = 1.0
+
             print("*DEBUG* _extract_points Starts:")
-            _current_points, highest_max_val, highest_max_val_loc = self._extract_points(height,
-                                                                                         res,
-                                                                                         tolerance,
-                                                                                         width,
-                                                                                         ratio)
+            _current_points, highest_max_val, highest_max_val_loc = \
+                self._extract_points(height * scale_ratio,
+                                     res,
+                                     tolerance,
+                                     width * scale_ratio,
+                                     ratio)
+
             if highest_max_val > best_highest_max_val:
                 best_highest_max_val = highest_max_val
                 best_highest_max_val_loc = highest_max_val_loc
@@ -290,6 +300,7 @@ class QIcon:
                 if best_highest_max_val > tolerance:
                     if draw == 1:
                         loc = np.where(res >= tolerance)
+
                         for pt in zip(*loc[::-1]):
                             cv2.rectangle(image, pt,
                                           (pt[0] + width, pt[1] + height),
@@ -388,7 +399,12 @@ class QIcon:
                  (loc[0] + max_left_w - int(ws / 2), loc[1] + int(hs / 2)),
                  (0, 0, 255), 2)
 
-        cv2.imwrite('temp_matched_image.png', result)
+        if CONFIG.get_value("LogMatchedIcons"):
+            output = BuiltIn().get_variable_value('${OUTPUT DIR}')
+            filename = "temp_matched_image-{}".format(uuid4()) + ".png"
+            filepath = os.path.join(output, SCREEN_SHOT_DIR_NAME, filename)
+            cv2.imwrite(filepath, result)
+            log_screenshot_file(filepath)
 
 
 def image_recognition(image_path, template_res_w, browser_res_w, pyautog):

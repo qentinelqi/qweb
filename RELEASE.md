@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2021-09-30
+### Added
+- Support for Edge in Linux & Mac
+- Support for Retina displays to Icon* keywords
+- Tags to keyword documentation
+- SwitchBrowser keyword
+- Forward keyword
+- Description how to get QWeb working on Apple M1 silicon
+- Edge added as testing target to pipeline
+  
+### Fixed
+- Icon keywords should be (less) resolution dependent. Scaling to different resolutions improved
+- Import error in Ubuntu if tkinter dependencies are not fulfilled now produces visible instructions
+- "\" characters not escapted correctly in keyword documentation
+
+### Changed
+- Security update to Pillow dependency
+- Minor change on dropdown search order as Firefox was behaving differently than other browsers
+
 ## [1.1.0] - 2021-09-01
 ### Fixed
 - Fixed rare timeout issue when reload happens while searching for frames. This happened from time to time especially with Firefox.

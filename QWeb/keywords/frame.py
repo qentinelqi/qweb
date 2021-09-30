@@ -25,9 +25,12 @@ from __future__ import print_function
 
 from selenium.common.exceptions import NoSuchFrameException
 
+from robot.api.deco import keyword
+
 from QWeb.internal import browser, element, frame, javascript
 
 
+@keyword(tags=["Config"])
 def use_frame(locator):
     """Make following keywords to use frame on a page.
 
@@ -61,6 +64,7 @@ def use_frame(locator):
         raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator))
 
 
+@keyword(tags=["Config"])
 def use_page():
     """Make following keywords to use the page and not a frame on a page.
 
@@ -76,6 +80,7 @@ def use_page():
     driver.switch_to_default_content()
 
 
+@keyword(tags=("Browser", "Interaction"))
 def refresh_page():
     r"""Refresh the current window.
 
@@ -94,6 +99,7 @@ def refresh_page():
     driver.refresh()
 
 
+@keyword(tags=("Browser", "Interaction"))
 def back():
     r"""Navigates back in the current window.
 
@@ -114,6 +120,7 @@ def back():
     driver.back()
 
 
+@keyword(tags=("Browser", "Interaction", "Window"))
 def forward():
     r"""Navigates forward in the current window.
 
@@ -134,6 +141,7 @@ def forward():
     driver.forward()
 
 
+@keyword(tags=["Logging"])
 def log_page():
     r"""Save and log current html.
 

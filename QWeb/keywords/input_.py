@@ -20,6 +20,7 @@
 Input elements are those in which one can input text in.
 """
 from robot.api import logger
+from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
@@ -27,6 +28,7 @@ from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from selenium.webdriver.remote.webelement import WebElement
 
 
+@keyword(tags=("Config", "Input"))
 def set_input_handler(input_method):
     """*DEPRECATED!!* Use keyword `SetConfig` instead.
 
@@ -58,6 +60,7 @@ def set_input_handler(input_method):
     input_handler.input_method = input_method
 
 
+@keyword(tags=("Config", "Input"))
 def set_line_break(key):
     r"""*DEPRECATED!!* Use keyword `SetConfig` instead."""
     old_line_break_key = input_handler.line_break_key
@@ -101,6 +104,7 @@ def type_secret3(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
 secrets.add_filter("Type Secret", 1, None)
 
 
+@keyword(tags=("Input", "Interaction"))
 def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     r"""Type secret information such as password.
 
@@ -129,6 +133,7 @@ def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
 
+@keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
 def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
     r"""Type given text to a text field.
@@ -247,6 +252,7 @@ def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 
+@keyword(tags=("File", "Input", "Interaction"))
 @decorators.timeout_decorator
 def type_texts(input_texts, timeout='0'):
     r"""Type text to multiple fields.
@@ -286,6 +292,7 @@ def type_texts(input_texts, timeout='0'):
         raise QWebValueError('Unknown input value. Text file or dictionary required.')
 
 
+@keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1, **kwargs):
     r"""Verify input field has given value.
@@ -349,6 +356,7 @@ def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1,
     actions.compare_input_values(input_element, expected_value, timeout=timeout)
 
 
+@keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_values(input_values, timeout='0'):
     r"""Verify input fields have given values.
@@ -390,6 +398,7 @@ def verify_input_values(input_values, timeout='0'):
         raise QWebValueError('Unknown input value. Text file or dictionary required.')
 
 
+@keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_status(locator, status, anchor="1", timeout=0, index=1, **kwargs):
     r"""Verify input field is enabled or disabled.
@@ -464,6 +473,7 @@ def verify_input_status(locator, status, anchor="1", timeout=0, index=1, **kwarg
         raise QWebValueError('Unkown status: "{}"'.format(status))
 
 
+@keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_element(locator, anchor='1', timeout=0, index=1, **kwargs):
     r"""Verify that input element exist.
@@ -521,6 +531,7 @@ def verify_input_element(locator, anchor='1', timeout=0, index=1, **kwargs):
         return
 
 
+@keyword(tags=("Input", "Getters"))
 @decorators.timeout_decorator
 def get_input_value(locator, anchor='1', timeout=0, index=1, **kwargs):
     r"""Get input value from input field.
@@ -585,6 +596,7 @@ def get_input_value(locator, anchor='1', timeout=0, index=1, **kwargs):
     return util.get_substring(val, **kwargs)
 
 
+@keyword(tags=("File", "Input", "Interaction"))
 @decorators.timeout_decorator
 def upload_file(locator, filename, anchor='1', timeout=0, index=1, **kwargs):
     r"""Upload file.
@@ -646,6 +658,7 @@ def upload_file(locator, filename, anchor='1', timeout=0, index=1, **kwargs):
         .format(filename))
 
 
+@keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
 def press_key(locator, key, anchor=u"1", timeout='0', **kwargs):
     r"""Simulate user pressing keyboard key on element identified by "locator".
