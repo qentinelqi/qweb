@@ -21,17 +21,25 @@ import time
 
 from functools import wraps
 import QWeb.config as custom_config
-from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox,
-                           input_, javascript, screenshot, download, table,
-                           search_strategy, dropdown, cookies, config, icon,
-                           dragdrop, lists, file, debug, ajax, blocks)
 
-from QWeb.internal import util
-from QWeb.internal.config_defaults import CONFIG
-from robot.api import logger
-from robot.utils import timestr_to_secs
-from robot.libraries.BuiltIn import BuiltIn
-from robot.libraries import Dialogs
+try:
+    from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox,
+                               input_, javascript, screenshot, download, table,
+                               search_strategy, dropdown, cookies, config, icon,
+                               dragdrop, lists, file, debug, ajax, blocks)
+
+    from QWeb.internal import util
+    from QWeb.internal.config_defaults import CONFIG
+    from robot.api import logger
+    from robot.utils import timestr_to_secs
+    from robot.libraries.BuiltIn import BuiltIn
+    from robot.libraries import Dialogs
+
+# Print system exit message. This can happen on fresh linux when tkinter
+# dependencies are not installed. This is a workaround as normally system
+# exit message is not cathced by robot framework / debugger.
+except SystemExit as e:
+    raise Exception(e)
 
 
 class QWeb:

@@ -16,7 +16,7 @@ Refresh Page
     RefreshPage
     VerifyNoText                Button1 was clicked
 
-Back
+Back & Forward
     [Tags]
     GoTo                        about:blank
     VerifyUrl                   about:blank
@@ -25,6 +25,11 @@ Back
     ${url}=                     GetUrl
     Should Not Be Equal         ${url}                      about:blank
     VerifyText                  Button1
+    Forward
+    VerifyNoText                Button1
+    ${url}=                     GetUrl
+    Should Be Equal             ${url}                      about:blank
+    Back
 
 Use Frame And Use Page
     [Tags]                      PROBLEM_IN_SAFARI
