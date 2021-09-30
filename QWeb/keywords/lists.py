@@ -21,6 +21,7 @@ List elements are used to show many kinds of data. Lists have cells in
 contain rows and columns. Cells can contain all kinds of elements. Cells
 are usually referenced by coordinates or unique neighboring values.
 """
+from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError, \
     QWebValueError
 from QWeb.internal.actions import execute_click_and_verify_condition
@@ -30,6 +31,7 @@ from QWeb.internal.lists import List
 ACTIVE_LIST = None
 
 
+@keyword(tags=("Config", "Lists"))
 @decorators.timeout_decorator
 def use_list(locator, anchor="1", timeout=0, parent=None, child=None, **kwargs):  # pylint: disable=unused-argument
     r"""Define list for all other list keywords.
@@ -73,6 +75,7 @@ def use_list(locator, anchor="1", timeout=0, parent=None, child=None, **kwargs):
     ACTIVE_LIST = List.from_list_instance(locator, anchor, parent=parent, child=child, **kwargs)
 
 
+@keyword(tags=("Lists", "Verification"))
 def verify_length(expected_length):
     """Verify lists length."""
     if _list_exists():
@@ -85,6 +88,7 @@ def verify_length(expected_length):
             .format(expected_length, list_length))
 
 
+@keyword(tags=("Lists", "Verification"))
 @decorators.timeout_decorator
 def verify_list(text, index=None, timeout=0):  # pylint: disable=unused-argument
     r"""Verify list contains given text.
@@ -110,6 +114,7 @@ def verify_list(text, index=None, timeout=0):  # pylint: disable=unused-argument
         raise QWebValueError('List didn\'t contain text "{}"'.format(text))
 
 
+@keyword(tags=("Lists", "Interaction"))
 @decorators.timeout_decorator
 def click_list(index, timeout=0, js=True, **kwargs):  # pylint: disable=unused-argument
     r"""Click list element with in given index.
@@ -135,6 +140,7 @@ def click_list(index, timeout=0, js=True, **kwargs):  # pylint: disable=unused-a
                 return
 
 
+@keyword(tags=("Lists", "Verification"))
 def verify_no_list(text, index=None):
     r"""Verify that text is not in the list.
 
@@ -159,8 +165,9 @@ def verify_no_list(text, index=None):
         raise QWebValueMismatchError('List contains text "{}"'.format(text))
 
 
+@keyword(tags=("Lists", "Getters"))
 def get_list(index=None, **kwargs):
-    r"""Verify that text is not in the list.
+    r"""Get value(s) from a list.
 
     Examples
     --------

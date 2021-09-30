@@ -19,10 +19,12 @@
 
 Dropdown elements are considered to be any <select> tagged element.
 """
+from robot.api.deco import keyword
 from QWeb.internal import decorators, actions
 from QWeb.internal.dropdown import get_dd_elements_from_all_documents
 
 
+@keyword(tags=("Dropdown", "Interaction"))
 @decorators.timeout_decorator
 def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, **kwargs):
     r"""Select an option from dropdown menu/list.
@@ -110,6 +112,7 @@ def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, *
         return
 
 
+@keyword(tags=("Dropdown", "Verification"))
 @decorators.timeout_decorator
 def verify_selected_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
     r"""Verify that an option is selected from dropdown menu/list.
@@ -161,6 +164,7 @@ def verify_selected_option(locator, expected_option, anchor='1', timeout=0, inde
         return
 
 
+@keyword(tags=("Dropdown", "Getters"))
 @decorators.timeout_decorator
 def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
     r"""Get selected option to variable from dropdown menu/list.
@@ -214,6 +218,7 @@ def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
     return actions.get_selected_value(select, timeout=timeout)
 
 
+@keyword(tags=("Dropdown", "Verification"))
 @decorators.timeout_decorator
 def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
     r"""Verify that option exist in dropdown menu/list.
@@ -263,6 +268,7 @@ def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kw
         return
 
 
+@keyword(tags=("Dropdown", "Getters"))
 @decorators.timeout_decorator
 def get_drop_down_values(locator, anchor='1', timeout=0, index=1, **kwargs):
     r"""Return all options from a dropdown menu/list.
@@ -305,6 +311,7 @@ def get_drop_down_values(locator, anchor='1', timeout=0, index=1, **kwargs):
     return actions.get_select_options(select, timeout=timeout)
 
 
+@keyword(tags=("Dropdown", "Verification"))
 @decorators.timeout_decorator
 def verify_no_option(locator, option, anchor='1', timeout=0, index=1, **kwargs):
     r"""Verify that a given option is not in a dropdown menu/list.

@@ -16,10 +16,12 @@
 # ---------------------------
 
 
+from robot.api.deco import keyword
 from QWeb.internal import alert
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 
 
+@keyword(tags=("Alert", "Interaction"))
 def close_alert(action, timeout=0):
     r"""Close popup alert.
 
@@ -50,6 +52,7 @@ def close_alert(action, timeout=0):
     alert.close_alert(alert_, action)
 
 
+@keyword(tags=("Alert", "Verification"))
 def is_alert(timeout="0.1s"):
     r"""Return True/False if alert is found on the screen.
 
@@ -80,6 +83,7 @@ def is_alert(timeout="0.1s"):
         return False
 
 
+@keyword(tags=("Alert", "Interaction", "Input"))
 def type_alert(text, action="Accept", timeout=0):
     r"""Type and close popup alert.
 
@@ -111,6 +115,7 @@ def type_alert(text, action="Accept", timeout=0):
     alert.close_alert(alert_, action)
 
 
+@keyword(tags=("Alert", "Getters"))
 def get_alert_text(timeout=0):
     r"""Get alert text to variable.
 
@@ -133,6 +138,7 @@ def get_alert_text(timeout=0):
     return alert_.text
 
 
+@keyword(tags=("Alert", "Verification"))
 def verify_alert_text(text, timeout=0):
     r"""Verify alert text.
 

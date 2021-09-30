@@ -19,6 +19,7 @@ import os
 import pkg_resources
 import requests
 from robot.api import logger
+from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from QWeb.keywords import window
 from QWeb.internal import browser, xhr, exceptions, util
@@ -27,6 +28,7 @@ from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
                                   bs_desktop, safari, edge
 
 
+@keyword(tags=("Browser", "Getters"))
 def return_browser():
     r"""Return browser instance.
 
@@ -46,6 +48,7 @@ def return_browser():
     return browser.get_current_browser()
 
 
+@keyword(tags=("Browser", "Interaction"))
 def open_browser(url, browser_alias, options=None, **kwargs):
     r"""Open new browser to given url.
 
@@ -198,6 +201,7 @@ def _close_remote_browser_session(driver, close_only=False):
     return False
 
 
+@keyword(tags=("Browser", "Interaction"))
 def close_browser():
     r"""Close current browser.
 
@@ -225,6 +229,7 @@ def close_browser():
         logger.info("All browser windows already closed")
 
 
+@keyword(tags=("Browser", "Interaction", "Remote"))
 def close_remote_browser():
     r"""Close remote browser session which is connected to the target browser.
 
@@ -255,6 +260,7 @@ def close_remote_browser():
         logger.info("All browser windows already closed")
 
 
+@keyword(tags=("Browser", "Interaction"))
 def close_all_browsers():
     r"""Close all opened browsers.
 
@@ -283,6 +289,7 @@ def close_all_browsers():
     CONFIG.set_value('Headless', False)
 
 
+@keyword(tags=("Browser", "Verification"))
 def verify_links(url='current', log_all=False, header_only=True):
     r"""Verify that all links on a given website return good HTTP status codes.
 
