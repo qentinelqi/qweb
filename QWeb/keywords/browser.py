@@ -175,6 +175,7 @@ def open_browser(url, browser_alias, options=None, **kwargs):
     xhr.setup_xhr_monitor()
 
 
+@keyword(tags=("Browser", "Interaction"))
 def switch_browser(index):
     r"""Switches to another browser instance in browser cache.
 
