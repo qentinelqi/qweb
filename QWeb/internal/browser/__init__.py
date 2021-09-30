@@ -92,8 +92,7 @@ def get_current_browser():
 def set_current_browser(index):
     # pylint: disable=global-statement
     global _current_browser
-    # pylint: disable=global-statement
-    global _open_browsers
+
     if index.isdigit():
         if int(index) == 0:
             raise QWebValueError('SwitchBrowser index starts at 1.')
