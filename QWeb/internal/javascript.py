@@ -26,7 +26,7 @@ def execute_javascript(script, *args):
     script : str
         Javascript code.
     *args : WebElement
-        WebElement objects that are stored in to variable "arguments" which is
+        WebElement object that is stored in to variable "arguments" which is
         an array in javascript. Check example.
 
     Returns
@@ -36,8 +36,7 @@ def execute_javascript(script, *args):
 
     Example
     -------
-    execute_javascript("arguments[0].set_attribute(
-    ...    "style", "background-color:yellow")", webelement)
+    execute_javascript('arguments[0].setAttribute("style", "background-color:yellow")', web_element)
     """
     driver = browser.get_current_browser()
     return driver.execute_script(script, *args)
@@ -128,9 +127,9 @@ def get_by_attributes(elements, locator, partial_match):
     Parameters
     ----------
     elements : web elements
-        Haystack we are looking for.
+        List of web elements.
     locator : str
-        Attribute we are looking for from given haystack.
+        Attribute we are looking for, that some of the elements on the list may or may not contain. E. g: '[checked = true]'
     partial_match : bool
         If True we don't need a perfect match -> Full = ull.
 

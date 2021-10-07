@@ -1,0 +1,4 @@
+[console_scripts]
+rfdebug = DebugLibrary.shell:shell
+rfshell = DebugLibrary.shell:shell
+

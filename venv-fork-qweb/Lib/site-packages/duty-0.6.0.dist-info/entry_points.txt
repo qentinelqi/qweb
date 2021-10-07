@@ -1,0 +1,3 @@
+[console_scripts]
+duty=duty.cli:main
+
