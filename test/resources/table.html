@@ -1,0 +1,62 @@
+<html>
+
+<head>Table acceptance
+  <style>
+    iframe,
+    frame {
+      border: solid 5px green
+    }
+  </style>
+</head>
+
+<body>
+  <p>Lorem ipsum</p>
+  <table>
+    <caption>Sample</caption>
+    <tr>
+      <th>Firstname</th>
+      <th>Lastname</th>
+      <th>Age</th>
+      <th>Date</th>
+    </tr>
+    <tr>
+      <td>Jill</td>
+      <td>Smith</td>
+      <td></td>
+      <td>2017-03-12</td>
+    </tr>
+    <tr>
+      <td>Eve</td>
+      <td>Jackson</td>
+      <td>94</td>
+      <td>2018-03-12</td>
+    </tr>
+    <tr>
+      <td><input></input></td>
+      <td><input></input></td>
+      <td><input></input></td>
+      <td><input></input></td>
+    </tr>
+    <tr>
+      <td>
+        <p>Some text inside of cell</p><input></input>
+      </td>
+      <td onclick=showMe(event)><label><input type="checkbox"></label></td>
+      <td onclick=showMe(event)><label><input type="radio"></label></td>
+    </tr>
+  </table>
+  <p id="Q"></p>
+  <h2> Checkboxes are in iframe inside of this table doc: </h2>
+  <iframe src="./checkbox.html" width="1000px" height="600px"></iframe>
+
+  <script>
+
+    function showMe(e) {
+      checkable = e.currentTarget.querySelector('[type="checkbox"], [type="radio"]')
+      checkable.click()
+      document.querySelector('#Q').textContent = checkable.type + " " + checkable.checked
+    }
+  </script>
+</body>
+
+</html>

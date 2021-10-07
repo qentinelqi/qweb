@@ -1,0 +1,47 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+      <title>Service Portal Test Helper Application</title>
+    </head>
+  <body>
+
+    <h1>Prepare user</h1>
+
+    <form action="/api/test/users/prepare" method="post">
+      <div>
+
+        <div style="float: left; overflow:hidden; margin-right:30px;">
+          <h2>User</h2>
+          <div>
+            First name: <br />
+            <input id="user_first_name" name="user_first_name" type="text" required=""></input>
+          </div>
+          <div>
+            Last name: <br />
+            <input id="user_last_name" name="user_last_name" type="text" required=""></input>
+          </div>
+          <div>
+            Username/email: <br />
+            <input id="user_email" name="user_email" type="email" required=""></input>
+          </div>
+          <div>
+            Password: <br />
+            <input id="user_password" name="user_password" type="password" required=""></input>
+          </div>
+
+          <div>
+            Email verified: <br />
+            <input id="user_is_email_verified" name="user_is_email_verified" type="checkbox"></input>
+          </div>
+          <div>
+            NIN: <br />
+            <input id="user_ssn" name="user_ssn" type="text"></input>
+          </div>
+          <div>
+              NIN country</br>
+              <input id="national_identity_number_country" name="national_identity_number_country" type="text"  value="FI" />
+          </div>
+  </body>
+</html>

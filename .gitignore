@@ -1,0 +1,38 @@
+# Compiled python code files
+*pyc
+
+# Robot framework log files
+log.html
+output.xml
+report.html
+debug.txt
+*.png
+*.log
+source_*.html
+screenshots/
+
+# doc output
+docs/build
+
+# unit test artifacts
+.coverage
+unittests.xml
+
+# package build output
+build
+dist
+QWeb.egg-info
+
+# Pycharm & virtual envs
+env/
+venv/
+!.idea/
+.idea/*
+!.idea/runConfigurations
+.tox/
+
+# vscode settings
+.vscode/
+
+# Mac files
+.DS_Store

@@ -1,0 +1,4 @@
+*.xml
+*.html
+/tests/screenshots
+*.log

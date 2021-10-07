@@ -1,0 +1,148 @@
+<html>
+  <head>
+  <style>
+  iframe, frame {border:solid 5px pink}
+  </style>
+  </head>
+  <body>
+  <h3>Input fields with &lt;label&gt; tags and one text in placeholder</h3>
+
+    <form>
+    <label>Name:</label> <input type="text" value="Lancelot" id="n"><br>
+    <label>Last name:</label> <input type="text" placeholder="The Brave" id="ln"><br>
+        <input type="button" value="Show inputbox" onclick="setTimeout('showInputBox()', 2000);" />
+    <!-- HIDDEN DIV SET TO DISPLAY AFTER 2 SECONDS - THIS CAN BE CHANGED BELOW  -->
+    <input id="hide" style="visibility: hidden"  type="text" value="hiddenbox"></input>
+    <script type="text/javascript">
+        function showInputBox() {
+            document.getElementById("hide").style.visibility = "visible";
+        }
+		function enable() {
+			event.target.readOnly=false
+		}
+    </script>
+    </form>
+
+
+
+    <input type="text" placeholder="username" />
+    <table>
+      <tr>
+        <td>row1column1</td>
+        <td><input id="r1c1" type="text"></td>
+        <td>row1column3&nbsp;&nbsp;</td>
+        <td><input id="r1c3" type="text"></td>
+      </tr>
+      <tr>
+        <td>row2column2</td>
+        <td><input id="r2c2" type="text"></td>
+        <td>row2column3&nbsp;&nbsp;</td>
+        <td><input id="r2c3" type="tel"></td>
+        <td>row2column4</td>
+      </tr>
+      <tr>
+        <td>row3column3</td>
+        <td><input onclick="enable()" id="r3c3" type="text" disabled></td>
+      </tr>
+      <tr>
+        <td>end-key</td>
+        <td><input type="text" onfocusout="document.getElementById('focus').setAttribute('hidden', true);" onfocus="document.getElementById('focus').removeAttribute('hidden');"/></td>
+	  </tr>
+	  <tr>
+		<td>read-only</td>
+        <td><input type="text" id="ronly" onclick="enable()" readonly="readonly" value="Qentinel" /></td>
+	</tr>
+    </table>
+    <p id="focus" hidden>on focus</p>
+    
+    <br>
+    <br>
+    <label>Code:</label><br>
+    <input type="text" id="jeuda">
+    <br>
+    <br>
+    <label>Other:</label><br>
+    <br>
+    <br>
+    <input type="text" id="udjskw"><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <table>
+        <tr>
+          <td><input type="text" id="rddf"></td>
+          <td>LeftRight</td>
+          <td><input type="text" id="odjdq"></td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <table>
+      <tr>
+          <td><input type="text" id="frtyhg"></td>
+      </tr>
+      <tr>
+        <td>UpDown</td>
+      </tr>
+      <tr>
+          <td><input type="text" id="igtews"></td>
+      </tr>
+    </table>
+	<br>
+	<div class="labelfors">
+    <label for="field1">First input:</label>
+    <input type="text" class="labelfors" id="field1">
+  </div>
+  <div class="labelfors">
+    <label for="field2">Second input:</label>
+    <input type="text" class="labelfors" id="field2">
+  </div>
+  <div class="labelfors">
+	<table>
+		<tr>
+			<td><label for="field3">Cell 1 input:</label></td>
+			<td><input type="text" class="labelfors" id="field3"></td>
+			<td><label for="field4">Cell 2 input:</label></td>
+			<td><input type="text" class="labelfors" id="field4"></td>
+			<td><label for="field5">Cell 3 input:</label></td>
+			<td><input type="text" class="labelfors" id="field5"></td>
+			<td><label for="field6">Misplaced input:</label></td>
+        </tr><tr>
+            <td><label for="field7">Cell 1 </label></td>
+			<td><input type="text" class="labelfors" id="field7"></td>
+            <td><label for="field8">Cell 1 input</label></td>
+			<td><input type="text" class="labelfors" id="field8"></td>
+		</tr>
+	</table>
+	<br>
+	<div>
+	<p> Some text.. </p>
+	<input type="text" class="labelfors" id="field6">
+	</div>
+	<div role="textbox" contenteditable="true" aria-label="Editable Div"></div>
+	<div role="textbox" contenteditable="true" aria-label="Another Editable Div"></div>
+	<div role="textbox" contenteditable="true" aria-label="Third Editable Div"></div>
+  </div>
+	<h2> This text is in input frame.. Buttons are on my childframe</h2>
+	<iframe src="./text.html" width="1000px" height="500px"></iframe>
+  <div>
+      <input type="text">
+  <div><div><div><label>Foobar</label></div></div></div>
+  </div>
+  <br>
+  <br>
+  <h3>Input fields with same labels and anchor text with partial match</h3>
+  <br>
+  <br>
+  <div>
+    <label for="address_field1">Address</label>
+      <input type="text" id="address_field1"><text>someanchortext</text><br><br>
+    <label for="address_field2">Address</label>
+    <input type="text" id="address_field2"><text>moreanchortext</text><br><br>
+    <label for="address_field3">Address</label>
+    <input type="text" id="address_field3"><text>anchor</text><br><br>
+  </div>
+  <br>
+  </body>
+</html>

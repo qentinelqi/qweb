@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .boxes {
+        width: 250px;
+        height: 100px;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">  
+  function showTarget(e){
+    if (e.target === e.currentTarget){
+      document.querySelector('#alertBox').innerText = e.currentTarget.id + " clicked!\n"
+    }
+  }
+</script>
+<h2>Nested List</h2>
+<p id=testing>Text that has nothing to do with lists..</p>
+<ul>
+  <li id="Text" onClick="showTarget(event)">Text in outer list</li>
+  <li id="Robot" onClick="showTarget(event)">Robot testing
+    <ul>
+      <li id="Qentinel" onClick="showTarget(event)">Qentinel</li>
+      <li id="QWeb" onClick="showTarget(event)">QWeb</li>
+      <li id="QVision" onClick="showTarget(event)">QVision</li>
+      <li id="QMobile" onClick="showTarget(event)">QMobile</li>
+    </ul>
+  </li>
+  <li>Another text in outer list</li>
+</ul>
+<h2>Boxes with same classname can be used as a list:</h2>
+<div class="boxes" id="parentbox" onClick="showTarget(event)"> Box 1 
+  <div class="innerBox1" id="childbox1" onClick="showTarget(event)">Inner box 1
+    <div class="innerBox2" id="childbox2" onClick="showTarget(event)">Inner box 2</div>
+  </div>
+</div>
+<div class="boxes"> Box 2 </div>
+<div class="boxes"> Box 3 </div>
+<div class="boxes"> Box 4 </div>
+<div id="alertBox"></div>
+</body>
+</html>

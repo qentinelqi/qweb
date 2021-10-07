@@ -1,0 +1,158 @@
+<html>
+
+<head>
+    <link href="./dropdown.css" rel="stylesheet" type="text/css" />
+
+
+    <style type="text/css">
+        /* style for hidden div */
+
+        #hide {
+            border: 1px solid black;
+            background-color: rgba(139, 0, 204, 0.027);
+            width: 400px;
+            height: 400px;
+            padding: 10px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <i>Lorem</i> ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+        sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>This sentence contains more than one space between words 125 603,33</p>
+    <p style="visibility:hidden">This text should be hidden</p>
+    <button onclick="this.innerText='Button1 was clicked'">Button1</button>
+    <input type="submit" value="Button2" onclick="this.value='Button2 was clicked'" />
+    <input type="button" value="Button3" onclick="this.value='Button3 was clicked'" />
+    <input type="reset" value="Button4" onclick="this.value='Button4 was clicked'" />
+    <input type="reset" value="Button5" onclick="this.value='This button was clicked'" />
+    <input type="button" value="Show hidden" onclick="setTimeout('showHiddenText()', 4000);" />
+    <input type="button" value="Hide Text" onclick="setTimeout('hideText()', 4000);" />
+    <script type="text/javascript">
+    var clicks = 0;
+    function onClick() {
+        clicks += 1;
+        document.getElementById("clicks").innerHTML = clicks;
+    };
+    function disableTarget(e){
+        document.getElementById(e.currentTarget.id).disabled = true;
+        setTimeout(function() {document.querySelector('#alertBox').innerText = "skim/scan clicked!\n"}, 4000)
+        setTimeout(function() {document.getElementById("skimclick").style.visibility = "hidden";}, 8000)
+    };
+    </script>
+    <button type="button" onClick="setTimeout('onClick()', 1000)">Click me</button>
+    <img src ="pics_and_icons/monitor-8x.png" style="width:30px" data-icon="screen" onClick="setTimeout('onClick()', 1000)"/>
+    <button type="button" id="skimclick" onclick="disableTarget(event)">SkimClick disable button</button>
+    <p>Clicks: <a id="clicks">0</a></p>
+    <!--  // visible after 4 seconds -->
+    <h1>HoverDropdown</h1>
+    <p>
+        <div class="dropdown">
+            <button id="hover_me" class="dropbtn">Hover Dropdown</button>
+            <div class="dropdown-content">
+                <a href="#">Hover Link</a>
+            </div>
+        </div>
+    </p>
+	<div id="parent" style="width:250px; height:250px" onClick="showTarget(event)">
+			<p id="textblock" onClick="showTarget(event)">Identifying text<br>
+			<span id="smiley" onClick="showTarget(event)">:-)</span></p>
+            <p id="doubleclick test" ondblclick="showTarget(event)">double-click test.</p>
+	</div>
+	<div id="alertBox"></div>
+	
+
+    <!-- HIDDEN DIV SET TO DISPLAY AFTER 2 SECONDS - THIS CAN BE CHANGED BELOW  -->
+    <div id="hide" aria-label="hidden-treasure" style="display: none">Delayed hidden text</div>
+    <script type="text/javascript">  
+        function showHiddenText() {
+            document.getElementById("hide").style.display = "block";
+        }
+
+        function hideText() {
+            document.getElementById("hide").style.display = "none";
+        }
+		
+		function showTarget(e){
+			if (e.target === e.currentTarget){
+				document.querySelector('#alertBox').innerText = e.currentTarget.id + " clicked!\n"
+			}
+		}
+
+    </script>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<p>TextToScroll</p>
+<br>
+<p>Text with quote character: 40"</p>
+<p>
+    <button onclick="this.innerText='fifty inch was clicked'">50"</button>
+</p>
+<p style="visibility: hidden;">Invisible text</p>
+<p>
+    <input type="submit" value="Button6" STYLE="position:absolute; BOTTOM:35px; LEFT:170px; WIDTH:50px; HEIGHT:50px" id="1" onclick="this.value='Button6 was clicked'"></input>
+    <input type="submit" value="Button7"STYLE="position:absolute; BOTTOM:35px; LEFT:170px; WIDTH:50px; HEIGHT:50px" id="2" onclick="this.value='Button7 was clicked'"></input>
+</p>
+
+<p><span>Anchor 1</span>
+    <input type="submit" value="Signup" id="signup1" onclick="this.value='The first Signup was clicked'"></input>
+    <input type="submit" value="Signup" id="signup1" onclick="this.value='Signup near Random text was clicked'"></input>
+    <span>Random text</span>
+    <br>
+    <span>Anchor 2</span>
+    <input type="submit" value="Signup" id="signup2" onclick="this.value='The second Signup was clicked'"></input>
+</p>
+<p>
+    Counttextyjku
+</p>
+<p>
+    Counttextyjku<br>
+    <div id="hiddencount" style="visibility: hidden">Counttextyjku</div>
+</p>
+
+<p>Current scroll = <b id="showScroll">scroll the window</b></p>
+<p>
+    <input type="button" value="Counttextyjku" onclick="setTimeout('showCountText()', 4000);"/>
+    <script type="text/javascript">
+        function showCountText() {
+            document.getElementById("hiddencount").style.visibility = "visible";
+            }
+
+		function showTarget(e){
+			if (e.target === e.currentTarget){
+				document.querySelector('#alertBox').innerText = e.currentTarget.id + " clicked!\n"
+			}
+
+		}
+
+    </script>
+    <script type="text/javascript">
+            window.addEventListener('scroll', function () {
+                document.getElementById('showScroll').innerHTML = window.pageYOffset + 'px';
+            });
+    </script>
+    anchorcount
+</p>
+
+</body>
+
+</html>

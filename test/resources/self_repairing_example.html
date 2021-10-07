@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+Enter your name: <input type="text" id="fname" value="kukkuu" onblur="myFunction()">
+Enter anything: <input type="text" id="lname" value="" onkeyup="myOtherFunction()">
+
+<p>When you leave the input field, a function is triggered which transforms the input text to upper case.</p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("fname");
+  if (x.value === "") {
+    x.value = "default";
+  } else {
+    x.value = x.value.toUpperCase();
+  }
+}
+
+function myOtherFunction() {
+  var word = "Matti och Teppo och ";
+  var x = document.getElementById("lname");
+  if (x.value === "Seppo") {
+    x.value = word + x.value;
+  }
+}
+</script>
+
+</body>
+</html>

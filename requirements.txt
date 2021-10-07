@@ -1,0 +1,28 @@
+astroid==2.3.0
+PyAutoGUI==0.9.48
+Pillow==8.3.2
+Flask==1.0.3
+mock==2.0.0
+robotframework>=3.2.2
+robotframework-debuglibrary==2.2.1
+selenium==3.141.0
+ply
+pynput==1.6.7
+pyparsing==2.2.2
+setuptools
+opencv-python==3.4.13.47
+pydocstyle==3.0.0
+pylint==2.4.1
+pytest
+pytest-pythonpath
+pytest-cov
+pyperclip==1.7.0
+requests==2.22.0
+slate3k==0.5.3
+coverage
+scipy==1.5.*
+scikit-image==0.17.2;python_version=="3.6"
+scikit-image==0.18.0;python_version>"3.6"
+importlib-metadata == 0.23
+msedge.selenium_tools == 3.141.2
+duty == 0.6.0
