@@ -348,6 +348,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
         ClickText   Canis     js=true     #Use Javascript click instead of Selenium
 
     To double-click text, use argument doubleclick=True
+    
     .. code-block:: robotframework
 
         ClickText   Canis       doubleclick=True
