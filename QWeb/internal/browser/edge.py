@@ -52,7 +52,7 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     if edge_path:
         options.binary_location = edge_path
 
-    if user.is_root():
+    if user.is_root() or user.is_docker():
         options.add_argument("no-sandbox")
     if edge_args:
         if any('--headless' in _.lower() for _ in edge_args):
