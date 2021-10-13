@@ -24,7 +24,8 @@ are usually referenced by coordinates or unique neighboring values.
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError, \
     QWebValueError
-from QWeb.internal.actions import execute_click_and_verify_condition
+from QWeb.internal.actions import execute_click_and_verify_condition \
+    as _execute_click_and_verify_condition
 from QWeb.internal import decorators, util, element
 from QWeb.internal.lists import List
 
@@ -136,7 +137,7 @@ def click_list(index, timeout=0, js=True, **kwargs):  # pylint: disable=unused-a
             index = _check_index(index)
             web_element = element.get_element_to_click_from_list(
                 active.web_element_list, index, **kwargs)
-            if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+            if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
                 return
 
 

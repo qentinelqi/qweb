@@ -19,7 +19,7 @@ import time
 
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.utils import timestr_to_secs
+from robot.utils import timestr_to_secs as _timestr_to_secs
 
 from QWeb.internal import download, frame
 from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
@@ -59,7 +59,7 @@ def verify_file_download(timeout=0):
     download_dir = download.get_downloads_dir()
     if timeout == 0:
         timeout = CONFIG["DefaultTimeout"]
-    timeout_int = timestr_to_secs(timeout)
+    timeout_int = _timestr_to_secs(timeout)
     start = time.time()
     previous_message = None
     while time.time() < start + timeout_int:

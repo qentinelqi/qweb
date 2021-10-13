@@ -25,8 +25,11 @@ text.
 """
 from pynput.keyboard import Controller
 import pyperclip
-from QWeb.internal.actions import scroll, execute_click_and_verify_condition, hover_to, \
-    text_appearance, scroll_dynamic_web_page, scroll_first_scrollable_parent_element
+from QWeb.internal.actions import scroll as _scroll, \
+    execute_click_and_verify_condition as _execute_click_and_verify_condition, \
+    hover_to as _hover_to, text_appearance as _text_appearance, \
+    scroll_dynamic_web_page as _scroll_dynamic_web_page, \
+    scroll_first_scrollable_parent_element as _scroll_first_scrollable_parent_element
 from QWeb.internal import element, decorators, util, download, text as internal_text
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import QWebValueError, QWebEnvironmentError, QWebTimeoutError,\
@@ -387,7 +390,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
     anchor = str(anchor)
     web_element = internal_text.get_element_by_locator_text(
         text, anchor, parent=parent, child=child, **kwargs)
-    if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
 
@@ -535,7 +538,7 @@ def hover_text(text, anchor="1", timeout="0", **kwargs):  # pylint: disable=unus
         by visible text
     """
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
-    hover_to(web_element, timeout=timeout)
+    _hover_to(web_element, timeout=timeout)
 
 
 @keyword(tags=("Item", "Verification"))
@@ -577,7 +580,7 @@ def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=u
     \`HoverElement\`, \`HoverText\`, \`HoverTo\`, \`ScrollText\`, \`ScrollTo\`
     """
     web_element = internal_text.get_item_using_anchor(locator, anchor, **kwargs)
-    hover_to(web_element, timeout=timeout)
+    _hover_to(web_element, timeout=timeout)
 
 
 @keyword(tags=("Text", "Verification"))
@@ -615,7 +618,7 @@ def is_text(text, timeout="0.1s", **kwargs):
     \`GetText\`, \`IsNoText\`, \`VerifyText\`
     """
     try:
-        return text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
+        return _text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
     except (QWebTimeoutError, QWebValueError):
         return False
 
@@ -656,7 +659,7 @@ def is_no_text(text, timeout="2s", **kwargs):
     \`IsText\`, \`VerifyText\`
     """
     try:
-        return text_appearance(text, text_appear=False, timeout=timeout, **kwargs)
+        return _text_appearance(text, text_appear=False, timeout=timeout, **kwargs)
     except (QWebValueError, QWebTimeoutError):
         return False
 
@@ -836,7 +839,7 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
     \`ClickList\`, \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`VerifyItem\`
     """
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
-    if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
 
@@ -975,7 +978,7 @@ def scroll_text(text, anchor="1", timeout=0, **kwargs):
     \`HoverElement\`, \`HoverItem\`, \`HoverText\`, \`HoverTo\`, \`ScrollTo\`
     """
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
-    scroll(web_element, timeout=timeout)
+    _scroll(web_element, timeout=timeout)
 
 
 @keyword(tags=("input", "Text", "Interaction"))
@@ -1199,10 +1202,10 @@ def scroll_to(text_to_find, locator=None, anchor='1', scroll_length=None,
         return
     slow_mode = util.par2bool(kwargs.get('slow_mode', False))
     if locator:  # If we are trying to scroll a specific element
-        scroll_first_scrollable_parent_element(
+        _scroll_first_scrollable_parent_element(
             locator, anchor, text_to_find, scroll_length, slow_mode, timeout)
     else:  # if we are just scrolling the web page
-        scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout)
+        _scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout)
 
 
 @keyword(tags=("Text", "Interaction"))

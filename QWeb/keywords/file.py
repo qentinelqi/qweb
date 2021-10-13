@@ -20,7 +20,7 @@ from QWeb.internal import download
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError,\
     QWebUnexpectedConditionError, QWebValueError, QWebFileNotFoundError
 from zipfile import ZipFile
-from os.path import basename
+from os.path import basename as _basename
 import os
 import shutil
 from robot.api import logger
@@ -346,7 +346,7 @@ def zip_files(name_of_zip, files_to_zip):
                         for file2 in files2:
                             zipped.write(os.path.join(root, file2))
                 else:
-                    zipped.write(file, basename(file))
+                    zipped.write(file, _basename(file))
     except OSError as e:
         raise QWebValueError('\nFile name "{}" contained illegal characters.'
                              '\nError message: {}'.format(name_of_zip, str(e)))
