@@ -29,6 +29,14 @@ from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 def verify_file_download(timeout=0):
     r"""Verify file has been downloaded and return file path.
 
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ExpectFileDownload
+        ClickText               Download
+        VerifyFileDownload      timeout=20s     # file should be downloaded in 20 seconds
+
     Parameters
     ----------
     timeout : str | int
@@ -82,9 +90,18 @@ def verify_file_download(timeout=0):
 
 @keyword(tags=("Browser", "Verification"))
 def expect_file_download():
-    r"""Set the time after which the download should happen.
+    r"""Turns on polling for time after which file download should happen.
 
-    Run this keyword everytime before VerifyFileDownload.
+    Run this keyword everytime before \`VerifyFileDownload\` and the action that
+    starts download process.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ExpectFileDownload
+        ClickText               Download
+        VerifyFileDownload      timeout=20s     # file should be downloaded in 20 seconds
 
     Related keywords
     ----------------
