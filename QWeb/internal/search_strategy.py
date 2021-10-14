@@ -30,9 +30,9 @@ class SearchStrategies:
 
     TEXT_MATCH = '//*[not(self::script) and normalize-space(translate(., "\u00a0", " "))="{0}" and not(descendant::*[normalize-space(translate(., "\u00a0", " "))="{0}"])]|//input[(@type="button" or @type="reset" or @type="submit" or @type="checkbox") and normalize-space(translate(@value, "\u00a0", " "))="{0}"]'
 
-    CONTAINING_TEXT_MATCH_CASE_SENSITIVE = '//*[not(self::script) and contains(normalize-space(translate(., "\u00a0", " ")), "{0}") \
-                                           and not(descendant::*[contains(normalize-space(translate(., "\u00a0", " ")), "{0}")])]| \
-                                           //input[(@type="button" or @type="reset" or @type="submit") and contains(normalize-space(translate(@value, "\u00a0", " ")), "{0}")]'
+    CONTAINING_TEXT_MATCH_CASE_SENSITIVE = ('//*[not(self::script) and contains(normalize-space(translate(., "\u00a0", " ")), "{0}") '
+                                            'and not(descendant::*[contains(normalize-space(translate(., "\u00a0", " ")), "{0}")])]| '
+                                            '//input[(@type="button" or @type="reset" or @type="submit") and contains(normalize-space(translate(@value, "\u00a0", " ")), "{0}")]')
 
     # ToDo: Will use lower-case to replace translate in xpath when it is ready.
 
