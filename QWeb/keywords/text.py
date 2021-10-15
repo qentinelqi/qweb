@@ -771,7 +771,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     elif '//' not in locator:
         web_element = internal_text.get_text_using_anchor(locator, anchor)
     else:
-        web_element = element.get_unique_element_by_xpath(locator)
+        web_element = element.get_unique_element_by_xpath(locator, **kwargs)
     text = web_element.text
     return util.get_substring(text, **kwargs)
 

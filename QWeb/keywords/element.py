@@ -322,7 +322,7 @@ def verify_element(xpath, timeout=0, **kwargs):  # pylint: disable=unused-argume
         web_elements = element.get_visible_elements_from_elements(
             element.get_elements_by_attributes(kwargs.get('tag'), xpath, **kwargs))
     else:
-        web_elements = element.get_webelements(xpath)
+        web_elements = element.get_webelements(xpath, **kwargs)
     if web_elements:
         return
     raise QWebElementNotFoundError('No matching element found')
