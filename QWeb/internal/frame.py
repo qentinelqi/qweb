@@ -101,8 +101,8 @@ def save_source(raw_html, folder, count):
     """
     filename = "source_{}.html".format(count)
     filepath = os.path.join(folder, filename)
-    with open(filepath, "w") as htmlfile:
-        htmlfile.write(raw_html.encode("utf-8"))
+    with open(filepath, "wb") as htmlfile:
+        htmlfile.write(raw_html.encode("utf-8-sig"))
     return filepath
 
 
@@ -147,11 +147,11 @@ def get_output_dir():
 
 
 def get_html_source_count():
-    return BuiltIn().get_variable_value("${html_source_count}")
+    return BuiltIn().get_variable_value("${html_source_count}", 0)
 
 
 def set_html_source_count(value):
-    BuiltIn().set_global_variable("html_source_count", value)
+    BuiltIn().set_global_variable("${html_source_count}", value)
 
 
 def all_frames(fn):

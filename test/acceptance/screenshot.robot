@@ -16,6 +16,10 @@ Remove Test Screenshot
     Remove File     ${OUTPUT_DIR}${/}screenshots${/}${file_name}
 
 *** Test Cases ***
+LogPage does not give errors
+    [Tags]         LogPage
+    LogPage
+
 Screenshot Functionality Works
     File Should Not Exist    ${OUTPUT_DIR}${/}screenshots${/}${SCREENSHOT_NAME}
     LogScreenshot    ${SCREENSHOT_NAME}
