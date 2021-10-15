@@ -954,6 +954,114 @@ def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=un
     raise QWebValueError('Element with attribute value {} still exists'.format(text))
 
 
+@keyword(tags=("Item", "Verification"))
+@decorators.timeout_decorator
+def is_item(text, anchor="1", timeout=0.1, **kwargs):  # pylint: disable=unused-argument
+    r"""Check if Item (usually icon or picture) exists.
+
+    Finds webelement by it's tooltip text (title or alt) or some another
+    attribute.
+    Available attributes: any
+    Available element types without using tag attribute:
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only)*
+
+    Keyword waits until timeout has passed or item is found.
+    If timeout is not specified, it uses default timeout that can be adjusted
+    with DefaultTimeout keyword.
+
+    IsItem does not require for the attribute to be unique.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ${exists]=  Istem        Canis
+
+    In the above example the IsItem keyword returns True if element which
+    has attribute Canis exists.
+
+    Parameters
+    ----------
+    text : str
+        Attribute value of item.
+    anchor : str
+        Parameter not used with this kw.
+    timeout : str | int
+        How long we wait for element to be ready for click
+    kwargs :
+        |  Accepted kwargs:
+        |       tag : html tag of preferred element -
+        |           If tag is used then element is found
+        |           by some of it's attribute
+        |       partial_match: False. If only full match is accepted set
+        |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickItem\`, \`IsNoItem\, \`VerifyItem\`
+    """
+    try:
+        verify_item(text, anchor, timeout, **kwargs)
+        return True
+    except QWebElementNotFoundError:
+        return False
+
+
+@keyword(tags=("Item", "Verification"))
+@decorators.timeout_decorator
+def is_no_item(text, anchor="1", timeout=0.1, **kwargs):  # pylint: disable=unused-argument
+    r"""Check if Item (usually icon or picture) does not exist.
+
+    Finds webelement by it's tooltip text (title or alt) or some another
+    attribute.
+    Available attributes: any
+    Available element types without using tag attribute:
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only)*
+
+    Keyword waits until timeout has passed or element disappears from the screen.
+    If timeout is not specified, it uses default timeout that can be adjusted
+    with DefaultTimeout keyword.
+
+    IsNoItem does not require for the attribute to be unique.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ${exists]=  IsNotem        Canis
+
+    In the above example the IsNoItem keyword returns True if element which
+    has attribute Canis disappears from the screen before timeout expires.
+
+    Parameters
+    ----------
+    text : str
+        Attribute value of item.
+    anchor : str
+        Parameter not used with this kw.
+    timeout : str | int
+        How long we wait for element to be ready for click
+    kwargs :
+        |  Accepted kwargs:
+        |       tag : html tag of preferred element -
+        |           If tag is used then element is found
+        |           by some of it's attribute
+        |       partial_match: False. If only full match is accepted set
+        |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickItem\`, \`IsItem\, \`VerifyItem\`
+    """
+    try:
+        verify_no_item(text, anchor, timeout, **kwargs)
+        return True
+    except QWebValueError:
+        return False
+
+
 @keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def scroll_text(text, anchor="1", timeout=0, **kwargs):
