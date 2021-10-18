@@ -79,7 +79,6 @@ def _parse_steps(data, iterator, **kwargs):
 
 def _parse_arguments(line, starting_point, **kwargs):  # pylint: disable=unused-argument
     args = []
-    kwargs = {}
     for a in range(starting_point, len(line)):
         if line[a].strip() != '':
             if '=' not in line[a]:
