@@ -61,6 +61,8 @@ CONFIG_DEFAULTS = {
                   SearchStrategies.text_match_validation),
     "ContainingTextMatch": (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
                             SearchStrategies.containing_text_match_validation),
+    "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH,
+                     SearchStrategies.clear_xpath),
     "VerifyAppAccuracy": (0.9999, None),
     "OffsetCheck": (True, util.par2bool),
     "Visibility": (True, util.par2bool),

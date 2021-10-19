@@ -449,6 +449,11 @@ def set_config(par, val):
     matching with a custom search string. Placeholder can be positional, such as {0}
     and repeated in that case.
 
+    If **IsModalXPath** is set to something else than //body, then text based element
+    search only considers elements which have the given xpath as ancestor, if
+    IsModalXpath exists / is open. This is meant for applications that have modal
+    dialogs but do not set elements below the dialog hidden in other means.
+
     Returns previously used search strategy.
 
 
@@ -462,6 +467,7 @@ def set_config(par, val):
         SetConfig    MatchingInputElement    containing input element
         ${previous}= SetConfig    AllInputElements    //input
         SetConfig    AllInputElements    ${previous}
+        SetConfig    IsModalXPath       //div[contains(@class, 'modal-container')]
 
     note: in the above case "containing input element" will use an xpath expression
     such that input elements that contain partial matches are used.

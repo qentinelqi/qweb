@@ -44,6 +44,8 @@ class SearchStrategies:
                             "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÅ", "abcdefghijklmnopqrstuvwxyzäöå"), \
                             translate("{0}", "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÅ", "abcdefghijklmnopqrstuvwxyzäöå"))]'
 
+    IS_MODAL_XPATH = '//body'
+
     @staticmethod
     def active_area_xpath_validation(xpath):
         return SearchStrategies.clear_xpath(xpath)

@@ -33,7 +33,7 @@ from QWeb.internal.actions import scroll as _scroll, \
 from QWeb.internal import element, decorators, util, download, text as internal_text
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import QWebValueError, QWebEnvironmentError, QWebTimeoutError,\
-    QWebElementNotFoundError, QWebDriverError
+    QWebElementNotFoundError, QWebDriverError, QWebInstanceDoesNotExistError
 from robot.api import logger
 from robot.api.deco import keyword
 import os
@@ -619,7 +619,7 @@ def is_text(text, timeout="0.1s", **kwargs):
     """
     try:
         return _text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
-    except (QWebTimeoutError, QWebValueError):
+    except (QWebTimeoutError, QWebValueError, QWebInstanceDoesNotExistError):
         return False
 
 
