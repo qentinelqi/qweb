@@ -26,3 +26,16 @@ Click Element Under slow accordion
 Modal Element
     ClickText       Modal Element 1
     ClickText       Click this text to close me!
+
+Filtering based on modal
+    # Default, no filtering based on modal
+    ClickText                Modal Element 1
+    ${found}=                IsText                        Accordion Element 1
+    Should Be True           ${found}                    
+
+    # Filter by modal
+    ${prev}=                 SetConfig                     IsModalXPath                  //div[@id="modal_element"]
+    ${found}=                IsText                        Accordion Element 1
+    Should Not Be True       ${found}
+
+    SetConfig                IsModalXPath                  ${prev}       
