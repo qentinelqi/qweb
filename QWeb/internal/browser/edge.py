@@ -29,6 +29,10 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     options = EdgeOptions()
     options.use_chromium = True
 
+    # Gets rid of Devtools listening .... printing
+    # other non-sensical error messages
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
     if platform.system().lower() == "windows":
         options.set_capability("platform", "WINDOWS")
 
