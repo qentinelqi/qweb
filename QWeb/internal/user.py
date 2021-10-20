@@ -29,3 +29,11 @@ def is_root():
     if uid == 0:
         return True
     return False
+
+
+def is_docker():
+    path = '/proc/self/cgroup'
+    return (
+        os.path.exists('/.dockerenv')
+        or os.path.isfile(path) and any('docker' in line for line in open(path))  # noqa: W503
+    )

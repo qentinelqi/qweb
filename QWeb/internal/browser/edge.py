@@ -29,6 +29,10 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     options = EdgeOptions()
     options.use_chromium = True
 
+    # Gets rid of Devtools listening .... printing
+    # other non-sensical error messages
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
     if platform.system().lower() == "windows":
         options.set_capability("platform", "WINDOWS")
 
@@ -52,7 +56,7 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
     if edge_path:
         options.binary_location = edge_path
 
-    if user.is_root():
+    if user.is_root() or user.is_docker():
         options.add_argument("no-sandbox")
     if edge_args:
         if any('--headless' in _.lower() for _ in edge_args):

@@ -19,7 +19,7 @@ import time
 
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.utils import timestr_to_secs
+from robot.utils import timestr_to_secs as _timestr_to_secs
 
 from QWeb.internal import download, frame
 from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
@@ -28,6 +28,14 @@ from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 @keyword(tags=("Browser", "Verification"))
 def verify_file_download(timeout=0):
     r"""Verify file has been downloaded and return file path.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ExpectFileDownload
+        ClickText               Download
+        VerifyFileDownload      timeout=20s     # file should be downloaded in 20 seconds
 
     Parameters
     ----------
@@ -51,7 +59,7 @@ def verify_file_download(timeout=0):
     download_dir = download.get_downloads_dir()
     if timeout == 0:
         timeout = CONFIG["DefaultTimeout"]
-    timeout_int = timestr_to_secs(timeout)
+    timeout_int = _timestr_to_secs(timeout)
     start = time.time()
     previous_message = None
     while time.time() < start + timeout_int:
@@ -82,9 +90,18 @@ def verify_file_download(timeout=0):
 
 @keyword(tags=("Browser", "Verification"))
 def expect_file_download():
-    r"""Set the time after which the download should happen.
+    r"""Turns on polling for time after which file download should happen.
 
-    Run this keyword everytime before VerifyFileDownload.
+    Run this keyword everytime before \`VerifyFileDownload\` and the action that
+    starts download process.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ExpectFileDownload
+        ClickText               Download
+        VerifyFileDownload      timeout=20s     # file should be downloaded in 20 seconds
 
     Related keywords
     ----------------

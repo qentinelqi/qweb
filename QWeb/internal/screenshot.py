@@ -131,7 +131,11 @@ def _draw_contours(diff, ref_image_c):
                            cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
     contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
-    for c in contours[1]:
+
+    # api differs on opencv3 and opencv4
+    index = 1 if cv2.__version__.startswith("3") else 0
+
+    for c in contours[index]:
         (x, y, w, h) = cv2.boundingRect(c)
         cv2.rectangle(ref_image_c, (x, y), ((x + w), (y + h)), (0, 0, 255), 2)
     return ref_image_c

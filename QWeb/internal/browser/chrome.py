@@ -53,7 +53,10 @@ def open_browser(executable_path="chromedriver", chrome_args=None,
     chrome_args : Optional arguments to modify browser settings
     """
     options = Options()
+
     logger.debug('opt: {}'.format(options))
+    # Gets rid of Devtools listening .... printing
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
     # If user wants to re-use existing browser session then
     # he/she has to set variable BROWSER_REUSE_ENABLED to True.
@@ -73,9 +76,6 @@ def open_browser(executable_path="chromedriver", chrome_args=None,
         browser_reuse, session_id, executor_url))
     if browser_reuse and session_id and executor_url:
         options.add_argument("headless")
-
-        # Gets rid of Devtools listening .... printing
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
         driver = Remote(command_executor=executor_url,
                         desired_capabilities=options.to_capabilities())

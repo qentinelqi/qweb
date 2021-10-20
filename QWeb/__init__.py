@@ -31,7 +31,7 @@ try:
     from QWeb.internal import util
     from QWeb.internal.config_defaults import CONFIG
     from robot.api import logger
-    from robot.utils import timestr_to_secs
+    from robot.utils import timestr_to_secs as _timestr_to_secs
     from robot.libraries.BuiltIn import BuiltIn
     from robot.libraries import Dialogs
 
@@ -56,11 +56,11 @@ class QWeb:
                 if not name.startswith("_"):
                     attr = getattr(module, name)
                     if isinstance(attr, types.FunctionType):
-                        attr = self.run_on_failure_decorator(attr)
-                        attr = self.xpath_decorator(attr)
+                        attr = self._run_on_failure_decorator(attr)
+                        attr = self._xpath_decorator(attr)
                         setattr(self, name, attr)
 
-    def run_on_failure_decorator(self, keyword_method):
+    def _run_on_failure_decorator(self, keyword_method):
         """Decorator method for keywords.
 
         If keyword fails then this method executes self.run_on_failure_keyword.
@@ -71,7 +71,7 @@ class QWeb:
             if 'type_secret' not in str(keyword_method):
                 logger.debug('args: {}, kwargs: {}'.format(args, kwargs))
             try:
-                time.sleep(timestr_to_secs(kwargs.get('delay', CONFIG['Delay'])))
+                time.sleep(_timestr_to_secs(kwargs.get('delay', CONFIG['Delay'])))
                 run_before = CONFIG['RunBefore']
                 valid_pw = ['click', 'get_text', 'drop_down']
                 if run_before and any(pw in str(keyword_method) for pw in valid_pw):
@@ -103,7 +103,7 @@ class QWeb:
         return inner
 
     @staticmethod
-    def xpath_decorator(keyword_method):
+    def _xpath_decorator(keyword_method):
         """Decorator method for selector-attribute. If selector attribute
         is given, method uses it's value and text to form simple xpath
         locator.

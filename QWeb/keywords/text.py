@@ -25,12 +25,15 @@ text.
 """
 from pynput.keyboard import Controller
 import pyperclip
-from QWeb.internal.actions import scroll, execute_click_and_verify_condition, hover_to, \
-    text_appearance, scroll_dynamic_web_page, scroll_first_scrollable_parent_element
+from QWeb.internal.actions import scroll as _scroll, \
+    execute_click_and_verify_condition as _execute_click_and_verify_condition, \
+    hover_to as _hover_to, text_appearance as _text_appearance, \
+    scroll_dynamic_web_page as _scroll_dynamic_web_page, \
+    scroll_first_scrollable_parent_element as _scroll_first_scrollable_parent_element
 from QWeb.internal import element, decorators, util, download, text as internal_text
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import QWebValueError, QWebEnvironmentError, QWebTimeoutError,\
-    QWebElementNotFoundError, QWebDriverError
+    QWebElementNotFoundError, QWebDriverError, QWebInstanceDoesNotExistError
 from robot.api import logger
 from robot.api.deco import keyword
 import os
@@ -348,6 +351,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
         ClickText   Canis     js=true     #Use Javascript click instead of Selenium
 
     To double-click text, use argument doubleclick=True
+
     .. code-block:: robotframework
 
         ClickText   Canis       doubleclick=True
@@ -386,7 +390,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
     anchor = str(anchor)
     web_element = internal_text.get_element_by_locator_text(
         text, anchor, parent=parent, child=child, **kwargs)
-    if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
 
@@ -534,7 +538,7 @@ def hover_text(text, anchor="1", timeout="0", **kwargs):  # pylint: disable=unus
         by visible text
     """
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
-    hover_to(web_element, timeout=timeout)
+    _hover_to(web_element, timeout=timeout)
 
 
 @keyword(tags=("Item", "Verification"))
@@ -576,7 +580,7 @@ def hover_item(locator, anchor="1", timeout="0", **kwargs):  # pylint: disable=u
     \`HoverElement\`, \`HoverText\`, \`HoverTo\`, \`ScrollText\`, \`ScrollTo\`
     """
     web_element = internal_text.get_item_using_anchor(locator, anchor, **kwargs)
-    hover_to(web_element, timeout=timeout)
+    _hover_to(web_element, timeout=timeout)
 
 
 @keyword(tags=("Text", "Verification"))
@@ -614,8 +618,8 @@ def is_text(text, timeout="0.1s", **kwargs):
     \`GetText\`, \`IsNoText\`, \`VerifyText\`
     """
     try:
-        return text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
-    except (QWebTimeoutError, QWebValueError):
+        return _text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
+    except (QWebTimeoutError, QWebValueError, QWebInstanceDoesNotExistError):
         return False
 
 
@@ -655,7 +659,7 @@ def is_no_text(text, timeout="2s", **kwargs):
     \`IsText\`, \`VerifyText\`
     """
     try:
-        return text_appearance(text, text_appear=False, timeout=timeout, **kwargs)
+        return _text_appearance(text, text_appear=False, timeout=timeout, **kwargs)
     except (QWebValueError, QWebTimeoutError):
         return False
 
@@ -767,7 +771,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     elif '//' not in locator:
         web_element = internal_text.get_text_using_anchor(locator, anchor)
     else:
-        web_element = element.get_unique_element_by_xpath(locator)
+        web_element = element.get_unique_element_by_xpath(locator, **kwargs)
     text = web_element.text
     return util.get_substring(text, **kwargs)
 
@@ -835,7 +839,7 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
     \`ClickList\`, \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`VerifyItem\`
     """
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
-    if execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
 
@@ -950,6 +954,114 @@ def verify_no_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=un
     raise QWebValueError('Element with attribute value {} still exists'.format(text))
 
 
+@keyword(tags=("Item", "Verification"))
+@decorators.timeout_decorator
+def is_item(text, anchor="1", timeout=0.1, **kwargs):  # pylint: disable=unused-argument
+    r"""Check if Item (usually icon or picture) exists.
+
+    Finds webelement by it's tooltip text (title or alt) or some another
+    attribute.
+    Available attributes: any
+    Available element types without using tag attribute:
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only)*
+
+    Keyword waits until timeout has passed or item is found.
+    If timeout is not specified, it uses default timeout that can be adjusted
+    with DefaultTimeout keyword.
+
+    IsItem does not require for the attribute to be unique.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ${exists]=  Istem        Canis
+
+    In the above example the IsItem keyword returns True if element which
+    has attribute Canis exists.
+
+    Parameters
+    ----------
+    text : str
+        Attribute value of item.
+    anchor : str
+        Parameter not used with this kw.
+    timeout : str | int
+        How long we wait for element to be ready for click
+    kwargs :
+        |  Accepted kwargs:
+        |       tag : html tag of preferred element -
+        |           If tag is used then element is found
+        |           by some of it's attribute
+        |       partial_match: False. If only full match is accepted set
+        |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickItem\`, \`IsNoItem\, \`VerifyItem\`
+    """
+    try:
+        verify_item(text, anchor, timeout, **kwargs)
+        return True
+    except QWebElementNotFoundError:
+        return False
+
+
+@keyword(tags=("Item", "Verification"))
+@decorators.timeout_decorator
+def is_no_item(text, anchor="1", timeout=0.1, **kwargs):  # pylint: disable=unused-argument
+    r"""Check if Item (usually icon or picture) does not exist.
+
+    Finds webelement by it's tooltip text (title or alt) or some another
+    attribute.
+    Available attributes: any
+    Available element types without using tag attribute:
+    *a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input\*
+    (\*submit buttons only)*
+
+    Keyword waits until timeout has passed or element disappears from the screen.
+    If timeout is not specified, it uses default timeout that can be adjusted
+    with DefaultTimeout keyword.
+
+    IsNoItem does not require for the attribute to be unique.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ${exists]=  IsNotem        Canis
+
+    In the above example the IsNoItem keyword returns True if element which
+    has attribute Canis disappears from the screen before timeout expires.
+
+    Parameters
+    ----------
+    text : str
+        Attribute value of item.
+    anchor : str
+        Parameter not used with this kw.
+    timeout : str | int
+        How long we wait for element to be ready for click
+    kwargs :
+        |  Accepted kwargs:
+        |       tag : html tag of preferred element -
+        |           If tag is used then element is found
+        |           by some of it's attribute
+        |       partial_match: False. If only full match is accepted set
+        |       partial_match to False.
+
+    Related keywords
+    ----------------
+    \`ClickItem\`, \`IsItem\, \`VerifyItem\`
+    """
+    try:
+        verify_no_item(text, anchor, timeout, **kwargs)
+        return True
+    except QWebValueError:
+        return False
+
+
 @keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def scroll_text(text, anchor="1", timeout=0, **kwargs):
@@ -974,7 +1086,7 @@ def scroll_text(text, anchor="1", timeout=0, **kwargs):
     \`HoverElement\`, \`HoverItem\`, \`HoverText\`, \`HoverTo\`, \`ScrollTo\`
     """
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
-    scroll(web_element, timeout=timeout)
+    _scroll(web_element, timeout=timeout)
 
 
 @keyword(tags=("input", "Text", "Interaction"))
@@ -1198,10 +1310,10 @@ def scroll_to(text_to_find, locator=None, anchor='1', scroll_length=None,
         return
     slow_mode = util.par2bool(kwargs.get('slow_mode', False))
     if locator:  # If we are trying to scroll a specific element
-        scroll_first_scrollable_parent_element(
+        _scroll_first_scrollable_parent_element(
             locator, anchor, text_to_find, scroll_length, slow_mode, timeout)
     else:  # if we are just scrolling the web page
-        scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout)
+        _scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout)
 
 
 @keyword(tags=("Text", "Interaction"))

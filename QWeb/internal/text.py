@@ -16,9 +16,9 @@
 # ---------------------------
 
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
-    WebDriverException, NoSuchFrameException
+    WebDriverException, NoSuchFrameException, NoSuchElementException
 from robot.api import logger
-from QWeb.internal import element, javascript, frame, util
+from QWeb.internal import element, javascript, frame, util, browser
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError,\
     QWebInstanceDoesNotExistError, QWebStalingElementError
 from QWeb.internal.config_defaults import CONFIG
@@ -175,6 +175,16 @@ def get_text_using_anchor(text, anchor, **kwargs):
     WebElement
     """
     web_elements = get_all_text_elements(text, **kwargs)
+    modal_xpath = CONFIG['IsModalXpath']
+    # filter elements by modal (dialog etc)
+    logger.debug("IsModalXpath filtering on, filtering...")
+    driver = browser.get_current_browser()
+    if modal_xpath != "//body":
+        modal_exists = driver.find_elements_by_xpath(modal_xpath)
+        if modal_exists:
+            web_elements = _filter_by_modal_ancestor(web_elements)
+            logger.debug(f"after filtering there are: {len(web_elements)} matching elements")
+
     if len(web_elements) == 1:
         return web_elements[0]
     # Found many elements, use anchors to determine correct element
@@ -190,6 +200,26 @@ def _get_exact_text_element(text, **kwargs):
 def _get_contains_text_element(text, **kwargs):
     xpath = (CONFIG["ContainingTextMatch"].format(text))
     return element.get_webelements_in_active_area(xpath, **kwargs)
+
+
+def _filter_by_modal_ancestor(elements):
+    xpath = CONFIG["IsModalXpath"]
+    if xpath.startswith("//"):
+        xpath = xpath[2:]
+
+    logger.debug(f"length before filterin: {len(elements)}")
+    elems_in_modal = []
+
+    for elem in elements:
+        try:
+            elem.find_element_by_xpath(f"./../ancestor::{xpath}")
+            elems_in_modal.append(elem)
+        except NoSuchElementException:
+            logger.debug("Filtering out element, modal open but not under modal")
+            continue
+
+    logger.debug(f"length after filtering: {len(elems_in_modal)}")
+    return elems_in_modal
 
 
 def get_element_using_anchor(elements, anchor, **kwargs):

@@ -19,7 +19,7 @@
 import pyautogui
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.utils import timestr_to_secs
+from robot.utils import timestr_to_secs as _timestr_to_secs
 from QWeb.internal import element, decorators, dragdrop
 from QWeb.internal import text as internal_text
 from QWeb.internal import javascript
@@ -105,7 +105,7 @@ def drag_drop(locator, target_locator, index=1, anchor="1",
     x = x + int(right) - int(left)
     y = y - int(above) + int(below)
     logger.debug('target x is {} and y is {}'.format(x, y))
-    dragtime = timestr_to_secs(dragtime)
+    dragtime = _timestr_to_secs(dragtime)
     pyautogui.dragTo(x, y, dragtime, button='left')
     pyautogui.FAILSAFE = True
 

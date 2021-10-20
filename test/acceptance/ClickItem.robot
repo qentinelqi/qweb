@@ -60,3 +60,20 @@ VerifyNoItem
     ${message}=     Set Variable    QWebValueError: Element with attribute value*
     Run Keyword and Expect Error   ${message}   VerifyNoItem  Infinity   timeout=0.5s
     VerifyNoItem    Fisherman
+
+IsItem and IsNoItem
+    [tags]           IsItem                     IsNoItem
+    ${exists}=       IsItem      person         partial_match=False
+    Should Be True   ${exists}
+    ${exists}=       IsItem      pers           partial_match=True
+    Should Be True   ${exists}
+    ClickText        Hide
+    ${not_exists}=   IsNoItem    person         partial_match=False      timeout=2
+    Should Be True   ${not_exists}
+    
+
+
+
+    ${message}=     Set Variable    QWebValueError: Element with attribute value*
+    Run Keyword and Expect Error   ${message}   VerifyNoItem  Infinity   timeout=0.5s
+    VerifyNoItem    Fisherman

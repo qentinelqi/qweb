@@ -36,3 +36,6 @@ venv/
 
 # Mac files
 .DS_Store
+
+# Sonarqbe etc.
+.scannerwork

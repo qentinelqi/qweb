@@ -5,6 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Configuration option **IsModalXpath** to limit text based search to elements under specific (modal) element
+- Keywords **IsItem** and **IsNoItem**
+- Added excludeSwitches option to Edge & Chrome, should not log all sorts of unnecessary things to console
+- Added --no-sandbox option when Edge is run in docker
+
+### Fixed
+- **LogPage** keyword
+- Fixed: example in ClickText documentation does not display correctly
+
+### Changed
+- Security update to OpenCV dependency
+- Imported functions that are not keywords removed from documentation
+- Clarified ExcpectFileDownload documenation
+
 
 ## [1.2.0] - 2021-09-30
 ### Added
