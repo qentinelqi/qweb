@@ -207,7 +207,7 @@ def _filter_by_modal_ancestor(elements):
     if xpath.startswith("//"):
         xpath = xpath[2:]
 
-    logger.debug(f"length before filterin: {len(elements)}")
+    logger.debug(f"length before filtering: {len(elements)}")
     elems_in_modal = []
 
     for elem in elements:
