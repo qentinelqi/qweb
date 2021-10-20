@@ -1,5 +1,0 @@
-[console_scripts]
-libdoc = robot.libdoc:libdoc_cli
-rebot = robot.rebot:rebot_cli
-robot = robot.run:run_cli
-
