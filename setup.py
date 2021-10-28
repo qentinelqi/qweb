@@ -52,7 +52,7 @@ setup(
                       'requests>=2.22.0',
                       "robotframework>=3.2.2",
                       "robotframework-debuglibrary==2.2.1",
-                      "selenium>=3.141.0",
+                      "selenium==3.141.0",
                       "msedge-selenium-tools==3.141.2",
                       "Pillow==8.3.2",
                       "scipy==1.5.*",
