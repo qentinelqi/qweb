@@ -10,7 +10,7 @@ ply
 pynput==1.6.7
 pyparsing==2.2.2
 setuptools
-opencv-python>=4.5.3.56,<5
+opencv-python==4.5.3.56
 pydocstyle==3.0.0
 pylint==2.4.1
 pytest
