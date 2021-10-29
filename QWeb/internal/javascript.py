@@ -129,7 +129,8 @@ def get_by_attributes(elements, locator, partial_match):
     elements : web elements
         List of web elements.
     locator : str
-        Attribute we are looking for, that some of the elements on the list may or may not contain. E. g: '[checked = true]'
+        Attribute we are looking for, that some of the elements on the list may or may not contain.
+        E. g: '[checked = true]'
     partial_match : bool
         If True we don't need a perfect match -> Full = ull.
 
