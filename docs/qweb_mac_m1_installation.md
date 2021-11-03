@@ -60,19 +60,7 @@ Go to your project folder and clone QWeb from GitHub:
 ```
 If git is not found you can install it with Homebrew.
 
-## 6. Install opencv-python and change version requirement
-Install opencv-python with conda:
-```bash
-    conda install opencv-python
-```
-Use pip to check the version of opencv-python package:
-```bash
-    pip list
-```
-Open *qweb/requirements.txt* and *qweb/setup.py* files to editor and find lines where opencv-python is mentioned.
-Change the version to the one you have in your environment.
-
-## 7. Install scikit-image and change version requirement
+## 6. Install scikit-image and change version requirement
 Install scikit-image with conda:
 ```bash
     conda install scikit-image
@@ -84,7 +72,7 @@ Use pip to check the version of scikit-image package:
 Open *qweb/requirements.txt* and *qweb/setup.py* files to editor and find lines where scikit-image is mentioned for
 Python versions greater than 3.6. Change the version to the one you have in your environment.
 
-## 8. Install QWeb
+## 7. Install QWeb
 Now QWeb can be installed to the environment. Installation needs to happen from the local clone where requirements
 were modified in previous steps:
  ```bash
@@ -92,7 +80,7 @@ were modified in previous steps:
     pip install -e .
 ```
 
-## 9. Install browser driver
+## 8. Install browser driver
 The last step is to use webdriver manager to install chromedriver. Install webdriver manager using pip:
  ```bash
     pip install webdrivermanager
