@@ -15,14 +15,23 @@
 ### Table of Contents
 
 - [Introduction](#introduction)
+- [Requirements](#requirements)
 - [Installation](#installation)
+  - [Windows](#windows)
+  - [Linux/Mac](#linuxmac)
 - [Usage](#usage)
   - [Keyword documentation](#keyword-documentation)
   - [Examples](#examples)
+    - [Basic usage](#basic-usage)
+    - [Timeouts and anchors](#timeouts-and-anchors)
+    - [Other locators](#other-locators)
+    - [Working with tables](#working-with-tables)
+    - [Changing configuration](#changing-configuration)
 - [Changelog](#changelog)
 - [Contribute](#contribute)
 - [Community](#community)
 - [License](#license)
+- [Resources](#resources)
 
 ---
 
@@ -76,7 +85,7 @@ Running the above command installs also supported Selenium and Robot Framework v
 See list of keywords and their usage on 
 
 * [Keyword documentation](https://qentinelqi.github.io/qweb/QWeb.html)
-* [Qentinel support pages](https://help.pace.qentinel.com/pacewords-reference/current/pacewords/all.html) 
+* [Copado Robotic Testing support pages](https://help.pace.qentinel.com/pacewords-reference/current/pacewords/all.html) 
 
 [Back To The Top](#qweb)
 
@@ -199,7 +208,7 @@ Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master
 [win_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/win_acceptance.yml/badge.svg
 [macos_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/mac_acceptance.yml/badge.svg
 [pace-url]: https://pace.qentinel.com
-[pace-badge]: https://img.shields.io/badge/Tested%20with-Qentinel%20Pace-blue
+[pace-badge]: https://img.shields.io/badge/Tested%20with-Copado%20Robotic%20Testing-blue
 [python-versions-badge]: https://img.shields.io/pypi/pyversions/QWeb
 [pypi-badge]: https://img.shields.io/pypi/v/QWeb?color=green
 [slack-badge]: https://img.shields.io/badge/Slack-QWeb-blue?style=flat-square&logo=Slack
