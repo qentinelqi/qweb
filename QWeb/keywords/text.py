@@ -976,7 +976,7 @@ def is_item(text, anchor="1", timeout=0.1, **kwargs):  # pylint: disable=unused-
     --------
     .. code-block:: robotframework
 
-        ${exists]=  Istem        Canis
+        ${exists}=  IsItem        Canis
 
     In the above example the IsItem keyword returns True if element which
     has attribute Canis exists.
@@ -1030,7 +1030,7 @@ def is_no_item(text, anchor="1", timeout=0.1, **kwargs):  # pylint: disable=unus
     --------
     .. code-block:: robotframework
 
-        ${exists]=  IsNotem        Canis
+        ${exists}=  IsNoItem        Canis
 
     In the above example the IsNoItem keyword returns True if element which
     has attribute Canis disappears from the screen before timeout expires.
