@@ -36,6 +36,7 @@ ScrollText
     [Teardown]      CloseAllBrowsers
 
 SwitchBrowser
+    [Tags]          PROBLEM_IN_WINDOWS
     GoTo            file://${CURDIR}/../resources/multielement_text.html
     OpenBrowser     file://${CURDIR}/../resources/dropdown.html     chrome
     OpenBrowser     file://${CURDIR}/../resources/frame.html        firefox
