@@ -92,8 +92,8 @@ def get_pdf_text(**kwargs):
     --------
     .. code-block:: robotframework
 
-        ${text}      GetPdfText     #returns whole content
-        ${text}      GetPdfText     xyz   10  #returns 10 chars. Starting from text xyz.
+        ${text}    GetPdfText    #returns whole content
+        ${text}    GetPdfText    locator=xyz   chars=10  #returns 10 chars, starting from text xyz.
 
     Parameters
     ----------
@@ -107,6 +107,9 @@ def get_pdf_text(**kwargs):
         if set to False returns chars after locator text.
     exclude_post : bool
         if set to False returned string includes post_text
+
+    Note that you must use named arguments with this keyword, i.e. use
+    ``argument_name=value`` format!
 
     Related keywords
     ----------------
@@ -124,8 +127,8 @@ def get_file_text(**kwargs):
     --------
     .. code-block:: robotframework
 
-        ${text}      GetFileText     #returns whole content
-        ${text}      GetFileText     xyz   10  #returns 10 chars. Starting from text xyz.
+        ${text}    GetFileText    #returns whole content
+        ${text}    GetFileText    xyz   10  #returns 10 chars, tarting from text xyz.
 
     Parameters
     ----------
@@ -139,6 +142,9 @@ def get_file_text(**kwargs):
         if set to False returns chars after locator text.
     exclude_post : bool
         if set to False returned string includes post_text
+
+    Note that you must use named arguments with this keyword, i.e. use
+    ``argument_name=value`` format!
 
     Related keywords
     ----------------
