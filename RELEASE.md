@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Updated documentation of **GetPDFText** and **GetFileText**
 - Changed **IsModalXpath** to enforce timeouts
+- Fixed  ``SetConfig   CaseInsensitive``
 
 
 ## [1.2.2] - 2021-11-03

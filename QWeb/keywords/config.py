@@ -16,7 +16,9 @@
 # ---------------------------
 
 from robot.api.deco import keyword
+import QWeb.internal.util as util
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.search_strategy import SearchStrategies
 
 
 @keyword(tags=["Config"])
@@ -653,6 +655,10 @@ def set_config(par, val):
     """
     if not CONFIG.is_value(par):
         raise ValueError("Parameter {} doesn't exist".format(par))
+
+    # Handle case insensitivity separately
+    if par.lower() == "caseinsensitive":
+        _set_case_insensitivity(val)
     return CONFIG.set_value(par, val)
 
 
@@ -719,6 +725,9 @@ def reset_config(par=None):
         if not CONFIG.is_value(par):
             raise ValueError("Parameter {} doesn't exist".format(par))
         CONFIG.reset_value(par)
+        # if case insensitive was reset, reset xpath
+        if par.lower() == "caseinsensitive":
+            CONFIG.reset_value("ContainingTextMatch")
         # Return single configuration value
         current_config = CONFIG.get_value(par)
     else:
@@ -726,3 +735,14 @@ def reset_config(par=None):
         # return whole configuration dictionary
         current_config = CONFIG.get_all_values()
     return current_config
+
+
+def _set_case_insensitivity(val):
+    check = util.par2bool(val)
+
+    if check:
+        CONFIG.set_value("ContainingTextMatch",
+                         SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
+    else:
+        CONFIG.set_value("ContainingTextMatch",
+                         SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)
