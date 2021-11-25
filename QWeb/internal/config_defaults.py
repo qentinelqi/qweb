@@ -30,7 +30,7 @@ Usage from test script:
 SetConfig    ScreenshotType    all
 
 Usage from code:
-import from QWeb.internal.config import CONFIG
+from QWeb.internal.config_defaults import CONFIG
 val = CONFIG["ScreenshotType"]
 """
 from QWeb.internal.search_strategy import SearchStrategies

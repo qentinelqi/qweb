@@ -184,6 +184,8 @@ def get_text_using_anchor(text, anchor, **kwargs):
         if modal_exists:
             web_elements = _filter_by_modal_ancestor(web_elements)
             logger.debug(f"after filtering there are: {len(web_elements)} matching elements")
+            if not web_elements:
+                raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
 
     if len(web_elements) == 1:
         return web_elements[0]

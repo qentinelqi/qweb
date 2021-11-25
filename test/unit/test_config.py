@@ -84,6 +84,15 @@ class TestConfig:
         old_val = config.set_config("DefaultDocument", False)
         assert old_val is True
 
+        old_val = config.set_config("CaseInsensitive", True)
+        assert old_val is False
+        assert config.get_config("CaseInsensitive") is True
+        # should automatically change ContainingTextMatch
+        assert config.get_config("ContainingTextMatch") == SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE 
+        resetted_val = config.reset_config("CaseInsensitive")
+        assert resetted_val is False
+        assert config.get_config("ContainingTextMatch") == SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE
+
         config.reset_config()
         assert config.get_config("ScreenshotType") == "screenshot"
         assert config.get_config("DefaultDocument") is True
