@@ -128,7 +128,7 @@ def get_file_text(**kwargs):
     .. code-block:: robotframework
 
         ${text}    GetFileText    #returns whole content
-        ${text}    GetFileText    xyz   10  #returns 10 chars, tarting from text xyz.
+        ${text}    GetFileText    xyz   10  #returns 10 chars, starting from text xyz.
 
     Parameters
     ----------
