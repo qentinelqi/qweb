@@ -499,7 +499,7 @@ def get_elements_by_attributes(css, locator=None, **kwargs):
         logger.debug('attrfunc found full matches: {}, partial matches: {}'
                      .format(matches.get('full'), matches.get('partial')))
         full, partial = matches.get('full'), matches.get('partial')
-    except (WebDriverException, JavascriptException) as e:
+    except (WebDriverException, JavascriptException, AttributeError) as e:
         logger.debug('Got exception from get elements by attributes: {}'.format(e))
         full, partial = [], []
     if 'element_kw' not in kwargs:
