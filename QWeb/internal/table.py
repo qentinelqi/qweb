@@ -18,6 +18,7 @@
 import fnmatch
 import re
 from robot.api import logger
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError
 from QWeb.internal import element, text, javascript, frame, util
@@ -118,7 +119,8 @@ class Table:
             else:
                 row, column = self._convert_coordinates(coordinates)
                 try:
-                    cell = self.table.find_element_by_xpath(
+                    cell = self.table.find_element(
+                        By.XPATH,
                         './/tr[{0}]//td[{1}]'.format(row, column))
                 except AttributeError as e:
                     logger.debug('exception {}'.format(e))
