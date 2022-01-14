@@ -1,6 +1,6 @@
 astroid==2.3.0
 PyAutoGUI==0.9.48
-Pillow==8.3.2
+Pillow==9.0.0
 robotframework>=3.2.2
 robotframework-debuglibrary==2.2.1
 selenium==3.141.0
