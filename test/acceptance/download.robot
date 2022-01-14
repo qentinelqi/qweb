@@ -71,14 +71,23 @@ Download Suite Teardown
     CloseAllBrowsers
     Terminate All Processes
     Remove Directory    ~/TmpDownloads    ${true}
+    Remove Small and Large Files
 
 Remove Small and Large Files
+    Set Library Search Order    OperatingSystem
     Remove File   ~/Downloads/small.csv
     Remove File   ~/Downloads/large.csv
     Remove File   ~/Downloads/large (1).csv
     Remove File   ~/Downloads/small (1).csv
-    Run Keyword And Ignore Error    Remove Crdownload
+    Remove Crdownload
 
 Remove Crdownload
-    Sleep    2s
-    Remove File   ~/Downloads/large.csv.crdownload
+    Set Library Search Order    OperatingSystem
+    ${status}  ${message}=    Run Keyword And Ignore Error    File Should Not Exist    ~/Downloads/large.csv.crdownload
+    Return From Keyword If    "${status}" == "PASS"
+    FOR     ${try}    IN RANGE    10
+            ${status}  ${message}=    Run Keyword And Ignore Error    Remove File   ~/Downloads/large.csv.crdownload
+            Log        ${status}
+            Exit For Loop If    "${status}" == "PASS"
+            Sleep    2s
+    END
