@@ -99,14 +99,19 @@ def set_config(par, val):
 
     Set search direction for element search.
 
-    Search direction is "up", "down", "left", "right" and "closest"
+    Search direction is "up", "down", "left", "right" and "closest".
+    "Closest" is the default value.
+
+    Elements are searched according to their relative position to anchor.
 
     Examples
     --------
     .. code-block:: robotframework
 
         SetConfig    SearchDirection       right
-        TypeText     MyLocator   Robot
+        TypeText     MyLocator   Robot     # finds text "My Locator" on the right of text "Robot"
+        SetConfig    SearchDirection       up
+        TypeText     MyLocator   Robot     # finds text "My Locator" above of text "Robot"
         SetConfig    SearchDirection       closest
 
     ---
