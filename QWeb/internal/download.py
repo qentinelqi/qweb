@@ -22,7 +22,6 @@ import time
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
 from selenium import webdriver
-from msedge.selenium_tools import Edge
 
 from QWeb.internal import browser, platform
 from QWeb.internal.exceptions import QWebFileNotFoundError
@@ -109,7 +108,7 @@ def is_tmp_file(filepath):
         partial_download_suffix = 'crdownload'
     elif isinstance(driver, webdriver.Firefox):
         partial_download_suffix = '.part'
-    elif isinstance(driver, Edge):
+    elif isinstance(driver, webdriver.Edge):
         partial_download_suffix = 'crdownload'
     else:
         raise ValueError('Unkown browser {}'.format(driver.name))

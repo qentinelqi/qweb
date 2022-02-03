@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------
 
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
     WebDriverException, NoSuchFrameException, NoSuchElementException
 from robot.api import logger
@@ -181,7 +182,7 @@ def get_text_using_anchor(text, anchor, **kwargs):
     if modal_xpath != "//body":
         # filter elements by modal (dialog etc)
         logger.debug("IsModalXpath filtering on, filtering...")
-        modal_exists = driver.find_elements_by_xpath(modal_xpath)
+        modal_exists = driver.find_elements(By.XPATH, modal_xpath)
         if modal_exists:
             web_elements = _filter_by_modal_ancestor(web_elements)
             logger.debug(f"after filtering there are: {len(web_elements)} matching elements")
@@ -215,7 +216,7 @@ def _filter_by_modal_ancestor(elements):
 
     for elem in elements:
         try:
-            elem.find_element_by_xpath(f"./../ancestor::{xpath}")
+            elem.find_element(By.XPATH, f"./../ancestor::{xpath}")
             elems_in_modal.append(elem)
         except NoSuchElementException:
             logger.debug("Filtering out element, modal open but not under modal")

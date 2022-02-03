@@ -3,14 +3,14 @@ PyAutoGUI==0.9.48
 Pillow==9.0.0;python_version>"3.6"
 robotframework>=3.2.2
 robotframework-debuglibrary==2.2.1
-selenium==3.141.0
+selenium==4.1.0
 ply
 pynput==1.6.7
 pyparsing==2.2.2
 setuptools
 opencv-python==4.5.3.56
 pyperclip==1.7.0
-requests==2.22.0
+requests==2.27.1
 slate3k==0.5.3
 scipy==1.5.*
 scikit-image==0.18.0;python_version>"3.6"

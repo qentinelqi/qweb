@@ -17,6 +17,7 @@
 
 import math
 from robot.api import logger
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, \
     StaleElementReferenceException, JavascriptException, InvalidSelectorException,\
     WebDriverException, NoSuchFrameException
@@ -172,7 +173,7 @@ def get_webelements(xpath, **kwargs):
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
     driver = browser.get_current_browser()
-    web_elements = driver.find_elements_by_xpath(xpath)
+    web_elements = driver.find_elements(By.XPATH, xpath)
     logger.trace("XPath {} matched {} WebElements"
                  .format(xpath, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
@@ -203,11 +204,11 @@ def get_webelements_in_active_area(xpath, **kwargs):
             xpath = xpath.replace('//', './/', 1)
         else:
             driver = browser.get_current_browser()
-            active_area = driver.find_element_by_xpath(active_area_xpath)
+            active_area = driver.find_element(By.XPATH, active_area_xpath)
     else:
         driver = browser.get_current_browser()
         try:
-            active_area = driver.find_element_by_xpath(active_area_xpath)
+            active_area = driver.find_element(By.XPATH, active_area_xpath)
             if active_area is None:
                 logger.debug('Got None for active area. Is page still loading '
                              'or is it missing body tag?')
@@ -218,7 +219,7 @@ def get_webelements_in_active_area(xpath, **kwargs):
             return None
 
     try:
-        webelements = active_area.find_elements_by_xpath(xpath)
+        webelements = active_area.find_elements(By.XPATH, xpath)
 
         logger.trace('XPath {} matched {} webelements'
                      .format(xpath, len(webelements)))

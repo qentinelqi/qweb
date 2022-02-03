@@ -48,7 +48,7 @@ setup(
                       "pynput>=1.6.7",
                       "pyperclip==1.7.0",
                       "pyparsing==2.2.2",
-                      'requests>=2.22.0',
+                      'requests>=2.27.0',
                       "robotframework>=3.2.2",
                       "robotframework-debuglibrary==2.2.1",
                       "selenium==4.1.0",
