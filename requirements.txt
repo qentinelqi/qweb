@@ -1,6 +1,5 @@
 astroid==2.3.0
 PyAutoGUI==0.9.48
-Pillow==8.3.2;python_version=="3.6"
 Pillow==9.0.0;python_version>"3.6"
 robotframework>=3.2.2
 robotframework-debuglibrary==2.2.1
@@ -14,7 +13,6 @@ pyperclip==1.7.0
 requests==2.27.1
 slate3k==0.5.3
 scipy==1.5.*
-scikit-image==0.17.2;python_version=="3.6"
 scikit-image==0.18.0;python_version>"3.6"
 importlib-metadata == 0.23
 pyobjc-core==7.3; sys_platform == "darwin"
