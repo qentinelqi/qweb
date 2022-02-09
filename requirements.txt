@@ -1,20 +1,16 @@
-astroid==2.3.0
-PyAutoGUI==0.9.48
+PyAutoGUI==0.9.53
 Pillow==9.0.0
 robotframework>=3.2.2
 robotframework-debuglibrary==2.2.1
 selenium==4.1.0
 ply
-pynput==1.6.7
-pyparsing==2.2.2
+pynput==1.7.6
 setuptools
 opencv-python==4.5.3.56
-pyperclip==1.7.0
 requests==2.27.1
 slate3k==0.5.3
 scipy==1.5.*
 scikit-image==0.18.0
-importlib-metadata == 0.23
 pyobjc-core==7.3; sys_platform == "darwin"
 pyobjc==7.3; sys_platform == "darwin"
 
