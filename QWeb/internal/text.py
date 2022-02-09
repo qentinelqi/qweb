@@ -45,7 +45,7 @@ def get_element_by_locator_text(locator, anchor="1", index=1, **kwargs):
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
-            raise QWebElementNotFoundError(e)
+            raise QWebElementNotFoundError(e)  # pylint: disable=W0707
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
@@ -112,8 +112,8 @@ def get_unique_text_element(text, **kwargs):
     web_elements = get_text_elements(text, **kwargs)
     if not web_elements:
         raise QWebValueError('Text "{}" did not match any elements'.format(text))
-    if web_elements and len(web_elements) == 1:
-        return web_elements[0]
+    if len(web_elements) == 1:
+        return web_elements[0]  # pylint: disable=unsubscriptable-object
     raise QWebValueError('Text "{}" matched {} elements. Needs to be unique'
                          .format(text, len(web_elements)))
 

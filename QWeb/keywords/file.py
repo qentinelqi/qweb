@@ -355,7 +355,7 @@ def zip_files(name_of_zip, files_to_zip):
                     zipped.write(file, _basename(file))
     except OSError as e:
         raise QWebValueError('\nFile name "{}" contained illegal characters.'
-                             '\nError message: {}'.format(name_of_zip, str(e)))
+                             '\nError message: {}'.format(name_of_zip, str(e))) from e
     logger.info('Zipped files {} into the file {}'
                 .format(str(files), name_of_zip), also_console=True)
 
@@ -414,6 +414,7 @@ def verify_file(filename):
         path = download.get_path(filename)
         logger.info('File found. Filepath is {}'.format(path))
         return path
-    except QWebFileNotFoundError:
+    except QWebFileNotFoundError as e:
         raise QWebFileNotFoundError(
-            'File not found from default folders. It\'s not exists or you may need a full path.')
+            'File not found from default folders. '
+            'It\'s not exists or you may need a full path.') from e

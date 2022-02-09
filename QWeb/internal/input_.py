@@ -52,7 +52,7 @@ def get_input_element_by_locator(locator, anchor, **kwargs):
             input_elements = _get_all_input_elements()
             input_element = element.get_closest_element(locator_element, input_elements)
         elif len(input_elements) == 1:
-            input_element = input_elements[0]
+            input_element = input_elements[0]  # pylint: disable=unsubscriptable-object
         else:  # Found many
             input_element = text.get_element_using_anchor(
                 input_elements, anchor, **kwargs)

@@ -36,7 +36,7 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, \
 # pylint: disable=too-many-branches
 def timeout_decorator(fn):
     @wraps(fn)
-    def get_elements_from_dom_content(*args, **kwargs):
+    def get_elements_from_dom_content(*args, **kwargs):  # pylint: disable=R1710
         try:
             args, kwargs, locator = _equal_sign_handler(args, kwargs, fn)
             msg = None
@@ -50,7 +50,7 @@ def timeout_decorator(fn):
                     frame.wait_page_loaded()
             except UnexpectedAlertPresentException as e:
                 if not CONFIG["HandleAlerts"]:
-                    raise QWebUnexpectedAlert(str(e))
+                    raise QWebUnexpectedAlert(str(e)) from e
                 logger.debug('Got {}. Trying to retry..'.format(e))
                 time.sleep(SHORT_DELAY)
             start = time.time()
@@ -67,13 +67,13 @@ def timeout_decorator(fn):
                         QWebIconNotFoundError) as e:
                     time.sleep(SHORT_DELAY)
                     logger.debug('Got exception: {}. Trying to retry..'.format(e))
-                except InvalidSessionIdException:
+                except InvalidSessionIdException as e:
                     CONFIG.set_value("OSScreenshots", True)
-                    raise QWebBrowserError("Browser session lost. Did browser crash?")
+                    raise QWebBrowserError("Browser session lost. Did browser crash?") from e
                 except (WebDriverException, QWebDriverError) as e:
                     if any(s in str(e) for s in FATAL_MESSAGES):
                         CONFIG.set_value("OSScreenshots", True)
-                        raise QWebBrowserError(e)
+                        raise QWebBrowserError(e)  # pylint: disable=W0707
                     logger.info('From timeout decorator: Webdriver exception. Retrying..')
                     logger.info(e)
                     time.sleep(SHORT_DELAY)
@@ -129,8 +129,8 @@ def timeout_decorator_for_actions(fn):
                 if 'execute_click' in str(fn) or 'text_appearance' in str(fn):
                     logger.info('Got staling element err from retry click.'
                                 'Action is probably triggered.')
-                    raise QWebUnexpectedConditionError(S)
-                raise QWebStalingElementError('Staling element')
+                    raise QWebUnexpectedConditionError(S)   # pylint: disable=W0707
+                raise QWebStalingElementError('Staling element')  # pylint: disable=W0707
             except (WebDriverException, QWebDriverError) as wde:
                 if 'alert' in str(fn):
                     time.sleep(LONG_DELAY)
@@ -138,7 +138,7 @@ def timeout_decorator_for_actions(fn):
                     err = QWebDriverError
                     msg = wde
                 else:
-                    raise QWebDriverError(wde)
+                    raise QWebDriverError(wde)  # pylint: disable=W0707
         if msg:
             raise err(msg)
         raise QWebTimeoutError('Timeout exceeded')
@@ -177,6 +177,6 @@ def _equal_sign_handler(args, kwargs, function_name):
             kwargs.clear()
     try:
         locator = args[0]
-    except IndexError:
-        raise QWebElementNotFoundError("Use \\= instead of = in xpaths")
+    except IndexError as ie:
+        raise QWebElementNotFoundError("Use \\= instead of = in xpaths") from ie
     return args, kwargs, locator

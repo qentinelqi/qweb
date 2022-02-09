@@ -172,7 +172,7 @@ class Table:
 
     def get_cell_by_locator(self, locator):
         rows = self.get_all_rows()
-        for i, r in enumerate(rows):
+        for i, r in enumerate(rows):  # pylint: disable=unused-variable
             cells = self.get_cells_from_row(r)
             for index, c in enumerate(cells):
                 cell_text = ""
@@ -214,7 +214,7 @@ class Table:
         return javascript.execute_javascript('return arguments[0].cells', row)
 
     @staticmethod
-    def _get_row_by_locator_text(rows, locator, anchor, **kwargs):
+    def _get_row_by_locator_text(rows, locator, anchor):
         matches = []
         input_elements = []
         row_index = []
@@ -276,7 +276,7 @@ class Table:
                     'return arguments[0].closest("table")', table_element[anchor])
                 return table_element
             except (ValueError, TypeError):
-                raise IndexError('Element found by it\'s attribute. When using CSS Selectors'
+                raise IndexError('Element found by it\'s attribute. When using CSS Selectors'  # pylint: disable=W0707
                                  ' for finding table, anchor has to be index when anchor is not '
                                  'related to separate locator element')
             except StaleElementReferenceException:

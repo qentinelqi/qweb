@@ -129,9 +129,9 @@ def get_path(filename):
             logger.debug(path)
             return path
     try:
-        base_path = BuiltIn().get_variable_value(u'${base_image_path}')
+        base_path = BuiltIn().get_variable_value('${base_image_path}')
         full_path = os.path.join(base_path, "{}".format(filename.lower()))
         return Path(full_path)
-    except TypeError:
+    except TypeError as e:
         raise QWebFileNotFoundError(
-            'File not found from default folders. Set variable for base image path')
+            'File not found from default folders. Set variable for base image path') from e

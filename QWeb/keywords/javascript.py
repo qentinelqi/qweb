@@ -47,4 +47,4 @@ def execute_javascript(script, variable_name=None):
             BuiltIn().set_suite_variable(variable_name, output)
         except Exception as e:
             logger.warn(e.__str__())
-            raise QWebValueError("Invalid variable syntax '{}'.".format(variable_name))
+            raise QWebValueError("Invalid variable syntax '{}'.".format(variable_name)) from e

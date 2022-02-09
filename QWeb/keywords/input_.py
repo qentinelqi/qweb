@@ -135,7 +135,7 @@ def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
 
 @keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
-def type_text(locator, input_text, anchor=u"1", timeout=0, index=1, **kwargs):
+def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     r"""Type given text to a text field.
 
     First look through if there are any input fields that have the
@@ -294,7 +294,7 @@ def type_texts(input_texts, timeout='0'):
 
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
-def verify_input_value(locator, expected_value, anchor=u"1", timeout=0, index=1, **kwargs):
+def verify_input_value(locator, expected_value, anchor="1", timeout=0, index=1, **kwargs):
     r"""Verify input field has given value.
 
     Examples
@@ -660,7 +660,7 @@ def upload_file(locator, filename, anchor='1', timeout=0, index=1, **kwargs):
 
 @keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
-def press_key(locator, key, anchor=u"1", timeout='0', **kwargs):
+def press_key(locator, key, anchor="1", timeout='0', **kwargs):
     r"""Simulate user pressing keyboard key on element identified by "locator".
 
     The parameter "key" is either a single character or a keyboard key surrounded by '{ }'.
@@ -685,5 +685,5 @@ def press_key(locator, key, anchor=u"1", timeout='0', **kwargs):
             locator, anchor, timeout=timeout, index=1, **kwargs)
         key = input_handler.check_key(key)
         input_element.send_keys(key)
-    except AttributeError:
-        raise QWebValueError('Could not find key "{}"'.format(key))
+    except AttributeError as e:
+        raise QWebValueError('Could not find key "{}"'.format(key)) from e

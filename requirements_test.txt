@@ -3,7 +3,7 @@ Flask==1.0.3
 flake8
 mock==2.0.0
 pydocstyle==3.0.0
-pylint==2.4.1
+pylint==2.12.2
 pytest
 pytest-pythonpath
 pytest-cov

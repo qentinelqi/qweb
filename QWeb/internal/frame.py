@@ -53,15 +53,15 @@ def wait_page_loaded():
                                   " to open browser first")
         try:
             driver.switch_to.default_content()
-        except InvalidSessionIdException:
+        except InvalidSessionIdException as ie:
             CONFIG.set_value("OSScreenshots", True)
-            raise QWebBrowserError("Browser session lost. Did browser crash?")
+            raise QWebBrowserError("Browser session lost. Did browser crash?") from ie
         except (NoSuchWindowException, WebDriverException) as e:
             logger.warn(
                 'Cannot switch to default context, maybe window is closed. Err: {}'.format(e))
             if any(s in str(e) for s in FATAL_MESSAGES):
                 CONFIG.set_value("OSScreenshots", True)
-                raise QWebBrowserError(e)
+                raise QWebBrowserError(e) from e
             driver.switch_to.default_content()
     timeout = CONFIG['XHRTimeout']
     if timeout.lower() == "none":

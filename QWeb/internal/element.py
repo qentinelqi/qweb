@@ -21,7 +21,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, \
     StaleElementReferenceException, JavascriptException, InvalidSelectorException,\
     WebDriverException, NoSuchFrameException
-import QWeb.internal.frame as frame
+from QWeb.internal import frame
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElementError,\
     QWebValueError, QWebSearchingMode
 from QWeb.internal import browser, javascript, util
@@ -224,8 +224,8 @@ def get_webelements_in_active_area(xpath, **kwargs):
         logger.trace('XPath {} matched {} webelements'
                      .format(xpath, len(webelements)))
         webelements = get_visible_elements_from_elements(webelements, **kwargs)
-    except StaleElementReferenceException:
-        raise QWebStalingElementError('Got StaleElementException')
+    except StaleElementReferenceException as se:
+        raise QWebStalingElementError('Got StaleElementException') from se
     except (JavascriptException, InvalidSelectorException) as e:
         logger.debug('Got {}, returning None'.format(e))
         webelements = None
@@ -244,7 +244,7 @@ def get_visible_elements_from_elements(web_elements, **kwargs):
         elem_objects = javascript.get_visibility(web_elements)
         logger.debug('Checking visibility from all found elements: {}'.format(len(elem_objects)))
     except (JavascriptException, StaleElementReferenceException, TypeError) as e:
-        raise QWebStalingElementError("Exception from visibility check: {}".format(e))
+        raise QWebStalingElementError("Exception from visibility check: {}".format(e)) from e
     for el in elem_objects:
         onscreen = el.get('viewport')
         logger.debug('Is element in viewport: {}'.format(onscreen))

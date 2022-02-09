@@ -38,8 +38,8 @@ try:
 # Print system exit message. This can happen on fresh linux when tkinter
 # dependencies are not installed. This is a workaround as normally system
 # exit message is not cathced by robot framework / debugger.
-except SystemExit as e:
-    raise Exception(e)
+except SystemExit as se:
+    raise Exception(se)  # pylint: disable=W0707
 
 
 class QWeb:
@@ -66,7 +66,7 @@ class QWeb:
         If keyword fails then this method executes self.run_on_failure_keyword.
         """
         @wraps(keyword_method)  # Preserves docstring of the original method.
-        def inner(*args, **kwargs):
+        def inner(*args, **kwargs):  # pylint: disable=R1710
             kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
             if 'type_secret' not in str(keyword_method):
                 logger.debug('args: {}, kwargs: {}'.format(args, kwargs))

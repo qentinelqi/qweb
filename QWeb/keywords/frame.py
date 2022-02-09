@@ -60,8 +60,8 @@ def use_frame(locator):
     driver = browser.get_current_browser()
     try:
         driver.switch_to.frame(webelement)
-    except NoSuchFrameException:
-        raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator))
+    except NoSuchFrameException as e:
+        raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator)) from e
 
 
 @keyword(tags=["Config"])

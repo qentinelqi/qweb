@@ -123,9 +123,9 @@ def execute_click_and_verify_condition(web_element, text_appear=True, **kwargs):
                 if text_appearance(kwargs['text'], text_appear=text_appear,
                                    timeout=kwargs.get('interval')):
                     return True
-            except QWebTimeoutError:
+            except QWebTimeoutError as e:
                 logger.debug('timeout err')
-                raise QWebUnexpectedConditionError('Unexpected condition')
+                raise QWebUnexpectedConditionError('Unexpected condition') from e
         return True
     raise QWebInvalidElementStateError('Element is not enabled')
 
@@ -199,8 +199,8 @@ def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=
                 else:
                     select.select_by_index(option)
                 return True
-            except TypeError:
-                raise QWebValueMismatchError('Index out of range')
+            except TypeError as te:
+                raise QWebValueMismatchError('Index out of range') from te
     try:
         if unselect:
             select.deselect_by_visible_text(option)
@@ -220,14 +220,11 @@ def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=
                     option_list.append(opt.text)
                     value_list.append(opt.get_attribute('value'))
         if option_list != value_list:
-            raise QWebValueMismatchError('Option "{}" is not in the options list.\n'
-                                         'The list contained these options: {}.\n'
-                                         'The list contained these values: {}.'.format(option,
-                                                                                       option_list,
-                                                                                       value_list))
-        raise QWebValueMismatchError('Option "{}" is not in the options list.\n'
-                                     'The list contained these options: {}.\n'
-                                     .format(option, option_list))
+            raise QWebValueMismatchError(f'Option "{option}" is not in the options list.\n'  # pylint: disable=W0707
+                                         f'The list contained these options: {option_list}.\n'
+                                         f'The list contained these values: {value_list}.')
+        raise QWebValueMismatchError(f'Option "{option}" is not in the options list.\n'  # pylint: disable=W0707
+                                     'The list contained these options: {option_list}.\n')
 
 
 @decorators.timeout_decorator_for_actions
@@ -307,10 +304,10 @@ def text_appearance(text, **kwargs):
     try:
         element = internal_text.get_element_by_locator_text(
             text, allow_non_existent=True, **kwargs)
-    except QWebTimeoutError:
+    except QWebTimeoutError as te:
         if kwargs['text_appear'] is False:
             return True
-        raise QWebValueMismatchError('return value should be true')
+        raise QWebValueMismatchError('return value should be true') from te
     try:
         if element and kwargs['text_appear'] is True:
             return True
@@ -327,8 +324,8 @@ def get_element_text(web_element, expected=None, timeout=0):  # pylint: disable=
     if expected is not None:
         try:
             return _compare_texts(real_text, expected.strip(), timeout)
-        except QWebValueMismatchError:
-            raise QWebValueError('Expected {}, found {}'.format(expected, real_text))
+        except QWebValueMismatchError as e:
+            raise QWebValueError('Expected {}, found {}'.format(expected, real_text)) from e
     if real_text is not None:
         return real_text
     raise QWebValueMismatchError('Text not found')

@@ -76,8 +76,8 @@ def swipe(direction, times='1', start=None):
     action_chains = ActionChains(driver)
     try:
         times = int(times)
-    except ValueError:
-        raise ValueError('Amount of times swiped needs to be an integer.')
+    except ValueError as e:
+        raise ValueError('Amount of times swiped needs to be an integer.') from e
     if not start:
         default_swipe_length = 20
         times = default_swipe_length * times

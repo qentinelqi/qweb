@@ -78,7 +78,7 @@ def _filtered_end_keyword(keyword):
     This function removes secret data from "end keyword"
     logs and returns previous log level.
     """
-    # pylint: disable=protected-access, global-statement
+    # pylint: disable=protected-access, global-statement, global-variable-not-assigned
     global log_level
     apply_filter = keyword.kwname in filtered_keywords
     if apply_filter:

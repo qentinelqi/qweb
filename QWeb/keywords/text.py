@@ -765,9 +765,9 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
             anchor = int(anchor) - 1
             kwargs['element_kw'] = True
             web_element = element.get_elements_by_attributes(tag, locator, **kwargs)[anchor]
-        except ValueError:
+        except ValueError as e:
             raise QWebValueError(
-                'Only index is allowed anchor when searching element by it\'s attribute')
+                'Only index is allowed anchor when searching element by it\'s attribute') from e
     elif '//' not in locator:
         web_element = internal_text.get_text_using_anchor(locator, anchor)
     else:
@@ -1402,8 +1402,8 @@ def click_while(text_to_disappear, text_to_click=None, anchor="1", timeout=0, in
         if el:
             try:
                 verify_item(text_to_disappear, timeout=timeout, **kwargs)
-            except QWebElementNotFoundError:
-                raise QWebValueError('Element to disappear is not visible before click.')
+            except QWebElementNotFoundError as e:
+                raise QWebValueError('Element to disappear is not visible before click.') from e
         elif not is_text(text_to_disappear, timeout):
             raise QWebValueError('Text to disappear is not visible before click.')
     try:
@@ -1477,8 +1477,8 @@ def click_until(text_to_appear, text_to_click, anchor="1", timeout=0, interval=N
         if el:
             try:
                 verify_no_item(text_to_appear, **kwargs)
-            except QWebValueError:
-                raise QWebValueError('Element to appear is already visible.')
+            except QWebValueError as e:
+                raise QWebValueError('Element to appear is already visible.') from e
         elif not is_no_text(text_to_appear):
             raise QWebValueError('Text to appear is already visible.')
     try:
@@ -1551,8 +1551,8 @@ def click_item_while(text_to_disappear, locator=None, anchor="1", timeout=0,
         if el:
             try:
                 verify_item(text_to_disappear, timeout=timeout, **kwargs)
-            except QWebElementNotFoundError:
-                raise QWebValueError('Element to disappear is not visible before click.')
+            except QWebElementNotFoundError as e:
+                raise QWebValueError('Element to disappear is not visible before click.') from e
         elif not is_text(text_to_disappear, timeout):
             raise QWebValueError('Text to disappear is not visible before click.')
     try:
@@ -1620,8 +1620,8 @@ def click_item_until(text_to_appear, locator, anchor="1", timeout=0,
         if el:
             try:
                 verify_no_item(text_to_appear, **kwargs)
-            except QWebValueError:
-                raise QWebValueError('Element to appear is already visible.')
+            except QWebValueError as e:
+                raise QWebValueError('Element to appear is already visible.') from e
         elif not is_no_text(text_to_appear):
             raise QWebValueError('Text to appear is already visible.')
     try:
