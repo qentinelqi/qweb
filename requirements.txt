@@ -6,7 +6,7 @@ selenium==4.1.0
 ply
 pynput==1.7.6
 setuptools
-opencv-python==4.5.3.56
+opencv-python==4.5.5.62
 requests==2.27.1
 slate3k==0.5.3
 scipy>=1.7.3

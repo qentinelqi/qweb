@@ -55,7 +55,7 @@ setup(
                       "scipy>=1.7.3",
                       "scikit-image==0.19.1",
                       "ply",
-                      "opencv-python==4.5.3.56",
+                      "opencv-python==4.5.5.62",
                       "slate3k>=0.5.3"],
 
     extras_require={':"linux" in sys_platform': ['xlib'],
