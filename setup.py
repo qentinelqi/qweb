@@ -33,6 +33,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'License :: OSI Approved :: Apache Software License',
         'Framework :: Robot Framework',
         'Framework :: Robot Framework :: Library'
@@ -51,8 +52,8 @@ setup(
                       "robotframework-debuglibrary==2.2.1",
                       "selenium==4.1.0",
                       "Pillow==9.0.0",
-                      "scipy==1.5.*",
-                      "scikit-image==0.18.0",
+                      "scipy>=1.7.3",
+                      "scikit-image==0.19.1",
                       "ply",
                       "opencv-python==4.5.3.56",
                       "slate3k>=0.5.3"],

@@ -9,8 +9,8 @@ setuptools
 opencv-python==4.5.3.56
 requests==2.27.1
 slate3k==0.5.3
-scipy==1.5.*
-scikit-image==0.18.0
+scipy>=1.7.3
+scikit-image==0.19.1
 pyobjc-core==7.3; sys_platform == "darwin"
 pyobjc==7.3; sys_platform == "darwin"
 
