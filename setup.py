@@ -45,6 +45,7 @@ setup(
     python_requires= ">3.6,<4.0",
     license= "Apache License 2.0",
     install_requires=["setuptools",
+                      "pyscreeze>=0.1.28",
                       "pyautogui>=0.9.53",
                       "pynput>=1.7.6",
                       'requests>=2.27.0',
@@ -59,5 +60,5 @@ setup(
                       "slate3k>=0.5.3"],
 
     extras_require={':"linux" in sys_platform': ['xlib'],
-                    ':"darwin" in sys_platform': ['pyobjc-core==7.3', 'pyobjc==7.3']}
+                    ':"darwin" in sys_platform': ['pyobjc-core==8.2', 'pyobjc==8.2']}
 )
