@@ -251,6 +251,9 @@ def initial_logging(capabilities):
         if b_n == 'chrome':
             logger.info('Chromedriver version: {}'.format(
                 capabilities['chrome']['chromedriverVersion']), also_console=True)
+        if b_n == 'msedge':
+            logger.info('Edgedriver version: {}'.format(
+                capabilities['msedge']['msedgedriverVersion']), also_console=True)
     except KeyError:
         logger.debug('Could not get browser/driver version data.')
 
