@@ -652,6 +652,36 @@ def set_config(par, val):
         SetConfig    LogMatchedIcons       True
 
     ---
+    Parameter: ShadowDOM
+
+    Extends element search to open shadow roots / shadow DOM.
+    Elments under shadow dom are not reachable by normal means, so setting
+    this configuration to True also changes how elements are searched.
+    This basically means that some attributes given to keywords can be ignored
+    and other search strategies are overridden.
+
+    It's best to use this setting only in specific situations where shadow dom
+    elements need to be verified or interacted with.
+
+    Same effect can be achieved by giving argument shadow_dom=True to keywords
+    supporting this configuration.
+
+    Default = False (Elements are only searched from the light / normal dom).
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig       ShadowDOM       True
+        # Do things related to shadow dom elements
+        VerifyText      This is under shadow root
+        ClickText       As is this
+        SetConfig       ShadowDOM       False
+
+        # Search from shadow dom in individual keyword
+        VerifyText      This is under shadow root   shadow_dom=True
+
+    ---
 
     Related keywords
     ----------------

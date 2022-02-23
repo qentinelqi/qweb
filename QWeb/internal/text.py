@@ -42,6 +42,12 @@ def get_element_by_locator_text(locator, anchor="1", index=1, **kwargs):
         try:
             web_element = element.get_unique_element_by_xpath(locator)
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
+            # could not find from light dom
+            shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+            if shadow_dom:
+                web_element = get_text_from_shadow_dom(locator, anchor)
+                if web_element:
+                    return web_element
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
@@ -326,3 +332,14 @@ def get_clickable_element_by_js(locator, **kwargs):
         logger.debug('Found elements by js: {}'.format(web_elements))
         return web_elements
     return None
+
+
+@frame.all_frames
+def get_text_from_shadow_dom(locator, index=1):
+    index = int(index) - 1
+    web_elements = javascript.get_text_elements_from_shadow_dom(locator)
+    if web_elements:
+        if CONFIG['SearchMode']:
+            element.draw_borders(web_elements[index])
+        return web_elements[index]
+    raise QWebElementNotFoundError('Element not found')

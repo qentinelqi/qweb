@@ -25,6 +25,7 @@ from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
+from QWeb.internal.config_defaults import CONFIG
 from selenium.webdriver.remote.webelement import WebElement
 
 
@@ -133,7 +134,7 @@ def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
 
-@keyword(tags=("Input", "Interaction"))
+@keyword(tags=("Input", "Interaction", "Shadow DOM"))
 @decorators.timeout_decorator
 def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     r"""Type given text to a text field.
@@ -239,13 +240,22 @@ def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
         # using WebElement instance
         ${elem}=            GetWebElement  //input[@title\="Search"]
         TypeText            ${elem}     Text to search for
+        # Type to input in shadow DOM
+        TypeText            Search      Test        shadow_dom=True
+        # same thing with using SetConfig
+        SetConfig           ShadowDOM   True
+        TypeText            Search      Test
 
     Related keywords
     ----------------
     \`PressKey\`, \`TypeSecret\`, \`TypeTexts\`, \`WriteText\`
     """
+    shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
     if isinstance(locator, WebElement):
         input_element = locator
+    elif shadow_dom:
+        input_element = element.get_input_from_shadow_dom(locator, anchor)
+        kwargs['shadow_dom'] = shadow_dom  # add to kwargs if this comes from setting
     else:
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs)

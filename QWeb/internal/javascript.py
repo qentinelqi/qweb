@@ -412,3 +412,82 @@ def get_clickable(locator):
     }
     return(web_elements('""" + locator.replace("\'", "\\'") + """'));"""
     return execute_javascript(js)
+
+
+def get_recursive_walk():
+    return """var recursiveWalk = function(node, func) {
+    var done = func(node);
+    if(done) {
+        return true;
+    }
+    if ('shadowRoot' in node && node.shadowRoot) {
+        var done = recursiveWalk(node.shadowRoot, func);
+        if (done) {
+            return true;
+        }
+    }
+    node = node.firstChild;
+
+    while (node) {
+        var done = recursiveWalk(node, func);
+        if (done) {
+            return true;
+        }
+        node = node.nextSibling;
+    }
+
+    }"""
+
+
+def get_text_elements_from_shadow_dom(locator):
+    js = get_recursive_walk() + """
+    function find_text_from_shadow_dom(text){
+        var results = [];
+        var div_results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+        if (node.innerText == text || node.placeholder == text || node.id == text || node.value == text) {
+            if (node.nodeName != "DIV") {
+                results.push(node)
+            }
+            else {
+                div_results.push(node)
+            }
+        }
+    });
+        if (results.length === 0) {
+            return div_results
+        }
+        return results;
+    }
+    return(find_text_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js, locator)
+
+
+def get_input_elements_from_shadow_dom(locator):
+    js = get_recursive_walk() + """
+    function find_input_from_shadow_dom(text){
+        var results = [];
+        var label_results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+        if (node.innerText == text || node.placeholder == text || node.id == text || node.value == text) {
+            if (node.nodeName == "INPUT") {
+                results.push(node);
+            }
+            else if (node.nodeName == "LABEL") {
+                if(node.control != null ) {
+                    label_results.push(node.control);
+                }
+                if(node.nextSibling.nodeName == "INPUT"){
+                    label_results.push(node);
+                }
+            }
+        }
+    });
+        if (results.length === 0) {
+            return label_results;
+        }
+
+        return results;
+    }
+    return(find_input_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js, locator)

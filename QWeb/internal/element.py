@@ -272,6 +272,17 @@ def get_visible_elements_from_elements(web_elements, **kwargs):
     return visible_elements + hiding_elements
 
 
+@frame.all_frames
+def get_input_from_shadow_dom(locator, index=1):
+    index = int(index) - 1
+    web_elements = javascript.get_input_elements_from_shadow_dom(locator)
+    if web_elements:
+        if CONFIG['SearchMode']:
+            draw_borders(web_elements[index])
+        return web_elements[index]
+    raise QWebElementNotFoundError('Element not found')
+
+
 def draw_borders(elements):
     mode = CONFIG['SearchMode']
     if not isinstance(elements, list):

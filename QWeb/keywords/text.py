@@ -39,7 +39,7 @@ from robot.api.deco import keyword
 import os
 
 
-@keyword(tags=("Text", "Verification"))
+@keyword(tags=("Text", "Verification", "Shadow DOM"))
 @decorators.timeout_decorator
 def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unused-argument
     r"""Verify page contains given text.
@@ -82,6 +82,8 @@ def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
         by visible text.
         window_find : True - When WindowFind is used VerifyText is not looking
         texts for dom, but simulates ctrl+f like search to current viewport.
+        shadow_dom : True - When ShadowDOM is used VerifyText is not only looking
+        texts for light/normal dom, but searches from shadow dom as well.
 
     Raises
     ------
@@ -291,7 +293,7 @@ def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
     return len(web_elements)
 
 
-@keyword(tags=("Text", "Interaction"))
+@keyword(tags=("Text", "Interaction", "Shadow DOM"))
 @decorators.timeout_decorator
 def click_text(text, anchor="1", timeout=0, parent=None,
                child=None, js=None, **kwargs):
@@ -363,6 +365,21 @@ def click_text(text, anchor="1", timeout=0, parent=None,
         SetConfig   DoubleClick     On
         ClickText   Canis
 
+    To search text also from shadow DOM, use argument shadow_dom=True.
+    Note that certain arguments like partial_match are ignored when
+    searching from shadow DOM.
+
+    .. code-block:: robotframework
+
+        ClickText   Canis       shadow_dom=True
+
+    Or use SetConfig
+
+    .. code-block:: robotframework
+
+        SetConfig   ShadowDOM     True
+        ClickText   Canis
+
     Parameters
     ----------
     text : str
@@ -388,6 +405,7 @@ def click_text(text, anchor="1", timeout=0, parent=None,
     \`ClickElement\`, \`ClickItem\`, \`GetText\`, \`RightClick\`, \`VerifyText\`
     """
     anchor = str(anchor)
+
     web_element = internal_text.get_element_by_locator_text(
         text, anchor, parent=parent, child=child, **kwargs)
     if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
