@@ -443,19 +443,19 @@ def get_text_elements_from_shadow_dom(locator):
     js = get_recursive_walk() + """
     function find_text_from_shadow_dom(text){
         var results = [];
-        var div_results = [];
+        var secondary_results = [];
         var elem = recursiveWalk(document.body, function(node) {
         if (node.innerText == text || node.placeholder == text || node.id == text || node.value == text) {
-            if (node.nodeName != "DIV") {
+            if (node.nodeName == "BUTTON" || node.nodeName == "A" || node.nodeName == "SPAN") {
                 results.push(node)
             }
             else {
-                div_results.push(node)
+                secondary_results.push(node)
             }
         }
     });
         if (results.length === 0) {
-            return div_results
+            return secondary_results
         }
         return results;
     }
@@ -477,7 +477,7 @@ def get_input_elements_from_shadow_dom(locator):
                 if(node.control != null ) {
                     label_results.push(node.control);
                 }
-                if(node.nextSibling.nodeName == "INPUT"){
+                else if(node.nextSibling.nodeName == "INPUT"){
                     label_results.push(node);
                 }
             }
