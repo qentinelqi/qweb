@@ -43,7 +43,7 @@ def get_element_by_locator_text(locator, anchor="1", index=1, **kwargs):
             web_element = element.get_unique_element_by_xpath(locator)
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
             # could not find from light dom
-            shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+            shadow_dom = CONFIG['ShadowDOM']
             if shadow_dom:
                 web_element = get_text_from_shadow_dom(locator, anchor)
                 if web_element:
@@ -89,6 +89,9 @@ def get_text_elements(text, **kwargs):
             web_elements = _get_contains_text_element(text, **kwargs)
         except NoSuchFrameException:
             logger.debug('Got no such frame from contains text')
+    shadow_dom = CONFIG['ShadowDOM']
+    if not web_elements and shadow_dom:
+        web_elements = javascript.get_text_elements_from_shadow_dom(text)
     return web_elements
 
 
@@ -116,9 +119,6 @@ def get_unique_text_element(text, **kwargs):
         Found many elements with the given text.
     """
     web_elements = get_text_elements(text, **kwargs)
-    shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
-    if not web_elements and shadow_dom:
-        web_elements = javascript.get_text_elements_from_shadow_dom(text)
     if not web_elements:
         raise QWebValueError('Text "{}" did not match any elements'.format(text))
     if len(web_elements) == 1:
@@ -185,6 +185,7 @@ def get_text_using_anchor(text, anchor, **kwargs):
     WebElement
     """
     web_elements = get_all_text_elements(text, **kwargs)
+    # Add shadow seach here if normal fails
     modal_xpath = CONFIG['IsModalXpath']
 
     driver = browser.get_current_browser()
@@ -292,7 +293,7 @@ def get_item_using_anchor(text, anchor, **kwargs):
         web_elements = element.get_webelements(xpath, **kwargs)
     if not web_elements:
         # could not find from normal DOM
-        shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+        shadow_dom = CONFIG['ShadowDOM']
         if shadow_dom:
             tag = kwargs.get('tag', "BUTTON")  # some valid value as default
             elements = javascript.get_item_elements_from_shadow_dom(tag)

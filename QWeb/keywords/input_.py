@@ -250,7 +250,7 @@ def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     ----------------
     \`PressKey\`, \`TypeSecret\`, \`TypeTexts\`, \`WriteText\`
     """
-    shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+    shadow_dom = CONFIG['ShadowDOM']
     if isinstance(locator, WebElement):
         input_element = locator
     elif shadow_dom:

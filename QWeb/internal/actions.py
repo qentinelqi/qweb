@@ -76,10 +76,8 @@ def compare_input_values(input_element, expected_value, timeout, **kwargs):  # p
 @decorators.timeout_decorator_for_actions
 def input_value(input_element, timeout, **kwargs):
     blind = util.par2bool(kwargs.get('blind', CONFIG['BlindReturn']))
-    shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+    shadow_dom =CONFIG['ShadowDOM']
 
-    # TODO: Remove debug print
-    logger.info(f'*******************************SHADOW: {shadow_dom}')
     if input_handler.is_editable_text_element(input_element) and not shadow_dom:
         value = input_element.get_attribute('innerText')
     else:
