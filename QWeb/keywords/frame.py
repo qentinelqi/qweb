@@ -59,9 +59,9 @@ def use_frame(locator):
         webelement = element.get_unique_element_by_xpath(locator)
     driver = browser.get_current_browser()
     try:
-        driver.switch_to_frame(webelement)
-    except NoSuchFrameException:
-        raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator))
+        driver.switch_to.frame(webelement)
+    except NoSuchFrameException as e:
+        raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator)) from e
 
 
 @keyword(tags=["Config"])
@@ -77,7 +77,7 @@ def use_page():
     """
     frame.wait_page_loaded()
     driver = browser.get_current_browser()
-    driver.switch_to_default_content()
+    driver.switch_to.default_content()
 
 
 @keyword(tags=("Browser", "Interaction"))

@@ -48,7 +48,7 @@ def setup_xhr_monitor():
         return javascript.execute_javascript(js)
 
     except (WebDriverException, JavascriptException) as e:
-        raise QWebDriverError(e)
+        raise QWebDriverError(e)  # pylint: disable=W0707
 
 
 def get_ready_state():

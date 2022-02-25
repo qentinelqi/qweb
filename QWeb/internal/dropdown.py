@@ -127,9 +127,9 @@ def get_dropdown_element_by_css_selector(locator, anchor, index, **kwargs):
             if index != 0:
                 try:
                     return full_matches[index]
-                except IndexError:
+                except IndexError as e:
                     raise QWebInstanceDoesNotExistError(
-                        f'Found {len(full_matches)} elements. Given index was {index}')
+                        f'Found {len(full_matches)} elements. Given index was {index}') from e
             correct_element = text.get_element_using_anchor(full_matches, anchor)
             return correct_element
     try:

@@ -1,5 +1,6 @@
 import platform
-from msedge.selenium_tools import Edge, EdgeOptions
+from selenium.webdriver import Edge
+from selenium.webdriver.edge.options import Options
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 from QWeb.internal.config_defaults import CONFIG
@@ -26,7 +27,7 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
         "proxy" or "loggingPref".
     chrome_args : Optional arguments to modify browser settings
     """
-    options = EdgeOptions()
+    options = Options()
     options.use_chromium = True
 
     # Gets rid of Devtools listening .... printing
@@ -76,6 +77,6 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
     driver = Edge(BuiltIn().get_variable_value('${EDGEDRIVER_PATH}') or executable_path,
-                  options=options, desired_capabilities=desired_capabilities)
+                  options=options, capabilities=desired_capabilities)
     browser.cache_browser(driver)
     return driver

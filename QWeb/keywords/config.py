@@ -16,7 +16,7 @@
 # ---------------------------
 
 from robot.api.deco import keyword
-import QWeb.internal.util as util
+from QWeb.internal import util
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.search_strategy import SearchStrategies
 

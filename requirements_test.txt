@@ -1,9 +1,9 @@
 # Testing dependencies
-Flask==1.0.3
+Flask==2.0.2
 flake8
-mock==2.0.0
-pydocstyle==3.0.0
-pylint==2.4.1
+mock==4.0.3
+pydocstyle==6.1.1
+pylint==2.12.2
 pytest
 pytest-pythonpath
 pytest-cov

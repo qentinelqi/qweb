@@ -144,7 +144,7 @@ def get_substring(text, **kwargs):
         if 'float' in kwargs:
             return float(text.replace(' ', '').replace(',', '.'))
     except ValueError as e:
-        raise QWebValueMismatchError('Unable to convert. Got exception: {}'.format(e))
+        raise QWebValueMismatchError('Unable to convert. Got exception: {}'.format(e)) from e
     return text
 
 
@@ -163,7 +163,7 @@ def get_index_of(text, locator, condition):
 
 
 def is_py_func(text):
-    return bool("(" and ")" in text)
+    return bool("(" and ")" in text)  # pylint: disable=R1726
 
 
 def is_retina():
@@ -199,10 +199,10 @@ def prefs_to_dict(prefs):
         except json.decoder.JSONDecodeError:
             try:
                 d = _handle_old_style_prefs(prefs)
-            except QWebUnexpectedConditionError:
+            except QWebUnexpectedConditionError as e:
                 raise QWebUnexpectedConditionError(
                     'Invalid argument! Experimental opts should given in robot dict '
-                    'or string in format: key1:value1, key2:value2')
+                    'or string in format: key1:value1, key2:value2') from e
     return d
 
 
@@ -251,6 +251,9 @@ def initial_logging(capabilities):
         if b_n == 'chrome':
             logger.info('Chromedriver version: {}'.format(
                 capabilities['chrome']['chromedriverVersion']), also_console=True)
+        if b_n == 'msedge':
+            logger.info('Edgedriver version: {}'.format(
+                capabilities['msedge']['msedgedriverVersion']), also_console=True)
     except KeyError:
         logger.debug('Could not get browser/driver version data.')
 

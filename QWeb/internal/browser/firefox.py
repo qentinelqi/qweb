@@ -19,7 +19,6 @@ def open_browser(profile_dir=None,
                  binary=None,
                  executable_path="geckodriver",
                  firefox_args=None,
-                 timeout=30,
                  log_path="geckodriver.log",
                  **kwargs):
     """Open Firefox browser and cache the driver.
@@ -85,7 +84,7 @@ def open_browser(profile_dir=None,
                 options.add_argument(option)
     driver = webdriver.Firefox(executable_path=executable_path, proxy=proxy, firefox_binary=binary,
                                desired_capabilities=capabilities, options=options,
-                               firefox_profile=profile_dir, timeout=timeout, log_path=log_path)
+                               firefox_profile=profile_dir, log_path=log_path)
     if os.name == 'nt':  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)

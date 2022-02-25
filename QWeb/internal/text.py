@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------
 
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
     WebDriverException, NoSuchFrameException, NoSuchElementException
 from robot.api import logger
@@ -44,7 +45,7 @@ def get_element_by_locator_text(locator, anchor="1", index=1, **kwargs):
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
-            raise QWebElementNotFoundError(e)
+            raise QWebElementNotFoundError(e)  # pylint: disable=W0707
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
@@ -111,8 +112,8 @@ def get_unique_text_element(text, **kwargs):
     web_elements = get_text_elements(text, **kwargs)
     if not web_elements:
         raise QWebValueError('Text "{}" did not match any elements'.format(text))
-    if web_elements and len(web_elements) == 1:
-        return web_elements[0]
+    if len(web_elements) == 1:
+        return web_elements[0]  # pylint: disable=unsubscriptable-object
     raise QWebValueError('Text "{}" matched {} elements. Needs to be unique'
                          .format(text, len(web_elements)))
 
@@ -181,7 +182,7 @@ def get_text_using_anchor(text, anchor, **kwargs):
     if modal_xpath != "//body":
         # filter elements by modal (dialog etc)
         logger.debug("IsModalXpath filtering on, filtering...")
-        modal_exists = driver.find_elements_by_xpath(modal_xpath)
+        modal_exists = driver.find_elements(By.XPATH, modal_xpath)
         if modal_exists:
             web_elements = _filter_by_modal_ancestor(web_elements)
             logger.debug(f"after filtering there are: {len(web_elements)} matching elements")
@@ -215,7 +216,7 @@ def _filter_by_modal_ancestor(elements):
 
     for elem in elements:
         try:
-            elem.find_element_by_xpath(f"./../ancestor::{xpath}")
+            elem.find_element(By.XPATH, f"./../ancestor::{xpath}")
             elems_in_modal.append(elem)
         except NoSuchElementException:
             logger.debug("Filtering out element, modal open but not under modal")

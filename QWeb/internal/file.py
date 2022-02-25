@@ -44,9 +44,9 @@ class File:
                     return File(all_text, filepath)
                 raise QWebValueMismatchError('Text not found. Seems that the pdf is empty.')
         except TypeError as e:
-            raise QWebFileNotFoundError('File not found. Got {} instead.'.format(e))
+            raise QWebFileNotFoundError(f'File not found. Got {e} instead.') from e
         except PSEOF as e:
-            raise QWebFileNotFoundError('File found, but it\'s not valid pdf-file: {}'.format(e))
+            raise QWebFileNotFoundError(f'File found, but it\'s not valid pdf-file: {e}') from e
 
     @staticmethod
     def create_text_file_instance(filename):
@@ -59,7 +59,7 @@ class File:
                     return File(data, filepath)
                 raise QWebValueMismatchError('Text not found. Seems that the file is empty.')
         except TypeError as e:
-            raise QWebFileNotFoundError('File not found. Got {} instead.'.format(e))
+            raise QWebFileNotFoundError('File not found. Got {} instead.'.format(e)) from e
 
     def get(self, **kwargs):
         if kwargs:

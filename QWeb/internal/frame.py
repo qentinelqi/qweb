@@ -52,17 +52,17 @@ def wait_page_loaded():
             raise QWebDriverError("No browser open. Use OpenBrowser keyword"
                                   " to open browser first")
         try:
-            driver.switch_to_default_content()
-        except InvalidSessionIdException:
+            driver.switch_to.default_content()
+        except InvalidSessionIdException as ie:
             CONFIG.set_value("OSScreenshots", True)
-            raise QWebBrowserError("Browser session lost. Did browser crash?")
+            raise QWebBrowserError("Browser session lost. Did browser crash?") from ie
         except (NoSuchWindowException, WebDriverException) as e:
             logger.warn(
                 'Cannot switch to default context, maybe window is closed. Err: {}'.format(e))
             if any(s in str(e) for s in FATAL_MESSAGES):
                 CONFIG.set_value("OSScreenshots", True)
-                raise QWebBrowserError(e)
-            driver.switch_to_default_content()
+                raise QWebBrowserError(e) from e
+            driver.switch_to.default_content()
     timeout = CONFIG['XHRTimeout']
     if timeout.lower() == "none":
         return
@@ -170,14 +170,14 @@ def all_frames(fn):
             err = None
             if not driver:
                 driver = browser.get_current_browser()
-                driver.switch_to_default_content()
+                driver.switch_to.default_content()
             if current_frame:
                 try:
-                    driver.switch_to_frame(current_frame)
+                    driver.switch_to.frame(current_frame)
                     logger.debug('switching to childframe {}'.format(str(fn)))
                 except (StaleElementReferenceException, WebDriverException) as e:
                     logger.warn(e)
-                    driver.switch_to_default_content()
+                    driver.switch_to.default_content()
                     raise e
             try:
                 web_element = fn(*args, **kwargs)
@@ -198,14 +198,14 @@ def all_frames(fn):
                     try:
                         driver.switch_to.parent_frame()
                     except WebDriverException as e:
-                        driver.switch_to_default_content()
+                        driver.switch_to.default_content()
                         raise e
                     config.set_config('FrameTimeout', float(timeout + start - time.time()))
                     logger.trace('Frame timeout: {}'.format(timeout))
                 if err:
                     raise err
                 return web_element
-            driver.switch_to_default_content()
+            driver.switch_to.default_content()
             raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
         return search_from_frames()
     logger.debug('wrapped = {}'.format(wrapped))

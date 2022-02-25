@@ -118,7 +118,7 @@ def get_open_browsers():
 def cache_browser(driver):
     # pylint: disable=global-statement
     global _current_browser
-    # pylint: disable=global-statement
+    # pylint: disable=global-statement, global-variable-not-assigned
     global _open_browsers
     _current_browser = driver
     _open_browsers.append(driver)
@@ -129,15 +129,11 @@ def remove_from_browser_cache(driver):
     Control is moved to previously opened browser'''
     # pylint: disable=global-statement
     global _current_browser
-    # pylint: disable=global-statement
+    # pylint: disable=global-statement, global-variable-not-assigned
     global _open_browsers
     _open_browsers.remove(driver)
     # there's at least one browser open, move to latest
-    if _open_browsers != []:
-        # set previously opened (last item in list) browser as current
-        _current_browser = _open_browsers[-1]
-    else:
-        _current_browser = None
+    _current_browser = _open_browsers[-1] if _open_browsers else None
 
 
 def clear_browser_cache():

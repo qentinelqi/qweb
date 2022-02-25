@@ -38,8 +38,8 @@ def set_robot_args(*args, **kwargs):
 def get_steps(name, caller_fn, **kwargs):
     file = Path(BuiltIn().get_variable_value('${SUITE SOURCE}'))
     test_case = BuiltIn().get_variable_value('${TEST_NAME}')
-    fo = open(file, "r+")
-    data = fo.readlines()
+    with open(file, "r+") as fo:
+        data = fo.readlines()
     idx = 0
     while data:
         if data[idx].strip() == test_case:

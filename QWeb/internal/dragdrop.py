@@ -38,8 +38,8 @@ def get_draggable_element(text, index, anchor):
         raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
     try:
         index = int(index) - 1
-    except ValueError:
-        raise QWebValueError('Index needs to be number')
+    except ValueError as e:
+        raise QWebValueError('Index needs to be number') from e
     web_elements = javascript.execute_javascript(
         'return document.querySelectorAll(\'{}\')'.format(attribute_match))
     if web_elements:

@@ -77,8 +77,8 @@ def compare_screenshots(filename, accuracy):
     filename_dif = '{}_dif.png'.format(filename)
     try:
         accuracy = float(accuracy)
-    except ValueError:
-        raise ValueError('Invalid accuracy: {}'.format(accuracy))
+    except ValueError as e:
+        raise ValueError('Invalid accuracy: {}'.format(accuracy)) from e
     # Save reference screenshot if it does not exist
     if not os.path.isfile(os.path.join(verifyapp_dir, filename_ref)):
         filepath_ref = save_screenshot(filename_ref, VERIFYAPP_DIR_NAME)

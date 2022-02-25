@@ -217,5 +217,5 @@ def _check_index(index):
         if int(index) - 1 < len(ACTIVE_LIST.web_list):
             return int(index) - 1
         raise QWebValueError('Index can\'t be bigger than length of the list')
-    except TypeError:
-        raise QWebValueError('Index has to be number')
+    except TypeError as e:
+        raise QWebValueError('Index has to be number') from e
