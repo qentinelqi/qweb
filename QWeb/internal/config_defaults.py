@@ -89,7 +89,8 @@ CONFIG_DEFAULTS = {
     "OSScreenshots": (False, util.par2bool),
     "RetinaDisplay": (util.is_retina(), util.par2bool),
     "LogMatchedIcons": (False, util.par2bool),
-    "ShadowDOM": (False, util.par2bool)
+    "ShadowDOM": (False, util.par2bool),
+    "HighlightColor": ("blue", None)
 }
 
 CONFIG = Config(CONFIG_DEFAULTS)

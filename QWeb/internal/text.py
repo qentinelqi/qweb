@@ -116,6 +116,9 @@ def get_unique_text_element(text, **kwargs):
         Found many elements with the given text.
     """
     web_elements = get_text_elements(text, **kwargs)
+    shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+    if not web_elements and shadow_dom:
+        web_elements = javascript.get_text_elements_from_shadow_dom(text)
     if not web_elements:
         raise QWebValueError('Text "{}" did not match any elements'.format(text))
     if len(web_elements) == 1:
@@ -287,21 +290,32 @@ def get_item_using_anchor(text, anchor, **kwargs):
         web_elements = _get_item_by_css(text, **kwargs)
     else:
         web_elements = element.get_webelements(xpath, **kwargs)
+    if not web_elements:
+        # could not find from normal DOM
+        shadow_dom = util.par2bool(kwargs.get('shadow_dom', CONFIG['ShadowDOM']))
+        if shadow_dom:
+            tag = kwargs.get('tag', "BUTTON")  # some valid value as default
+            elements = javascript.get_item_elements_from_shadow_dom(tag)
+            matches = javascript.get_by_attributes(elements, text, False)
+            full, partial = matches.get('full'), matches.get('partial')
+            web_elements = full + partial
     if web_elements:
         if CONFIG['SearchMode']:
-            element.draw_borders(_get_correct_element(web_elements, str(anchor)))
-        return _get_correct_element(web_elements, str(anchor))
+            correct = _get_correct_element(web_elements, str(anchor), **kwargs)
+            element.draw_borders(correct)
+        # return _get_correct_element(web_elements, str(anchor))
+        return correct
     no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
     if no_raise:
         return None
     raise QWebElementNotFoundError('Cannot find item for locator {}'.format(text))
 
 
-def _get_correct_element(web_elements, anchor):
+def _get_correct_element(web_elements, anchor, **kwargs):
     if len(web_elements) == 1:
         return web_elements[0]
     correct_element = get_element_using_anchor(
-        web_elements, anchor)
+        web_elements, anchor, **kwargs)
     return correct_element
 
 

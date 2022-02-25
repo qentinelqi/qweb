@@ -28,7 +28,8 @@
             <template id="fooTemplate">
                 <div id="shadowLocalTarget">
                     Local Target in Shadow DOM
-                </div>  
+                </div>
+                <custom title="Test123">*</custom> 
             </template>
             <input-component id="inputShadowRoot"></input-component>
             <template id="inputTemplate">
@@ -37,7 +38,7 @@
                 </div><br><br>
                 <div id="secondinput">
                     <label id="second" for="withlabel">Input2</label>
-                    <input id="withlabel" aria-labelledby="second"></input>
+                    <input type="text" id="withlabel" aria-labelledby="second"></input>
                 </div>
 
                 </div>  
@@ -45,7 +46,7 @@
             <click-component id="buttonShadowRoot"></click-component>
             <template id="clickTemplate">
                 <div id="shadowClickTarget">
-                    <button onclick="myFunction('Alert from button')">Click me</button>
+                    <button id="myButton" tooltip="Click this" aria-label="Another label" onclick="myFunction('Alert from button')">Click me</button>
                     <a href="./alert.html">Link</a>
 
                 </div>  

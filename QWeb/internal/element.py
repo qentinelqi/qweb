@@ -284,17 +284,31 @@ def get_input_from_shadow_dom(locator, index=1):
 
 
 def draw_borders(elements):
+    color = CONFIG['HighlightColor']
+    color = color if color.lower() in ["red",
+                                       "green",
+                                       "blue",
+                                       "black",
+                                       "orange",
+                                       "yellow",
+                                       "fuchsia",
+                                       "lime",
+                                       "olive",
+                                       "teal",
+                                       "purple",
+                                       "navy",
+                                       "aqua"] else "blue"
     mode = CONFIG['SearchMode']
     if not isinstance(elements, list):
         elements = [elements]
     for e in elements:
         if mode.lower() == 'debug':
-            javascript.highlight_element(e, False)
+            javascript.highlight_element(e, False, color=color)
             raise QWebSearchingMode('Element highlighted')
         if mode.lower() == 'draw':
-            javascript.highlight_element(e, True)
+            javascript.highlight_element(e, True, color=color)
         elif mode.lower() == 'flash':
-            javascript.highlight_element(e, False, True)
+            javascript.highlight_element(e, False, True, color=color)
 
 
 def _calculate_closest_distance(element1, element2):

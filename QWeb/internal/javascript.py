@@ -73,7 +73,7 @@ def get_visibility(web_elements):
     return execute_javascript(js, web_elements)
 
 
-def highlight_element(element, draw_only, flash_border=False):
+def highlight_element(element, draw_only, flash_border=False, color="blue"):
     """Highlight borders for given web element.
 
     Parameters
@@ -84,18 +84,19 @@ def highlight_element(element, draw_only, flash_border=False):
         True = draw only, False = blink (2sec)
     flash_border : bool
         Flash 0.3s.
+    color : str
+        Border color (default: blue)
     """
-
     js = """
            function blink(el, style) {
-               el.style.border = "5px solid blue";
+               el.style.border = "5px solid {COLOR}";
                setTimeout(function(){
                    el.style.border = style;
                }, 2000);
            }
 
            function flash(el, style) {
-               el.style.border = "5px solid blue";
+               el.style.border = "5px solid {COLOR}";
                    setTimeout(function(){
                    el.style.border = style;
                    }, 300);
@@ -112,13 +113,14 @@ def highlight_element(element, draw_only, flash_border=False):
                }
 
                else {
-                   blink(el, "5px solid blue");
+                   blink(el, "5px solid {COLOR}");
                }
            }
 
-           show(arguments[0], arguments[1], arguments[2]);
+           show(arguments[0], arguments[1], arguments[2], arguments[3]);
            """
-    execute_javascript(js, element, draw_only, flash_border)
+    js = js.replace("{COLOR}", color)
+    execute_javascript(js, element, draw_only, flash_border, color)
 
 
 def get_by_attributes(elements, locator, partial_match):
@@ -445,7 +447,7 @@ def get_text_elements_from_shadow_dom(locator):
         var results = [];
         var secondary_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText == text || node.placeholder == text || node.id == text || node.value == text) {
+        if (node.innerText == text || node.placeholder == text || node.value == text || node.ariaLabel == text) {
             if (node.nodeName == "BUTTON" || node.nodeName == "A" || node.nodeName == "SPAN") {
                 results.push(node)
             }
@@ -469,7 +471,7 @@ def get_input_elements_from_shadow_dom(locator):
         var results = [];
         var label_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText == text || node.placeholder == text || node.id == text || node.value == text) {
+        if (node.innerText == text || node.placeholder == text || node.value == text || node.ariaLabel == text) {
             if (node.nodeName == "INPUT") {
                 results.push(node);
             }
@@ -491,3 +493,23 @@ def get_input_elements_from_shadow_dom(locator):
     }
     return(find_input_from_shadow_dom(arguments[0]))"""
     return execute_javascript(js, locator)
+
+
+def get_item_elements_from_shadow_dom(tag):
+    js = get_recursive_walk() + """
+    function find_item_elements_from_shadow_dom(tag){
+        var results = [];
+        var secondary_results = [];
+        var supported_tags = ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3"] +
+                             ["H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT", tag.toUpperCase()];
+        var elem = recursiveWalk(document.body, function(node) {
+            if (supported_tags.includes(node.tagName)) {
+                    results.push(node);
+            }
+
+        });
+        return results;
+    }
+
+    return(find_item_elements_from_shadow_dom(arguments[0], arguments[1]))"""
+    return execute_javascript(js, tag)

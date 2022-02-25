@@ -255,7 +255,6 @@ def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
         input_element = locator
     elif shadow_dom:
         input_element = element.get_input_from_shadow_dom(locator, anchor)
-        kwargs['shadow_dom'] = shadow_dom  # add to kwargs if this comes from setting
     else:
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs)
