@@ -663,9 +663,6 @@ def set_config(par, val):
     It's best to use this setting only in specific situations where shadow dom
     elements need to be verified or interacted with.
 
-    Same effect can be achieved by giving argument shadow_dom=True to keywords
-    supporting this configuration.
-
     Default = False (Elements are only searched from the light / normal dom).
 
     Examples

@@ -240,9 +240,7 @@ def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
         # using WebElement instance
         ${elem}=            GetWebElement  //input[@title\="Search"]
         TypeText            ${elem}     Text to search for
-        # Type to input in shadow DOM
-        TypeText            Search      Test        shadow_dom=True
-        # same thing with using SetConfig
+        # Type to input in shadow DOM input
         SetConfig           ShadowDOM   True
         TypeText            Search      Test
 

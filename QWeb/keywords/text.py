@@ -365,15 +365,9 @@ def click_text(text, anchor="1", timeout=0, parent=None,
         SetConfig   DoubleClick     On
         ClickText   Canis
 
-    To search text also from shadow DOM, use argument shadow_dom=True.
+    To search text also from shadow DOM, use SetConfig ShadowDOM.
     Note that certain arguments like partial_match are ignored when
     searching from shadow DOM.
-
-    .. code-block:: robotframework
-
-        ClickText   Canis       shadow_dom=True
-
-    Or use SetConfig
 
     .. code-block:: robotframework
 
@@ -794,7 +788,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     return util.get_substring(text, **kwargs)
 
 
-@keyword(tags=("Item", "Interaction"))
+@keyword(tags=("Item", "Interaction", "Shadow DOM"))
 @decorators.timeout_decorator
 def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
     r"""Click item (usually icon or picture) on webpage.
@@ -831,6 +825,15 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
         ClickItem    Canis    3     # clicks the third "Canis" on the page
         ClickItem    Canis    Dog   # clicks the "Canis" near to the word "Dog"
 
+    To enable searching items also from Shadow DOM, use SetConfig   Shadow DOM.
+
+    Shadow DOM Example
+    ------------------
+    .. code-block:: robotframework
+
+        SetConfig        Shadow DOM     True
+        ClickItem        Canis
+
     Parameters
     ----------
     text : str
@@ -861,7 +864,7 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
         return
 
 
-@keyword(tags=("Item", "Verification"))
+@keyword(tags=("Item", "Verification", "Shadow DOM"))
 @decorators.timeout_decorator
 def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Verify Item (usually icon or picture) exist.
@@ -891,6 +894,16 @@ def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unuse
 
     - a number or
     - a word that is near to the word Canis
+
+    To enable searching items also from Shadow DOM, use SetConfig Shadow DOM.
+
+    Shadow DOM Example
+    ------------------
+    .. code-block:: robotframework
+
+        SetConfig         Shadow DOM     True
+        VerifyItem        Canis
+
 
     Parameters
     ----------

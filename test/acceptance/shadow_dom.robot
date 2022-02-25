@@ -90,8 +90,8 @@ Chrome via aria-label
     ${error}=               Run Keyword and Expect Error       *    VerifyText   Cool grey   timeout=2
     
     SetConfig               ShadowDOM        True
-    VerifyText              Cool grey        timeout=3                        shadow_dom=True
-    ClickText               Midnight blue    shadow_dom=True
+    VerifyText              Cool grey        timeout=3
+    ClickText               Midnight blue
     LogScreenshot
     
 *** Keywords ***
