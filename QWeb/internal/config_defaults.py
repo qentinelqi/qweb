@@ -90,7 +90,7 @@ CONFIG_DEFAULTS = {
     "RetinaDisplay": (util.is_retina(), util.par2bool),
     "LogMatchedIcons": (False, util.par2bool),
     "ShadowDOM": (False, util.par2bool),
-    "HighlightColor": ("blue", None)
+    "HighlightColor": ("blue", util.highlight_validation)
 }
 
 CONFIG = Config(CONFIG_DEFAULTS)

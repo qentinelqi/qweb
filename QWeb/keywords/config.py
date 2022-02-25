@@ -25,6 +25,109 @@ from QWeb.internal.search_strategy import SearchStrategies
 def set_config(par, val):
     r"""Set configuration parameter to given value. Return previous value.
 
+    Summary of possible configurations and their purpose. More information below.
+
+    +---------------------+-----------------------------------------+----------------+
+    | Parameter           | Description                             | Default value  |
+    +=====================+=========================================+================+
+    | ActiveAreaXpath     | Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | AllInputElements    | Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | BlindReturn         | Return value without waiting            |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | CaseInsensitive     | Allow case insensitive search when      | False          |
+    |                     | partial match is used                   |                |
+    +---------------------+-----------------------------------------+----------------+
+    | CheckInputValue     | Check that typed value is stored        | False          |
+    |                     | correctly after TypeText.               |                |
+    +---------------------+-----------------------------------------+----------------+
+    | ClearKey            | Set key to be clear previous value when | webdrivers     |
+    |                     | text is written to input field (or None)| default clear  |
+    +---------------------+-----------------------------------------+----------------+
+    | ClickToFocus        | Sets focus by clicking the field before |   False        |
+    |                     | typing.                                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | CssSelectors        | Use CSS selectors for finding elements  | True           |
+    +---------------------+-----------------------------------------+----------------+
+    | Delay               | Wait time before each keyword           |   0 (no delay) |
+    +---------------------+-----------------------------------------+----------------+
+    | DefaultDocument     | Automatically switch back to default    | True           |
+    |                     | framew after each keyword.              |                |
+    +---------------------+-----------------------------------------+----------------+
+    | DefaultTimeout      | How long to wait for element to appear  | 10s            |
+    |                     | before failing the case.                |                |
+    +---------------------+-----------------------------------------+----------------+
+    | DoubleClick         | Perform double-click action in all click|   False        |
+    |                     | keywords.                               |                |
+    +---------------------+-----------------------------------------+----------------+
+    | HandleAlerts        | Automatically handle alerts.            |   True         |
+    +---------------------+-----------------------------------------+----------------+
+    | HighlightColor      | Sets the highlight color to use when    |   blue         |
+    |                     | element is highlighted.                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | InputHandler        | Use selenium or pyautogui to input text | selenium       |
+    +---------------------+-----------------------------------------+----------------+
+    | InViewport          | If set to true every element outside of | False          |
+    |                     | current viewport is considered invisible|                |
+    |                     | and not returned by default searches    |                |
+    +---------------------+-----------------------------------------+----------------+
+    | IsModalXPath        | Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | LineBreak           | Set key to send to text fields after    | ue004 (tab key)|
+    |                     | typing.                                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | LogMatchedIcons     | Highlights where icon was found on the  |   False        |
+    |                     | screen and adds a sceenshot to logs     |                |
+    +---------------------+-----------------------------------------+----------------+
+    | LogScreenShot       | Adds screenshot of failure to logs      | True           |
+    +---------------------+-----------------------------------------+----------------+
+    | MatchingInputElement| Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | MultipleAnchors     | Accept non-unique anchors.              |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | OffsetCheck         | Check element has offset. Element with  | True           |
+    |                     | no offset is considered invisible.      |                |
+    +---------------------+-----------------------------------------+----------------+
+    | OSScreenshots       | Use operating system functionalities    | False          |
+    |                     | instead of selenium to take screenshots |                |
+    +---------------------+-----------------------------------------+----------------+
+    | RetinaDisplay       | Is current monitor Retina display       |   Automatic    |
+    |                     | (True) or not (False)                   |   detection    |
+    +---------------------+-----------------------------------------+----------------+
+    | RetryInterval       | Timeout to wait before re-trying in     |   5s           |
+    |                     | -Until/-While keywords.                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | RunBefore           | A keyword to be run before every        |   None         |
+    |                     | interaction keyword. Useful for example |                |
+    |                     | when there is a custom spinner that     |                |
+    |                     | should be waited for                    |                |
+    +---------------------+-----------------------------------------+----------------+
+    | ScreenShotType      | Log html source, screenshot or both     | screenshot     |
+    +---------------------+-----------------------------------------+----------------+
+    | SearchDirection     | Set relative search direction for       | closest        |
+    |                     | element search (up, down, lef, righ,    |                |
+    |                     | closest)                                |                |
+    +---------------------+-----------------------------------------+----------------+
+    | SearchMode          | Options for highlighting elements found | draw           |
+    |                     | by searches (None, debug, draw).        |                |
+    +---------------------+-----------------------------------------+----------------+
+    | ShadowDOM           | Extend element searches to shadow DOM.  |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | XHRTimeout          | Maximum wait for page to be loaded      | 30s            |
+    +---------------------+-----------------------------------------+----------------+
+    | VerifyAppAccuracy   | Threshold for needed similarity in      | 0.9999         |
+    |                     | VerifyApp keyword.                      |                |
+    +---------------------+-----------------------------------------+----------------+
+    | Visibility          | Set if visibility should be checked when| True           |
+    |                     | searching for elements.                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | WindowFind          | Simulate CTRL+F to search for elements  | False          |
+    |                     | instead of searching from DOM           |                |
+    +---------------------+-----------------------------------------+----------------+
+    | WindowSize          | Set the size of browser window          | Full screen    |
+    +---------------------+-----------------------------------------+----------------+
+
     ---
     Parameter: LogScreenshot
 
@@ -492,7 +595,7 @@ def set_config(par, val):
 
     Parameter: MultipleAnchors
 
-    Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to False,
+    Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to True,
     QWeb accepts multiple anchors and selects the first one.
 
     Examples
@@ -650,6 +753,37 @@ def set_config(par, val):
     .. code-block:: robotframework
 
         SetConfig    LogMatchedIcons       True
+
+    ---
+    Parameter: HighlightColor
+
+    Sets the highlight color to use when element is highlighted.
+
+    Accepted colors are:
+
+    * aqua
+    * black
+    * blue
+    * fuchsia
+    * green
+    * lime
+    * navy
+    * olive
+    * orange
+    * purple
+    * red
+    * teal
+    * yellow
+
+
+    Default = "blue".
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    HighlightColor       olive
+
 
     ---
     Parameter: ShadowDOM

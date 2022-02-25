@@ -49,6 +49,7 @@ def write(input_element, input_text, timeout, **kwargs):  # pylint: disable=unus
         input_text, key = _remove_ending_line_break(input_text)
         kwargs['key'] = key
     check = util.par2bool(kwargs.get('check', CONFIG['CheckInputValue']))
+    kwargs['shadow_dom'] = CONFIG['ShadowDOM']
     if check is True:
         kwargs['check'] = True
         input_handler.write(input_element, input_text, **kwargs)
