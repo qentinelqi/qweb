@@ -447,13 +447,17 @@ def get_text_elements_from_shadow_dom(locator):
         var results = [];
         var secondary_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText == text || node.placeholder == text || node.value == text || node.ariaLabel == text) {
-            if (node.nodeName == "BUTTON" || node.nodeName == "A" || node.nodeName == "SPAN") {
-                results.push(node)
+        if (node.innerText == text) {
+            nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent : ''); }, '');
+            if (nodetext == text) {
+                results.push(node);
             }
-            else {
+             else {
                 secondary_results.push(node)
             }
+        }
+        else if (node.placeholder == text || node.value == text || node.ariaLabel == text) {
+                results.push(node)
         }
     });
         if (results.length === 0) {

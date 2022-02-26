@@ -68,7 +68,7 @@ class InputHandler:
             input_element.send_keys(clear_key)
         try:
             write(input_element, input_text)
-        # workaround for Firefox shadow doms not always being reachable
+        # workaround for Firefox shadow dom inputs not always being reachable
         except ElementNotInteractableException as e:
             if shadow_dom:
                 javascript.execute_javascript(f'arguments[0].value = "{input_text}"', input_element)

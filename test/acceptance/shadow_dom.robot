@@ -12,14 +12,12 @@ ${BROWSER}         chrome
 Shadow dom with config
     [Setup]                SetConfig              ShadowDOM                     False
  
-    
-    SetConfig              ShadowDOM                     False
     ${error}=               Run Keyword and Expect Error       *
     ...                    VerifyText      Local Target in Shadow DOM     partial_match=False  timeout=2
 
     SetConfig              ShadowDOM                     True
     VerifyText             Local Target in Shadow DOM 
-    TypeText               What's your name              Robot2
+    TypeText               What's your name              Robot2           check=True
     TypeText               Input2                        Test456
     
     ClickText              Click me
@@ -46,6 +44,18 @@ Shadow DOM with attributes
     CloseAlert             Accept
 
 
+Text Counts with Shadow
+    [Setup]                SetConfig              ShadowDOM                     False
+    GoTo                   file://${CURDIR}/../resources/shadow_dom.html
+    # verify count using normal dom only
+    VerifyTextCount        In both DOM   1
+    
+    # extend search to shadow dom
+    SetConfig              ShadowDOM                     True
+    VerifyTextCount        In both DOM   2
+    ${count}=              GetTextCount                  In both DOM
+    Should Be Equal As Numbers   ${count}                2
+
 VerifyText shadow dom
     [tags]                  shadow_dom
     [Setup]                 SetConfig              ShadowDOM                     False
@@ -64,7 +74,6 @@ VerifyText shadow dom
     ClickText               Sign In         timeout=3
     TypeText                Email           test@test.com                    timeout=20
     LogScreenshot
-
 
 
 Chrome shadow dom

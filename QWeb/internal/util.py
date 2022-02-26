@@ -121,23 +121,22 @@ def set_clear_key(key):
 
 
 def highlight_validation(color):
-        """ Validates the given highligh color is among supported basic colors """
-        if not color.lower() in ["red",
-                                 "green",
-                                 "blue",
-                                 "black",
-                                 "orange",
-                                 "yellow",
-                                 "fuchsia",
-                                 "lime",
-                                 "olive",
-                                 "teal",
-                                 "purple",
-                                 "navy",
-                                 "aqua"]:
-                                 raise ValueError("Not a supported highligt color")
-        return color
-
+    """ Validates the given highligh color is among supported basic colors """
+    if not color.lower() in ["red",
+                             "green",
+                             "blue",
+                             "black",
+                             "orange",
+                             "yellow",
+                             "fuchsia",
+                             "lime",
+                             "olive",
+                             "teal",
+                             "purple",
+                             "navy",
+                             "aqua"]:
+        raise ValueError("Not a supported highligt color")
+    return color
 
 
 def get_substring(text, **kwargs):

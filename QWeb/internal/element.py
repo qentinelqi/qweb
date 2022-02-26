@@ -284,21 +284,8 @@ def get_input_from_shadow_dom(locator, index=1):
 
 
 def draw_borders(elements):
-    color = CONFIG['HighlightColor']
-    color = color if color.lower() in ["red",
-                                       "green",
-                                       "blue",
-                                       "black",
-                                       "orange",
-                                       "yellow",
-                                       "fuchsia",
-                                       "lime",
-                                       "olive",
-                                       "teal",
-                                       "purple",
-                                       "navy",
-                                       "aqua"] else "blue"
     mode = CONFIG['SearchMode']
+    color = CONFIG['HighlightColor']
     if not isinstance(elements, list):
         elements = [elements]
     for e in elements:

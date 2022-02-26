@@ -90,8 +90,13 @@ def get_text_elements(text, **kwargs):
         except NoSuchFrameException:
             logger.debug('Got no such frame from contains text')
     shadow_dom = CONFIG['ShadowDOM']
-    if not web_elements and shadow_dom:
-        web_elements = javascript.get_text_elements_from_shadow_dom(text)
+    if shadow_dom:
+        shadow_elements = javascript.get_text_elements_from_shadow_dom(text)
+        shadow_elements = element.get_visible_elements_from_elements(shadow_elements, **kwargs)
+        #  remove duplicates (normal search and including shadow search)
+        for el in shadow_elements:
+            if el not in list(web_elements):
+                web_elements.append(el)
     return web_elements
 
 
@@ -185,7 +190,6 @@ def get_text_using_anchor(text, anchor, **kwargs):
     WebElement
     """
     web_elements = get_all_text_elements(text, **kwargs)
-    # Add shadow seach here if normal fails
     modal_xpath = CONFIG['IsModalXpath']
 
     driver = browser.get_current_browser()

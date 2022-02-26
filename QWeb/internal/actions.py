@@ -30,7 +30,7 @@ import fnmatch
 from robot.api import logger
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, \
-    MoveTargetOutOfBoundsException
+    MoveTargetOutOfBoundsException, ElementNotInteractableException
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebValueError, \
     QWebUnexpectedConditionError, QWebInvalidElementStateError, QWebTimeoutError, \
     QWebTextNotFoundError
@@ -55,7 +55,12 @@ def write(input_element, input_text, timeout, **kwargs):  # pylint: disable=unus
         input_handler.write(input_element, input_text, **kwargs)
         time.sleep(1)
         compare_input_values(input_element, kwargs.get('expected', input_text), timeout=2, **kwargs)
-        input_element.send_keys(kwargs.get('key', input_handler.line_break_key))
+        try:
+            input_element.send_keys(kwargs.get('key', input_handler.line_break_key))
+        except ElementNotInteractableException:
+            # this can happen with firefox for shadow dom elements
+            # log, but do not fail the test case as value was written correctly
+            logger.debug("Could not send line break key to input")
     else:
         input_handler.write(input_element, input_text, **kwargs)
     logger.debug('Preferred text: "{}"'.format(input_text))
