@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for text keywords
 Library           QWeb
-Suite Setup       Shadow Setup
+Suite Setup       OpenBrowser              file://${CURDIR}/../resources/shadow_dom.html  ${BROWSER}
 Suite Teardown    Shadow Teardown
 Test Timeout      1min
 
@@ -9,7 +9,7 @@ Test Timeout      1min
 ${BROWSER}         chrome
 
 *** Test Cases ***
-Shadow dom with config
+Basic inteactions with Shadow DOM
     [Setup]                SetConfig              ShadowDOM                     False
  
     ${error}=               Run Keyword and Expect Error       *
@@ -44,7 +44,42 @@ Shadow DOM with attributes
     CloseAlert             Accept
 
 
-Text Counts with Shadow
+VerifyAll & VerifyAny with shadow DOM
+    [Setup]                SetConfig              ShadowDOM                     False
+    GoTo                   file://${CURDIR}/../resources/shadow_dom.html
+    # verify using normal dom only
+    ${error}=              Run Keyword and Expect Error  *
+    ...                    VerifyAll                     In both DOM,Input2                        timeout=2
+    VerifyAny              In both DOM,Click me,Input2
+    
+    SetConfig              ShadowDOM                     True
+    VerifyAll              In both DOM,Input2            timeout=2
+    VerifyAny              Click me,In both DOM,Input2
+
+
+Input keywords with shadow DOM
+    [Setup]                SetConfig              ShadowDOM                     False
+    GoTo                   file://${CURDIR}/../resources/shadow_dom.html
+    # verify inputs using normal dom only
+    TypeText               username                      John Doe               # in normal/light dom
+    ${error}=              Run Keyword and Expect Error  *
+    ...                    VerifyInputElement            Input2                        timeout=2
+    
+    SetConfig              ShadowDOM                     True
+    VerifyInputElement     Input2
+    VerifyInputStatus      Input2                        Enabled
+    TypeText               Input2                        Test123
+    VerifyInputValue       Input2                        Test123
+    VerifyInputValue       username                      John Doe
+    ${val}=                GetInputValue                 Input2
+    Should Be Equal        ${val}                        Test123
+    
+    # Verify Multiple, both shadow and normal dom
+    ${inputs}=           Create Dictionary    Input2=Test123    What's your name=${EMPTY}
+    VerifyInputValues    ${inputs}
+
+
+Text Counts with shadow DOM
     [Setup]                SetConfig              ShadowDOM                     False
     GoTo                   file://${CURDIR}/../resources/shadow_dom.html
     # verify count using normal dom only
@@ -56,7 +91,8 @@ Text Counts with Shadow
     ${count}=              GetTextCount                  In both DOM
     Should Be Equal As Numbers   ${count}                2
 
-VerifyText shadow dom
+
+External site with shadow DOM
     [tags]                  shadow_dom
     [Setup]                 SetConfig              ShadowDOM                     False
     GoTo                    https://developer.servicenow.com/dev.do
@@ -70,13 +106,12 @@ VerifyText shadow dom
     
     SetConfig               ShadowDOM       True
     VerifyText              Sign In         timeout=3
-    Sleep                   3
     ClickText               Sign In         timeout=3
     TypeText                Email           test@test.com                    timeout=20
     LogScreenshot
 
 
-Chrome shadow dom
+Chrome shadow DOM
     [Documentation]         Chrome only, verify shadow dom elements in Chrome
     [tags]                  shadow_dom    PROBLEM_IN_WINDOWS    PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
     [Setup]                 SetConfig              ShadowDOM                     True
@@ -104,11 +139,6 @@ Chrome via aria-label
     LogScreenshot
     
 *** Keywords ***
-Shadow Setup
-    OpenBrowser              file://${CURDIR}/../resources/shadow_dom.html  ${BROWSER}   #--HEADLESS
-    SetConfig              ShadowDOM                     True
-       
-
 Shadow Teardown
     SetConfig              ShadowDOM                     False
     CloseBrowser
