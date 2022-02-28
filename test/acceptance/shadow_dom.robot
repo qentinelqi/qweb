@@ -17,6 +17,11 @@ Basic inteactions with Shadow DOM
 
     SetConfig              ShadowDOM                     True
     VerifyText             Local Target in Shadow DOM 
+    # partial text should fail without partial_match
+    ${error}=               Run Keyword and Expect Error       *
+    ...                    VerifyText      Local Target     partial_match=False  timeout=2
+    # partial text should found with setting on
+    VerifyText             Local Target                     partial_match=True  timeout=2
     TypeText               What's your name              Robot2           check=True
     TypeText               Input2                        Test456
     
@@ -134,8 +139,8 @@ Chrome via aria-label
     ${error}=               Run Keyword and Expect Error       *    VerifyText   Cool grey   timeout=2
     
     SetConfig               ShadowDOM        True
-    VerifyText              Cool grey        timeout=3
-    ClickText               Midnight blue
+    VerifyText              Cool grey        visibility=False
+    ClickText               Midnight blue    visibility=False
     LogScreenshot
     
 *** Keywords ***

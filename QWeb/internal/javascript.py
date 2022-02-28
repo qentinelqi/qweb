@@ -441,27 +441,31 @@ def get_recursive_walk():
     }"""
 
 
-def get_text_elements_from_shadow_dom(locator):
+def get_text_elements_from_shadow_dom(locator, partial):
     js = get_recursive_walk() + """
-    function find_text_from_shadow_dom(text){
+    function find_text_from_shadow_dom(text, partial){
         var results = [];
-        var secondary_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText == text) {
+        //if (node.innerText == text) {
+        if (node.textContent.includes(text)) {
             nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
             if (nodetext == text) {
                 results.push(node);
             }
+            else if (partial && nodetext.includes(text)) {
+                 console.log("nodetext: " + nodetext);
+                 results.push(node)
+            }
         }
-        else if (node.placeholder === text || node.value === text || node.ariaLabel === text) {
+        else if (node.placeholder === text || node.value === text) {
                 results.push(node)
         }
     });
 
         return results;
     }
-    return(find_text_from_shadow_dom(arguments[0]))"""
-    return execute_javascript(js, locator)
+    return(find_text_from_shadow_dom(arguments[0], arguments[1]))"""
+    return execute_javascript(js, locator, partial)
 
 
 def get_input_elements_from_shadow_dom(locator):
@@ -470,7 +474,7 @@ def get_input_elements_from_shadow_dom(locator):
         var results = [];
         var label_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText === text || node.placeholder === text || node.value === text || node.ariaLabel === text) {
+        if (node.innerText === text || node.placeholder === text || node.value === text) {
             if (node.nodeName == "INPUT") {
                 results.push(node);
             }

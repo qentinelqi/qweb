@@ -42,12 +42,6 @@ def get_element_by_locator_text(locator, anchor="1", index=1, **kwargs):
         try:
             web_element = element.get_unique_element_by_xpath(locator)
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
-            # could not find from light dom
-            shadow_dom = CONFIG['ShadowDOM']
-            if shadow_dom:
-                web_element = get_text_from_shadow_dom(locator, anchor)
-                if web_element:
-                    return web_element
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
@@ -84,14 +78,15 @@ def get_text_elements(text, **kwargs):
         web_elements = _get_exact_text_element(text, **kwargs)
     except NoSuchFrameException:
         logger.debug('Got no such frame from get exact text')
-    if util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch'])):
+    partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
+    if partial:
         try:
             web_elements = _get_contains_text_element(text, **kwargs)
         except NoSuchFrameException:
             logger.debug('Got no such frame from contains text')
     shadow_dom = CONFIG['ShadowDOM']
     if shadow_dom:
-        shadow_elements = javascript.get_text_elements_from_shadow_dom(text)
+        shadow_elements = javascript.get_text_elements_from_shadow_dom(text, partial)
         shadow_elements = element.get_visible_elements_from_elements(shadow_elements, **kwargs)
         #  remove duplicates (normal search and including shadow search)
         for el in shadow_elements:
@@ -351,14 +346,3 @@ def get_clickable_element_by_js(locator, **kwargs):
         logger.debug('Found elements by js: {}'.format(web_elements))
         return web_elements
     return None
-
-
-@frame.all_frames
-def get_text_from_shadow_dom(locator, index=1):
-    index = int(index) - 1
-    web_elements = javascript.get_text_elements_from_shadow_dom(locator)
-    if web_elements:
-        if CONFIG['SearchMode']:
-            element.draw_borders(web_elements[index])
-        return web_elements[index]
-    raise QWebElementNotFoundError('Element not found')
