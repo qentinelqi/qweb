@@ -448,21 +448,16 @@ def get_text_elements_from_shadow_dom(locator):
         var secondary_results = [];
         var elem = recursiveWalk(document.body, function(node) {
         if (node.innerText == text) {
-            nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent : ''); }, '');
+            nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
             if (nodetext == text) {
                 results.push(node);
             }
-             else {
-                secondary_results.push(node)
-            }
         }
-        else if (node.placeholder == text || node.value == text || node.ariaLabel == text) {
+        else if (node.placeholder === text || node.value === text || node.ariaLabel === text) {
                 results.push(node)
         }
     });
-        if (results.length === 0) {
-            return secondary_results
-        }
+
         return results;
     }
     return(find_text_from_shadow_dom(arguments[0]))"""
@@ -475,7 +470,7 @@ def get_input_elements_from_shadow_dom(locator):
         var results = [];
         var label_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText == text || node.placeholder == text || node.value == text || node.ariaLabel == text) {
+        if (node.innerText === text || node.placeholder === text || node.value === text || node.ariaLabel === text) {
             if (node.nodeName == "INPUT") {
                 results.push(node);
             }
