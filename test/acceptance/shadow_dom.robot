@@ -118,7 +118,7 @@ External site with shadow DOM
 
 Chrome shadow DOM
     [Documentation]         Chrome only, verify shadow dom elements in Chrome
-    [tags]                  shadow_dom    PROBLEM_IN_WINDOWS    PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
+    [tags]                  shadow_dom    PROBLEM_IN_EDGE    PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
     [Setup]                 SetConfig              ShadowDOM                     True
     
     SetConfig               ShadowDOM                          False
@@ -133,7 +133,7 @@ Chrome shadow DOM
 
 Chrome via aria-label
     [Documentation]         Chrome only, verify shadow dom elements in Chrome using aria-label
-    [tags]                  shadow_dom    PROBLEM_IN_WINDOWS    PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
+    [tags]                  shadow_dom    PROBLEM_IN_EDGE    PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
     [Setup]                 SetConfig              ShadowDOM                     False
     GoTo                    chrome://settings/manageProfile
     ${error}=               Run Keyword and Expect Error       *    VerifyText   Cool grey   timeout=2
