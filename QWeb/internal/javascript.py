@@ -468,41 +468,27 @@ def get_text_elements_from_shadow_dom(locator, partial):
     return execute_javascript(js, locator, partial)
 
 
-def get_input_elements_from_shadow_dom(locator):
+def get_all_input_elements_from_shadow_dom():
     js = get_recursive_walk() + """
-    function find_input_from_shadow_dom(text){
+    function find_all_input_elements_from_shadow_dom(){
         var results = [];
-        var label_results = [];
         var elem = recursiveWalk(document.body, function(node) {
-        if (node.innerText === text || node.placeholder === text || node.value === text) {
-            if (node.nodeName == "INPUT") {
-                results.push(node);
+            if (node.tagName == "INPUT") {
+                    results.push(node);
             }
-            else if (node.nodeName == "LABEL") {
-                if(node.control != null ) {
-                    label_results.push(node.control);
-                }
-                else if(node.nextSibling.nodeName == "INPUT"){
-                    label_results.push(node);
-                }
-            }
-        }
-    });
-        if (results.length === 0) {
-            return label_results;
-        }
 
+        });
         return results;
     }
-    return(find_input_from_shadow_dom(arguments[0]))"""
-    return execute_javascript(js, locator)
+
+    return(find_all_input_elements_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js)
 
 
 def get_item_elements_from_shadow_dom(tag):
     js = get_recursive_walk() + """
     function find_item_elements_from_shadow_dom(tag){
         var results = [];
-        var secondary_results = [];
         var supported_tags = ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3"] +
                              ["H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT", tag.toUpperCase()];
         var elem = recursiveWalk(document.body, function(node) {

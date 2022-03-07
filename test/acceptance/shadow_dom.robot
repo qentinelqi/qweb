@@ -112,7 +112,7 @@ External site with shadow DOM
     SetConfig               ShadowDOM       True
     VerifyText              Sign In         timeout=3
     ClickText               Sign In         timeout=3
-    TypeText                Email           test@test.com                    timeout=20
+    VerifyText              Remember me     timeout=20
     LogScreenshot
 
 
