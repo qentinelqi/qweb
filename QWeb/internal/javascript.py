@@ -453,7 +453,6 @@ def get_text_elements_from_shadow_dom(locator, partial):
                 results.push(node);
             }
             else if (partial && nodetext.includes(text)) {
-                 console.log("nodetext: " + nodetext);
                  results.push(node)
             }
         }
