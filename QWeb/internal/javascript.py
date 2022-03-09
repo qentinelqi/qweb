@@ -488,8 +488,7 @@ def get_item_elements_from_shadow_dom(tag):
     js = get_recursive_walk() + """
     function find_item_elements_from_shadow_dom(tag){
         var results = [];
-        var supported_tags = ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3"] +
-                             ["H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT", tag.toUpperCase()];
+        var supported_tags = tag === null ? ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT"] : [tag.toUpperCase()];
         var elem = recursiveWalk(document.body, function(node) {
             if (supported_tags.includes(node.tagName)) {
                     results.push(node);

@@ -292,7 +292,7 @@ def get_item_using_anchor(text, anchor, **kwargs):
     # extend search to Shadow DOM
     shadow_dom = CONFIG['ShadowDOM']
     if shadow_dom:
-        tag = kwargs.get('tag', "BUTTON")  # some valid value as default
+        tag = kwargs.get('tag', None)
         elements = get_items_including_shadow_dom(text, tag)
 
         if web_elements:
@@ -367,5 +367,5 @@ def get_items_including_shadow_dom(text, tag, **kwargs):
     full, partial = matches.get('full'), matches.get('partial')
     shadow_elements = full + partial
     if shadow_elements:
-        logger.debug('Found items from shadow dom: {}'.format(web_elements))
+        logger.debug(f'Found {len(shadow_elements)} items when extending search to shadow dom')
     return shadow_elements
