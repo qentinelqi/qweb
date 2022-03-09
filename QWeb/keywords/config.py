@@ -25,6 +25,111 @@ from QWeb.internal.search_strategy import SearchStrategies
 def set_config(par, val):
     r"""Set configuration parameter to given value. Return previous value.
 
+    Summary of possible configurations and their purpose. More information below.
+
+    +---------------------+-----------------------------------------+----------------+
+    | Parameter           | Description                             | Default value  |
+    +=====================+=========================================+================+
+    | ActiveAreaXpath_    | Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | AllInputElements_   | Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | BlindReturn_        | Return value without waiting            |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | CaseInsensitive_    | Allow case insensitive search when      | False          |
+    |                     | partial match is used                   |                |
+    +---------------------+-----------------------------------------+----------------+
+    | CheckInputValue_    | Check that typed value is stored        | False          |
+    |                     | correctly after TypeText.               |                |
+    +---------------------+-----------------------------------------+----------------+
+    | ClearKey_           | Set key to be clear previous value when | webdrivers     |
+    |                     | text is written to input field (or None)| default clear  |
+    +---------------------+-----------------------------------------+----------------+
+    | ClickToFocus_       | Sets focus by clicking the field before |   False        |
+    |                     | typing.                                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | CssSelectors_       | Use CSS selectors for finding elements  | True           |
+    +---------------------+-----------------------------------------+----------------+
+    | Delay_              | Wait time before each keyword           |   0 (no delay) |
+    +---------------------+-----------------------------------------+----------------+
+    | DefaultDocument_    | Automatically switch back to default    | True           |
+    |                     | framew after each keyword.              |                |
+    +---------------------+-----------------------------------------+----------------+
+    | DefaultTimeout_     | How long to wait for element to appear  | 10s            |
+    |                     | before failing the case.                |                |
+    +---------------------+-----------------------------------------+----------------+
+    | DoubleClick_        | Perform double-click action in all click|   False        |
+    |                     | keywords.                               |                |
+    +---------------------+-----------------------------------------+----------------+
+    | HandleAlerts_       | Automatically handle alerts.            |   True         |
+    +---------------------+-----------------------------------------+----------------+
+    | HighlightColor_     | Sets the highlight color to use when    |   blue         |
+    |                     | element is highlighted.                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | InputHandler_       | Use selenium or pyautogui to input text | selenium       |
+    +---------------------+-----------------------------------------+----------------+
+    | InViewport_         | If set to true every element outside of | False          |
+    |                     | current viewport is considered invisible|                |
+    |                     | and not returned by default searches    |                |
+    +---------------------+-----------------------------------------+----------------+
+    | IsModalXPath_       | Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | LineBreak_          | Set key to send to text fields after    | ue004 (tab key)|
+    |                     | typing.                                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | LogMatchedIcons_    | Highlights where icon was found on the  |   False        |
+    |                     | screen and adds a sceenshot to logs     |                |
+    +---------------------+-----------------------------------------+----------------+
+    | LogScreenShot_      | Adds screenshot of failure to logs      | True           |
+    +---------------------+-----------------------------------------+----------------+
+    |MatchingInputElement_| Set search strategy for element search. |                |
+    +---------------------+-----------------------------------------+----------------+
+    | MultipleAnchors_    | Accept non-unique anchors.              |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | OffsetCheck_        | Check element has offset. Element with  | True           |
+    |                     | no offset is considered invisible.      |                |
+    +---------------------+-----------------------------------------+----------------+
+    | OSScreenshots_      | Use operating system functionalities    | False          |
+    |                     | instead of selenium to take screenshots |                |
+    +---------------------+-----------------------------------------+----------------+
+    | RetinaDisplay_      | Is current monitor Retina display       |   Automatic    |
+    |                     | (True) or not (False)                   |   detection    |
+    +---------------------+-----------------------------------------+----------------+
+    | RetryInterval_      | Timeout to wait before re-trying in     |   5s           |
+    |                     | -Until/-While keywords.                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | RunBefore_          | A keyword to be run before every        |   None         |
+    |                     | interaction keyword. Useful for example |                |
+    |                     | when there is a custom spinner that     |                |
+    |                     | should be waited for                    |                |
+    +---------------------+-----------------------------------------+----------------+
+    | ScreenShotType_     | Log html source, screenshot or both     | screenshot     |
+    +---------------------+-----------------------------------------+----------------+
+    | SearchDirection_    | Set relative search direction for       | closest        |
+    |                     | element search (up, down, lef, righ,    |                |
+    |                     | closest)                                |                |
+    +---------------------+-----------------------------------------+----------------+
+    | SearchMode_         | Options for highlighting elements found | draw           |
+    |                     | by searches (None, debug, draw).        |                |
+    +---------------------+-----------------------------------------+----------------+
+    | ShadowDOM_          | Extend element searches to shadow DOM.  |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | XHRTimeout_         | Maximum wait for page to be loaded      | 30s            |
+    +---------------------+-----------------------------------------+----------------+
+    | VerifyAppAccuracy_  | Threshold for needed similarity in      | 0.9999         |
+    |                     | VerifyApp keyword.                      |                |
+    +---------------------+-----------------------------------------+----------------+
+    | Visibility_         | Set if visibility should be checked when| True           |
+    |                     | searching for elements.                 |                |
+    +---------------------+-----------------------------------------+----------------+
+    | WindowFind_         | Simulate CTRL+F to search for elements  | False          |
+    |                     | instead of searching from DOM           |                |
+    +---------------------+-----------------------------------------+----------------+
+    | WindowSize_         | Set the size of browser window          | Full screen    |
+    +---------------------+-----------------------------------------+----------------+
+
+    .. _logscreenshot:
+
     ---
     Parameter: LogScreenshot
 
@@ -38,6 +143,8 @@ def set_config(par, val):
         SetConfig    LogScreenshot         False
         SetConfig    LogScreenshot         True
 
+
+    .. _screenshottype:
 
     ---
     Parameter: ScreenshotType
@@ -53,6 +160,7 @@ def set_config(par, val):
         SetConfig    ScreenshotType        screenshot
         SetConfig    ScreenshotType        all
 
+    .. _osscreenshots:
 
     ---
     Parameter: OSScreenshots
@@ -66,6 +174,8 @@ def set_config(par, val):
 
         SetConfig    OSScreenshots        True
         SetConfig    OSScreenshots        False
+
+    .. _cssselectors:
 
     ---
     Parameter: CssSelectors
@@ -94,6 +204,8 @@ def set_config(par, val):
         SetConfig    CssSelectors       off
 
 
+    .. _searchdirection:
+
     ---
     Parameter: SearchDirection
 
@@ -113,6 +225,8 @@ def set_config(par, val):
         SetConfig    SearchDirection       up
         TypeText     MyLocator   Robot     # finds text "My Locator" above of text "Robot"
         SetConfig    SearchDirection       closest
+
+    .. _linebreak:
 
     ---
     Parameter: LineBreak
@@ -212,6 +326,8 @@ def set_config(par, val):
         SetConfig   LineBreak    \ue007    # Enter key
         SetConfig   LineBreak    ${EMPTY}  # Do not send anything
 
+    .. _clearkey:
+
     ---
     Parameter: ClearKey
 
@@ -233,8 +349,9 @@ def set_config(par, val):
         # One time use:
         TypeText    username    Robot       clear_key={CONTROL + A}
 
-    ---
+    .. _checkinputvalue:
 
+    ---
     Parameter: CheckInputValue
 
     Check that real value matches to preferred value after TypeText.
@@ -254,6 +371,8 @@ def set_config(par, val):
         # One time use:
         TypeText    username           Robot       check=True
 
+    .. _defaulttimeout:
+
     ---
     Parameter: DefaultTimeout
 
@@ -269,6 +388,8 @@ def set_config(par, val):
         # One time use:
         VerifyText        Foo          60s
 
+    .. _xhrtimeout:
+
     ---
     Parameter: XHRTimeout
 
@@ -281,6 +402,8 @@ def set_config(par, val):
     .. code-block:: robotframework
 
         SetConfig   XHRTimeout        60
+
+    .. _defaultdocument:
 
     ---
     Parameter: DefaultDocument
@@ -305,6 +428,8 @@ def set_config(par, val):
         SetConfig   DefaultDocument    On
         SetConfig   DefaultDocument    off
 
+    .. _caseinsensitive:
+
     ---
     Parameter: CaseInsensitive
 
@@ -321,6 +446,8 @@ def set_config(par, val):
         SetConfig   CaseInsensitive    True
         SetConfig   CaseInsensitive    False
 
+    .. _verifyappaccuracy:
+
     ---
     Parameter: VerifyAppAccuracy
 
@@ -333,6 +460,8 @@ def set_config(par, val):
 
         SetConfig    VerifyAppAccuracy     0.99999
 
+    .. _windowsize:
+
     ---
     Parameter: WindowSize
 
@@ -343,6 +472,8 @@ def set_config(par, val):
     .. code-block:: robotframework
 
         SetConfig    WindowSize     1920x1080
+
+    .. _inputhandler:
 
     ---
     Parameter: InputHandler
@@ -366,6 +497,8 @@ def set_config(par, val):
          SetConfig      InputHandler        raw
          SetConfig      InputHandler        selenium
 
+    .. _offsetcheck:
+
     ---
     Parameter: OffsetCheck
 
@@ -381,6 +514,8 @@ def set_config(par, val):
         # One time use:
         ClickItem    Qentinel        offset=False
 
+    .. _visibility:
+
     ---
     Parameter: Visibility
 
@@ -394,6 +529,8 @@ def set_config(par, val):
         SetConfig    Visibility      True   #returns only visible elements(default).
         # One time use:
         ClickItem    Qentinel        visibility=False
+
+    .. _inviewport:
 
     ---
     Parameter: InViewport
@@ -412,6 +549,8 @@ def set_config(par, val):
         SetConfig    InViewport      True   #element has to be inside of current viewport
         ClickItem    Qentinel        viewport=False
 
+    .. _searchmode:
+
     ---
     Parameter: SearchMode
 
@@ -427,6 +566,8 @@ def set_config(par, val):
         SetConfig    SearchMode      draw   #Highlights element and then executes kw (default)
         SetConfig    SearchMode      None   #Turns off highlighting element
 
+    .. _windowfind:
+
     ---
     Parameter: WindowFind
 
@@ -439,6 +580,11 @@ def set_config(par, val):
 
         SetConfig    WindowFind      True    #Searching text from current viewport
         SetConfig    WindowFind      False   #Searching text from dom(default)
+
+    .. _activeareaxpath:
+    .. _allinputelements:
+    .. _ismodalxpath:
+    .. _matchinginputelement:
 
     ---
     Parameter: SearchStrategy Values
@@ -488,11 +634,12 @@ def set_config(par, val):
     ------
     ValueError: Unknown search strategy
 
-    ---
+    .. _multipleanchors:
 
+    ---
     Parameter: MultipleAnchors
 
-    Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to False,
+    Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to True,
     QWeb accepts multiple anchors and selects the first one.
 
     Examples
@@ -502,8 +649,9 @@ def set_config(par, val):
         SetConfig    MultipleAnchors      True    # Accept multiple anchors
         SetConfig    MultipleAnchors      False   # Raise error if anchor is not unique
 
-    ---
+    .. _clicktofocus:
 
+    ---
     Parameter: ClickToFocus
 
     Clicks Input element before typing. This is sometimes needed to activate
@@ -516,8 +664,9 @@ def set_config(par, val):
         SetConfig    ClickToFocus         True    # Clicks element before TypeText
         SetConfig    ClickToFocus         False   # Handle TypeText without clicks(default)
 
-    ---
+    .. _doubleclick:
 
+    ---
     Parameter: DoubleClick
 
     Sets double-click the default action for all Click* keywords.
@@ -529,8 +678,9 @@ def set_config(par, val):
         SetConfig    DoubleClick          True    # All Click keywords perform double-click action
         SetConfig    DoubleClick          False   # Single-click action(default)
 
-    ---
+    .. _handlealerts:
 
+    ---
     Parameter: HandleAlerts
 
     Option for handling alerts boxes, on by default.
@@ -541,8 +691,10 @@ def set_config(par, val):
 
         SetConfig    HandleAlerts       False
 
-    ---
 
+    .. _blindreturn:
+
+    ---
     Parameter: BlindReturn
 
     Return any value (even empty) from input element without waiting.
@@ -560,8 +712,9 @@ def set_config(par, val):
         # One time use:
         ${VALUE}     GetInputValue     username     blind=True
 
-    ---
+    .. _delay:
 
+    ---
     Parameter: Delay
 
     Set delay for Paceword.
@@ -578,8 +731,9 @@ def set_config(par, val):
         # One time use - Wait 1s before given Paceword is executed:
         TypeText     username          QRobot   delay=1s
 
-    ---
+    .. _retryinterval:
 
+    ---
     Parameter: RetryInterval
 
     Set default interval for QWeb retry keywords.
@@ -594,8 +748,9 @@ def set_config(par, val):
         # One time use:
         ClickUntil      Foo         button       interval=3
 
-    ---
+    .. _runbefore:
 
+    ---
     Parameter: RunBefore
 
     Set a verificaton keyword to be run before any interaction
@@ -627,6 +782,8 @@ def set_config(par, val):
         ClickText    Foo
         # Waits that text "Loading..." disappears before running other keywords
 
+    .. _retinadisplay:
+
     ---
     Parameter: RetinaDisplay
 
@@ -639,6 +796,8 @@ def set_config(par, val):
 
         SetConfig    RetinaDisplay       False
 
+    .. _logmatchedicons:
+
     ---
     Parameter: LogMatchedIcons
 
@@ -650,6 +809,68 @@ def set_config(par, val):
     .. code-block:: robotframework
 
         SetConfig    LogMatchedIcons       True
+
+    .. _highlightcolor:
+
+    ---
+    Parameter: HighlightColor
+
+    Sets the highlight color to use when element is highlighted.
+
+    Accepted colors are:
+
+    * aqua
+    * black
+    * blue
+    * fuchsia
+    * green
+    * lime
+    * navy
+    * olive
+    * orange
+    * purple
+    * red
+    * teal
+    * yellow
+
+
+    Default = "blue".
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig    HighlightColor       olive
+
+
+    .. _shadowdom:
+
+    ---
+    Parameter: ShadowDOM
+
+    Extends element search to open shadow roots / shadow DOM.
+    Elments under shadow dom are not reachable by normal means, so setting
+    this configuration to True also changes how elements are searched.
+    This basically means that some attributes given to keywords can be ignored
+    and other search strategies are overridden.
+
+    It's best to use this setting only in specific situations where shadow dom
+    elements need to be verified or interacted with.
+
+    Default = False (Elements are only searched from the light / normal dom).
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig       ShadowDOM       True
+        # Do things related to shadow dom elements
+        VerifyText      This is under shadow root
+        ClickText       As is this
+        SetConfig       ShadowDOM       False
+
+        # Search from shadow dom in individual keyword
+        VerifyText      This is under shadow root   shadow_dom=True
 
     ---
 

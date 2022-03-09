@@ -78,11 +78,19 @@ def get_text_elements(text, **kwargs):
         web_elements = _get_exact_text_element(text, **kwargs)
     except NoSuchFrameException:
         logger.debug('Got no such frame from get exact text')
-    if util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch'])):
+    partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
+    if partial:
         try:
             web_elements = _get_contains_text_element(text, **kwargs)
         except NoSuchFrameException:
             logger.debug('Got no such frame from contains text')
+    shadow_dom = CONFIG['ShadowDOM']
+    if shadow_dom:
+        shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
+        #  remove duplicates (normal search and including shadow search)
+        for el in shadow_elements:
+            if el not in list(web_elements):
+                web_elements.append(el)
     return web_elements
 
 
@@ -281,21 +289,34 @@ def get_item_using_anchor(text, anchor, **kwargs):
         web_elements = _get_item_by_css(text, **kwargs)
     else:
         web_elements = element.get_webelements(xpath, **kwargs)
+    # extend search to Shadow DOM
+    shadow_dom = CONFIG['ShadowDOM']
+    if shadow_dom:
+        tag = kwargs.get('tag', None)
+        elements = get_items_including_shadow_dom(text, tag)
+
+        if web_elements:
+            for el in elements:
+                if el not in list(web_elements):
+                    web_elements.append(el)
+        else:
+            web_elements = elements
     if web_elements:
         if CONFIG['SearchMode']:
-            element.draw_borders(_get_correct_element(web_elements, str(anchor)))
-        return _get_correct_element(web_elements, str(anchor))
+            correct = _get_correct_element(web_elements, str(anchor), **kwargs)
+            element.draw_borders(correct)
+        return correct
     no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
     if no_raise:
         return None
     raise QWebElementNotFoundError('Cannot find item for locator {}'.format(text))
 
 
-def _get_correct_element(web_elements, anchor):
+def _get_correct_element(web_elements, anchor, **kwargs):
     if len(web_elements) == 1:
         return web_elements[0]
     correct_element = get_element_using_anchor(
-        web_elements, anchor)
+        web_elements, anchor, **kwargs)
     return correct_element
 
 
@@ -326,3 +347,25 @@ def get_clickable_element_by_js(locator, **kwargs):
         logger.debug('Found elements by js: {}'.format(web_elements))
         return web_elements
     return None
+
+
+@frame.all_frames
+def get_texts_including_shadow_dom(locator, partial, **kwargs):
+    web_elements = element.get_visible_elements_from_elements(
+        javascript.get_text_elements_from_shadow_dom(locator, partial), **kwargs)
+    if web_elements:
+        logger.debug('Found elements from shadow dom: {}'.format(web_elements))
+    return web_elements
+
+
+@frame.all_frames
+def get_items_including_shadow_dom(text, tag, **kwargs):
+    web_elements = element.get_visible_elements_from_elements(
+        javascript.get_item_elements_from_shadow_dom(tag), **kwargs)
+
+    matches = javascript.get_by_attributes(web_elements, text, False)
+    full, partial = matches.get('full'), matches.get('partial')
+    shadow_elements = full + partial
+    if shadow_elements:
+        logger.debug(f'Found {len(shadow_elements)} items when extending search to shadow dom')
+    return shadow_elements

@@ -133,7 +133,7 @@ def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
 
-@keyword(tags=("Input", "Interaction"))
+@keyword(tags=("Input", "Interaction", "Shadow DOM"))
 @decorators.timeout_decorator
 def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     r"""Type given text to a text field.
@@ -239,6 +239,9 @@ def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
         # using WebElement instance
         ${elem}=            GetWebElement  //input[@title\="Search"]
         TypeText            ${elem}     Text to search for
+        # Type to input in shadow DOM input
+        SetConfig           ShadowDOM   True
+        TypeText            Search      Test
 
     Related keywords
     ----------------

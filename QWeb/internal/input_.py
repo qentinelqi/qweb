@@ -50,6 +50,15 @@ def get_input_element_by_locator(locator, anchor, **kwargs):
         if not input_elements:  # Find input element using locator
             locator_element = text.get_text_using_anchor(locator, anchor, **kwargs)
             input_elements = _get_all_input_elements()
+
+            shadow_dom = CONFIG['ShadowDOM']
+            if shadow_dom:
+                shadow_inputs = element.get_all_inputs_from_shadow_dom()
+                #  remove duplicates (normal search and including shadow search)
+                for el in shadow_inputs:
+                    if el not in list(input_elements):
+                        input_elements.append(el)
+
             input_element = element.get_closest_element(locator_element, input_elements)
         elif len(input_elements) == 1:
             input_element = input_elements[0]  # pylint: disable=unsubscriptable-object

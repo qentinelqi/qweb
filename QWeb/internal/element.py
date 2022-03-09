@@ -272,18 +272,23 @@ def get_visible_elements_from_elements(web_elements, **kwargs):
     return visible_elements + hiding_elements
 
 
+def get_all_inputs_from_shadow_dom():
+    return javascript.get_all_input_elements_from_shadow_dom()
+
+
 def draw_borders(elements):
     mode = CONFIG['SearchMode']
+    color = CONFIG['HighlightColor']
     if not isinstance(elements, list):
         elements = [elements]
     for e in elements:
         if mode.lower() == 'debug':
-            javascript.highlight_element(e, False)
+            javascript.highlight_element(e, False, color=color)
             raise QWebSearchingMode('Element highlighted')
         if mode.lower() == 'draw':
-            javascript.highlight_element(e, True)
+            javascript.highlight_element(e, True, color=color)
         elif mode.lower() == 'flash':
-            javascript.highlight_element(e, False, True)
+            javascript.highlight_element(e, False, True, color=color)
 
 
 def _calculate_closest_distance(element1, element2):

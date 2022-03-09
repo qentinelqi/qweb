@@ -20,7 +20,7 @@ Close All Browsers 1
     CloseAllBrowsers
 
 Close All Browsers 2
-    [Tags]          PROBLEM_IN_WINDOWS      PROBLEM_IN_OSX  PROBLEM_IN_SAFARI
+    [Tags]          PROBLEM_IN_WINDOWS      PROBLEM_IN_OSX  PROBLEM_IN_SAFARI    PROBLEM_IN_MACOS
     OpenBrowser     about:blank             firefox         # force another (firefox) browser to open
     [Teardown]      CloseAllBrowsers
 
@@ -36,7 +36,7 @@ ScrollText
     [Teardown]      CloseAllBrowsers
 
 SwitchBrowser
-    [Tags]          PROBLEM_IN_WINDOWS
+    [Tags]          PROBLEM_IN_WINDOWS    PROBLEM_IN_MACOS
     GoTo            file://${CURDIR}/../resources/multielement_text.html
     OpenBrowser     file://${CURDIR}/../resources/dropdown.html     chrome
     OpenBrowser     file://${CURDIR}/../resources/frame.html        firefox

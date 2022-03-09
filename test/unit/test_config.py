@@ -34,6 +34,7 @@ class TestConfig:
         assert config.get_config("MatchingInputElement") == SearchStrategies.MATCHING_INPUT_ELEMENT
         assert config.get_config("CssSelectors") is True
         assert config.get_config("TextMatch") == SearchStrategies.TEXT_MATCH
+        assert config.get_config("HighlightColor") == "blue"
 
     @staticmethod
     def test_get_config_with_brackets():
@@ -42,6 +43,7 @@ class TestConfig:
         assert CONFIG["MatchingInputElement"] == SearchStrategies.MATCHING_INPUT_ELEMENT
         assert CONFIG["CssSelectors"] is True
         assert CONFIG["TextMatch"] == SearchStrategies.TEXT_MATCH
+        assert CONFIG["HighlightColor"] == "blue"
 
     @staticmethod
     def test_set_config():
@@ -66,6 +68,16 @@ class TestConfig:
         assert CONFIG["RunBefore"] == "Verify Something"
         config.reset_config("RunBefore")
         assert CONFIG["RunBefore"] == None
+
+        old_val = config.set_config("ShadowDOM", True)
+        assert old_val is False
+        assert config.get_config("ShadowDOM") is True
+        assert CONFIG["ShadowDOM"] is True
+
+        old_val = config.set_config("HighlightColor", "orange")
+        assert old_val == "blue"
+        assert config.get_config("HighlightColor") == "orange"
+        assert CONFIG["HighlightColor"] == "orange"
 
     @staticmethod
     def test_reset_config():
@@ -93,9 +105,21 @@ class TestConfig:
         assert resetted_val is False
         assert config.get_config("ContainingTextMatch") == SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE
 
+        old_val = config.set_config("HighlightColor", "purple")
+        assert old_val == "blue"
+        assert config.get_config("HighlightColor") == "purple"
+        resetted_val = config.reset_config("HighlightColor")
+        assert resetted_val == "blue"
+
+        old_val = config.set_config("ShadowDOM", True)
+        assert old_val is False
+        assert config.get_config("ShadowDOM") is True
+
         config.reset_config()
         assert config.get_config("ScreenshotType") == "screenshot"
         assert config.get_config("DefaultDocument") is True
+        assert config.get_config("HighlightColor") == "blue"
+        assert config.get_config("ShadowDOM") is False
 
     @staticmethod
     def test_non_existing_parameter():
@@ -104,6 +128,12 @@ class TestConfig:
 
         with pytest.raises(ValueError):
             config.set_config("new", 100)
+
+    @staticmethod
+    def test_non_accepted_color():
+        with pytest.raises(ValueError):
+            config.set_config("HighlightColor", "salmon pink")
+        assert config.get_config("HighlightColor") == "blue"
 
     @staticmethod
     def test_pixel_parser_case_one():

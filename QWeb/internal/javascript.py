@@ -73,7 +73,7 @@ def get_visibility(web_elements):
     return execute_javascript(js, web_elements)
 
 
-def highlight_element(element, draw_only, flash_border=False):
+def highlight_element(element, draw_only, flash_border=False, color="blue"):
     """Highlight borders for given web element.
 
     Parameters
@@ -84,18 +84,19 @@ def highlight_element(element, draw_only, flash_border=False):
         True = draw only, False = blink (2sec)
     flash_border : bool
         Flash 0.3s.
+    color : str
+        Border color (default: blue)
     """
-
     js = """
            function blink(el, style) {
-               el.style.border = "5px solid blue";
+               el.style.border = "5px solid {COLOR}";
                setTimeout(function(){
                    el.style.border = style;
                }, 2000);
            }
 
            function flash(el, style) {
-               el.style.border = "5px solid blue";
+               el.style.border = "5px solid {COLOR}";
                    setTimeout(function(){
                    el.style.border = style;
                    }, 300);
@@ -112,13 +113,14 @@ def highlight_element(element, draw_only, flash_border=False):
                }
 
                else {
-                   blink(el, "5px solid blue");
+                   blink(el, "5px solid {COLOR}");
                }
            }
 
-           show(arguments[0], arguments[1], arguments[2]);
+           show(arguments[0], arguments[1], arguments[2], arguments[3]);
            """
-    execute_javascript(js, element, draw_only, flash_border)
+    js = js.replace("{COLOR}", color)
+    execute_javascript(js, element, draw_only, flash_border, color)
 
 
 def get_by_attributes(elements, locator, partial_match):
@@ -412,3 +414,89 @@ def get_clickable(locator):
     }
     return(web_elements('""" + locator.replace("\'", "\\'") + """'));"""
     return execute_javascript(js)
+
+
+def get_recursive_walk():
+    return """var recursiveWalk = function(node, func) {
+    var done = func(node);
+    if(done) {
+        return true;
+    }
+    if ('shadowRoot' in node && node.shadowRoot) {
+        var done = recursiveWalk(node.shadowRoot, func);
+        if (done) {
+            return true;
+        }
+    }
+    node = node.firstChild;
+
+    while (node) {
+        var done = recursiveWalk(node, func);
+        if (done) {
+            return true;
+        }
+        node = node.nextSibling;
+    }
+
+    }"""
+
+
+def get_text_elements_from_shadow_dom(locator, partial):
+    js = get_recursive_walk() + """
+    function find_text_from_shadow_dom(text, partial){
+        var results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+        //if (node.innerText == text) {
+        if (node.textContent.includes(text)) {
+            nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
+            if (nodetext == text) {
+                results.push(node);
+            }
+            else if (partial && nodetext.includes(text)) {
+                 results.push(node)
+            }
+        }
+        else if (node.placeholder === text || node.value === text) {
+                results.push(node)
+        }
+    });
+
+        return results;
+    }
+    return(find_text_from_shadow_dom(arguments[0], arguments[1]))"""
+    return execute_javascript(js, locator, partial)
+
+
+def get_all_input_elements_from_shadow_dom():
+    js = get_recursive_walk() + """
+    function find_all_input_elements_from_shadow_dom(){
+        var results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+            if (node.tagName == "INPUT") {
+                    results.push(node);
+            }
+
+        });
+        return results;
+    }
+
+    return(find_all_input_elements_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js)
+
+
+def get_item_elements_from_shadow_dom(tag):
+    js = get_recursive_walk() + """
+    function find_item_elements_from_shadow_dom(tag){
+        var results = [];
+        var supported_tags = tag === null ? ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT"] : [tag.toUpperCase()];
+        var elem = recursiveWalk(document.body, function(node) {
+            if (supported_tags.includes(node.tagName)) {
+                    results.push(node);
+            }
+
+        });
+        return results;
+    }
+
+    return(find_item_elements_from_shadow_dom(arguments[0], arguments[1]))"""
+    return execute_javascript(js, tag)

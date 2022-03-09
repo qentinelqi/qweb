@@ -30,7 +30,7 @@ import fnmatch
 from robot.api import logger
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, \
-    MoveTargetOutOfBoundsException
+    MoveTargetOutOfBoundsException, ElementNotInteractableException
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebValueError, \
     QWebUnexpectedConditionError, QWebInvalidElementStateError, QWebTimeoutError, \
     QWebTextNotFoundError
@@ -49,21 +49,27 @@ def write(input_element, input_text, timeout, **kwargs):  # pylint: disable=unus
         input_text, key = _remove_ending_line_break(input_text)
         kwargs['key'] = key
     check = util.par2bool(kwargs.get('check', CONFIG['CheckInputValue']))
+    kwargs['shadow_dom'] = CONFIG['ShadowDOM']
     if check is True:
         kwargs['check'] = True
         input_handler.write(input_element, input_text, **kwargs)
         time.sleep(1)
-        compare_input_values(input_element, kwargs.get('expected', input_text), timeout=2)
-        input_element.send_keys(kwargs.get('key', input_handler.line_break_key))
+        compare_input_values(input_element, kwargs.get('expected', input_text), timeout=2, **kwargs)
+        try:
+            input_element.send_keys(kwargs.get('key', input_handler.line_break_key))
+        except ElementNotInteractableException:
+            # this can happen with firefox for shadow dom elements
+            # log, but do not fail the test case as value was written correctly
+            logger.debug("Could not send line break key to input")
     else:
         input_handler.write(input_element, input_text, **kwargs)
     logger.debug('Preferred text: "{}"'.format(input_text))
 
 
 @decorators.timeout_decorator_for_actions
-def compare_input_values(input_element, expected_value, timeout):  # pylint: disable=unused-argument
+def compare_input_values(input_element, expected_value, timeout, **kwargs):  # pylint: disable=unused-argument
     try:
-        real_value = util.get_substring(input_value(input_element, timeout="0.5s"))
+        real_value = util.get_substring(input_value(input_element, timeout="0.5s", **kwargs))
     except QWebValueError:
         real_value = ""
     logger.debug('Real value: {}, expected value {}'.format(real_value, expected_value))
@@ -76,7 +82,9 @@ def compare_input_values(input_element, expected_value, timeout):  # pylint: dis
 @decorators.timeout_decorator_for_actions
 def input_value(input_element, timeout, **kwargs):
     blind = util.par2bool(kwargs.get('blind', CONFIG['BlindReturn']))
-    if input_handler.is_editable_text_element(input_element):
+    shadow_dom = CONFIG['ShadowDOM']
+
+    if input_handler.is_editable_text_element(input_element) and not shadow_dom:
         value = input_element.get_attribute('innerText')
     else:
         value = input_element.get_attribute('value')

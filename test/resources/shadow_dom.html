@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <body>
+            <script>document.addEventListener( "DOMContentLoaded", () => {
+
+                function registerCustomElement( elName, templateId ) {
+                  globalThis.customElements.define( elName, class extends HTMLElement {
+                  constructor() {
+                      super();
+                      this.attachShadow({ mode: "open" });
+                      this.shadowRoot.appendChild( document.getElementById( templateId ).content );
+                    }
+                  });
+                }
+            
+                registerCustomElement( "foo-component", "fooTemplate" );
+                registerCustomElement( "input-component", "inputTemplate" );
+                registerCustomElement( "click-component", "clickTemplate" );
+            });
+
+            function myFunction(text) {
+                alert(text);
+            }
+            </script>
+
+            <foo-component id="fooShadowRoot"></foo-component>
+            <template id="fooTemplate">
+                <div id="shadowLocalTarget">
+                    <div>Local Target in Shadow DOM</div><br><br>
+                    <div>In both DOM</div>
+                </div>
+                <custom title="Test123">*</custom> 
+            </template>
+            <input-component id="inputShadowRoot"></input-component>
+            <template id="inputTemplate">
+                <div id="shadowInputTarget">
+                    <input type="text" placeholder="What's your name" contenteditable="true"></input>
+                </div><br><br>
+                <div id="secondinput">
+                    <label id="second" for="withlabel">Input2</label>
+                    <input type="text" id="withlabel" aria-labelledby="second"></input>
+                </div>
+
+                </div>  
+            </template>
+            <click-component id="buttonShadowRoot"></click-component>
+            <template id="clickTemplate">
+                <div id="shadowClickTarget">
+                    <button id="myButton" tooltip="Click this" aria-label="Another label" onclick="myFunction('Alert from button')">Click me</button>
+                    <a href="./alert.html">Link</a>
+
+                </div>  
+            </template>
+            <input type="text" placeholder="username" />
+            <span>In both DOM</span>
+        </body>
+    </head>
+
+
+</html>
+

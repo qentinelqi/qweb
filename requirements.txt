@@ -12,6 +12,6 @@ requests==2.27.1
 slate3k==0.5.3
 scipy>=1.7.3
 scikit-image==0.19.1
-pyobjc-core==8.2; sys_platform == "darwin"
-pyobjc==8.2; sys_platform == "darwin"
+pyobjc-core==8.3; sys_platform == "darwin"
+pyobjc==8.3; sys_platform == "darwin"
 

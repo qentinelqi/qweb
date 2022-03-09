@@ -20,6 +20,7 @@ import os
 import pyperclip
 from robot.api import logger
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import ElementNotInteractableException
 from QWeb.internal.exceptions import QWebInvalidElementStateError, QWebValueError,\
     QWebEnvironmentError
 from QWeb.internal import javascript
@@ -57,6 +58,7 @@ class InputHandler:
         # we avoid triggering focus events right after
         # clear and trigger them only on send_keys call.
         clear_key = self.check_key(kwargs.get('clear_key', self.clear_key))
+        shadow_dom = kwargs.get('shadow_dom', False)
         if not clear_key:
             if self.is_editable_text_element(input_element):
                 javascript.execute_javascript('arguments[0].innerText=""', input_element)
@@ -64,7 +66,16 @@ class InputHandler:
                 javascript.execute_javascript("arguments[0].value = \"\"", input_element)
         else:
             input_element.send_keys(clear_key)
-        write(input_element, input_text)
+        try:
+            write(input_element, input_text)
+        # workaround for Firefox shadow dom inputs not always being reachable
+        except ElementNotInteractableException as e:
+            if shadow_dom:
+                javascript.execute_javascript(f'arguments[0].value = "{input_text}"', input_element)
+                kwargs['key'] = None
+            else:
+                raise e from e
+
         if 'check' not in kwargs:
             line_break = kwargs.get('key', self.check_key(self.line_break_key))
             if line_break:
