@@ -46,41 +46,26 @@ Homebrew. Open new terminal window and type:
     brew install ffmpeg
 ```
 
-## 4. Install scipy
-Go back to terminal where you have Python 3.9 environment activated. Use conda to install correct version of scipy
-package:
-```bash
-    conda install scipy=1.5.*
-```
-
-## 5. Clone QWeb (but don't install yet!)
+## 4. Clone QWeb (but don't install yet!)
 Go to your project folder and clone QWeb from GitHub:
 ```bash
     git clone https://github.com/qentinelqi/qweb.git
 ```
 If git is not found you can install it with Homebrew.
 
-## 6. Install scikit-image and change version requirement
-Install scikit-image with conda:
+## 5. Install scikit-image
+Install scikit-image with conda, currently the required version is 0.19.1:
 ```bash
-    conda install scikit-image
+    conda install scikit-image==0.19.1
 ```
-Use pip to check the version of scikit-image package:
-```bash
-    pip list
-```
-Open *qweb/requirements.txt* and *qweb/setup.py* files to editor and find lines where scikit-image is mentioned for
-Python versions greater than 3.6. Change the version to the one you have in your environment.
 
-## 7. Install QWeb
-Now QWeb can be installed to the environment. Installation needs to happen from the local clone where requirements
-were modified in previous steps:
+## 6. Install QWeb
+Now QWeb can be installed to the environment. Installation needs to happen from the local clone:
  ```bash
-    cd qweb
-    pip install -e .
+    pip install -e <path to local QWeb project>
 ```
 
-## 8. Install browser driver
+## 7. Install browser driver
 The last step is to use webdriver manager to install chromedriver. Install webdriver manager using pip:
  ```bash
     pip install webdrivermanager
