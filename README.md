@@ -23,6 +23,7 @@
   - [Keyword documentation](#keyword-documentation)
   - [Examples](#examples)
     - [Basic usage](#basic-usage)
+    - [Shadow DOMs and visibility](#shadow-doms-and-visibility)
     - [Timeouts and anchors](#timeouts-and-anchors)
     - [Other locators](#other-locators)
     - [Working with tables](#working-with-tables)
@@ -107,6 +108,26 @@ Basic interaction
     ClickText           Add to cart                                     # Click *button* with specific text
     DropDown            Size            Large                           # Select value (Large) from dropdown (Size)
 
+```
+#### Shadow DOMs and visibility
+Most common cases when text or element is not found are:
+- Element has (incorrectly?) some attribute set so, that it's considered invisible.
+- Element is under shadow dom (i.e. has #shadow-root parent element)
+
+QWeb searches for visible elements by default, but can be instructed to work with invisible elements as well. See keyword documentation of **SetConfig** and the following parameters:
+- Visibility
+- Offsetcheck
+- InViewport
+
+Elements under shadow DOM can not be found using xpaths. However, all *Text, *Item and *Input keywords do support extending the search to Shadow DOM elements. We intentionally keep this under separate setting for ensuring compatibility with older test cases. 
+
+Example:
+```RobotFramework
+*** Settings ***
+Library    QWeb     # Import library
+SetConfig            ShadowDOM            True  # extends search to shadow dom elements
+OpenBrowser          chrome://settings/content/popups   chrome
+ClickText            Sites can send pop-ups 
 ```
 
 #### Timeouts and anchors

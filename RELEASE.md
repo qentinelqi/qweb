@@ -5,12 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [2.0.0rc1] - 2022-03-10
 ### Changed
 - Moved to Selenium 4
-- Ended support for Python 3.6
+- Removed support for Python 3.6
 - Added support for Python 3.10
 - Updated dependencies
 - Enhanced support for M1 Macs
+- Added support for extending element searches to shadow dom
+  - This can be enabled using `SetConfig    ShadowDOM   True` 
+  - All *Text, *Item and *Input keywords are supported
+  - Note: *Element keywords are not supported, as xpaths do not work with shadow doms.
+- Added summary table to **SetConfig** documentation to make it easier to understand which kind of configurations are possible
+- Added ability to change element hightlight color when needed. Example `SetConfig   HighlightColor    orange`  
 
 ## [1.2.5] - 2022-02-02
 ### Fixed
