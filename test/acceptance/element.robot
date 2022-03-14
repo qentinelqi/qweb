@@ -68,7 +68,7 @@ IsElementFound 3
     ${found}=                   IsElement                   xpath=//*[@id\="hover_me"]
     Should Be Equal             ${found}                    ${TRUE}
 
-IsElementFound 3
+IsElementFound 4
     ${found}=                   IsElement                   xpath=//*[@id="hover_me"]
     Should Be Equal             ${found}                    ${TRUE}
 
