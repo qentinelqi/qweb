@@ -37,15 +37,39 @@ Click Element by xpath 2
     ClickElement                xpath\=//*[@value\="Button4"]
     VerifyText                  Button4 was clicked
 
+Click Element by xpath 3
+    Go To                       file://${CURDIR}/../resources/text.html
+    Verify No Text              Button4 was clicked
+    ClickElement                xpath=//*[@value\="Button4"]
+    VerifyText                  Button4 was clicked
+
+Click Element by xpath 4
+    Go To                       file://${CURDIR}/../resources/text.html
+    Verify No Text              Button4 was clicked
+    ClickElement                xpath=//*[@value="Button4"]
+    VerifyText                  Button4 was clicked
+
 Click Element by WebElement instance
     [Tags]                      WebElement
     Go To                       file://${CURDIR}/../resources/text.html
     ${elem}=                    GetWebElement               Button4                        element_type=text
-    ClickElement                xpath\=//*[@value\="Button4"]
+    ClickElement                ${elem}
     VerifyText                  Button4 was clicked
 
 IsElementFound
     ${found}=                   IsElement                   //*[@id\="hover_me"]
+    Should Be Equal             ${found}                    ${TRUE}
+
+IsElementFound 2
+    ${found}=                   IsElement                   xpath\=//*[@id\="hover_me"]
+    Should Be Equal             ${found}                    ${TRUE}
+
+IsElementFound 3
+    ${found}=                   IsElement                   xpath=//*[@id\="hover_me"]
+    Should Be Equal             ${found}                    ${TRUE}
+
+IsElementFound 3
+    ${found}=                   IsElement                   xpath=//*[@id="hover_me"]
     Should Be Equal             ${found}                    ${TRUE}
 
 IsElementFoundDelay
