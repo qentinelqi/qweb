@@ -177,6 +177,23 @@ def _equal_sign_handler(args, kwargs, function_name):
             kwargs.clear()
     try:
         locator = args[0]
-    except IndexError as ie:
-        raise QWebElementNotFoundError("Use \\= instead of = in xpaths") from ie
+    except IndexError:
+        for key, value in kwargs.items():
+            # if present these are always the first argument
+            if key in ('locator', 'xpath', 'steps',
+                        'image', 'input_texts', 'input_values',
+                        'text', 'coordinates', 'texts_to_verify',
+                        'url', 'title'):
+                locator = value
+                break
+        else:
+            # index can be unnamed first argument or named argument
+            locator = kwargs.get('index', None)
+        
+        # The only decorated method with locator as NOT the first argument
+        if str(function_name) == "scroll_to":
+            locator = kwargs.get('text_to_find', None)
+        
+    if locator is None:
+        raise QWebElementNotFoundError("If xpath is an unnamed argument you need to escape '=' characters in xpath: '//div[@class\\=\"name\"]'\nOr you can give xpath as a named argument: 'xpath=//div[@class=\"name\"]'")
     return args, kwargs, locator
