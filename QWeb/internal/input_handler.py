@@ -122,7 +122,7 @@ class InputHandler:
             return None
         if key == '{PASTE}':
             return pyperclip.paste()
-        hotkey = ""
+        hotkey = []
         if key.startswith('{') and key.endswith('}'):
             key = key[1:-1].upper()
             if '+' in key:
@@ -132,7 +132,7 @@ class InputHandler:
                         key = getattr(Keys, k.strip())
                     except AttributeError:
                         key = k.lower().strip()
-                    hotkey += key
+                    hotkey.append(key)
                 return hotkey
             key = getattr(Keys, key)
         return key

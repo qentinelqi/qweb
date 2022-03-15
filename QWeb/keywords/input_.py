@@ -22,9 +22,11 @@ Input elements are those in which one can input text in.
 from robot.api import logger
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
-from QWeb.internal import secrets, actions, util
+from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
+from QWeb.keywords import browser
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 
 
@@ -683,10 +685,21 @@ def press_key(locator, key, anchor="1", timeout='0', **kwargs):
     ----------------
     \`TypeSecret\`, \`TypeText\`, \`WriteText\`
     """
+    driver = browser.return_browser()
+    action = ActionChains(driver)
     try:
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=1, **kwargs)
         key = input_handler.check_key(key)
-        input_element.send_keys(key)
+
+        is_safari = driver.capabilities['browserName'].lower() in browser.safari.NAMES
+        if key[0] == '\ue03d' and is_safari:  # COMMAND key workaround on safari
+            javascript.execute_javascript("arguments[0].focus();", input_element)
+            action.key_down(key[0]) \
+                  .send_keys(key[1]) \
+                  .key_up(key[0]).perform()
+        else:
+            input_element.send_keys(key)
     except AttributeError as e:
+        logger.console(e)
         raise QWebValueError('Could not find key "{}"'.format(key)) from e

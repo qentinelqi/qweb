@@ -63,7 +63,7 @@ jobs:
         Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
         matchbox-window-manager -use_titlebar no &
         python -c "import pyautogui; print(pyautogui.size())"
-        python -m robot --exitonfailure -e jailed -v BROWSER:Chrome -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_LINUX -v BROWSER:Chrome -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
     - name: Acceptance tests Firefox
       if: matrix.browser == 'firefox'
       run: |
@@ -71,7 +71,7 @@ jobs:
         Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
         matchbox-window-manager -use_titlebar no &
         python -c "import pyautogui; print(pyautogui.size())"
-        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_FIREFOX -v BROWSER:Firefox -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_LINUX -e PROBLEM_IN_FIREFOX -v BROWSER:Firefox -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v1

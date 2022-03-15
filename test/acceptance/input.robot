@@ -326,6 +326,19 @@ PressKey test hotkeys
     PressKey                username              {CONTROL + V}
     VerifyInputValue        username              Kalakalle
 
+PressKey test hotkeys - Mac
+    [documentation]         Use keyboard shortcuts with press key
+    [tags]                  PROBLEM_IN_WINDOWS    PROBLEM_IN_LINUX
+    RefreshPage
+    TypeText                The Brave             Kalakalle
+    VerifyInputValue        The Brave             Kalakalle
+    PressKey                The Brave             {COMMAND + A}
+    PressKey                The Brave             {COMMAND + C}
+    PressKey                The Brave             {BACKSPACE}
+    VerifyInputValue        The Brave             ${EMPTY}
+    PressKey                username              {COMMAND + V}
+    VerifyInputValue        username              Kalakalle
+
 GetInputValue get substring
     TypeText                username                Write some random words and number 25.11.2019
     ${substring}            GetInputValue           username    between=some???words
