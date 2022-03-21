@@ -40,7 +40,7 @@ Type text to table and verify values
     ...   VerifyInputValue              r4c4        2019-02-23          timeout=1
 
 Get Cell Value to variable
-    [Tags]                  PROBLEM_IN_SAFARI
+    [Tags]
     UseTable                Sample
     ${TEST}                 GetCellText             r2c3
     ShouldBeEqual           ${TEST}                 ${EMPTY}
