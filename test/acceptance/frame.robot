@@ -10,14 +10,16 @@ ${BROWSER}                      chrome
 
 *** Test Cases ***
 Refresh Page
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame    Refresh
     ClickText                   Button1
     VerifyText                  Button1 was clicked
     RefreshPage
-    VerifyNoText                Button1 was clicked
+    VerifyNoText                Button1 was clicked    timeout=5
+    SetConfig                   StayInCurrentFrame    False
+    VerifyText                  Text in frame
 
 Back & Forward
-    [Tags]
+    [Tags]                      Frame    Back    Forward
     GoTo                        about:blank
     VerifyUrl                   about:blank
     VerifyNoText                Button1
@@ -32,14 +34,14 @@ Back & Forward
     Back
 
 Use Frame And Use Page
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame
     VerifyText                  Text not in frame
     VerifyText                  Text in frame
     VerifyText                  Text not in frame
     VerifyText                  Text in frame
 
 Automatic frame search text elements
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame                   
     SetConfig                   DefaultDocument             True
     VerifyNoText                Button3 was clicked
     ScrollText                  Button3
@@ -48,7 +50,7 @@ Automatic frame search text elements
     ScrollText                  Input fields with
 
 Automatic frame search input elements
-    [tags]                      inputs                      PROBLEM_IN_SAFARI
+    [tags]                      inputs                      
     TypeText                    First input                 Robot
     TypeText                    Second input                QENROB
     TypeText                    Cell 1 input                20022019
@@ -63,7 +65,7 @@ Automatic frame search input elements
     ShouldbeEqual               ${value}                    I'am catching you too..
 
 Automatic frame search table elements
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame
     UseTable                    Sample
     TypeText                    r4c1                        Qentiro
     TypeText                    r4c2                        Robot
@@ -78,7 +80,7 @@ Automatic frame search table elements
 
 
 Automatic frame search checkbox elements
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame
     SetConfig                   CSSSelectors                off
     VerifyCheckboxStatus        I have a bike               enabled
     VerifyCheckboxStatus        I should be disabled        disabled
@@ -94,7 +96,7 @@ Automatic frame search checkbox elements
     VerifyCheckboxValue         I have a car                off
 
 Automatic frame search dropdown elements
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame
     SetConfig                   CSSSelectors                on
     Dropdown                    label without               Rules
     VerifySelectedOption        label without               Rules
@@ -102,7 +104,7 @@ Automatic frame search dropdown elements
     VerifyOption                label without               Qentinel
 
 Automatic frame search back and forth between frames
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame                
     Dropdown                    label without               Rules
     VerifySelectedOption        label without               Rules
     TypeText                    First input                 Robot
@@ -117,19 +119,19 @@ Automatic frame search back and forth between frames
     ScrollText                  Input fields with
 
 IsText in different frame
-    [Tags]                      istext                      PROBLEM_IN_SAFARI
+    [Tags]                      istext
     ClickCheckbox               I have a bike               on
     ${found}=                   IsText                      Last name:
     Should Be Equal             ${found}                    ${TRUE}
 
 IsNoText in different frame
-    [Tags]                      istext                      PROBLEM_IN_SAFARI
+    [Tags]                      istext
     ClickCheckbox               I have a bike               on
     ${notfound}=                IsNoText                    Last name:                  0.1s
     Should Be Equal             ${notfound}                 ${FALSE}
 
 Upload files with index
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame    Upload
     UploadFile                  1                           test1.txt
     ExecuteJavaScript           return document.querySelector('#myFile1').value         $value
     ShouldBeEqual               ${value}                    C:\fakepath\test1.txt
@@ -138,12 +140,13 @@ Upload files with index
     ShouldBeEqual               ${value}                    C:\fakepath\test2.txt
 
 Upload files with locator
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Frame    Upload
     UploadFile                  Uploadme                    test1.txt
     ExecuteJavaScript           return document.querySelector('#myFile1').value         $value
     ShouldBeEqual               ${value}                    C:\fakepath\test1.txt
 
 Upload with xpath
+    [Tags]                      Frame    Upload
     UploadFile                  //*[@id\='myFile3']         test2.txt
     ExecuteJavaScript           return document.querySelector('#myFile3').value         $value
     ShouldBeEqual               ${value}                    C:\fakepath\test2.txt

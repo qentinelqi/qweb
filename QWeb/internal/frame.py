@@ -28,7 +28,7 @@ from QWeb.keywords import config
 import QWeb.internal.frame_checker as fc
 from QWeb.internal.exceptions import QWebDriverError, QWebElementNotFoundError, \
                                      QWebTimeoutError, QWebBrowserError, FATAL_MESSAGES
-from QWeb.internal import xhr, browser
+from QWeb.internal import xhr, browser, util
 from QWeb.internal.config_defaults import CONFIG
 
 
@@ -154,6 +154,7 @@ def set_html_source_count(value):
     BuiltIn().set_global_variable("${html_source_count}", value)
 
 
+# pylint: disable=R0915
 def all_frames(fn):
     """Decorator that takes any func as a parameter.
 
@@ -207,7 +208,63 @@ def all_frames(fn):
                 return web_element
             driver.switch_to.default_content()
             raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
-        return search_from_frames()
+
+        # pylint: disable=W0102
+        def search_from_frames_safari(driver=None, current_frame=None, parent_tree=[]):
+            keep_frame = kwargs.get('stay_in_current_frame', CONFIG['StayInCurrentFrame'])
+            if keep_frame:
+                return fn(*args, **kwargs)
+            err = None
+            if not driver:
+                driver = browser.get_current_browser()
+                driver.switch_to.default_content()
+            if current_frame is not None:
+                try:
+                    driver.switch_to.frame(current_frame)
+                    logger.debug('switching to childframe {}'.format(str(fn)))
+                except (StaleElementReferenceException, WebDriverException) as e:
+                    logger.warn(e)
+                    driver.switch_to.default_content()
+                    raise e
+            try:
+                web_element = fn(*args, **kwargs)
+            except QWebElementNotFoundError as e:
+                err = e
+                web_element = None
+            if is_valid(web_element):
+                return web_element
+            start = time.time()
+            timeout = CONFIG['FrameTimeout']
+            while time.time() < timeout + start:
+                frames = fc.check_frames(driver)
+                for count, frame in enumerate(frames):  # pylint: disable=W0612
+                    parent_tree.append(count)
+                    # using count instead of frame reference due to Safari bug
+                    web_element = search_from_frames_safari(driver=driver,
+                                                            current_frame=count,
+                                                            parent_tree=parent_tree)
+                    if is_valid(web_element):
+                        logger.debug('Found webelement = {}'.format(web_element))
+                        return web_element
+                    try:
+                        # switch_to.parent_frame not working in Safari
+                        # doing moving to previuos frame "manually"
+                        parent_tree.pop()
+                        driver.switch_to.default_content()
+                        for f in parent_tree:
+                            driver.switch_to.frame(f)
+                    except WebDriverException as e:
+                        driver.switch_to.default_content()
+                        raise e
+                    config.set_config('FrameTimeout', float(timeout + start - time.time()))
+                    logger.trace('Frame timeout: {}'.format(timeout))
+                if err:
+                    raise err
+                return web_element
+            driver.switch_to.default_content()
+            raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
+
+        return search_from_frames_safari() if util.is_safari() else search_from_frames()
     logger.debug('wrapped = {}'.format(wrapped))
     return wrapped
 
