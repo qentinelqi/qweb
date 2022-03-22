@@ -14,11 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 from robot.api import logger
 from robot.api.deco import keyword
 from selenium.common.exceptions import NoSuchWindowException
-from QWeb.internal import browser, javascript, xhr, window, decorators
+from QWeb.internal import browser, javascript, xhr, window, decorators, util
+from QWeb.internal.browser.safari import open_windows
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 from QWeb.internal.config_defaults import CONFIG
 
@@ -76,10 +76,21 @@ def open_window():
     script = 'window.open()'
     javascript.execute_javascript(script)
     window_handles = window.get_window_handles()
+    logger.debug(f'available handles: {len(window_handles)}')
+
     current_window_handle = window.get_current_window_handle()
+
+    # make ordered list for safari
+    if util.is_safari():
+        # refresh all windows, not just the ones we have tracked as open
+        window.append_new_windows_safari()
+        window_handles = window.get_window_handles()
+
     index = window_handles.index(current_window_handle)
     new_window_index = index + 1
+
     window.switch_to_window(window_handles[new_window_index])
+
     try:
         xhr.setup_xhr_monitor()
     except QWebDriverError:
@@ -112,7 +123,6 @@ def close_others():
     logger.info("Current browser has {} tabs".format(len(window_handles)))
     if len(window_handles) == 1:
         return
-
     driver = browser.get_current_browser()
     while len(window_handles) > 1:
         try:
@@ -121,7 +131,8 @@ def close_others():
             driver.close()
         except NoSuchWindowException:
             logger.info('Failed to close window')
-    first_window_handle = window_handles.pop()
+    first_window_handle = window_handles[0] if util.is_safari() \
+        else window_handles.pop()
     window.switch_to_window(first_window_handle)
 
     number_of_handles = len(window.get_window_handles())
@@ -151,6 +162,8 @@ def close_window():
     logger.info("Current browser has {} tabs".format(len(window_handles)))
     if len(window_handles) == 1:
         logger.info("Only one tab, handle closing without changing context")
+        if util.is_safari():
+            open_windows.clear()
         browser.remove_from_browser_cache(driver)  # remove from browser cache
         driver.close()
     else:
@@ -159,6 +172,8 @@ def close_window():
         current_window = window.get_current_window_handle()
         current_index = window_handles.index(current_window)
         logger.info("Current index {}".format(current_index))
+        if util.is_safari():
+            open_windows.remove(current_window)
         driver.close()
         # "refresh" window handles
         window_handles = window.get_window_handles()
@@ -205,6 +220,9 @@ def switch_window(index, timeout=0):  # pylint: disable=unused-argument
     ----------------
     \`CloseBrowser\`, \`CloseWindow\`, \`CloseOthers\`, \`GoTo\`, \`OpenWindow\`
     """
+    # safari specific, refresh windows not open by keywords
+    if util.is_safari():
+        window.append_new_windows_safari()
     window_handles = window.get_window_handles()
     logger.info("Current browser contains {} tabs".format(len(window_handles)))
     if index.isdigit():

@@ -110,9 +110,7 @@ def execute_click_and_verify_condition(web_element, text_appear=True, **kwargs):
         timeout = How long we are trying if element is not enabled or some other error exists
         js = if js parameter exists, try javascript click instead of selenium
     """
-    driver = browser.get_current_browser()
-    is_safari = driver.capabilities['browserName'].lower() in browser.safari.NAMES
-    js = True if is_safari else util.par2bool(kwargs.get('js', False))
+    js = True if util.is_safari() else util.par2bool(kwargs.get('js', False))
     dbl_click = util.par2bool(kwargs.get('doubleclick', CONFIG["DoubleClick"]))
     if web_element.is_enabled():
         try:
@@ -303,8 +301,7 @@ def get_select_options(select, expected=None, **kwargs):  # pylint: disable=unus
 @decorators.timeout_decorator_for_actions
 def hover_to(web_element, timeout=0):  # pylint: disable=unused-argument
     driver = browser.get_current_browser()
-    # firefox specific fix
-    #if driver.capabilities['browserName'].lower() in browser.firefox.NAMES:
+    # firefox & safari specific fix
     needs_js_scroll = [x for x in [browser.firefox.NAMES, browser.safari.NAMES]
                        if driver.capabilities['browserName'].lower() in x]
     if needs_js_scroll:

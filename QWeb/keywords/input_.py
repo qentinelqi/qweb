@@ -692,8 +692,7 @@ def press_key(locator, key, anchor="1", timeout='0', **kwargs):
             locator, anchor, timeout=timeout, index=1, **kwargs)
         key = input_handler.check_key(key)
 
-        is_safari = driver.capabilities['browserName'].lower() in browser.safari.NAMES
-        if key[0] == '\ue03d' and is_safari:  # COMMAND key workaround on safari
+        if key[0] == '\ue03d' and util.is_safari():  # COMMAND key workaround on safari
             javascript.execute_javascript("arguments[0].focus();", input_element)
             action.key_down(key[0]) \
                   .send_keys(key[1]) \

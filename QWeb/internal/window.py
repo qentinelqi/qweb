@@ -15,8 +15,9 @@
 # limitations under the License.
 # ---------------------------
 
-from QWeb.internal import browser, text
+from QWeb.internal import browser, text, util
 from QWeb.internal.exceptions import QWebDriverError
+from QWeb.internal.browser.safari import open_windows
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from robot.api import logger
@@ -28,7 +29,7 @@ def get_window_handles():
     if driver is None:
         raise QWebDriverError("No browser open. Use OpenBrowser keyword"
                               " to open browser first")
-    return driver.window_handles
+    return open_windows if util.is_safari() else driver.window_handles
 
 
 def get_current_window_handle():
@@ -37,6 +38,17 @@ def get_current_window_handle():
         raise QWebDriverError("No browser open. Use OpenBrowser keyword"
                               " to open browser first")
     return driver.current_window_handle
+
+
+def append_new_windows_safari():
+    """ Safari returns window handles in random order.
+        We must keep track of opened windows in safari.
+        This function will append new open windows to global list."""
+    driver = browser.get_current_browser()
+    all_handles = driver.window_handles
+    for i in all_handles:
+        if i not in open_windows:
+            open_windows.append(i)
 
 
 def get_url():
