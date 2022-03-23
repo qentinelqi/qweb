@@ -70,11 +70,13 @@ Type Text
     VerifyInputValue        xpath\=//input[@id\="r2c2"]   22
 
 Type Text Another Input Field To The Left
+    [Tags]                  jailed
     Log                     Not implemented correctly yet
     #TypeText               row1column3             13
     #VerifyInputValue       xpath\=//input[@id\="r1c3"]   13
 
 Type Text into Tel Type Inputbox
+    [Tags]                  PROBLEM_IN_SAFARI
     SetConfig               CSSSelectors            False
     TypeText                row2column4             33
     VerifyInputValue        xpath\=//input[@id\="r2c3"]   33
@@ -86,6 +88,7 @@ TypeText but box id delayed
     VerifyInputValue        //*[@id\='hide']         not hidden
 
 Verify Input Value Empty
+    [Tags]                  jailed
     Log                     Not implemented correctly yet
     #VerifyInputValue       row1column1             ${EMPTY}
 
@@ -140,7 +143,7 @@ VerifyInputStatus enabled when ReadOnly exists
     ...     VerifyInputStatus   ronly   readonly  timeout=0.2s
 
 Verify Input Handler
-    [Tags]                  PROBLEM_IN_WINDOWS
+    [Tags]                  PROBLEM_IN_WINDOWS    PROBLEM_IN_SAFARI
     SetConfig               InputHandler            raw
     TypeText                username                Qentinel
     SetConfig               InputHandler            selenium
@@ -172,14 +175,14 @@ Verify search strategy placeholders
     ...   SetConfig               MatchingInputElement       //*[@type\="{} {0}"]
 
 Set Line Break Tab
-    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_SAFARI	PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_FIREFOX
     SetConfig               LineBreak               \t
     VerifyNoText            on focus
     TypeText                end-key                 dummytext
     VerifyNoText            on focus
 
 Set Line Break Empty
-    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_SAFARI     empty_line_break	PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_WINDOWS      empty_line_break	PROBLEM_IN_FIREFOX
     SetConfig               LineBreak               \ue000
     VerifyNoText            on focus
     TypeText                end-key                 dummytext
@@ -187,7 +190,7 @@ Set Line Break Empty
     RefreshPage
 
 Set Line Break Empty 2
-    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_SAFARI     empty_line_break	PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_WINDOWS      empty_line_break	PROBLEM_IN_FIREFOX
     SetConfig               LineBreak               Empty
     VerifyNoText            on focus
     TypeText                end-key                 dummytext
@@ -195,7 +198,7 @@ Set Line Break Empty 2
     RefreshPage
 
 Set Line Break Empty 3
-    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_SAFARI     empty_line_break	PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_WINDOWS      empty_line_break	PROBLEM_IN_FIREFOX
     SetConfig               LineBreak               None
     VerifyNoText            on focus
     TypeText                end-key                 dummytext
@@ -203,7 +206,7 @@ Set Line Break Empty 3
     RefreshPage
 
 Set Line Break Empty 4
-    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_SAFARI     empty_line_break	PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_WINDOWS      empty_line_break	PROBLEM_IN_FIREFOX
     SetConfig               LineBreak               Null
     VerifyNoText            on focus
     TypeText                end-key                 dummytext
@@ -211,7 +214,7 @@ Set Line Break Empty 4
     RefreshPage
 
 Set Line Break None
-    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_SAFARI	PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_WINDOWS      PROBLEM_IN_FIREFOX
     # first we need to clear the focus from previous test case
     SetConfig               LineBreak               \t
     TypeText                end-key                 dummytext
@@ -388,7 +391,7 @@ TypeTexts and VerifyInputValues
     VerifyInputValues    test4.txt
 
 TypeTexts and VerifyInputValues fail
-    [tags]	PROBLEM_IN_FIREFOX
+    [tags]	PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
     ${message}=  Set Variable  QWebValueError: Unknown input value. Text file or*
     Run Keyword And Expect Error        ${message}
     ...    VerifyInputValues    bad_parameter.xlsx

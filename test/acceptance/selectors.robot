@@ -16,6 +16,7 @@ Use selector attribute instead of xpath syntax
     HoverElement            screen          selector=data-icon
     ClickElement            screen          selector=data-icon
     VerifyText              Clicks: 1
+    HoverText               Flow
     DropDown                dropdown9       optionx        selector=id
     VerifySelectedOption    dropdown9       optionx        selector=id
 

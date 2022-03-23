@@ -313,7 +313,7 @@ def close_all_browsers():
     BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
 
     # safari specific
-    safari.open_windows = []
+    safari.open_windows.clear()
 
     # Set 'Headless' flag as False, since no session open anymore
     CONFIG.set_value('Headless', False)
