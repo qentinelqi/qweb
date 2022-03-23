@@ -49,6 +49,7 @@ Test Dropdown Keyword With Value
     [Documentation]             Tests choosing dropdown with value instead of text, with CSSSelectors on
     ...                         and off.
     VerifyNotext                bear
+    HoverText                   Joulupukki
     Dropdown                    Joulupukki                  bear
     VerifyText                  bear
     VerifyNoText                boar
