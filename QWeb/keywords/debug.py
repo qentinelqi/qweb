@@ -56,7 +56,7 @@ def debug_on(mode='draw'):
     CONFIG.set_value('DefaultTimeout', 2)
     CONFIG.set_value('Debug_Run', True)
     dbg.debug()
-
+    CONFIG.set_value('DefaultTimeout', cur_timeout)
 
 @keyword(tags=("Debug", "Error handling"))
 def debug_off():
