@@ -40,7 +40,8 @@ Swipe with starting points and verify images
     VerifyIcon      person
 
 ScrollTo
-    [Tags]            ScrollTo
+    [Tags]            ScrollTo  RESOLUTION_DEPENDENCY
+    SetConfig         WindowSize   1600x900
     GoTo              file://${CURDIR}/../resources/text.html
     ScrollTo          Current scroll
     # Verify that we have scrolled (default text "scroll the window" has vanished)
