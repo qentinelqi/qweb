@@ -19,8 +19,13 @@
                 registerCustomElement( "click-component", "clickTemplate" );
             });
 
-            function myFunction(text) {
-                alert(text);
+            function myFunction() {
+                var x = document.getElementById("hiddenEL");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
             }
             </script>
 
@@ -47,13 +52,14 @@
             <click-component id="buttonShadowRoot"></click-component>
             <template id="clickTemplate">
                 <div id="shadowClickTarget">
-                    <button id="myButton" tooltip="Click this" aria-label="Another label" onclick="myFunction('Alert from button')">Click me</button>
+                    <button id="myButton" tooltip="Click this" aria-label="Another label" onclick="myFunction()">Click me</button>
                     <a href="./alert.html">Link</a>
 
                 </div>  
             </template>
             <input type="text" placeholder="username" />
             <span>In both DOM</span>
+            <div style="display:none" id="hiddenEL">This should be hidden</div>
         </body>
     </head>
 
