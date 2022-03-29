@@ -38,6 +38,26 @@ from robot.output.logger import LOGGER
 from robot.libraries.BuiltIn import BuiltIn
 
 
+def _replace_keyword_args(keyword, args):
+    """Replace keyword args with the provided args
+
+    This function was added to support also RFW 4.0/5.0 RFW changes.
+    """
+    try:
+        keyword.args = args
+        return
+
+    except AttributeError:
+        # Robot Framework 4.0/5.0 has ModelCombiner object that fails with this
+        pass
+
+    # Update according to the ModelCombiner object interface
+    if hasattr(keyword.result, 'args'):
+        setattr(keyword.result, 'args', args)
+    if hasattr(keyword.data, 'args'):
+        setattr(keyword.data, 'args', args)
+
+
 def _filtered_start_keyword(keyword):
     """Modify Robot FW internal function "start_keyword".
 
@@ -47,23 +67,24 @@ def _filtered_start_keyword(keyword):
     # pylint: disable=protected-access, global-statement
     global log_level
     apply_filter = keyword.kwname in filtered_keywords
+    original_args = keyword.args
     if apply_filter:
         par_index, secret = filtered_keywords[keyword.kwname]
-        keyword = keyword.deepcopy()
-        keyword.args = list(keyword.args)
+        censored_args = list(keyword.args)
         if secret == 'hint':
-            keyword.args[par_index] = 'SECRET'
+            censored_args[par_index] = 'SECRET'
         else:
-            keyword.args[par_index] = "*" * 5
+            censored_args[par_index] = "*" * 5
+
+        _replace_keyword_args(keyword, tuple(censored_args))
+
     LOGGER._started_keywords += 1
     LOGGER.log_message = LOGGER._log_message
-    for logger in LOGGER.start_loggers:
-        try:
-            logger.start_keyword(keyword)
-        except AttributeError:
-            # AttributeError is raised on RFW 4.x under debugger
-            pass
+    for start_logger in LOGGER.start_loggers:
+        start_logger.start_keyword(keyword)
+
     if apply_filter:
+        _replace_keyword_args(keyword, tuple(original_args))
         b = BuiltIn()
         # Disable logging and store previous log level
         if 'INFO' not in b.get_variables()['${LOG_LEVEL}']:
@@ -78,23 +99,28 @@ def _filtered_end_keyword(keyword):
     This function removes secret data from "end keyword"
     logs and returns previous log level.
     """
-    # pylint: disable=protected-access, global-statement, global-variable-not-assigned
-    global log_level
+    # pylint: disable=protected-access, global-statement
     apply_filter = keyword.kwname in filtered_keywords
+    original_args = keyword.args
     if apply_filter:
         par_index, secret = filtered_keywords[keyword.kwname]
-        keyword = keyword.deepcopy()
-        keyword.args = list(keyword.args)
+        censored_args = list(keyword.args)
         if secret == 'hint':
-            keyword.args[par_index] = 'SECRET'
+            censored_args[par_index] = 'SECRET'
         else:
-            keyword.args[par_index] = "*" * 5
+            censored_args[par_index] = "*" * 5
+
+        _replace_keyword_args(keyword, tuple(censored_args))
+
     LOGGER._started_keywords -= 1
-    for logger in LOGGER.end_loggers:
-        logger.end_keyword(keyword)
+    for end_logger in LOGGER.end_loggers:
+        end_logger.end_keyword(keyword)
+
     if not LOGGER._started_keywords:
         LOGGER.log_message = LOGGER.message
+
     if apply_filter:
+        _replace_keyword_args(keyword, tuple(original_args))
         b = BuiltIn()
         # Return previous log level
         b.set_log_level(log_level)
@@ -122,6 +148,7 @@ try:
     debugfile_log = LOGGER._other_loggers[0].log_message    # pylint: disable=protected-access
 except IndexError:
     debugfile_log = False
+
 
 # Monkey patch Robot FW methods
 LOGGER.start_keyword = _filtered_start_keyword

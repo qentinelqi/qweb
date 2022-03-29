@@ -58,6 +58,7 @@ def debug_on(mode='draw'):
     dbg.debug()
     CONFIG.set_value('DefaultTimeout', cur_timeout)
 
+
 @keyword(tags=("Debug", "Error handling"))
 def debug_off():
     r"""Exit debugger. Set timeout and SearchMode back to default.
