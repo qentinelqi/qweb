@@ -28,7 +28,7 @@ Basic inteactions with Shadow DOM
     ClickText              Click me
     VerifyAlertText        Alert from button
     CloseAlert             Accept
-    ClickText              Link
+    ClickText              Link                        delay=2
     VerifyText             Alert popup
 
 
