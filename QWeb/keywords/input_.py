@@ -692,7 +692,10 @@ def press_key(locator, key, anchor="1", timeout='0', **kwargs):
             locator, anchor, timeout=timeout, index=1, **kwargs)
         key = input_handler.check_key(key)
 
-        if key[0] == '\ue03d' and util.is_safari():  # COMMAND key workaround on safari
+        # COMMAND key workaround on safari
+        # supports normal text field CMD operations only
+        # (i.e. CMD+C, CMD+A, CMD+V etc.)
+        if len(key) == 2 and key[0] == '\ue03d' and util.is_safari():
             javascript.execute_javascript("arguments[0].focus();", input_element)
             action.key_down(key[0]) \
                   .send_keys(key[1]) \
