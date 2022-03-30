@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 import os
 import pkg_resources
 import requests
@@ -245,6 +244,8 @@ def close_browser():
     """
     driver = browser.get_current_browser()
     if driver is not None:
+        if util.is_safari():
+            safari.open_windows.clear()
         _close_remote_browser_session(driver, close_only=True)
         browser.remove_from_browser_cache(driver)
 
@@ -310,6 +311,9 @@ def close_all_browsers():
 
     # Clear browser re-use flag as no session open anymore
     BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
+
+    # safari specific
+    safari.open_windows.clear()
 
     # Set 'Headless' flag as False, since no session open anymore
     CONFIG.set_value('Headless', False)

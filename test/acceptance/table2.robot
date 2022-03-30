@@ -17,6 +17,7 @@ Use table kw:s with text locator
     UseTable                Stars
     VerifyTable             r?Jimi/c?Age           27
     VerifyTable             r?Buddy/c?Date         1959-02-03
+    HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Qentiro
     DropDown                r?Qentiro/c?Some       Ruotsi
     VerifySelectedOption    r2c5                   Ruotsi
@@ -32,6 +33,7 @@ Use table kw:s with xpath locators
     UseTable                Stars
     VerifyTable             r?Jimi/c?Age           27
     VerifyTable             r?Buddy/c?Date         1959-02-03
+    HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Qentiro
     DropDown                r?Qentiro/c?Some       Ruotsi
     VerifySelectedOption    r2c5                   Ruotsi
@@ -72,8 +74,9 @@ Verify Multiple
     VerifyTable             r2c4                    1970*
 
 Use general kw:s with Table using cell coordinates as an locator
-    [Tags]                  PROBLEM_IN_SAFARI       kk
+    [Tags]
     SetConfig               CSSSelectors            on
+    HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Qentiro
     TypeText                r1c2                    Test Automation
     VerifyInputValue        r1c2                    Test Automation
@@ -95,8 +98,9 @@ Use general kw:s with Table using cell coordinates as an locator
     DropDown                r2c5                    Norja
 
 Use general kws with Table Get row by text or start counting from last cell
-    [Tags]                  PROBLEM_IN_SAFARI
+    [Tags]
     SetConfig               PartialMatch            False
+    HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Robot
     ClickCheckBox           r?Qentiro/c1            On
     VerifyCheckBoxValue     r2c1                    On
@@ -112,12 +116,14 @@ Use general kws with Table Get row by text or start counting from last cell
     DropDown                r?Random/c1             Norja
     VerifySelectedOption    r-2c1                   Norja
     ClickCell               r?Text Node/c6
+    ExecuteJavascript       window.scrollTo(0, document.body.scrollHeight);    # scroll to bottom, safari needs this
     DropDown                r-1c2                   Robot
     VerifySelectedOption    r6c2                    Robot
     ClickCell               r-1c6
 
 Anchors and indexes
-    [Tags]                  PROBLEM_IN_SAFARI
+    [Tags]
+    HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Text Node
     #Using index anchor(2)
     ClickCell               r?Text/c6               2
@@ -158,6 +164,7 @@ Anchors and indexes
     DropDown                r-2c2                   Qentinel
     DropDown                r-1c2                   Robot
     ClickCell               r?Text/c6               Node
+    ExecuteJavascript       window.scrollTo(0, document.body.scrollHeight);    # scroll to bottom, safari needs this
     DropDown                r-1c2                   Robot
     ClickCheckbox           r-1c2                   On
     TypeText                r-1c3                   new ind\=1
@@ -170,7 +177,7 @@ Anchors and indexes
     VerifyCheckBoxValue     r-1c6                   On                      index=2
 
 Using Cells, starts from last one
-    [Tags]                  PROBLEM_IN_SAFARI
+    [Tags]
     UseTable                Some Text
     ClickCheckbox           r-1c-1                  On
     ClickCheckbox           r-1c-1                  Off                     index=2
@@ -188,7 +195,7 @@ Using Cells, starts from last one
     TypeText                r-1c-4                  -4 ind\=1
 
 Get row index and cell values to variables
-    [Tags]                  PROBLEM_IN_SAFARI
+    [Tags]
     SetConfig               CSSSelectors            True
     UseTable                Some Text
     ${row1}                 GetTableRow             //last

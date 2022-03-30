@@ -11,20 +11,21 @@ ${BROWSER}                      chrome
 
 *** Test Cases ***
 Go To
+    [Tags]                      Window    GoTo
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Should Be Equal             ${driver.current_url}       about:blank
     GoTo                        file://${CURDIR}/../resources/window.html
     Should Be Equal             ${driver.title}             Window Acceptance Tests
 
 Open Window
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    OpenWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     OpenWindow
     Length Should Be            ${driver.window_handles}    2
 
 Open Window Changed To New Window
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    OpenWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     GoTo                        file://${CURDIR}/../resources/window.html
@@ -32,7 +33,7 @@ Open Window Changed To New Window
     Should Be Equal             ${driver.current_url}       about:blank
 
 Close Window
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    OpenWindow    CloseWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     OpenWindow
@@ -41,7 +42,7 @@ Close Window
     Length Should Be            ${driver.window_handles}    1
 
 Switch Window
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     GoTo                        file://${CURDIR}/../resources/window.html
@@ -52,7 +53,7 @@ Switch Window
     Should Be Equal             ${driver.title}             Window Acceptance Tests
 
 Switch window, check context
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     GoTo                        file://${CURDIR}/../resources/window.html
@@ -64,7 +65,7 @@ Switch window, check context
     VerifyText                  Liirum laarum
 
 Switch window, special parameter NEW
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Open New Tab Link Page
     Length Should Be            ${driver.window_handles}    2
     VerifyNoText                Liirum laarum               3                           # should not find new window text yet as focus is on parent page
@@ -84,6 +85,7 @@ Switch window, special parameter NEW
     VerifyText                  Liirum laarum
 
 Switch window, alphanumeric parameters
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Open New Tab Link Page
     Length Should Be            ${driver.window_handles}    2
     VerifyNoText                Liirum laarum               3                           # should not find new window text yet as focus is on parent page
@@ -95,7 +97,7 @@ Switch window, alphanumeric parameters
 
 
 Switch window, multiple closings, check context
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     GoTo                        file://${CURDIR}/../resources/window.html
@@ -116,13 +118,14 @@ Switch window, multiple closings, check context
     VerifyText                  Liirum laarum
 
 Switch window, no other window
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     Run Keyword And Expect Error                            QWebDriverError: Tried to select tab with index 2 but there are only 1 tabs open
     ...                         Switch Window               2
 
 Switch Window, delay
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     Execute Javascript          setTimeout('window.open()', 3000);
@@ -131,13 +134,14 @@ Switch Window, delay
     Length Should Be            ${driver.window_handles}    2
 
 Close window, no tabs open
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     GoTo                        file://${CURDIR}/../resources/window.html
     Close window
 
 Switch window, open multiple, close index
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     GoTo                        file://${CURDIR}/../resources/window.html
@@ -160,6 +164,7 @@ Switch window, open multiple, close index
     Should Be Equal             ${driver.title}             Window Acceptance Tests
 
 Title and url
+    [Tags]                      Window    Title    Url
     [Documentation]             Tests for -title and -url keywords
     GoTo                        file://${CURDIR}/../resources/window.html
     ${url}=                     GetUrl
@@ -175,7 +180,7 @@ Set Window Size
 
 Maximize Window
     [Documentation]             Tests for MaximizeWindow keyword
-    [Tags]                      MaximizeWindow
+    [Tags]                      Window    MaximizeWindow
     GoTo                        http://howbigismybrowser.com/
     Sleep                       2                           # wait for browser
     SetConfig                   WindowSize                  550X550
@@ -200,7 +205,7 @@ Maximize Window
     Should be True              ${max_height} > ${height}
 
 Close Other Windows
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]                      Window
     [Documentation]             Close other windows
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     GoTo                        file://${CURDIR}/../resources/window.html
@@ -219,6 +224,7 @@ Close Other Windows
     VerifyText                  Liirum
 
 Self Closing PopUp
+    [Tags]                      Window
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     GoTo                        file://${CURDIR}/../resources/window.html
     Close Others
@@ -230,6 +236,7 @@ Self Closing PopUp
     VerifyText                  Liirum
 
 SwitchWindow 0
+    [Tags]                      Window
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     RunKeywordAndExpectError    QWebValueError: SwitchWindow index starts at 1.         SwitchWindow                0
 

@@ -49,6 +49,7 @@ Test Dropdown Keyword With Value
     [Documentation]             Tests choosing dropdown with value instead of text, with CSSSelectors on
     ...                         and off.
     VerifyNotext                bear
+    HoverText                   Joulupukki
     Dropdown                    Joulupukki                  bear
     VerifyText                  bear
     VerifyNoText                boar
@@ -166,6 +167,7 @@ Locate dropdowns with anchor 2
 Select and unselect in multiselection dropdown
     [Documentation]             Test for multiple selection dropdowns
     RefreshPage
+    HoverText                   Choose a spacecraft
     DropDown                    Choose a spacecraft         USS Defiant
     DropDown                    Choose a spacecraft         Scimitar
     DropDown                    Choose a spacecraft         Galileo

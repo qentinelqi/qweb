@@ -99,7 +99,7 @@ VerifyTextCountFail
     ...                     VerifyTextCount         Counttextyjku    4   timeout=1s
 
 VerifyTextCountDelay
-    [Tags]                  VerifyTextCount     PROBLEM_IN_SAFARI
+    [Tags]                  VerifyTextCount
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyTextCount         Counttextyjku    3
     ClickText               Counttextyjku    anchorcount
@@ -187,7 +187,7 @@ GetText Use between parameter to get substring
     ShouldBeEqual           ${text}                 This sentence contains
 
 GetText Use from start parameter to get substring
-    [Tags]                  sub
+    [Tags]                  sub                     PROBLEM_IN_SAFARI
     ${text}                 GetText                 dolor   from_start=5
     ShouldBeEqual           ${text}                 Lorem
     ${text}                 GetText                 dolor   between=deserunt???     from_start=7
@@ -478,9 +478,10 @@ ClickItemUntil
     Run Keyword and Expect Error   ${message}  ClickItemUntil   Clicks: 4    screen  timeout=2
 
 Hover Text small window
-    [Tags]                  PROBLEM_IN_SAFARI   PROBLEM_IN_FIREFOX
+    [Tags]                  PROBLEM_IN_FIREFOX
     # Bug https://qentinel.visualstudio.com/Pace_libraries/_workitems/edit/3364
     SetConfig               WindowSize              576X356
+    HoverText               Button1
     VerifyNoText            Hover Link
     HoverText               Hover Dropdown
     VerifyText              Hover Link
@@ -617,7 +618,7 @@ VerifyAny From List With None Found
     Run Keyword and Expect Error   *   VerifyAny      ${iddqd}   
 
 WriteText error in headless mode
-    [tags]	PROBLEM_IN_FIREFOX
+    [tags]	PROBLEM_IN_FIREFOX    PROBLEM_IN_SAFARI
     [Documentation]     Headless mode is used in suite setup, if that gets changed this test needs
     ...                 to be fixed as well.
     ${error}      Set Variable    QWebEnvironmentError: Running in headless*

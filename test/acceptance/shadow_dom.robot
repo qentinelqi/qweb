@@ -26,8 +26,10 @@ Basic inteactions with Shadow DOM
     TypeText               Input2                        Test456
     
     ClickText              Click me
-    VerifyAlertText        Alert from button
-    CloseAlert             Accept
+    VerifyText             hidden
+    ClickText              Click me
+    VerifyNoText           hidden
+
     ClickText              Link
     VerifyText             Alert popup
 
@@ -45,8 +47,7 @@ Shadow DOM with attributes
     Log Screenshot
     ResetConfig            HighlightColor
     ClickItem              myButton
-    VerifyAlertText        Alert from button
-    CloseAlert             Accept
+    VerifyText             hidden
 
 
 VerifyAll & VerifyAny with shadow DOM

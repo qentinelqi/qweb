@@ -95,7 +95,7 @@ ElementNotFound
     ...                         ClickElement                //*[id\='qwerty']           timeout=2
 
 DoubleClick Element
-    [Tags]                      PROBLEM_IN_SAFARI
+    [Tags]
     VerifyNoText                doubleclick test clicked!
     SetConfig                   DoubleClick                 On
     ClickElement                //*[@id\="doubleclick test"]
@@ -103,7 +103,9 @@ DoubleClick Element
     SetConfig                   DoubleClick                 Off
 
 Use attributes without xpath to get element
+    [Tags]
     RefreshPage
+    HoverText                   Lorem ipsum
     HoverElement                hover_me                    tag=button
     VerifyText                  Hover Link
     ClickElement                screen                      tag=img

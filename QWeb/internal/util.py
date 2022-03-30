@@ -198,6 +198,11 @@ def is_retina():
     return False
 
 
+def is_safari():
+    driver = browser.get_current_browser()
+    return driver.capabilities['browserName'].lower() in browser.safari.NAMES
+
+
 def get_browser_width():
     driver = browser.get_current_browser()
     size = driver.get_window_size()

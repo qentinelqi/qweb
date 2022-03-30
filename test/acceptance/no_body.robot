@@ -10,7 +10,7 @@ ${BROWSER}    chrome
 
 *** Test Cases ***
 Verify Text Under One Tag
-    [Tags]                  PROBLEM_IN_SAFARI
+    [Tags]
     VerifyText              Click the button to open a new browser window.
     ClickText               Avaa ikkuna
     Switch Window           NEW
