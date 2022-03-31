@@ -58,6 +58,17 @@ def _replace_keyword_args(keyword, args):
         setattr(keyword.data, 'args', args)
 
 
+def _hide_keyword_arg_values(keyword):
+    par_index, secret = filtered_keywords[keyword.kwname]
+    censored_args = list(keyword.args)
+    if secret == 'hint':
+        censored_args[par_index] = 'SECRET'
+    else:
+        censored_args[par_index] = "*" * 5
+
+    return censored_args
+
+
 def _filtered_start_keyword(keyword):
     """Modify Robot FW internal function "start_keyword".
 
@@ -69,13 +80,7 @@ def _filtered_start_keyword(keyword):
     apply_filter = keyword.kwname in filtered_keywords
     original_args = keyword.args
     if apply_filter:
-        par_index, secret = filtered_keywords[keyword.kwname]
-        censored_args = list(keyword.args)
-        if secret == 'hint':
-            censored_args[par_index] = 'SECRET'
-        else:
-            censored_args[par_index] = "*" * 5
-
+        censored_args = _hide_keyword_arg_values(keyword)
         _replace_keyword_args(keyword, tuple(censored_args))
 
     LOGGER._started_keywords += 1
@@ -103,13 +108,7 @@ def _filtered_end_keyword(keyword):
     apply_filter = keyword.kwname in filtered_keywords
     original_args = keyword.args
     if apply_filter:
-        par_index, secret = filtered_keywords[keyword.kwname]
-        censored_args = list(keyword.args)
-        if secret == 'hint':
-            censored_args[par_index] = 'SECRET'
-        else:
-            censored_args[par_index] = "*" * 5
-
+        censored_args = _hide_keyword_arg_values(keyword)
         _replace_keyword_args(keyword, tuple(censored_args))
 
     LOGGER._started_keywords -= 1
