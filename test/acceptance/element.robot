@@ -128,12 +128,22 @@ GetAttributeOK
     should be equal             ${attribute}                screen
     ${attribute}                GetAttribute                reset                       value                       element_type=item
     should be equal             ${attribute}                Button4
+    ${attribute}                GetAttribute                input#signup2               value                       element_type=css
+    should be equal             ${attribute}                Signup
+    ${attribute}                GetAttribute                body > input[type\=button]:nth-child(10)   value        element_type=css
+    should be equal             ${attribute}                Hide Text
+    # with index using css
+    ${attribute}                GetAttribute                input   value        element_type=css    index=5
+    should be equal             ${attribute}                Show hidden
+    
+
 
 GetAttributeNOK
     [Tags]                      GetAttribute
     Go To                       file://${CURDIR}/../resources/text.html
-    Run Keyword And Expect Error                            QWebElementNotFoundError:*                              GetAttribute         //button[@name\="somethingthatdoesnotexist"]    id    timeout=2
-    Run Keyword And Expect Error                            QWebValueError:*            GetAttribute                //button             id                   element_type=Text
+    Run Keyword And Expect Error    QWebElementNotFoundError:*    GetAttribute         //button[@name\="somethingthatdoesnotexist"]    id    timeout=2
+    Run Keyword And Expect Error    QWebValueError:*              GetAttribute         //button                                        id    timeout=2
+    Run Keyword And Expect Error    QWebElementNotFoundError:*    GetAttribute         //button                                        id    element_type=css    timeout=2
 
 VerifyAttributeOK
     [Tags]                      VerifyAttribute
@@ -142,6 +152,9 @@ VerifyAttributeOK
     VerifyAttribute             //img                       data-icon                   screen
     VerifyAttribute             reset                       value                       Button4                     element_type=item
     VerifyAttribute             Button                      value                       Button3                     anchor=3             element_type=Text
+    VerifyAttribute             \#signup2                   value                       Signup                      element_type=css
+    VerifyAttribute             p a                         id                          clicks                      element_type=css
+
 
 VerifyAttributeCheckbox
     [Tags]                      VerifyAttribute
@@ -154,5 +167,9 @@ VerifyAttributeCheckbox
 VerifyAttributeNOK
     [Tags]                      VerifyAttribute
     Go To                       file://${CURDIR}/../resources/text.html
-    Run Keyword And Expect Error                            QWebElementNotFoundError:*                              VerifyAttribute      //button[@name\="somethingthatdoesnotexist"]    id    something    timeout=2
-    Run Keyword And Expect Error                            QWebValueError:*            VerifyAttribute             //button             value                Button2              element_type=Text
+    Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button[@name\="somethingthatdoesnotexist"]    id    something    timeout=2
+    Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      //button             value                Button2              element_type=Text    timeout=2
+    # not valid css
+    Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button             value                Button2              element_type=css     timeout=2
+    # multiple found css
+    Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      button               value                Button2              element_type=css     timeout=2

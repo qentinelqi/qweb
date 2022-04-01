@@ -419,6 +419,11 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
         ${elem}      GetWebelement          Country   element_type=dropdown
         ${elem}      GetWebelement          Gender    element_type=checkbox
 
+    Any element using css selectors:
+    .. code-block:: robotframework
+
+        ${elem}      GetWebelement          input[type=button]:nth-child(10)    element_type=css
+
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
 
@@ -431,7 +436,7 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown).
+        (available types: text, input, checkbox, item, dropdown or css).
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :
@@ -457,6 +462,8 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
             return input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
         if element_type.lower() == "checkbox":
             return checkbox.get_checkbox_elements_from_all_documents(locator, anchor, **kwargs)
+        if element_type.lower() == "css":
+            return element.get_webelement_by_css(locator, **kwargs)
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
         web_elements = element.get_visible_elements_from_elements(
@@ -502,6 +509,12 @@ def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, 
         ${attribute_value}  GetAttribute          Country   value           element_type=dropdown
         ${attribute_value}  GetAttribute          Gender    checked         element_type=checkbox
 
+    Any element using css selectors:
+
+    .. code-block:: robotframework
+
+        ${attribute_value}  GetAttribute          input[type=button]   value    element_type=css
+
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
 
@@ -516,7 +529,7 @@ def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, 
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown).
+        (available types: text, input, checkbox, item, dropdown or css).
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :

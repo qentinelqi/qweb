@@ -181,6 +181,42 @@ def get_webelements(xpath, **kwargs):
 
 
 @frame.all_frames
+def get_webelement_by_css(css, **kwargs):
+    """Get visible web element that correspond to given css selector.
+
+    To check that element is visible it is checked that it has width. This
+    does not handle all cases but it is fast so no need to modify if it
+    works. Replace the visibility check using WebElement's is_displayed
+    method if necessary.
+
+    Parameters
+    ----------
+    css : str
+        CSS selector to find the element.
+
+    Returns
+    -------
+    :obj:`list` of :obj:`WebElement`
+        List of visible WebElements.
+    """
+    index = kwargs.get('index', 1)
+    driver = browser.get_current_browser()
+    web_elements = driver.find_elements(By.CSS_SELECTOR, css)
+    logger.debug("CSS selector {} matched {} WebElements"
+                 .format(css, len(web_elements)))
+    web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
+
+    index = int(index) -1
+    if len(web_elements) > 1:
+        try:
+            return web_elements[index]
+        except IndexError:
+            raise QWebValueError(f'Used index {index} was greater than amount of found elements.')
+    
+    return web_elements
+
+
+@frame.all_frames
 def get_webelements_in_active_area(xpath, **kwargs):
     """Find element under another element.
 
