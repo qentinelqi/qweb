@@ -199,7 +199,7 @@ def get_webelements_in_active_area(xpath, **kwargs):
     """
     active_area_xpath = CONFIG["ActiveAreaXpath"]
     if ACTIVE_AREA_FUNCTION is not None:
-        active_area = ACTIVE_AREA_FUNCTION()
+        active_area = ACTIVE_AREA_FUNCTION()  # pylint:disable=E1102
         if active_area:
             xpath = xpath.replace('//', './/', 1)
         else:
