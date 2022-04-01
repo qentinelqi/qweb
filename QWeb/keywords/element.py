@@ -388,7 +388,7 @@ def verify_no_element(xpath, timeout=0, **kwargs):  # pylint: disable=unused-arg
 @keyword(tags=["Getters"])
 @decorators.timeout_decorator
 def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
-    r"""Get Webelement using any Paceword -stylish locator.
+    r"""Get Webelement using any Qword -stylish locator.
 
     Examples
     --------
@@ -425,7 +425,7 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
         ${elem}      GetWebelement          input[type=button]:nth-child(10)    element_type=css
 
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
-    in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
+    in same way as you are using those with Qwords like ClickText/Item, TypeText, Dropdown etc.
 
     Parameters
     ----------
@@ -453,17 +453,22 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
     kwargs['timeout'] = timeout
     if element_type:
         if element_type.lower() == 'text':
-            return text.get_element_by_locator_text(locator, anchor, **kwargs)
+            web_elements = text.get_element_by_locator_text(locator, anchor, **kwargs)
         if element_type.lower() == 'item':
-            return text.get_item_using_anchor(locator, anchor, **kwargs)
+            web_elements = text.get_item_using_anchor(locator, anchor, **kwargs)
         if element_type.lower() == "dropdown":
-            return dropdown.get_dd_elements_from_all_documents(locator, anchor, **kwargs)
+            web_elements = dropdown.get_dd_elements_from_all_documents(locator, anchor, **kwargs)
         if element_type.lower() == "input":
-            return input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
+            web_elements = input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
         if element_type.lower() == "checkbox":
-            return checkbox.get_checkbox_elements_from_all_documents(locator, anchor, **kwargs)
+            web_elements = checkbox.get_checkbox_elements_from_all_documents(
+                locator, anchor, **kwargs
+            )
         if element_type.lower() == "css":
-            return element.get_webelement_by_css(locator, **kwargs)
+            web_elements = element.get_webelement_by_css(locator, **kwargs)
+
+        return web_elements
+
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
         web_elements = element.get_visible_elements_from_elements(
@@ -516,7 +521,7 @@ def get_attribute(locator, attribute, anchor='1', element_type=None, timeout=0, 
         ${attribute_value}  GetAttribute          input[type=button]   value    element_type=css
 
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
-    in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
+    in same way as you are using those with Qwords like ClickText/Item, TypeText, Dropdown etc.
 
     Parameters
     ----------
@@ -596,8 +601,34 @@ def verify_attribute(locator, attribute, value, anchor='1', element_type=None, t
         VerifyAttribute     Country   value     Finland         element_type=dropdown
         VerifyAttribute     Gender    checked   checked         element_type=checkbox
 
+    Any element using css selectors:
+
+    .. code-block:: robotframework
+
+        VerifyAttribute          input[type=button]   value    Click Me     element_type=css
+
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
+
+    In addition, operator performing verification can be given as keyword argument.
+    If 'operator' argument is not given, 'equals' is expected. Examples:
+
+    .. code-block:: robotframework
+
+        # Not equal
+        VerifyAttribute     //img    data-icon    screen123    operator=not equal
+        VerifyAttribute     //img    data-icon    screen123    operator=!=
+
+        # Greater than
+        VerifyAttribute    Button3    data-id    7    element_type=Text    operator=greater than
+        VerifyAttribute    Button3    data-id    5    element_type=Text    operator=>
+
+        # less than or equal
+        # ('operator=less than or equal' also works)
+        VerifyAttribute    Button3    data-id    10   element_type=Item   operator=<=
+
+        # contains
+        VerifyAttribute    somebutton    id    skim      element_type=Text   operator=contains
 
     Parameters
     ----------
@@ -612,7 +643,7 @@ def verify_attribute(locator, attribute, value, anchor='1', element_type=None, t
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown).
+        (available types: text, input, checkbox, item, dropdown or css).
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :
@@ -620,13 +651,27 @@ def verify_attribute(locator, attribute, value, anchor='1', element_type=None, t
         |       Any available for picked searching method.
         |       See interacting with text, item, input etc. elements from
         |       documentation
+        |
+        |       In addition:
+        |       operator : str
+        |           Which operator use for verification. Possible values:
+        |               * 'Equals' or '==' (Default)
+        |               * 'Not Equal' or '!='
+        |               * 'Less than' or '<'
+        |               * 'Greater than' or '>'
+        |               * 'Less than or equal' or  '<='
+        |               * 'Greater than or equal' or '>='
+        |               *  Contains
+
 
     Related keywords
     ----------------
     \`GetAttribute\`, \`VerifyElement\`
     """
     attr_val = get_attribute(locator, attribute, anchor, element_type, timeout, **kwargs)
+    operator = kwargs.get('operator', "equals")
 
-    if attr_val != value:
-        raise QWebValueError("Expected attribute value differs from real value: {}/{}"
-                             .format(value, attr_val))
+    try:
+        element.operator_verify(attr_val, value, operator)
+    except QWebValueError as e:
+        raise e

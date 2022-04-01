@@ -28,7 +28,7 @@
     <p style="visibility:hidden">This text should be hidden</p>
     <button onclick="this.innerText='Button1 was clicked'">Button1</button>
     <input type="submit" value="Button2" onclick="this.value='Button2 was clicked'" />
-    <input type="button" value="Button3" onclick="this.value='Button3 was clicked'" />
+    <input type="button" value="Button3" data-id="12345" onclick="this.value='Button3 was clicked'" />
     <input type="reset" value="Button4" onclick="this.value='Button4 was clicked'" />
     <input type="reset" value="Button5" onclick="this.value='This button was clicked'" />
     <input type="button" value="Show hidden" onclick="setTimeout('showHiddenText()', 4000);" />

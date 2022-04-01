@@ -154,7 +154,73 @@ VerifyAttributeOK
     VerifyAttribute             Button                      value                       Button3                     anchor=3             element_type=Text
     VerifyAttribute             \#signup2                   value                       Signup                      element_type=css
     VerifyAttribute             p a                         id                          clicks                      element_type=css
+    VerifyAttribute             p a                         id                          clicks                      element_type=css     operator=\==
 
+VerifyAttributeNotEquals
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    VerifyAttribute             SkimClick disable button    id                          skimclick123                element_type=Text    operator=not equal
+    VerifyAttribute             SkimClick disable button    id                          skimclick123                element_type=Text    operator=!=
+    VerifyAttribute             //img                       data-icon                   screen123                   operator=not equal  
+
+VerifyAttributeGreater
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # greater, should pass
+    VerifyAttribute             Button3    data-id                          7                   element_type=Text    operator=greater than
+    VerifyAttribute             Button3    data-id                          5                   element_type=Text    operator=>
+    # lower, should fail
+    Run Keyword And Expect Error    QWebValueError:*                       VerifyAttribute             Button3    data-id                          12346                   element_type=Text    operator=greater than   timeout=2
+    # not a number
+    Run Keyword And Expect Error    QWebValueError:*not numeric!           VerifyAttribute             //img                       data-icon                   screen1                     operator=greater than      timeout=2
+
+VerifyAttributeGreaterOrEqual
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # greater or equal, should pass
+    VerifyAttribute             Button3    data-id                          7                   element_type=Text    operator=greater than or equal
+    VerifyAttribute             Button3    data-id                          12345               element_type=Text    operator=>=
+    # less than, should fail
+    Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             input[value\="Button3"]     data-id                     12346    element_type=css        operator=>=    timeout=2
+
+VerifyAttributeLessThan
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # lower, should pass
+    VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=less than
+    VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=<
+    # greater, should fail
+    Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             Button3    data-id      39                      element_type=Text        operator=less than    timeout=2
+    # not a number
+    Run Keyword And Expect Error    QWebValueError:*not numeric!           VerifyAttribute             //img                       data-icon               screen123               operator=less than   timeout=2
+
+VerifyAttributeLessThanOrEqual
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # lower or equal, should pass
+    VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=less than or equal
+    VerifyAttribute             input[value\="Button3"]     data-id                     12345                   element_type=css        operator=<=
+    # greater, should fail
+    Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             input[value\="Button3"]     data-id                     7    element_type=css        timeout=2    operator=<=
+
+VerifyAttributeContains
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # contains, should pass
+    VerifyAttribute             SkimClick disable button    id                          skim      element_type=Text   operator=contains
+    VerifyAttribute             input[value\="Button3"]     data-id                     123                     element_type=css        operator=contains
+    # not contains, should fail
+    Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             input[value\="Button3"]     data-id                     7    element_type=css       timeout=2     operator=contains
+
+VerifyAttributeIncorrectOperator
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # default operator
+    VerifyAttribute             SkimClick disable button    id                          skimclick                   element_type=Text 
+    # incorrect operator
+    Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             //img                       data-icon                   screen123                    timeout=2    operator=adsfj
+    # correct operator, uppercase
+    VerifyAttribute             //img                       data-icon                   screen123                   operator=NOT EQUAL  
 
 VerifyAttributeCheckbox
     [Tags]                      VerifyAttribute
