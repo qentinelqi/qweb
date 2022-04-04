@@ -207,7 +207,7 @@ def get_webelement_by_css(css, **kwargs):
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
 
     index = int(index) - 1
-    if len(web_elements) > 1:
+    if len(web_elements) >= 1:
         try:
             return web_elements[index]
         except IndexError as ie:

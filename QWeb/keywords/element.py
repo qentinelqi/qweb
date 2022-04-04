@@ -420,6 +420,7 @@ def get_webelement(locator, anchor='1', element_type=None, timeout=0, **kwargs):
         ${elem}      GetWebelement          Gender    element_type=checkbox
 
     Any element using css selectors:
+
     .. code-block:: robotframework
 
         ${elem}      GetWebelement          input[type=button]:nth-child(10)    element_type=css
