@@ -135,7 +135,7 @@ def type_secret(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
 
-@keyword(tags=("Input", "Interaction", "Shadow DOM"))
+@keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
 def type_text(locator, input_text, anchor="1", timeout=0, index=1, **kwargs):
     r"""Type given text to a text field.

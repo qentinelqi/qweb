@@ -869,9 +869,6 @@ def set_config(par, val):
         ClickText       As is this
         SetConfig       ShadowDOM       False
 
-        # Search from shadow dom in individual keyword
-        VerifyText      This is under shadow root   shadow_dom=True
-
     ---
 
     Related keywords
