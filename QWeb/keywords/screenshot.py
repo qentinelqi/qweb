@@ -33,7 +33,7 @@ def verify_app(imagename):
 
 
 @keyword(tags=["Logging"])
-def log_screenshot(filename='screenshot_{}.png'):
+def log_screenshot(filename='screenshot_{}.png', fullpage=False):
     r"""Log screenshot to Robot Framework log.
 
     Examples
@@ -48,6 +48,11 @@ def log_screenshot(filename='screenshot_{}.png'):
     filename : str
         Filename where the screenshot is saved.
 
+    fullpage : str
+        Capture full page screenshot instead of visible area only if browser/driver supports it.
+        (Currently only supported in Firefox)
+        Default: False (visible area only)
+
     Returns
     -------
     filepath : full path to saved screenshot
@@ -60,12 +65,12 @@ def log_screenshot(filename='screenshot_{}.png'):
     if CONFIG["LogScreenshot"]:
         screenshot_type = CONFIG["ScreenshotType"]
         if screenshot_type == 'screenshot':
-            filepath = screenshot.save_screenshot(filename)
+            filepath = screenshot.save_screenshot(filename, fullpage=fullpage)
             screenshot.log_screenshot_file(filepath)
         elif screenshot_type == 'html':
             screenshot.log_html()
         elif screenshot_type == 'all':
-            filepath = screenshot.save_screenshot(filename)
+            filepath = screenshot.save_screenshot(filename, fullpage=fullpage)
             screenshot.log_screenshot_file(filepath)
             screenshot.log_html()
         else:

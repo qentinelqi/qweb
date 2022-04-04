@@ -38,6 +38,24 @@ Screenshot Is Taken On Exception
     ${result}=    evaluate   (${amount_of_screenshots_before} + 1) == ${amount_of_screenshots_after}
     Should Be True    ${result}    Screenshot amount did not grow by one
 
+Full page screenshot
+    [Tags]
+    ${normal}=                          LogScreenshot                        
+    ${fullpage}=                        LogScreenshot                       fullpage=True
+
+    ${size1}=                           Get File Size                       ${normal}
+    ${size2}=                           Get File Size                       ${fullpage}
+    ${is_ff}=                           Evaluate   $BROWSER.lower() in ["firefox", "ff"]
+
+    # Full page screenshot on firefox, else normal screenshot
+    Run Keyword If                      ${is_ff}    Should Not Be Equal    ${size1}    ${size2}
+    Run Keyword Unless                  ${is_ff}    Should Be Equal        ${size1}    ${size2}
+
+
+
+
+
+
 Test VerifyApp
     VerifyApp      verifyapp
     Directory Should exist         ${OUTPUT_DIR}/verifyapp

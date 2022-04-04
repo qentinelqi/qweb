@@ -141,7 +141,10 @@ def _draw_contours(diff, ref_image_c):
     return ref_image_c
 
 
-def save_screenshot(filename='screenshot_{}.png', folder=SCREEN_SHOT_DIR_NAME, pyautog=False):
+def save_screenshot(filename='screenshot_{}.png',
+                    folder=SCREEN_SHOT_DIR_NAME,
+                    pyautog=False,
+                    fullpage=False):
     """Save screenshot of web page to a file.
 
     If robot framework is running then screenshots are saved to
@@ -202,7 +205,11 @@ def save_screenshot(filename='screenshot_{}.png', folder=SCREEN_SHOT_DIR_NAME, p
     driver = browser.get_current_browser()
     if driver:
         try:
-            saved = driver.save_screenshot(filepath)
+            saved = driver.get_full_page_screenshot_as_file(filepath) \
+                    if fullpage else driver.save_screenshot(filepath)
+        except AttributeError:  # fullpage not supported in driver, try again non-fullpage
+            logger.warn("Full page screenshots are only available in FIREFOX")
+            saved = save_screenshot(filename, fullpage=False)
         except (UnexpectedAlertPresentException, WebDriverException,
                 QWebDriverError, InvalidSessionIdException):
             saved = pyscreenshot(filepath)
