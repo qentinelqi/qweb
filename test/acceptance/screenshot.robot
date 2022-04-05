@@ -40,21 +40,19 @@ Screenshot Is Taken On Exception
 
 Full page screenshot
     [Tags]
+    ${driver}=                          Return Browser
+    VerifyText                          HoverDropdown
+    VerifyText                          Current scroll
     ${normal}=                          LogScreenshot                        
     ${fullpage}=                        LogScreenshot                       fullpage=True
 
     ${size1}=                           Get File Size                       ${normal}
     ${size2}=                           Get File Size                       ${fullpage}
-    ${is_ff}=                           Evaluate   $BROWSER.lower() in ["firefox", "ff"]
+    ${is_ff}=                           Evaluate                            $driver.capabilities['browserName'].lower() in ["ff", "firefox"]
 
     # Full page screenshot on firefox, else normal screenshot
     Run Keyword If                      ${is_ff}    Should Not Be Equal    ${size1}    ${size2}
     Run Keyword Unless                  ${is_ff}    Should Be Equal        ${size1}    ${size2}
-
-
-
-
-
 
 Test VerifyApp
     VerifyApp      verifyapp

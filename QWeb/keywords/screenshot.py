@@ -49,9 +49,9 @@ def log_screenshot(filename='screenshot_{}.png', fullpage=False):
         Filename where the screenshot is saved.
 
     fullpage : str
-        Capture full page screenshot instead of visible area only if browser/driver supports it.
-        (Currently only supported in Firefox)
-        Default: False (visible area only)
+        | Capture full page screenshot instead of visible area only (if browser/driver supports it).
+        | Currently only supported in Firefox.
+        | Default: False (visible area only)
 
     Returns
     -------
