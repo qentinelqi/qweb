@@ -662,7 +662,8 @@ def verify_attribute(locator, attribute, value, anchor='1', element_type=None, t
         |               * 'Greater than' or '>'
         |               * 'Less than or equal' or  '<='
         |               * 'Greater than or equal' or '>='
-        |               *  Contains
+        |               * 'Contains'
+        |               * 'Not Contains'
 
 
     Related keywords

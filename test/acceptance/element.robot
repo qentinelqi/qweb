@@ -212,6 +212,15 @@ VerifyAttributeContains
     # not contains, should fail
     Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             input[value\="Button3"]     data-id                     7    element_type=css       timeout=2     operator=contains
 
+VerifyAttributeNotContains
+    [Tags]                      VerifyAttribute
+    Go To                       file://${CURDIR}/../resources/text.html
+    # contains, should pass
+    VerifyAttribute             SkimClick disable button    id                          skjm      element_type=Text   operator=not contains
+    VerifyAttribute             input[value\="Button3"]     data-id                     3245                     element_type=css        operator=not contains
+    # not contains, should fail
+    Run Keyword And Expect Error    QWebValueError:*        VerifyAttribute             input[value\="Button3"]     data-id                     5    element_type=css       timeout=2     operator=not contains
+
 VerifyAttributeIncorrectOperator
     [Tags]                      VerifyAttribute
     Go To                       file://${CURDIR}/../resources/text.html

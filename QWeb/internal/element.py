@@ -537,6 +537,7 @@ def operator_verify(value, expected, operator):
     valid_operators.extend(LESS_THAN_OR_EQUAL)
     valid_operators.extend(GREATER_THAN_OR_EQUAL)
     valid_operators.append("contains")
+    valid_operators.append("not contains")
 
     operator = operator.lower()
 
@@ -552,9 +553,10 @@ def operator_verify(value, expected, operator):
         raise QWebValueError(
             f"Expected attribute value matches real value: {expected}/{value}"
         )
-    if operator == "contains":
-        if expected not in value:
-            raise QWebValueError(f'Attribute value "{value}" does not contain: "{expected}"')
+    if operator == "contains" and expected not in value:
+        raise QWebValueError(f'Attribute value "{value}" does not contain: "{expected}"')
+    if operator == "not contains" and expected in value:
+        raise QWebValueError(f'Attribute value "{value}" contains: "{expected}"')
 
     # numeric comparison operator used but either value not numeric
     if [x for x in [GREATER_THAN, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL]
