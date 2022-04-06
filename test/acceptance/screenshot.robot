@@ -2,7 +2,7 @@
 Documentation       Test for screenshot functionality
 Library             QWeb
 Library             OperatingSystem
-Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${BROWSER}  --headless
+Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${BROWSER}  #--headless
 Suite Teardown      CloseBrowser
 Test Timeout        1min
 
@@ -48,11 +48,12 @@ Full page screenshot
 
     ${size1}=                           Get File Size                       ${normal}
     ${size2}=                           Get File Size                       ${fullpage}
-    ${is_ff}=                           Evaluate                            $driver.capabilities['browserName'].lower() in ["ff", "firefox"]
+    @{supported_browsers}=              Create List                         chrome    gc    edge     msedge   ff    firefox
+    ${supports_fullpage}=               Evaluate                            $driver.capabilities['browserName'].lower() in $supported_browsers
 
-    # Full page screenshot on firefox, else normal screenshot
-    Run Keyword If                      ${is_ff}    Should Not Be Equal    ${size1}    ${size2}
-    Run Keyword Unless                  ${is_ff}    Should Be Equal        ${size1}    ${size2}
+    # Full page screenshot on supported browsers, else normal screenshot
+    Run Keyword If                      ${supports_fullpage}    Should Not Be Equal    ${size1}    ${size2}
+    Run Keyword Unless                  ${supports_fullpage}    Should Be Equal        ${size1}    ${size2}
 
 Test VerifyApp
     VerifyApp      verifyapp

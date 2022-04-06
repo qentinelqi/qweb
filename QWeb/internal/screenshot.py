@@ -15,12 +15,15 @@
 # limitations under the License.
 # ---------------------------
 
+import base64
+import json
 import os
 from uuid import uuid4
 
 import cv2
 from selenium.common.exceptions import UnexpectedAlertPresentException, \
                                        WebDriverException, InvalidSessionIdException
+from QWeb.internal.browser import firefox, chrome, edge
 from QWeb.internal.exceptions import QWebDriverError
 from QWeb.internal import browser
 from QWeb.keywords import config
@@ -205,11 +208,12 @@ def save_screenshot(filename='screenshot_{}.png',
     driver = browser.get_current_browser()
     if driver:
         try:
-            saved = driver.get_full_page_screenshot_as_file(filepath) \
-                    if fullpage else driver.save_screenshot(filepath)
-        except AttributeError:  # fullpage not supported in driver, try again non-fullpage
-            logger.warn("Full page screenshots are only available in FIREFOX")
-            saved = save_screenshot(filename, fullpage=False)
+            browser_name = driver.capabilities['browserName']
+            if not fullpage:
+                saved = driver.save_screenshot(filepath)
+            else:
+                saved = full_page_screenshot(driver, filepath, browser_name)
+
         except (UnexpectedAlertPresentException, WebDriverException,
                 QWebDriverError, InvalidSessionIdException):
             saved = pyscreenshot(filepath)
@@ -279,3 +283,56 @@ def get_url():
 def get_source():
     driver = browser.get_current_browser()
     return driver.page_source
+
+
+def chromium_full_screenshot(driver, filepath):
+
+    def send(cmd, params):
+        resource = f"/session/{driver.session_id}/chromium/send_command_and_get_result"
+
+        # pylint:disable=W0212
+        url = driver.command_executor._url + resource
+        body = json.dumps({'cmd': cmd, 'params': params})
+        response = driver.command_executor._request('POST', url, body)
+        return response.get('value')
+
+    def evaluate(script):
+        response = send('Runtime.evaluate', {
+            'returnByValue': True,
+            'expression': script
+        })
+        return response['result']['value']
+
+    metrics = evaluate("({"
+                       "width: Math.max(window.innerWidth, "
+                       "document.body.scrollWidth, "
+                       "document.documentElement.scrollWidth)|0,"
+                       "height: Math.max(innerHeight, document.body.scrollHeight, "
+                       "document.documentElement.scrollHeight)|0,"
+                       "deviceScaleFactor: window.devicePixelRatio || 1,"
+                       "mobile: typeof window.orientation !== 'undefined'"
+                       "})")
+    send('Emulation.setDeviceMetricsOverride', metrics)
+    screenshot = send('Page.captureScreenshot', {
+        'format': 'png',
+        'fromSurface': True
+    })
+    send('Emulation.clearDeviceMetricsOverride', {})
+
+    image = base64.b64decode(screenshot['data'])
+    with open(filepath, 'wb') as f:
+        f.write(image)
+
+    return filepath
+
+
+def full_page_screenshot(driver, filepath, browser_name):
+    if browser_name in firefox.NAMES:
+        saved = driver.get_full_page_screenshot_as_file(filepath)
+    elif browser_name in chrome.NAMES or browser_name in edge.NAMES:
+        saved = chromium_full_screenshot(driver, filepath)
+    else:
+        logger.warn("Your current browser does not support full page screenshots")
+        saved = save_screenshot(filepath, fullpage=False)
+
+    return saved

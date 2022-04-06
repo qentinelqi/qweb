@@ -7,7 +7,7 @@ from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal import browser, user, util
 
 
-NAMES = ["edge"]
+NAMES = ["edge", "msedge"]
 
 
 def open_browser(executable_path="msedgedriver", edge_args=None,

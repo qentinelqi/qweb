@@ -52,6 +52,7 @@ SwitchBrowser
     [Teardown]      CloseAllBrowsers
 
 Open Browser With Options
+    [tags]          PROBLEM_IN_SAFARI
     Close All Browsers
     OpenBrowser    about:blank    ${BROWSER}    no-sandbox, disable-gpu, disable-impl-side-painting
     [Teardown]     CloseAllBrowsers
