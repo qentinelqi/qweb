@@ -92,6 +92,9 @@ def set_config(par, val):
     | OSScreenshots_      | Use operating system functionalities    | False          |
     |                     | instead of selenium to take screenshots |                |
     +---------------------+-----------------------------------------+----------------+
+    | PartialMatch_       | Accept partial matches from element     | True           |
+    |                     | search functions or require exact match |                |
+    +---------------------+-----------------------------------------+----------------+
     | RetinaDisplay_      | Is current monitor Retina display       |   Automatic    |
     |                     | (True) or not (False)                   |   detection    |
     +---------------------+-----------------------------------------+----------------+
@@ -445,6 +448,23 @@ def set_config(par, val):
 
         SetConfig   CaseInsensitive    True
         SetConfig   CaseInsensitive    False
+
+    .. _partialmatch:
+
+    ---
+    Parameter: PartialMatch
+
+    Accept partial match (True) from textual element searches
+    or require exact match (False)
+
+    Default = True
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        SetConfig   PartialMatch    True
+        SetConfig   PartialMatch    False
 
     .. _verifyappaccuracy:
 
@@ -868,9 +888,6 @@ def set_config(par, val):
         VerifyText      This is under shadow root
         ClickText       As is this
         SetConfig       ShadowDOM       False
-
-        # Search from shadow dom in individual keyword
-        VerifyText      This is under shadow root   shadow_dom=True
 
     ---
 

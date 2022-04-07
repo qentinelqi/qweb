@@ -2,7 +2,7 @@
 Documentation       Test for screenshot functionality
 Library             QWeb
 Library             OperatingSystem
-Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${BROWSER}  --headless
+Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${BROWSER}  #--headless
 Suite Teardown      CloseBrowser
 Test Timeout        1min
 
@@ -37,6 +37,23 @@ Screenshot Is Taken On Exception
 
     ${result}=    evaluate   (${amount_of_screenshots_before} + 1) == ${amount_of_screenshots_after}
     Should Be True    ${result}    Screenshot amount did not grow by one
+
+Full page screenshot
+    [Tags]
+    ${driver}=                          Return Browser
+    VerifyText                          HoverDropdown
+    VerifyText                          Current scroll
+    ${normal}=                          LogScreenshot                        
+    ${fullpage}=                        LogScreenshot                       fullpage=True
+
+    ${size1}=                           Get File Size                       ${normal}
+    ${size2}=                           Get File Size                       ${fullpage}
+    @{supported_browsers}=              Create List                         chrome    gc    edge     msedge   ff    firefox
+    ${supports_fullpage}=               Evaluate                            $driver.capabilities['browserName'].lower() in $supported_browsers
+
+    # Full page screenshot on supported browsers, else normal screenshot
+    Run Keyword If                      ${supports_fullpage}    Should Not Be Equal    ${size1}    ${size2}
+    Run Keyword Unless                  ${supports_fullpage}    Should Be Equal        ${size1}    ${size2}
 
 Test VerifyApp
     VerifyApp      verifyapp

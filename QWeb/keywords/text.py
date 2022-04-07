@@ -39,7 +39,7 @@ from robot.api.deco import keyword
 import os
 
 
-@keyword(tags=("Text", "Verification", "Shadow DOM"))
+@keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unused-argument
     r"""Verify page contains given text.
@@ -71,6 +71,15 @@ def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
        DefaultTimeout    2m
        VerifyText        Canis      # Waits 2 minutes
 
+    To enable searching items also from Shadow DOM, use SetConfig Shadow DOM.
+
+    Shadow DOM Example
+    ------------------
+    .. code-block:: robotframework
+
+        SetConfig         Shadow DOM     True
+        VerifyText        Canis
+
     Parameters
     ----------
     text : str
@@ -82,8 +91,6 @@ def verify_text(text, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
         by visible text.
         window_find : True - When WindowFind is used VerifyText is not looking
         texts for dom, but simulates ctrl+f like search to current viewport.
-        shadow_dom : True - When ShadowDOM is used VerifyText is not only looking
-        texts for light/normal dom, but searches from shadow dom as well.
 
     Raises
     ------
@@ -293,7 +300,7 @@ def get_text_count(text, timeout=0, **kwargs):  # pylint: disable=unused-argumen
     return len(web_elements)
 
 
-@keyword(tags=("Text", "Interaction", "Shadow DOM"))
+@keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def click_text(text, anchor="1", timeout=0, parent=None,
                child=None, js=None, **kwargs):
@@ -788,7 +795,7 @@ def get_text(locator, timeout=0, anchor="1", **kwargs):  # pylint: disable=unuse
     return util.get_substring(text, **kwargs)
 
 
-@keyword(tags=("Item", "Interaction", "Shadow DOM"))
+@keyword(tags=("Item", "Interaction"))
 @decorators.timeout_decorator
 def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
     r"""Click item (usually icon or picture) on webpage.
@@ -864,7 +871,7 @@ def click_item(text, anchor="1", timeout=0, js=False, **kwargs):
         return
 
 
-@keyword(tags=("Item", "Verification", "Shadow DOM"))
+@keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
 def verify_item(text, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
     r"""Verify Item (usually icon or picture) exist.
