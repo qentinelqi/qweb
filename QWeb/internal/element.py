@@ -181,6 +181,44 @@ def get_webelements(xpath, **kwargs):
 
 
 @frame.all_frames
+def get_webelement_by_css(css, **kwargs):
+    """Get visible web element that correspond to given css selector.
+
+    To check that element is visible it is checked that it has width. This
+    does not handle all cases but it is fast so no need to modify if it
+    works. Replace the visibility check using WebElement's is_displayed
+    method if necessary.
+
+    Parameters
+    ----------
+    css : str
+        CSS selector to find the element.
+
+    Returns
+    -------
+    :obj:`list` of :obj:`WebElement`
+        List of visible WebElements.
+    """
+    index = kwargs.get('index', 1)
+    driver = browser.get_current_browser()
+    web_elements = driver.find_elements(By.CSS_SELECTOR, css)
+    logger.debug("CSS selector {} matched {} WebElements"
+                 .format(css, len(web_elements)))
+    web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
+
+    index = int(index) - 1
+    if len(web_elements) >= 1:
+        try:
+            return web_elements[index]
+        except IndexError as ie:
+            raise QWebValueError(
+                f'Used index {index} was greater than amount of found elements.'
+            ) from ie
+
+    return web_elements
+
+
+@frame.all_frames
 def get_webelements_in_active_area(xpath, **kwargs):
     """Find element under another element.
 
@@ -480,6 +518,69 @@ def _get_closest_ortho_element(locator_element, element_list):
             closest_element = candidate_element
 
     return closest_element
+
+
+def operator_verify(value, expected, operator):
+    """verify value based on given operator / condition"""
+    EQUALS = ["equal", "equals", "=="]
+    NOT_EQUAL = ["not equal", "!="]
+    LESS_THAN = ["less than", "<"]
+    GREATER_THAN = ["greater than", ">"]
+    LESS_THAN_OR_EQUAL = ["less than or equal", "<="]
+    GREATER_THAN_OR_EQUAL = ["greater than or equal", ">="]
+
+    valid_operators = []
+    valid_operators.extend(EQUALS)
+    valid_operators.extend(NOT_EQUAL)
+    valid_operators.extend(LESS_THAN)
+    valid_operators.extend(GREATER_THAN)
+    valid_operators.extend(LESS_THAN_OR_EQUAL)
+    valid_operators.extend(GREATER_THAN_OR_EQUAL)
+    valid_operators.append("contains")
+    valid_operators.append("not contains")
+
+    operator = operator.lower()
+
+    if operator not in valid_operators:
+        raise QWebValueError(f'Incorrect operator "{operator}" given. Supported operators are:'
+                             f'"{valid_operators}"')
+
+    if operator in EQUALS and value != expected:
+        raise QWebValueError(
+            f"Expected attribute value differs from real value: {expected}/{value}"
+        )
+    if operator in NOT_EQUAL and value == expected:
+        raise QWebValueError(
+            f"Expected attribute value matches real value: {expected}/{value}"
+        )
+    if operator == "contains" and expected not in value:
+        raise QWebValueError(f'Attribute value "{value}" does not contain: "{expected}"')
+    if operator == "not contains" and expected in value:
+        raise QWebValueError(f'Attribute value "{value}" contains: "{expected}"')
+
+    # numeric comparison operator used but either value not numeric
+    if [x for x in [GREATER_THAN, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL]
+       if operator in x]:
+        if not (value.isdigit() and expected.isdigit()):
+            raise QWebValueError(f'Attribute value "{value}" is not numeric!')
+
+    if operator in GREATER_THAN and int(value) <= int(expected):
+        raise QWebValueError(
+            f'Attribute value: "{value}" is not greater than expected: "{expected}"'
+        )
+
+    if operator in LESS_THAN and int(value) >= int(expected):
+        raise QWebValueError(
+            f'Attribute value: "{value}" is greater than expected: "{expected}"'
+        )
+    if operator in GREATER_THAN_OR_EQUAL and int(value) < int(expected):
+        raise QWebValueError(
+            f'Attribute value: "{value}" is not greater or equal than expected: "{expected}"'
+        )
+    if operator in LESS_THAN_OR_EQUAL and int(value) > int(expected):
+        raise QWebValueError(
+            f'Attribute value: "{value}" is not less or equal than expected: "{expected}"'
+        )
 
 
 def _list_info(candidate_element):
