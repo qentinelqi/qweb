@@ -271,6 +271,7 @@ class QIcon:
             res = cv2.matchTemplate(image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
+            BuiltIn().log(f'ratio: {ratio}', console=True)
 
             if CONFIG.get_value("RetinaDisplay"):
                 ratio = ratio * 2
