@@ -190,11 +190,14 @@ def is_retina():
         if "arm" in platform.machine().lower():
             return True
 
-        if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
-                           shell=True,
-                           stdout=subprocess.DEVNULL,
-                           stderr=subprocess.DEVNULL) == 0:
-            return True
+        try:
+            if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
+                               shell=True,
+                               stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL) == 0:
+                return True
+        except Exception:  # pylint:disable=W0703
+            pass
     return False
 
 
