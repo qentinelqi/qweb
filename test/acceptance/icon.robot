@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation       Tests for icon keywords
 Library             QWeb
-Library             ScreencapLibrary
+Library             ScreenCapLibrary
 Suite Setup         Start record and open BROWSER
 Test Setup          GoTo    file://${CURDIR}/../resources/items.html
 Suite Teardown      Stop Video recording and close browser
@@ -95,9 +95,9 @@ Abc
 
 Start record and open BROWSER
     Start Video Recording
-     OpenBrowser    about:blank    ${BROWSER}
+    OpenBrowser    about:blank    ${BROWSER}
 
 
 Stop video recording and close browser
- CloseBrowser
- Stop Video Recording
+     CloseBrowser
+     Stop Video Recording
