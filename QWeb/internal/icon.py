@@ -220,7 +220,7 @@ class QIcon:
     def image_location(self,
                        needle,
                        haystack,
-                       tolerance=0.95,
+                       tolerance=0.8,
                        draw=1,
                        template_res_w=1440,
                        device_res_w=1080):
