@@ -14,13 +14,13 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 *** Test Cases ***
 Click icons
     [Tags]                  ICON
-    SetConfig               OSScreenshots        True
     ${is_retina}=           GetConfig    RetinaDisplay
     Log                     Retina display detected: ${is_retina}
     VerifyIcon              person                template_res_w=1920
     ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
     VerifyIcon              lock                  template_res_w=1920
+    SetConfig               OSScreenshots        True
     ClickIcon               lock                  template_res_w=1920
     VerifyText              Lock is my title value!
     ClickIcon               screen                 template_res_w=1920
