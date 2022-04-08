@@ -200,6 +200,7 @@ def save_screenshot(filename='screenshot_{}.png',
         try:
             os.remove(filepath)
         except OSError:
+            logger.info("OS Error raised when removing files", also_console=True)
             pass
 
         pyscreenshot(filepath)
