@@ -2,7 +2,7 @@
 Documentation       Tests for icon keywords
 Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}
-Test Setup          GoTo    file://${CURDIR}/../resources/items.html
+Test Setup          OpenAndMaximize
 Suite Teardown      CloseBrowser
 Library             Dialogs
 Test Timeout        1min
@@ -81,3 +81,8 @@ RemoveFiles
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_1.png
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_2.png
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_3.png
+
+
+OpenAndMaximize
+    GoTo    file://${CURDIR}/../resources/items.html
+    MaximizeWindow
