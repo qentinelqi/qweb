@@ -57,6 +57,7 @@ def click_icon(image, template_res_w=None, browser_res_w=None,
     \`ClickUntil\`, \`ClickWhile\`, \`VerifyIcon\`
     """
     if not browser_res_w:
+        util.get_browser_width()
         browser_res_w = util.get_monitor_width()  # pyautogui works on whole screen
         logger.info(f"Width: {browser_res_w}", also_console=True)
 
