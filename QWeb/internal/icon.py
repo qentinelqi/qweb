@@ -278,7 +278,7 @@ class QIcon:
             elif ratio < 1.1:
                 ratio = 1.0
 
-            print("*DEBUG* _extract_points Starts:")
+            # print("*DEBUG* _extract_points Starts:")
             _current_points, highest_max_val, highest_max_val_loc = \
                 self._extract_points(height * scale_ratio,
                                      res,
