@@ -16,11 +16,11 @@ Click icons
     [Tags]                  ICON
     #${is_retina}            GetConfig    RetinaDislay
     #Log                     Retina display detected: ${is_retina}
-    ClickIcon               person                template_res_w=1920        timeout=20
+    ClickIcon               person                timeout=20
     VerifyText              person is my tooltip value!
-    ClickIcon               lock                  template_res_w=1920
+    ClickIcon               lock                  
     VerifyText              Lock is my title value!
-    ClickIcon               screen                template_res_w=1920
+    ClickIcon               screen
     VerifyText              screen is my data-icon value!
 
 Verify icons
