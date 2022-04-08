@@ -19,6 +19,7 @@ Click icons
     VerifyIcon              person                template_res_w=1920
     ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
+    VerifyIcon              lock                  template_res_w=1920
     ClickIcon               lock                  template_res_w=1920
     VerifyText              Lock is my title value!
     ClickIcon               screen                 template_res_w=1920
