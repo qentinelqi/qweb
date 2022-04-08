@@ -14,7 +14,7 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 *** Test Cases ***
 Click icons
     [Tags]                  ICON
-    ${is_retina}=           GetConfig    RetinaDislay
+    ${is_retina}=           GetConfig    RetinaDisplay
     Log                     Retina display detected: ${is_retina}
     ClickIcon               person                timeout=20
     VerifyText              person is my tooltip value!
