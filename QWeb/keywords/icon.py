@@ -66,8 +66,8 @@ def click_icon(image, template_res_w=None, browser_res_w=None,
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=False)
-    logger.info(f'x: {x}')
+    x, y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=True)
+    logger.info(f'x: {x}, y: {y}')
     if x == -1:
         raise QWebElementNotFoundError("Couldn't find the icon from the screen")
     if CONFIG.get_value("RetinaDisplay"):
@@ -165,6 +165,7 @@ def verify_icon(image, template_res_w=None, browser_res_w=None,
     """
     if not browser_res_w:
         browser_res_w = util.get_browser_width()
+        logger.info(f"Browser Width: {browser_res_w}", also_console=True)
 
     # use current resolution by default
     if not template_res_w:
