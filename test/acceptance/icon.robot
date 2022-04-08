@@ -2,7 +2,7 @@
 Documentation       Tests for icon keywords
 Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}
-Test Setup          OpenAndMaximize
+Test Setup          GoTo    file://${CURDIR}/../resources/items.html
 Suite Teardown      CloseBrowser
 Library             Dialogs
 Test Timeout        1min
@@ -16,7 +16,8 @@ Click icons
     [Tags]                  ICON
     ${is_retina}=           GetConfig    RetinaDisplay
     Log                     Retina display detected: ${is_retina}
-    ClickIcon               person                timeout=20
+    VerifyIcon              person                template_res_w=1920
+    ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
     ClickIcon               lock                  
     VerifyText              Lock is my title value!
@@ -80,9 +81,4 @@ RemoveFiles
     [Documentation]     Remove files used in CaptureIcon test
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_1.png
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_2.png
-    RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_3.png
-
-
-OpenAndMaximize
-    GoTo    file://${CURDIR}/../resources/items.html
-    MaximizeWindow
+    RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_3.png    
