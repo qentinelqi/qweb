@@ -60,15 +60,15 @@ jobs:
     - name: Acceptance tests Chrome
       if: matrix.browser == 'chrome'
       run: |
-        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:Chrome -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:Chrome -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance/ícon.robot
     - name: Acceptance tests Safari
       if: matrix.browser == 'safari'
       run: |
-        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_SAFARI -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:safari -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_SAFARI -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:safari -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance/icon.robot
     - name: Acceptance tests Edge
       if: matrix.browser == 'edge'
       run: |
-        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_EDGE -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:edge -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -e jailed -e PROBLEM_IN_EDGE -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:edge -d output_${{ matrix.browser }} --name QWeb -b debug.txt --consolecolors ansi test/acceptance/icon.robot
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v1
