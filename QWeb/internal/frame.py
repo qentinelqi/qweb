@@ -63,6 +63,7 @@ def wait_page_loaded():
                 CONFIG.set_value("OSScreenshots", True)
                 raise QWebBrowserError(e) from e
             driver.switch_to.default_content()
+    time.sleep(0.1)
     timeout = CONFIG['XHRTimeout']
     if timeout.lower() == "none":
         return
