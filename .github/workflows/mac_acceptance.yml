@@ -36,6 +36,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_test.txt
+        pip install --upgrade robotframework-screencaplibrary
     - name: Display Python version
       run: |
         python -c "import sys; print(sys.version)"

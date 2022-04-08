@@ -1,9 +1,10 @@
 *** Settings ***
 Documentation       Tests for icon keywords
 Library             QWeb
-Suite Setup         OpenBrowser    about:blank    ${BROWSER}
+Library             ScreencapLibrary
+Suite Setup         Start record and open BROWSER
 Test Setup          GoTo    file://${CURDIR}/../resources/items.html
-Suite Teardown      CloseBrowser
+Suite Teardown      Stop Video recording and close browser
 Library             Dialogs
 Test Timeout        1min
 
@@ -91,3 +92,12 @@ Abc
     LogScreenshot
     RefreshPage
     LogScreenshot
+
+Start record and open BROWSER
+    Start Video Recording
+     OpenBrowser    about:blank    ${BROWSER}
+
+
+Stop video recording and close browser
+ CloseBrowser
+ Stop Video Recording
