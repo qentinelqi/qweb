@@ -14,6 +14,7 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 *** Test Cases ***
 Click icons
     [Tags]                  ICON
+    [Teardown]              Abc
     ${is_retina}=           GetConfig    RetinaDisplay
     Log                     Retina display detected: ${is_retina}
     VerifyIcon              person                template_res_w=1920
@@ -84,3 +85,9 @@ RemoveFiles
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_1.png
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_2.png
     RemoveFile          ${BASE_IMAGE_PATH}/capture_icon_3.png    
+
+Abc
+    Sleep                3
+    LogScreenshot
+    RefreshPage
+    LogScreenshot
