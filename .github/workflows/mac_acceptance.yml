@@ -75,4 +75,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: acceptance-tests-report-${{ matrix.browser }}-${{ runner.os }}-${{ matrix.python-version }}
-        path: ./output_${{ matrix.browser }}
+        path: ./output_${{ matrix.browser }}-${{ matrix.python-version }}
