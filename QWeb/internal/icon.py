@@ -249,7 +249,7 @@ class QIcon:
 
         scale_ratios = self._get_scale_ratios(template_res_w, device_res_w)
         BuiltIn().log(f'Scale ratios: {scale_ratios}', console=True)
-        print("*DEBUG* Scale ratios to be used in order: {}".format(scale_ratios))
+        # print("*DEBUG* Scale ratios to be used in order: {}".format(scale_ratios))
 
         best_highest_max_val = 0.0
         best_highest_max_val_loc = (-1, -1)
