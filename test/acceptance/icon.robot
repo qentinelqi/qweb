@@ -13,6 +13,10 @@ ${BROWSER}                  chrome
 ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}icons
 
 *** Test Cases ***
+Settings
+    [Tags]                  PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE
+    GoTo                    chrome://settings/content/protectedContent
+    LogScreenshot
 Click icons
     [Tags]                  ICON
     [Teardown]              Abc
