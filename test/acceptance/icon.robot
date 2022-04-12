@@ -18,8 +18,6 @@ Click icons
     [Teardown]              Abc
     ${is_retina}=           GetConfig    RetinaDisplay
     Log                     Retina display detected: ${is_retina}
-    ExecuteJavascript       await window.getScreenDetails()   $screendetails
-    Log                     Screen details: ${screendetails}
     VerifyIcon              person                template_res_w=1920
     ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
@@ -93,6 +91,8 @@ Abc
     Sleep                3
     LogScreenshot
     RefreshPage
+    LogScreenshot
+    SetConfig               OSScreenshots        False
     LogScreenshot
 
 Start record and open BROWSER
