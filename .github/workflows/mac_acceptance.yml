@@ -55,6 +55,9 @@ jobs:
     - name: Test with pytest
       run: |
         pytest -v --junit-xml=unittests.xml --cov=QWeb
+    - name: change screen resolution
+        run: |
+          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1600 1200
     - name: Display screen resolution
       run: |
         python -c "import pyautogui; print(pyautogui.size())"
