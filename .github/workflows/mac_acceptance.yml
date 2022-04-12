@@ -64,7 +64,7 @@ jobs:
     - name: Acceptance tests Chrome
       if: matrix.browser == 'chrome'
       run: |
-        python -m robot -e jailed -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:Chrome -d output_${{ matrix.browser }}-${{ matrix.python-version }} --name QWeb -b debug.txt --consolecolors ansi -t "Click icons" test/acceptance/icon.robot
+        python -m robot -e jailed -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY -e FLASK -v BROWSER:Chrome -d output_${{ matrix.browser }}-${{ matrix.python-version }} --name QWeb -b debug.txt --consolecolors ansi -t Settings -t "Click icons" test/acceptance/icon.robot
     - name: Acceptance tests Safari
       if: matrix.browser == 'safari'
       run: |
