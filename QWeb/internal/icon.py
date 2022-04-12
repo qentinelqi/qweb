@@ -220,7 +220,7 @@ class QIcon:
     def image_location(self,
                        needle,
                        haystack,
-                       tolerance=0.8,
+                       tolerance=0.95,
                        draw=1,
                        template_res_w=1440,
                        device_res_w=1080):
@@ -248,6 +248,7 @@ class QIcon:
         height, width = template.shape[:2]
 
         scale_ratios = self._get_scale_ratios(template_res_w, device_res_w)
+        BuiltIn().log(f'Scale ratios: {scale_ratios}', console=True)
         print("*DEBUG* Scale ratios to be used in order: {}".format(scale_ratios))
 
         best_highest_max_val = 0.0
