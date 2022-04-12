@@ -98,7 +98,7 @@ Abc
 
 Start record and open BROWSER
     Start Video Recording
-    OpenBrowser    about:blank    ${BROWSER}
+    OpenBrowser    about:blank    ${BROWSER}    prefs="profile.default_content_setting_values.notifications": "2"
 
 
 Stop video recording and close browser
