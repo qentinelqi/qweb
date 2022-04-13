@@ -148,9 +148,9 @@ def get_substring(text: str, **kwargs) -> Union[int, float, str]:
     if end == 0:
         end = len(text)
     if 'from_start' in kwargs:
-        end = start + kwargs.get('from_start')
+        end = start + int(kwargs.get('from_start'))  # type: ignore[arg-type]
     if 'from_end' in kwargs:
-        start = end - kwargs.get('from_end')
+        start = end - int(kwargs.get('from_end'))  # type: ignore[arg-type]
     logger.debug('substring start: {}'.format(start))
     logger.debug('substring end: {}'.format(end))
     text = str(text[start:end]).strip().replace('\n', "")

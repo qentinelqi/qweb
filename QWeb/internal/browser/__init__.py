@@ -15,7 +15,6 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
@@ -83,7 +82,7 @@ MIME_TYPES = (
     "video/webm;"
     "video/x-msvideo")
 
-_current_browser: Optional[WebDriver] = None
+_current_browser: WebDriver = None  # type: ignore[assignment]
 _open_browsers: list[WebDriver] = []
 
 

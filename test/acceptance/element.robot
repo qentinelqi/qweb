@@ -53,7 +53,6 @@ Click Element by WebElement instance
     [Tags]                      WebElement
     Go To                       file://${CURDIR}/../resources/text.html
     ${elem}=                    GetWebElement               Button4                        element_type=text
-    Log To Console    ${elem}
     ClickElement                ${elem}
     VerifyText                  Button4 was clicked
 

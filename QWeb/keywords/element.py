@@ -20,7 +20,6 @@ from typing import Union, Optional
 from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api.deco import keyword
-from robot.api import logger
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
 from QWeb.internal import element, decorators, actions, text, input_,\
     dropdown, checkbox
@@ -28,7 +27,7 @@ from QWeb.internal import element, decorators, actions, text, input_,\
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def click_element(xpath: Union[str, WebElement],
+def click_element(xpath: Union[WebElement, str],
                   timeout: Union[int, str] = 0,
                   js: bool = False,
                   index: int = 1,
@@ -84,9 +83,7 @@ def click_element(xpath: Union[str, WebElement],
     \`ClickCell\`, \`ClickCheckbox\`, \`ClickIcon\`, \`ClickItem\`, \`ClickList\`,
     \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`RightClick\`, \`VerifyElement\`
     """
-    #logger.console(f"xpath: {type(xpath)}, {xpath}")
     if isinstance(xpath, WebElement):
-        logger.console("Is webelement!") 
         web_element = xpath
     else:
         index = int(index) - 1
@@ -152,7 +149,7 @@ def right_click(xpath: str,
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def hover_element(xpath: Union[str, WebElement],
+def hover_element(xpath: Union[WebElement, str],
                   timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
                   index: int = 1,
                   **kwargs) -> None:
@@ -478,7 +475,6 @@ def get_webelement(locator: str,
     ----------------
     \`ClickElement\`, \`HoverElement\`, \`TypeText\`
     """
-    logger.console(f"element type str= {element_type}")
     kwargs['index'] = kwargs.get('index', 1)
     kwargs['timeout'] = timeout
     if element_type:
@@ -499,10 +495,7 @@ def get_webelement(locator: str,
                 locator, anchor, **kwargs)[0]
         if element_type.lower() == "css":
             web_elements = element.get_webelement_by_css(locator, **kwargs)
-
-        logger.console(f"actual element type = {type(web_elements)}")
-        logger.console(f"str repr = {str(web_elements)}")
-        return [web_elements]
+        return web_elements
 
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
