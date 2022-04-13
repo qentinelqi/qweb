@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for draggable elements."""
 from __future__ import annotations
 from typing import Union
@@ -33,16 +32,15 @@ from QWeb.internal import javascript
 @decorators.timeout_decorator
 def drag_drop(locator: str,
               target_locator: str,
-              index: int=1,
-              anchor: str="1",
-              target_anchor: str="1",
-              timeout: Union[int, str]=0,
-              dragtime: Union[int, str]='0.5s',
-              left: int=0,
-              right: int=0,
-              above: int=0,
-              below: int=0
-              ) -> None:
+              index: int = 1,
+              anchor: str = "1",
+              target_anchor: str = "1",
+              timeout: Union[int, str] = 0,
+              dragtime: Union[int, str] = '0.5s',
+              left: int = 0,
+              right: int = 0,
+              above: int = 0,
+              below: int = 0) -> None:
     # pylint: disable=unused-argument
     r"""Drag and drop element.
 
@@ -110,7 +108,8 @@ def drag_drop(locator: str,
     if target_locator.startswith('xpath=') or target_locator.startswith('//'):
         target_elem = element.get_unique_element_by_xpath(target_locator)
     else:
-        target_elem = internal_text.get_text_using_anchor(target_locator, target_anchor)
+        target_elem = internal_text.get_text_using_anchor(
+            target_locator, target_anchor)
     x, y = _get_coordinates(draggable)
     logger.debug('draggable x is {} and y is {}'.format(x, y))
     pyautogui.moveTo(x, y)
@@ -128,7 +127,8 @@ def _get_coordinates(web_element: WebElement) -> tuple[int, int]:
         'return window.outerWidth-window.innerWidth+screen.availLeft')
     y_diff = javascript.execute_javascript(
         'return window.outerHeight-window.innerHeight+screen.availTop')
-    elem = javascript.execute_javascript("return arguments[0].getBoundingClientRect()", web_element)
+    elem = javascript.execute_javascript(
+        "return arguments[0].getBoundingClientRect()", web_element)
     logger.debug("coords: {0}".format(elem))
     y = elem['y']
 

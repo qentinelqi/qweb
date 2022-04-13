@@ -17,11 +17,8 @@
 
 from __future__ import annotations
 from typing import Union, Any, Optional
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.select import Select
-
 from robot.api import logger
-
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import Select
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebInstanceDoesNotExistError
 from QWeb.internal import text, element, javascript
@@ -70,7 +67,8 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
             dropdown_element = dropdown_elements[0]
         elif not dropdown_elements:  # Find dropdown element using locator
             locator_element = text.get_text_using_anchor(locator, anchor)
-            dropdown_elements = _get_all_dropdown_elements(stay_in_current_frame=True)
+            dropdown_elements = _get_all_dropdown_elements(
+                stay_in_current_frame=True)
             dropdown_element = element.get_closest_element(
                 locator_element, dropdown_elements)
         else:  # Found many
@@ -80,22 +78,26 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
     return dropdown_element
 
 
-def get_dd_elements_from_all_documents(locator: str, anchor: str, index: Union[int, str], **kwargs: Any
-                                      ) -> Select:
+def get_dd_elements_from_all_documents(locator: str, anchor: str,
+                                       index: Union[int, str],
+                                       **kwargs: Any) -> Select:
     if int(index) > 0:
         index = int(index) - 1
     css_selector = CONFIG["CssSelectors"]
-    if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
+    if not css_selector or locator.startswith('xpath=') or locator.startswith(
+            '//'):
         select = get_dropdown_element_by_locator(locator, anchor)
     elif Table.is_table_coordinates(locator):
         table = Table.ACTIVE_TABLE.update_table()
         if table is None:
-            raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+            raise QWebInstanceDoesNotExistError(
+                'Table has not been defined with UseTable keyword')
         locator = table.get_table_cell(locator, anchor)
         select = element.get_element_from_childnodes(
             locator, 'select', dom_traversing=False)[int(index)]
     else:
-        select = get_dropdown_element_by_css_selector(locator, anchor, int(index), **kwargs)
+        select = get_dropdown_element_by_css_selector(locator, anchor,
+                                                      int(index), **kwargs)
     if not select:
         select = get_dropdown_element_by_locator(locator, anchor)
     if select:
@@ -105,8 +107,9 @@ def get_dd_elements_from_all_documents(locator: str, anchor: str, index: Union[i
     raise QWebElementNotFoundError('No matching elements found')
 
 
-def get_dropdown_element_by_css_selector(locator: str, anchor: str, index: int, **kwargs: Any
-                                        ) -> Optional[WebElement]:
+def get_dropdown_element_by_css_selector(
+        locator: str, anchor: str, index: int,
+        **kwargs: Any) -> Optional[WebElement]:
     """Get Dropdown element using css selectors.
        Parameters
        ----------
@@ -136,18 +139,24 @@ def get_dropdown_element_by_css_selector(locator: str, anchor: str, index: int, 
                     return full_matches[index]
                 except IndexError as e:
                     raise QWebInstanceDoesNotExistError(
-                        f'Found {len(full_matches)} elements. Given index was {index}') from e
-            correct_element = text.get_element_using_anchor(full_matches, anchor)
+                        f'Found {len(full_matches)} elements. Given index was {index}'
+                    ) from e
+            correct_element = text.get_element_using_anchor(
+                full_matches, anchor)
             return correct_element
     try:
         locator_element = text.get_text_using_anchor(locator, anchor)
         # if this is option, return parent select immediately
         if locator_element.tag_name.lower() == "option":
-            return javascript.execute_javascript("return arguments[0].parentNode;", locator_element)
-        dropdown_elements = list(dict.fromkeys(element.get_element_from_childnodes(
-            locator_element, css, **kwargs) + partial_matches))
+            return javascript.execute_javascript(
+                "return arguments[0].parentNode;", locator_element)
+        dropdown_elements = list(
+            dict.fromkeys(
+                element.get_element_from_childnodes(locator_element, css,
+                                                    **kwargs) + partial_matches))
     except QWebElementNotFoundError:
-        logger.trace('Element not found by visible text. Trying with partial match')
+        logger.trace(
+            'Element not found by visible text. Trying with partial match')
         dropdown_elements = partial_matches
     if dropdown_elements:
         return dropdown_elements[index]

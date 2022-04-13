@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for text elements.
 
 Text elements are considered to be elements that have visible text. Input
@@ -43,7 +42,10 @@ import os
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def verify_text(text: str, timeout: Union[int, str]=0, anchor: str="1", **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_text(text: str,
+                timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                anchor: str = "1",
+                **kwargs) -> None:
     r"""Verify page contains given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -111,18 +113,20 @@ def verify_text(text: str, timeout: Union[int, str]=0, anchor: str="1", **kwargs
     \`VerifyTable\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
     kwargs['css'] = False
-    window_find = util.par2bool(kwargs.get('window_find', CONFIG['WindowFind']))
+    window_find = util.par2bool(kwargs.get('window_find',
+                                           CONFIG['WindowFind']))
     if window_find:
         web_elements = internal_text.find_text(text)
     else:
-        web_elements = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+        web_elements = internal_text.get_element_by_locator_text(
+            text, anchor, **kwargs)
     if web_elements:
         return
 
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def verify_no_text(text: str, timeout: Union[int, str]=0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_no_text(text: str, timeout: Union[int, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Verify that page does not contain given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -181,13 +185,16 @@ def verify_no_text(text: str, timeout: Union[int, str]=0, **kwargs) -> None:  # 
         text, allow_non_existent=True, **kwargs)
     if not web_elements:
         return
-    raise QWebValueError('Page contained the text "{}" after timeout'.format(
-        text))
+    raise QWebValueError(
+        'Page contained the text "{}" after timeout'.format(text))
 
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def verify_text_count(text: str, expected_count: Union[int,str], timeout: Union[int, str]=0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_text_count(text: str,
+                      expected_count: Union[int, str],
+                      timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                      **kwargs) -> None:
     r"""Verify page contains given text given times.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -253,13 +260,14 @@ def verify_text_count(text: str, expected_count: Union[int,str], timeout: Union[
     if element_count == expected_count:
         return
 
-    raise QWebValueError('Page contained {0} texts instead of {1} after timeout'
-                         .format(element_count, expected_count))
+    raise QWebValueError(
+        'Page contained {0} texts instead of {1} after timeout'.format(
+            element_count, expected_count))
 
 
 @keyword(tags=("Text", "Getters"))
 @decorators.timeout_decorator
-def get_text_count(text: str , timeout: Union[int, str]=0, **kwargs) -> int:  # pylint: disable=unused-argument
+def get_text_count(text: str, timeout: Union[int, str] = 0, **kwargs) -> int:  # pylint: disable=unused-argument
     r"""Get count of appearances for given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -305,13 +313,12 @@ def get_text_count(text: str , timeout: Union[int, str]=0, **kwargs) -> int:  # 
 @keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def click_text(text: str,
-               anchor: str="1",
-               timeout: Union[int, str]=0,
-               parent: Optional[str]=None,
-               child: Optional[str]=None,
-               js: bool=False,
-               **kwargs
-               ) -> None:
+               anchor: str = "1",
+               timeout: Union[int, str] = 0,
+               parent: Optional[str] = None,
+               child: Optional[str] = None,
+               js: bool = False,
+               **kwargs) -> None:
     r"""Click text on web page.
 
     Keyword looks for an exact match and if not found uses xpath defined in
@@ -415,22 +422,27 @@ def click_text(text: str,
     """
     anchor = str(anchor)
 
-    web_element = internal_text.get_element_by_locator_text(
-        text, anchor, parent=parent, child=child, **kwargs)
-    if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    web_element = internal_text.get_element_by_locator_text(text,
+                                                            anchor,
+                                                            parent=parent,
+                                                            child=child,
+                                                            **kwargs)
+    if _execute_click_and_verify_condition(web_element,
+                                           timeout=timeout,
+                                           js=js,
+                                           **kwargs):
         return
 
 
 def scan_click(text: str,
                text_to_appear: str,
-               anchor: str="1",
-               timeout: Union[int, str]=0,
-               interval: Optional[str]=None,
-               parent: Optional[str]=None,
-               child: Optional[str]=None,
-               js: bool=False,
-               **kwargs
-               ) -> None:  # pylint: disable=unused-argument
+               anchor: str = "1",
+               timeout: Union[int, str] = 0,
+               interval: Optional[str] = None,
+               parent: Optional[str] = None,  # pylint: disable=unused-argument
+               child: Optional[str] = None,  # pylint: disable=unused-argument
+               js: bool = False,  # pylint: disable=unused-argument
+               **kwargs) -> None:
     """*DEPRECATED!!* Use keyword `ClickUntil` instead.
 
     Click text until a text appears.
@@ -474,22 +486,34 @@ def scan_click(text: str,
     """
     el_type = kwargs.get('el_type', 'text')
     if el_type.lower() != 'text':
-        click_item_until(text_to_appear, text, anchor, timeout, interval, js=False, **kwargs)
+        click_item_until(text_to_appear,
+                         text,
+                         anchor,
+                         timeout,
+                         interval,
+                         js=False,
+                         **kwargs)
     else:
-        click_until(text_to_appear, text, anchor, timeout,
-                    interval, parent=None, child=None, js=False, **kwargs)
+        click_until(text_to_appear,
+                    text,
+                    anchor,
+                    timeout,
+                    interval,
+                    parent=None,
+                    child=None,
+                    js=False,
+                    **kwargs)
 
 
 def skim_click(text: str,
-               text_to_disappear: str='',
-               anchor: str="1",
-               timeout: Union[int,str]=0,
-               interval: Optional[str]=None,
-               parent: Optional[str]=None,
-               child: Optional[str]=None,
-               js: bool=False,
-               **kwargs
-               ) -> None:
+               text_to_disappear: str = '',
+               anchor: str = "1",
+               timeout: Union[int, str] = 0,
+               interval: Optional[str] = None,
+               parent: Optional[str] = None,
+               child: Optional[str] = None,
+               js: bool = False,
+               **kwargs) -> None:
     """*DEPRECATED!!* Use keyword `ClickWhile` instead.
 
     Click text until a text disappears.
@@ -540,14 +564,24 @@ def skim_click(text: str,
     if text_to_disappear == '':
         text_to_disappear = text
     if el_type.lower() != 'text':
-        click_item_while(text_to_disappear, text, anchor, timeout, interval, js=js, **kwargs)
+        click_item_while(text_to_disappear,
+                         text,
+                         anchor,
+                         timeout,
+                         interval,
+                         js=js,
+                         **kwargs)
     else:
-        click_while(text_to_disappear, text, anchor, timeout, interval, parent, child, js, **kwargs)
+        click_while(text_to_disappear, text, anchor, timeout, interval, parent,
+                    child, js, **kwargs)
 
 
 @keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
-def hover_text(text: str, anchor: str="1", timeout: Union[int, str]="0", **kwargs) -> None:  # pylint: disable=unused-argument
+def hover_text(text: str,
+               anchor: str = "1",
+               timeout: Union[int, str] = "0",
+               **kwargs) -> None:
     r"""Hover over text.
 
     Keyword will fail if text is not visible. You should use VerifyText before HoverText
@@ -580,13 +614,17 @@ def hover_text(text: str, anchor: str="1", timeout: Union[int, str]="0", **kwarg
         css=False/off: Use this to bypass css search when finding elements
         by visible text
     """
-    web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+    web_element = internal_text.get_element_by_locator_text(
+        text, anchor, **kwargs)
     _hover_to(web_element, timeout=timeout)
 
 
 @keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
-def hover_item(locator: str, anchor: str="1", timeout: Union[int,str]="0", **kwargs) -> None:  # pylint: disable=unused-argument
+def hover_item(locator: str,
+               anchor: str = "1",
+               timeout: Union[int, str] = "0",
+               **kwargs) -> None:
     r"""Hover over item.
 
     Hover over web element.
@@ -622,13 +660,14 @@ def hover_item(locator: str, anchor: str="1", timeout: Union[int,str]="0", **kwa
     ----------------
     \`HoverElement\`, \`HoverText\`, \`HoverTo\`, \`ScrollText\`, \`ScrollTo\`
     """
-    web_element = internal_text.get_item_using_anchor(locator, anchor, **kwargs)
+    web_element = internal_text.get_item_using_anchor(locator, anchor,
+                                                      **kwargs)
     _hover_to(web_element, timeout=timeout)
 
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def is_text(text: str, timeout: Union[int, str]="0.1s", **kwargs) -> bool:
+def is_text(text: str, timeout: Union[int, str] = "0.1s", **kwargs) -> bool:
     r"""Return True/False if text is found on the screen.
 
     Used to get text presence to variable. This keyword returns after text is found.
@@ -661,14 +700,17 @@ def is_text(text: str, timeout: Union[int, str]="0.1s", **kwargs) -> bool:
     \`GetText\`, \`IsNoText\`, \`VerifyText\`
     """
     try:
-        return _text_appearance(text, text_appear=True, timeout=timeout, **kwargs)
+        return _text_appearance(text,
+                                text_appear=True,
+                                timeout=timeout,
+                                **kwargs)
     except (QWebTimeoutError, QWebValueError, QWebInstanceDoesNotExistError):
         return False
 
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def is_no_text(text: str, timeout: Union[int, str]="2s", **kwargs) -> bool:
+def is_no_text(text: str, timeout: Union[int, str] = "2s", **kwargs) -> bool:
     r"""Return True/False if text is found on the screen.
 
     Used to get text presence info to variable. This keyword returns if text is not visible or
@@ -702,14 +744,21 @@ def is_no_text(text: str, timeout: Union[int, str]="2s", **kwargs) -> bool:
     \`IsText\`, \`VerifyText\`
     """
     try:
-        return _text_appearance(text, text_appear=False, timeout=timeout, **kwargs)
+        return _text_appearance(text,
+                                text_appear=False,
+                                timeout=timeout,
+                                **kwargs)
     except (QWebValueError, QWebTimeoutError):
         return False
 
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def verify_element_text(locator: str, text_to_find: str, timeout: Union[int,str]=0, anchor: str="1", **kwargs) -> None:
+def verify_element_text(locator: str,
+                        text_to_find: str,
+                        timeout: Union[int, str] = 0,
+                        anchor: str = "1",
+                        **kwargs) -> None:
     r"""Verify that element contains specified text.
 
     Examples
@@ -751,7 +800,10 @@ def verify_element_text(locator: str, text_to_find: str, timeout: Union[int,str]
 
 @keyword(tags=("Text", "Getters"))
 @decorators.timeout_decorator
-def get_text(locator: str, timeout: Union[int,str]=0, anchor: str="1", **kwargs) -> Union[str, int, float]:  # pylint: disable=unused-argument
+def get_text(locator: str,
+             timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+             anchor: str = "1",
+             **kwargs) -> Union[str, int, float]:
     r"""Get text from element specified by xpath.
 
     Examples
@@ -807,10 +859,12 @@ def get_text(locator: str, timeout: Union[int,str]=0, anchor: str="1", **kwargs)
         try:
             anchor_int = int(anchor) - 1
             kwargs['element_kw'] = True
-            web_element = element.get_elements_by_attributes(tag, locator, **kwargs)[anchor_int]
+            web_element = element.get_elements_by_attributes(
+                tag, locator, **kwargs)[anchor_int]
         except ValueError as e:
             raise QWebValueError(
-                'Only index is allowed anchor when searching element by it\'s attribute') from e
+                'Only index is allowed anchor when searching element by it\'s attribute'
+            ) from e
     elif '//' not in locator:
         web_element = internal_text.get_text_using_anchor(locator, anchor)
     else:
@@ -821,7 +875,11 @@ def get_text(locator: str, timeout: Union[int,str]=0, anchor: str="1", **kwargs)
 
 @keyword(tags=("Item", "Interaction"))
 @decorators.timeout_decorator
-def click_item(text: str, anchor: str="1", timeout: Union[int,str]=0, js: bool=False, **kwargs) -> None:
+def click_item(text: str,
+               anchor: str = "1",
+               timeout: Union[int, str] = 0,
+               js: bool = False,
+               **kwargs) -> None:
     r"""Click item (usually icon or picture) on webpage.
 
     Finds webelement by it's tooltip text (title or alt) or some another
@@ -891,13 +949,19 @@ def click_item(text: str, anchor: str="1", timeout: Union[int,str]=0, js: bool=F
     \`ClickList\`, \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`VerifyItem\`
     """
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
-    if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    if _execute_click_and_verify_condition(web_element,
+                                           timeout=timeout,
+                                           js=js,
+                                           **kwargs):
         return
 
 
 @keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
-def verify_item(text: str, anchor: str="1", timeout: Union[int,str]=0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_item(text: str,
+                anchor: str = "1",
+                timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                **kwargs) -> None:
     r"""Verify Item (usually icon or picture) exist.
 
     Finds webelement by it's tooltip text (title or alt) or some another
@@ -965,7 +1029,10 @@ def verify_item(text: str, anchor: str="1", timeout: Union[int,str]=0, **kwargs)
 
 @keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
-def verify_no_item(text: str, anchor: str="1", timeout: Union[int,str]=0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_no_item(text: str,
+                   anchor: str = "1",
+                   timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                   **kwargs) -> None:
     r"""Verify Item (usually icon or picture) is not exist.
 
     Finds webelement by it's tooltip text (title or alt) or some another
@@ -1013,12 +1080,16 @@ def verify_no_item(text: str, anchor: str="1", timeout: Union[int,str]=0, **kwar
     web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
     if not web_element:
         return
-    raise QWebValueError('Element with attribute value {} still exists'.format(text))
+    raise QWebValueError(
+        'Element with attribute value {} still exists'.format(text))
 
 
 @keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
-def is_item(text: str, anchor:str ="1", timeout: Union[int, float, str]=0.1, **kwargs) -> bool:  # pylint: disable=unused-argument
+def is_item(text: str,
+            anchor: str = "1",
+            timeout: Union[int, float, str] = 0.1,
+            **kwargs) -> bool:
     r"""Check if Item (usually icon or picture) exists.
 
     Finds webelement by it's tooltip text (title or alt) or some another
@@ -1072,7 +1143,10 @@ def is_item(text: str, anchor:str ="1", timeout: Union[int, float, str]=0.1, **k
 
 @keyword(tags=("Item", "Verification"))
 @decorators.timeout_decorator
-def is_no_item(text: str, anchor: str="1", timeout: Union[int, float, str]=0.1, **kwargs):  # pylint: disable=unused-argument
+def is_no_item(text: str,
+               anchor: str = "1",
+               timeout: Union[int, float, str] = 0.1,
+               **kwargs):
     r"""Check if Item (usually icon or picture) does not exist.
 
     Finds webelement by it's tooltip text (title or alt) or some another
@@ -1126,7 +1200,10 @@ def is_no_item(text: str, anchor: str="1", timeout: Union[int, float, str]=0.1, 
 
 @keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
-def scroll_text(text: str, anchor: str="1", timeout: Union[int, float, str]=0, **kwargs) -> None:
+def scroll_text(text: str,
+                anchor: str = "1",
+                timeout: Union[int, float, str] = 0,
+                **kwargs) -> None:
     r"""Scroll page until text is on top.
 
     Finds text on page and scrolls until it is on top. This is used with visual testing
@@ -1147,7 +1224,8 @@ def scroll_text(text: str, anchor: str="1", timeout: Union[int, float, str]=0, *
     ----------------
     \`HoverElement\`, \`HoverItem\`, \`HoverText\`, \`HoverTo\`, \`ScrollTo\`
     """
-    web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+    web_element = internal_text.get_element_by_locator_text(
+        text, anchor, **kwargs)
     _scroll(web_element, timeout=timeout)
 
 
@@ -1178,7 +1256,8 @@ def write_text(text: str) -> None:
 
 
 @decorators.timeout_decorator
-def verify_texts(texts_to_verify: Union[str, list[str]], timeout: Union[int, float, str]=0) -> None:
+def verify_texts(texts_to_verify: Union[str, list[str]],
+                 timeout: Union[int, float, str] = 0) -> None:
     r"""*DEPRECATED!!* Use keyword `VerifyAll` instead."""
     logger.warn(r"""*DEPRECATED!!* Use keyword `VerifyAll` instead.""")
     if isinstance(texts_to_verify, list):
@@ -1191,19 +1270,22 @@ def verify_texts(texts_to_verify: Union[str, list[str]], timeout: Union[int, flo
             clean_data = [line.rstrip() for line in txt_file]
             for x in clean_data:
                 x_str = x.decode('utf-8')
-                logger.info('Verifying text "{}".'.format(x_str), also_console=True)
+                logger.info('Verifying text "{}".'.format(x_str),
+                            also_console=True)
                 verify_text(x_str, timeout)
     else:
         texts = texts_to_verify.split(',')
         for text in texts:
             clean_text = text.strip()
-            logger.info('Verifying text "{}".'.format(clean_text), also_console=True)
+            logger.info('Verifying text "{}".'.format(clean_text),
+                        also_console=True)
             verify_text(clean_text, timeout)
 
 
 @keyword(tags=("File", "Text", "Verification"))
 @decorators.timeout_decorator
-def verify_any(texts_to_verify: Union[str, list[str]], timeout: Union[int, float, str]=0) -> str:
+def verify_any(texts_to_verify: Union[str, list[str]],
+               timeout: Union[int, float, str] = 0) -> str:
     r"""Verify any of the given texts.
 
     Verify that at least one of the texts is found. Useful for handling
@@ -1259,7 +1341,8 @@ def verify_any(texts_to_verify: Union[str, list[str]], timeout: Union[int, float
         texts = texts_to_verify.split(',')
         for text in texts:
             clean_text = text.strip()
-            logger.info('Verifying text "{}".'.format(clean_text), also_console=True)
+            logger.info('Verifying text "{}".'.format(clean_text),
+                        also_console=True)
             if is_text(clean_text, timeout):
                 return clean_text
 
@@ -1269,7 +1352,8 @@ def verify_any(texts_to_verify: Union[str, list[str]], timeout: Union[int, float
 
 @keyword(tags=("File", "Text", "Verification"))
 @decorators.timeout_decorator
-def verify_all(texts_to_verify: Union[str, list[str]], timeout: Union[int, float, str]=0) -> None:
+def verify_all(texts_to_verify: Union[str, list[str]],
+               timeout: Union[int, float, str] = 0) -> None:
     r"""Verify page contains given texts.
 
     The texts should be separated with a comma.
@@ -1303,25 +1387,26 @@ def verify_all(texts_to_verify: Union[str, list[str]], timeout: Union[int, float
             clean_data = [line.rstrip() for line in txt_file]
             for x in clean_data:
                 x_str = x.decode('utf-8')
-                logger.info('Verifying text "{}".'.format(x_str), also_console=True)
+                logger.info('Verifying text "{}".'.format(x_str),
+                            also_console=True)
                 verify_text(x_str, timeout)
     else:
         texts = texts_to_verify.split(',')
         for text in texts:
             clean_text = text.strip()
-            logger.info('Verifying text "{}".'.format(clean_text), also_console=True)
+            logger.info('Verifying text "{}".'.format(clean_text),
+                        also_console=True)
             verify_text(clean_text, timeout)
 
 
 @keyword(tags=("Text", "Interaction"))
 @decorators.timeout_decorator
 def scroll_to(text_to_find: str,
-              locator: Optional[str]=None,
-              anchor: str='1',
-              scroll_length: Optional[str]=None,
-              timeout: Union[int,float,str]=120,
-              **kwargs
-              ) -> None:  # pylint: disable=unused-argument
+              locator: Optional[str] = None,
+              anchor: str = '1',
+              scroll_length: Optional[str] = None,
+              timeout: Union[int, float, str] = 120,
+              **kwargs) -> None:
     r"""Scroll a dynamic web page or scrollbar.
 
     Parameters
@@ -1377,10 +1462,12 @@ def scroll_to(text_to_find: str,
         return
     slow_mode = util.par2bool(kwargs.get('slow_mode', False))
     if locator:  # If we are trying to scroll a specific element
-        _scroll_first_scrollable_parent_element(
-            locator, anchor, text_to_find, scroll_length, slow_mode, timeout)
+        _scroll_first_scrollable_parent_element(locator, anchor, text_to_find,
+                                                scroll_length, slow_mode,
+                                                timeout)
     else:  # if we are just scrolling the web page
-        _scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout)
+        _scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode,
+                                 timeout)
 
 
 @keyword(tags=("Text", "Interaction"))
@@ -1408,15 +1495,14 @@ def copy_text(text: str) -> None:
 
 @keyword(tags=("Text", "Interaction"))
 def click_while(text_to_disappear: str,
-                text_to_click: Optional[str]=None,
-                anchor: str="1",
-                timeout: Union[int,float,str]=0,
-                interval: Optional[str]=None,
-                parent: Optional[str]=None,
-                child: Optional[str]=None,
-                js: bool=False,
-                **kwargs
-                ) -> None:
+                text_to_click: Optional[str] = None,
+                anchor: str = "1",
+                timeout: Union[int, float, str] = 0,
+                interval: Optional[str] = None,
+                parent: Optional[str] = None,
+                child: Optional[str] = None,
+                js: bool = False,
+                **kwargs) -> None:
     r"""Click text until a text or element disappears.
 
     This keyword is required on slow pages where it takes time for a button
@@ -1478,12 +1564,14 @@ def click_while(text_to_disappear: str,
             try:
                 verify_item(text_to_disappear, timeout=timeout, **kwargs)
             except QWebElementNotFoundError as e:
-                raise QWebValueError('Element to disappear is not visible before click.') from e
+                raise QWebValueError(
+                    'Element to disappear is not visible before click.') from e
         elif not is_text(text_to_disappear, timeout):
-            raise QWebValueError('Text to disappear is not visible before click.')
+            raise QWebValueError(
+                'Text to disappear is not visible before click.')
     try:
-        _retry_while(text_to_click, text_to_disappear, anchor, timeout, interval,
-                     parent, child, js, **kwargs)
+        _retry_while(text_to_click, text_to_disappear, anchor, timeout,
+                     interval, parent, child, js, **kwargs)
     except QWebElementNotFoundError as orig_err:
         err = CONFIG.get_value('RetryError')
         CONFIG.reset_value('RetryError')
@@ -1492,15 +1580,14 @@ def click_while(text_to_disappear: str,
 
 @keyword(tags=("Text", "Interaction"))
 def click_until(text_to_appear: str,
-                text_to_click: Optional[str]=None,
-                anchor: str="1",
-                timeout: Union[int,float,str]=0,
-                interval: Optional[str]=None,
-                parent: Optional[str]=None,
-                child: Optional[str]=None,
-                js: bool=False,
-                **kwargs
-                ) -> None:
+                text_to_click: Optional[str] = None,
+                anchor: str = "1",
+                timeout: Union[int, float, str] = 0,
+                interval: Optional[str] = None,
+                parent: Optional[str] = None,
+                child: Optional[str] = None,
+                js: bool = False,
+                **kwargs) -> None:
     r"""Click text until a text appears.
 
     This keyword is required on slow pages where it takes time for a button
@@ -1561,7 +1648,8 @@ def click_until(text_to_appear: str,
             try:
                 verify_no_item(text_to_appear, **kwargs)
             except QWebValueError as e:
-                raise QWebValueError('Element to appear is already visible.') from e
+                raise QWebValueError(
+                    'Element to appear is already visible.') from e
         elif not is_no_text(text_to_appear):
             raise QWebValueError('Text to appear is already visible.')
     try:
@@ -1575,13 +1663,12 @@ def click_until(text_to_appear: str,
 
 @keyword(tags=("Item", "Interaction"))
 def click_item_while(text_to_disappear: str,
-                     locator: Optional[str]=None,
-                     anchor: str="1",
-                     timeout: Union[int,float,str]=0,
-                     interval: Optional[str]=None,
-                     js: bool=False,
-                     **kwargs
-                     ) -> None:
+                     locator: Optional[str] = None,
+                     anchor: str = "1",
+                     timeout: Union[int, float, str] = 0,
+                     interval: Optional[str] = None,
+                     js: bool = False,
+                     **kwargs) -> None:
     r"""Click Item until a text or element disappears.
 
     This keyword is required on slow pages where it takes time for a button
@@ -1641,11 +1728,19 @@ def click_item_while(text_to_disappear: str,
             try:
                 verify_item(text_to_disappear, timeout=timeout, **kwargs)
             except QWebElementNotFoundError as e:
-                raise QWebValueError('Element to disappear is not visible before click.') from e
+                raise QWebValueError(
+                    'Element to disappear is not visible before click.') from e
         elif not is_text(text_to_disappear, timeout):
-            raise QWebValueError('Text to disappear is not visible before click.')
+            raise QWebValueError(
+                'Text to disappear is not visible before click.')
     try:
-        _retry_while(locator, text_to_disappear, anchor, timeout, interval, js=js, **kwargs)
+        _retry_while(locator,
+                     text_to_disappear,
+                     anchor,
+                     timeout,
+                     interval,
+                     js=js,
+                     **kwargs)
     except QWebElementNotFoundError as orig_err:
         err = CONFIG.get_value('RetryError')
         CONFIG.reset_value('RetryError')
@@ -1654,13 +1749,12 @@ def click_item_while(text_to_disappear: str,
 
 @keyword(tags=("Item", "Interaction"))
 def click_item_until(text_to_appear: str,
-                     locator: Optional[str]=None,
-                     anchor: str="1",
-                     timeout: Union[int,float,str]=0,
-                     interval: Optional[str]=None,
-                     js: bool=False,
-                     **kwargs
-                     ) -> None:
+                     locator: Optional[str] = None,
+                     anchor: str = "1",
+                     timeout: Union[int, float, str] = 0,
+                     interval: Optional[str] = None,
+                     js: bool = False,
+                     **kwargs) -> None:
     r"""Click text until a text appears.
 
     This keyword is required on slow pages where it takes time for a button
@@ -1716,11 +1810,18 @@ def click_item_until(text_to_appear: str,
             try:
                 verify_no_item(text_to_appear, **kwargs)
             except QWebValueError as e:
-                raise QWebValueError('Element to appear is already visible.') from e
+                raise QWebValueError(
+                    'Element to appear is already visible.') from e
         elif not is_no_text(text_to_appear):
             raise QWebValueError('Text to appear is already visible.')
     try:
-        _retry_until(locator, text_to_appear, anchor, timeout, interval, js=js, **kwargs)
+        _retry_until(locator,
+                     text_to_appear,
+                     anchor,
+                     timeout,
+                     interval,
+                     js=js,
+                     **kwargs)
     except QWebElementNotFoundError as orig_err:
         err = CONFIG.get_value('RetryError')
         CONFIG.reset_value('RetryError')
@@ -1731,13 +1832,12 @@ def click_item_until(text_to_appear: str,
 def _retry_while(text: str,
                  text_to_disappear: str,
                  anchor: str,
-                 timeout: Union[int,float,str],
+                 timeout: Union[int, float, str],  # pylint: disable=unused-argument
                  interval: Optional[str],
-                 parent: Optional[str]=None,
-                 child: Optional[str]=None,
-                 js: bool=False,
-                 **kwargs
-                 ) -> None:
+                 parent: Optional[str] = None,
+                 child: Optional[str] = None,
+                 js: bool = False,
+                 **kwargs) -> None:
     if not interval:
         interval = CONFIG['RetryInterval']
     item = kwargs.get('item', False)
@@ -1749,7 +1849,8 @@ def _retry_while(text: str,
             click_text(text, anchor, interval, parent, child, js, **kwargs)
     except (QWebElementNotFoundError, QWebDriverError, QWebValueError) as e:
         CONFIG.set_value('RetryError', e)
-        logger.info('Got {} from click part. Action probably triggered'.format(e))
+        logger.info(
+            'Got {} from click part. Action probably triggered'.format(e))
     try:
         if el:
             verify_no_item(text_to_disappear, timeout=interval, **kwargs)
@@ -1765,13 +1866,12 @@ def _retry_while(text: str,
 def _retry_until(text: str,
                  text_to_appear: str,
                  anchor: str,
-                 timeout: Union[int,float,str],
+                 timeout: Union[int, float, str],  # pylint: disable=unused-argument
                  interval: Optional[str],
-                 parent: Optional[str]=None,
-                 child: Optional[str]=None,
-                 js: bool=False,
-                 **kwargs
-                 ) -> None:
+                 parent: Optional[str] = None,
+                 child: Optional[str] = None,
+                 js: bool = False,
+                 **kwargs) -> None:
     if not interval:
         interval = CONFIG['RetryInterval']
     item = kwargs.get('item', False)
@@ -1783,7 +1883,8 @@ def _retry_until(text: str,
             click_text(text, anchor, interval, parent, child, js, **kwargs)
     except (QWebElementNotFoundError, QWebDriverError, QWebValueError) as e:
         CONFIG.set_value('RetryError', e)
-        logger.info('Got {} from click part. Action probably triggered'.format(e))
+        logger.info(
+            'Got {} from click part. Action probably triggered'.format(e))
     try:
         if el:
             verify_item(text_to_appear, timeout=interval, **kwargs)

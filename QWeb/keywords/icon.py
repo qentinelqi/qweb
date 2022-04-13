@@ -29,11 +29,11 @@ import os
 
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
-def click_icon(image: str,
-               template_res_w: Optional[int]=None,
-               browser_res_w: Optional[int]=None,
-               timeout: Union[int,str]=0
-               ) -> None:  # pylint: disable=unused-argument
+def click_icon(
+        image: str,
+        template_res_w: Optional[int] = None,
+        browser_res_w: Optional[int] = None,
+        timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Click the icon on the screen.
 
     In case you want to click icons you always have to have reference images.
@@ -61,7 +61,8 @@ def click_icon(image: str,
     \`ClickUntil\`, \`ClickWhile\`, \`VerifyIcon\`
     """
     if not browser_res_w:
-        browser_res_w = util.get_monitor_width()  # pyautogui works on whole screen
+        browser_res_w = util.get_monitor_width(
+        )  # pyautogui works on whole screen
 
     # use current resolution by default
     if not template_res_w:
@@ -69,9 +70,13 @@ def click_icon(image: str,
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=True)
+    x, y = icon.image_recognition(str(image_path),
+                                  template_res_w,
+                                  browser_res_w,
+                                  pyautog=True)
     if x == -1:
-        raise QWebElementNotFoundError("Couldn't find the icon from the screen")
+        raise QWebElementNotFoundError(
+            "Couldn't find the icon from the screen")
     if CONFIG.get_value("RetinaDisplay"):
         x = int(x * 0.5)
         y = int(y * 0.5)
@@ -80,10 +85,11 @@ def click_icon(image: str,
 
 
 @keyword(tags=("Icon", "Verification"))
-def is_icon(image: str,
-            template_res_w: Optional[int]=None,
-            browser_res_w: Optional[int]=None,
-            ) -> bool:  # pylint: disable=unused-argument
+def is_icon(
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+) -> bool:
     r"""Check is the icon on the screen.
 
     In case you want to use this keyword you always have to have reference images.
@@ -118,7 +124,10 @@ def is_icon(image: str,
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False)
+    x, _y = icon.image_recognition(str(image_path),
+                                   template_res_w,
+                                   browser_res_w,
+                                   pyautog=False)
 
     if x == -1:
         return False
@@ -127,11 +136,12 @@ def is_icon(image: str,
 
 @keyword(tags=("Icon", "Verification"))
 @decorators.timeout_decorator
-def verify_icon(image: str,
-               template_res_w: Optional[int]=None,
-               browser_res_w: Optional[int]=None,
-               timeout: Union[int,str]=0
-               ) -> bool:  # pylint: disable=unused-argument  # pylint: disable=unused-argument
+def verify_icon(
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+    timeout: Union[int, str] = 0  # pylint: disable=unused-argument
+) -> bool:
     r"""Verify page contains icon.
 
     In case you want to use this keyword you always have to have reference images.
@@ -181,7 +191,10 @@ def verify_icon(image: str,
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
 
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False)
+    x, _y = icon.image_recognition(str(image_path),
+                                   template_res_w,
+                                   browser_res_w,
+                                   pyautog=False)
     if x == -1:
         raise QWebIconNotFoundError("Couldn't find the icon from the screen")
     return True
@@ -190,11 +203,10 @@ def verify_icon(image: str,
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
 def capture_icon(locator: str,
-                 folder: str='screenshots',
-                 filename: str='screenshot_{}.png',
-                 timeout: Union[int,str]=0,
-                 **kwargs
-                 ) -> None:  # pylint: disable=unused-argument
+                 folder: str = 'screenshots',
+                 filename: str = 'screenshot_{}.png',
+                 timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                 **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 
     Examples
@@ -230,6 +242,7 @@ def capture_icon(locator: str,
         web_element = text.get_item_using_anchor(locator, anchor='1', **kwargs)
     img = Image.open(io.BytesIO(web_element.screenshot_as_png))
     filepath = os.path.join(screenshot.save_screenshot(filename, folder))
-    logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')), also_console=True)
+    logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')),
+                also_console=True)
     img.save(filepath)
     screenshot.log_screenshot_file(filepath)

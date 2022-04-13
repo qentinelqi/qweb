@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Union, Optional
+from typing import Union
 
 from robot.api.deco import keyword
 from QWeb.internal import alert
@@ -23,7 +23,7 @@ from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 
 
 @keyword(tags=("Alert", "Interaction"))
-def close_alert(action: str, timeout: Union[int, str]=0) -> None:
+def close_alert(action: str, timeout: Union[int, str] = 0) -> None:
     r"""Close popup alert.
 
     Examples
@@ -54,7 +54,7 @@ def close_alert(action: str, timeout: Union[int, str]=0) -> None:
 
 
 @keyword(tags=("Alert", "Verification"))
-def is_alert(timeout: Union[int, str]="0.1s") -> bool:
+def is_alert(timeout: Union[int, str] = "0.1s") -> bool:
     r"""Return True/False if alert is found on the screen.
 
     Used to get alert presence to variable. This keyword returns after alert is found.
@@ -85,7 +85,9 @@ def is_alert(timeout: Union[int, str]="0.1s") -> bool:
 
 
 @keyword(tags=("Alert", "Interaction", "Input"))
-def type_alert(text: str, action: str="Accept", timeout: Union[int, str]=0):
+def type_alert(text: str,
+               action: str = "Accept",
+               timeout: Union[int, str] = 0):
     r"""Type and close popup alert.
 
     Examples
@@ -117,7 +119,7 @@ def type_alert(text: str, action: str="Accept", timeout: Union[int, str]=0):
 
 
 @keyword(tags=("Alert", "Getters"))
-def get_alert_text(timeout: Union[int, str]=0) -> str:
+def get_alert_text(timeout: Union[int, str] = 0) -> str:
     r"""Get alert text to variable.
 
     Examples
@@ -140,7 +142,7 @@ def get_alert_text(timeout: Union[int, str]=0) -> str:
 
 
 @keyword(tags=("Alert", "Verification"))
-def verify_alert_text(text: str, timeout: Union[int, str]=0) -> None:
+def verify_alert_text(text: str, timeout: Union[int, str] = 0) -> None:
     r"""Verify alert text.
 
     Examples

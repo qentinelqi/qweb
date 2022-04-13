@@ -57,7 +57,8 @@ def url_validator(url: str) -> bool:
         r'localhost|'
         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
         r'(?::\d+)?'
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        r'(?:/?|[/?]\S+)$',
+        re.IGNORECASE)
     return re.match(regex, url) is not None
 
 
@@ -85,7 +86,7 @@ def set_window_size(pixels: str) -> tuple[int, int]:
     return width, height
 
 
-def _parse_pixels(pixels: str, split: str='x') -> tuple[str, str]:
+def _parse_pixels(pixels: str, split: str = 'x') -> tuple[str, str]:
     pixel_list = pixels.lower().split(split)
     if len(pixel_list) == 1:
         raise ValueError("Pixels needs to be given with '1920x1080' syntax")
@@ -99,12 +100,14 @@ def set_input_handler(input_method: str) -> str:
 
 def set_line_break(key: str) -> str:
     if key == '\ue000':
-        current_browser = browser.get_current_browser().capabilities['browserName']
+        current_browser = browser.get_current_browser(
+        ).capabilities['browserName']
         if current_browser == 'firefox':
             key = ''
             input_handler.line_break_key = key
-            logger.info('\n\\ue000 line break does not work with Firefox, using empty string'
-                        ' instead. It is recommended to use None instead of \\ue000.')
+            logger.info(
+                '\n\\ue000 line break does not work with Firefox, using empty string'
+                ' instead. It is recommended to use None instead of \\ue000.')
         else:
             input_handler.line_break_key = key
     elif key.lower() in ('none', 'empty', 'null'):
@@ -125,19 +128,10 @@ def set_clear_key(key: str) -> Optional[str]:
 
 def highlight_validation(color: str) -> str:
     """ Validates the given highligh color is among supported basic colors """
-    if not color.lower() in ["red",
-                             "green",
-                             "blue",
-                             "black",
-                             "orange",
-                             "yellow",
-                             "fuchsia",
-                             "lime",
-                             "olive",
-                             "teal",
-                             "purple",
-                             "navy",
-                             "aqua"]:
+    if not color.lower() in [
+            "red", "green", "blue", "black", "orange", "yellow", "fuchsia",
+            "lime", "olive", "teal", "purple", "navy", "aqua"
+    ]:
         raise ValueError("Not a supported highligt color")
     return color
 
@@ -145,7 +139,8 @@ def highlight_validation(color: str) -> str:
 def get_substring(text: str, **kwargs) -> Union[int, float, str]:
     if '\xa0' in text:
         text = text.replace('\xa0', ' ')
-    start, end = kwargs.get('between', '{}???{}').format(0, len(text)).split('???')
+    start, end = kwargs.get('between',
+                            '{}???{}').format(0, len(text)).split('???')
     include_start = kwargs.get('include_locator', False)
     exclude_end = kwargs.get('exclude_post', True)
     start = get_index_of(text, start, include_start)
@@ -166,11 +161,13 @@ def get_substring(text: str, **kwargs) -> Union[int, float, str]:
         if 'float' in kwargs:
             return float(text.replace(' ', '').replace(',', '.'))
     except ValueError as e:
-        raise QWebValueMismatchError('Unable to convert. Got exception: {}'.format(e)) from e
+        raise QWebValueMismatchError(
+            'Unable to convert. Got exception: {}'.format(e)) from e
     return text
 
 
-def get_index_of(text: str, locator: str, condition: Union[bool, int, str]) -> int:
+def get_index_of(text: str, locator: str, condition: Union[bool, int,
+                                                           str]) -> int:
     try:
         return int(locator.strip())
     except ValueError:
@@ -181,7 +178,8 @@ def get_index_of(text: str, locator: str, condition: Union[bool, int, str]) -> i
         if par2bool(condition) is False:
             index += len(locator)
         return index
-    raise QWebValueMismatchError('File did not contain the text "{}"'.format(locator))
+    raise QWebValueMismatchError(
+        'File did not contain the text "{}"'.format(locator))
 
 
 def is_py_func(text: str) -> bool:
@@ -193,10 +191,11 @@ def is_retina() -> bool:
         if "arm" in platform.machine().lower():
             return True
 
-        if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
-                           shell=True,
-                           stdout=subprocess.DEVNULL,
-                           stderr=subprocess.DEVNULL) == 0:
+        if subprocess.call(
+                "system_profiler SPDisplaysDataType | grep -i 'retina'",
+                shell=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL) == 0:
             return True
     return False
 
@@ -275,13 +274,16 @@ def initial_logging(capabilities: dict[str, Any]) -> None:
         logger.info('Browser version: {}'.format(b_v), also_console=True)
         if b_n == 'firefox':
             logger.info('Geckodriver version: {}'.format(
-                capabilities['moz:geckodriverVersion']), also_console=True)
+                capabilities['moz:geckodriverVersion']),
+                        also_console=True)
         if b_n == 'chrome':
             logger.info('Chromedriver version: {}'.format(
-                capabilities['chrome']['chromedriverVersion']), also_console=True)
+                capabilities['chrome']['chromedriverVersion']),
+                        also_console=True)
         if b_n == 'msedge':
             logger.info('Edgedriver version: {}'.format(
-                capabilities['msedge']['msedgedriverVersion']), also_console=True)
+                capabilities['msedge']['msedgedriverVersion']),
+                        also_console=True)
     except KeyError:
         logger.debug('Could not get browser/driver version data.')
 
@@ -291,7 +293,8 @@ def option_handler(options: Optional[str]) -> list[str]:
     if options:
         options2 += options.split(',')
     if BuiltIn().get_variable_value('${BROWSER_OPTIONS}'):
-        options2 += BuiltIn().get_variable_value('${BROWSER_OPTIONS}').split(',')
+        options2 += BuiltIn().get_variable_value('${BROWSER_OPTIONS}').split(
+            ',')
     return options2
 
 

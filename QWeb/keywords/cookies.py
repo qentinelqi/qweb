@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
-
 """Keywords for browser cookie handling.
 
 When Selenium gets cookies from browser, it return them as dictionaries
@@ -49,7 +47,7 @@ def delete_all_cookies() -> None:
 
 
 @keyword(tags=("Browser", "Getters"))
-def list_cookies() -> set[dict[str,Any]]:
+def list_cookies() -> set[dict[str, Any]]:
     r"""List all cookies in browser.
 
     Cookies can be only listed when browser is open. Cookies are automatically

@@ -19,7 +19,6 @@ from typing import Optional
 
 import timeit
 
-
 # pylint: disable=pointless-string-statement
 """
    The purpose of this module is to provide measurement utilities.
@@ -44,26 +43,27 @@ import timeit
 
 
 class Meas(object):  # pylint: disable=bad-option-value, useless-object-inheritance
-    def __init__(self, enabled: bool=True):
+
+    def __init__(self, enabled: bool = True):
         """When initialized with enabled=False the functions
            are no-ops"""
 
         if not enabled:
-            self.start = lambda a='': None # type:ignore[assignment]
-            self.stop = lambda a=True: None # type:ignore[assignment]
-            self.log = lambda a, b: None # type:ignore[assignment, misc]
+            self.start = lambda a='': None  # type:ignore[assignment]
+            self.stop = lambda a=True: None  # type:ignore[assignment]
+            self.log = lambda a, b: None  # type:ignore[assignment, misc]
 
-        self.timers: list[tuple[float,str]] = []
+        self.timers: list[tuple[float, str]] = []
 
     # pylint: disable=method-hidden
-    def start(self, comment:str ='') -> None:
+    def start(self, comment: str = '') -> None:
         """Start a timer. Can be called multiple times without
            a stop in between."""
         start_t = timeit.default_timer()
         self.timers.append((start_t, comment))
 
     # pylint: disable=method-hidden
-    def stop(self, log: bool=True) -> Optional[float]:
+    def stop(self, log: bool = True) -> Optional[float]:
         """Returns the calculated time against last started timer.
            When called multiple times pops always the next available
            timer."""
@@ -76,7 +76,7 @@ class Meas(object):  # pylint: disable=bad-option-value, useless-object-inherita
         return t
 
     @staticmethod
-    def log(t, comment: str, level: str="info") -> None:
+    def log(t, comment: str, level: str = "info") -> None:
         _level = level.lower().strip()
         _log_setting = "*INFO* "
         if _level and _level in "debug":

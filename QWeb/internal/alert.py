@@ -22,7 +22,7 @@ from QWeb.internal import browser, decorators
 
 
 @decorators.timeout_decorator_for_actions
-def close_alert(alert: Alert, action: str) -> None: 
+def close_alert(alert: Alert, action: str) -> None:
     if action.upper() == 'ACCEPT':
         alert.accept()
     elif action.upper() == 'DISMISS':
@@ -36,11 +36,11 @@ def close_alert(alert: Alert, action: str) -> None:
 
 
 @decorators.timeout_decorator_for_actions
-def wait_alert(timeout: Union[str,int]) -> Alert:  # pylint: disable=unused-argument
+def wait_alert(timeout: Union[str, int]) -> Alert:  # pylint: disable=unused-argument
     driver = browser.get_current_browser()
     return driver.switch_to.alert
 
 
 @decorators.timeout_decorator_for_actions
-def type_alert(alert: Alert, text: str, timeout: Union[str,int]) -> None:  # pylint: disable=unused-argument
+def type_alert(alert: Alert, text: str, timeout: Union[str, int]) -> None:  # pylint: disable=unused-argument
     alert.send_keys(text)

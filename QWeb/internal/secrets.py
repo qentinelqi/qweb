@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """ Robot framework secrets handling.
 
     In Robot FW logs following things may expose secrets:
@@ -131,7 +130,8 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
             LOGGER._other_loggers[0].log_message = debugfile_log
 
 
-def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None:
+def add_filter(keyword_name: str, par_index: int,
+               secret: Optional[str]) -> None:
     """Add keyword to secrets filtering.
 
     Keyword name is according to Robot FW name, i.e. text presentation
@@ -144,14 +144,13 @@ def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None
 
 # List of keyword names for which filtering of secret parameters is applied.
 # Format: "keyword name": index of secret parameter
-filtered_keywords: dict[str,Any] = {}
+filtered_keywords: dict[str, Any] = {}
 log_level = "INFO"
 
 try:
-    debugfile_log = LOGGER._other_loggers[0].log_message    # pylint: disable=protected-access
+    debugfile_log = LOGGER._other_loggers[0].log_message  # pylint: disable=protected-access
 except IndexError:
     debugfile_log = False
-
 
 # Monkey patch Robot FW methods
 LOGGER.start_keyword = _filtered_start_keyword

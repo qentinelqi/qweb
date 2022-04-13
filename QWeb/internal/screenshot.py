@@ -17,7 +17,6 @@
 from __future__ import annotations
 from typing import Union, Optional
 from numpy import ndarray
-from selenium.webdriver.remote.webdriver import WebDriver
 
 import base64
 import json
@@ -25,6 +24,7 @@ import os
 from uuid import uuid4
 
 import cv2
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, \
                                        WebDriverException, InvalidSessionIdException
 from QWeb.internal.browser import firefox, chrome, edge
@@ -37,6 +37,7 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.utils import get_link_path
 from pyautogui import screenshot as pyscreenshot
 from tempfile import gettempdir
+
 SCREEN_SHOT_DIR_NAME = 'screenshots'
 VERIFYAPP_DIR_NAME = 'verifyapp'
 VALID_FILENAME_CHARS = '-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -148,11 +149,10 @@ def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     return ref_image_c
 
 
-def save_screenshot(filename: str='screenshot_{}.png',
-                    folder: str=SCREEN_SHOT_DIR_NAME,
-                    pyautog: bool=False,
-                    fullpage: bool=False
-                    ) -> str:
+def save_screenshot(filename: str = 'screenshot_{}.png',
+                    folder: str = SCREEN_SHOT_DIR_NAME,
+                    pyautog: bool = False,
+                    fullpage: bool = False) -> str:
     """Save screenshot of web page to a file.
 
     If robot framework is running then screenshots are saved to
@@ -270,8 +270,7 @@ def log_html() -> None:
     element = document.getElementById("source_link_{0}");
     element.setAttribute("href", "{2}");
     document.getElementById("source_{0}").setAttribute("src", "{1}");
-    </script>'''
-                .format(source_html_counter, 'screenshots/' + filename,
+    </script>'''.format(source_html_counter, 'screenshots/' + filename,
                         filepath.replace("\\", "\\\\")),
                 html=True)
     source_html_counter += 1
@@ -281,7 +280,8 @@ def get_url() -> Optional[str]:
     driver = browser.get_current_browser()
     if driver:
         return driver.current_url
-    logger.warn('Could not take a screenshot of browser because it is not open.')
+    logger.warn(
+        'Could not take a screenshot of browser because it is not open.')
     return None
 
 
@@ -308,15 +308,16 @@ def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
         })
         return response['result']['value']
 
-    metrics = evaluate("({"
-                       "width: Math.max(window.innerWidth, "
-                       "document.body.scrollWidth, "
-                       "document.documentElement.scrollWidth)|0,"
-                       "height: Math.max(window.innerHeight, document.body.scrollHeight, "
-                       "document.documentElement.scrollHeight)|0,"
-                       "deviceScaleFactor: window.devicePixelRatio || 1,"
-                       "mobile: typeof window.orientation !== 'undefined'"
-                       "})")
+    metrics = evaluate(
+        "({"
+        "width: Math.max(window.innerWidth, "
+        "document.body.scrollWidth, "
+        "document.documentElement.scrollWidth)|0,"
+        "height: Math.max(window.innerHeight, document.body.scrollHeight, "
+        "document.documentElement.scrollHeight)|0,"
+        "deviceScaleFactor: window.devicePixelRatio || 1,"
+        "mobile: typeof window.orientation !== 'undefined'"
+        "})")
     send('Emulation.setDeviceMetricsOverride', metrics)
     screenshot = send('Page.captureScreenshot', {
         'format': 'png',
@@ -331,13 +332,15 @@ def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
     return filepath
 
 
-def full_page_screenshot(driver: WebDriver, filepath: str, browser_name: str) -> str:
+def full_page_screenshot(driver: WebDriver, filepath: str,
+                         browser_name: str) -> str:
     if browser_name in firefox.NAMES:
         saved = driver.get_full_page_screenshot_as_file(filepath)
     elif browser_name in chrome.NAMES or browser_name in edge.NAMES:
         saved = chromium_full_screenshot(driver, filepath)
     else:
-        logger.warn("Your current browser does not support full page screenshots")
+        logger.warn(
+            "Your current browser does not support full page screenshots")
         saved = save_screenshot(filepath, fullpage=False)
 
     return saved

@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Optional, Any, Union
+
 import logging
 from logging import Logger
 import os
-from __future__ import annotations
-from typing import Optional, Any, Union
+
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.firefox.webdriver import FirefoxBinary
 from selenium import webdriver
@@ -17,14 +19,14 @@ LOGGER: Logger = logging.getLogger(__name__)
 NAMES: list[str] = ["firefox", "ff"]
 
 
-def open_browser(profile_dir: Optional[str]=None,
-                 capabilities: Optional[dict[str,Any]]=None,
-                 proxy: Optional[str]=None,
-                 headless: bool=False,
-                 binary: Optional[Union[str, FirefoxBinary]]=None, 
-                 executable_path: str="geckodriver",
-                 firefox_args: list[str]=None,
-                 log_path: str="geckodriver.log",
+def open_browser(profile_dir: Optional[str] = None,
+                 capabilities: Optional[dict[str, Any]] = None,
+                 proxy: Optional[str] = None,
+                 headless: bool = False,
+                 binary: Optional[Union[str, FirefoxBinary]] = None,
+                 executable_path: str = "geckodriver",
+                 firefox_args: list[str] = None,
+                 log_path: str = "geckodriver.log",
                  **kwargs: Any) -> WebDriver:
     """Open Firefox browser and cache the driver.
 
@@ -49,9 +51,10 @@ def open_browser(profile_dir: Optional[str]=None,
     """
     options = Options()
     if headless:
-        logger.warn('Deprecated.\n'
-                    'Headless mode can be activated just like any other firefox option:\n'
-                    '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"')
+        logger.warn(
+            'Deprecated.\n'
+            'Headless mode can be activated just like any other firefox option:\n'
+            '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"')
         options.add_argument('-headless')
         CONFIG.set_value("Headless", True)
     # if profile_dir:
@@ -60,21 +63,25 @@ def open_browser(profile_dir: Optional[str]=None,
     #                 '"OpenBrowser   https://site.com   ${BROWSER}  -profile /path/to/profile"')
     #     # options.add_argument('-profile {}'.format(profile_dir))
 
-    options.set_preference("browser.helperApps.neverAsk.saveToDisk", browser.MIME_TYPES)
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk",
+                           browser.MIME_TYPES)
     options.set_preference("extensions.update.enabled", False)
     options.set_preference("app.update.enabled", False)
     options.set_preference("app.update.auto", False)
     options.set_preference("dom.webnotifications.enabled", False)
-    options.set_preference("privacy.socialtracking.block_cookies.enabled", False)
-    kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
+    options.set_preference("privacy.socialtracking.block_cookies.enabled",
+                           False)
+    kwargs = {k.lower(): v
+              for k, v in kwargs.items()}  # Kwargs keys to lowercase
     if 'prefs' in kwargs:
         if isinstance(kwargs.get('prefs'), dict):
             prefs = kwargs.get('prefs')
         else:
             prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
-        for item in prefs.items(): # type: ignore[union-attr]
+        for item in prefs.items():  # type: ignore[union-attr]
             key, value = item[0], item[1]
-            logger.info('Using prefs: {} = {}'.format(key, value), also_console=True)
+            logger.info('Using prefs: {} = {}'.format(key, value),
+                        also_console=True)
             if not isinstance(value, int) and value.isdigit():
                 value = int(value)
             options.set_preference(key, value)
@@ -87,9 +94,13 @@ def open_browser(profile_dir: Optional[str]=None,
                 profile_dir = _get_profile_dir(option)
             else:
                 options.add_argument(option)
-    driver = webdriver.Firefox(executable_path=executable_path, proxy=proxy, firefox_binary=binary,
-                               desired_capabilities=capabilities, options=options,
-                               firefox_profile=profile_dir, log_path=log_path)
+    driver = webdriver.Firefox(executable_path=executable_path,
+                               proxy=proxy,
+                               firefox_binary=binary,
+                               desired_capabilities=capabilities,
+                               options=options,
+                               firefox_profile=profile_dir,
+                               log_path=log_path)
     if os.name == 'nt':  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)

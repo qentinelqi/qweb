@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
-
 """Keywords for webpage and frame elements.
 
 Frame is considered to be an element in a webapage which can contain another
@@ -61,7 +59,8 @@ def use_frame(locator: str) -> None:
     try:
         driver.switch_to.frame(webelement)
     except NoSuchFrameException as e:
-        raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator)) from e
+        raise NoSuchFrameException(
+            'No frame wound with xpath: {0}'.format(locator)) from e
 
 
 @keyword(tags=["Config"])
@@ -171,8 +170,7 @@ def log_page() -> None:
     raw_html = frame.get_raw_html()
     output_dir = frame.get_output_dir()
     html_source_count = frame.get_html_source_count()
-    filepath = frame.save_source(raw_html, output_dir,
-                                 html_source_count)
+    filepath = frame.save_source(raw_html, output_dir, html_source_count)
     frame.link_source_to_log(html_source_count, filepath)
     html_source_count += 1
     frame.set_html_source_count(html_source_count)

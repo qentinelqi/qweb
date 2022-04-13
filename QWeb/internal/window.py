@@ -68,7 +68,9 @@ def switch_to_window(handle) -> None:
     driver.switch_to.window(handle)
 
 
-def swipe(direction: str, times: Union[str, int]='1', start: Optional[str]=None) -> None:
+def swipe(direction: str,
+          times: Union[str, int] = '1',
+          start: Optional[str] = None) -> None:
     """
     Internal swipe function used by the swipe keywords. Uses the arrow keys to "swipe",
     unless a starting point is given. If a starting point is given, drag and drop is used.
@@ -90,7 +92,8 @@ def swipe(direction: str, times: Union[str, int]='1', start: Optional[str]=None)
     try:
         times = int(times)
     except ValueError as e:
-        raise ValueError('Amount of times swiped needs to be an integer.') from e
+        raise ValueError(
+            'Amount of times swiped needs to be an integer.') from e
     if not start:
         default_swipe_length = 20
         times = default_swipe_length * times

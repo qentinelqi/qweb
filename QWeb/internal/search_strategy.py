@@ -30,9 +30,11 @@ class SearchStrategies:
 
     TEXT_MATCH: str = '//*[not(self::script) and normalize-space(translate(., "\u00a0", " "))="{0}" and not(descendant::*[normalize-space(translate(., "\u00a0", " "))="{0}"])]|//input[(@type="button" or @type="reset" or @type="submit" or @type="checkbox") and normalize-space(translate(@value, "\u00a0", " "))="{0}"]'
 
-    CONTAINING_TEXT_MATCH_CASE_SENSITIVE: str = ('//*[not(self::script) and contains(normalize-space(translate(., "\u00a0", " ")), "{0}") '
-                                            'and not(descendant::*[contains(normalize-space(translate(., "\u00a0", " ")), "{0}")])]| '
-                                            '//input[(@type="button" or @type="reset" or @type="submit") and contains(normalize-space(translate(@value, "\u00a0", " ")), "{0}")]')
+    CONTAINING_TEXT_MATCH_CASE_SENSITIVE: str = (
+        '//*[not(self::script) and contains(normalize-space(translate(., "\u00a0", " ")), "{0}") '
+        'and not(descendant::*[contains(normalize-space(translate(., "\u00a0", " ")), "{0}")])]| '
+        '//input[(@type="button" or @type="reset" or @type="submit") and contains(normalize-space(translate(@value, "\u00a0", " ")), "{0}")]'
+    )
 
     # ToDo: Will use lower-case to replace translate in xpath when it is ready.
 
@@ -127,18 +129,19 @@ class SearchStrategies:
         # Position placeholders are in a set. They must start from zero
         # so that we have {0}'s, {1}'s etc.
         if index_placeholders:
-            continuous = SearchStrategies._continuous_set(index_placeholders, placeholder_num)
+            continuous = SearchStrategies._continuous_set(
+                index_placeholders, placeholder_num)
 
         if placeholder_num != (empty_placeholders + len(index_placeholders)):
-            raise ValueError("xpath has invalid number of placeholders, got {}, {}"
-                             .format(empty_placeholders, len(index_placeholders)))
+            raise ValueError(
+                "xpath has invalid number of placeholders, got {}, {}".format(
+                    empty_placeholders, len(index_placeholders)))
 
         if empty_placeholders == placeholder_num or \
            len(index_placeholders) == placeholder_num and continuous:
             pass
         else:
-            raise ValueError("xpath should contain {} placeholders, got {}, {}, {}"
-                             .format(placeholder_num,
-                                     empty_placeholders,
-                                     len(index_placeholders),
-                                     continuous))
+            raise ValueError(
+                "xpath should contain {} placeholders, got {}, {}, {}".format(
+                    placeholder_num, empty_placeholders,
+                    len(index_placeholders), continuous))

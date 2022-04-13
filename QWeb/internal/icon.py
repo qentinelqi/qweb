@@ -15,7 +15,6 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional
 from numpy import ndarray
 
 import cv2
@@ -46,7 +45,8 @@ class QIcon:
         return screen_w, screen_h
 
     @staticmethod
-    def _get_scale_ratios(template_res_w: int, device_res_w: int) -> list[float]:
+    def _get_scale_ratios(template_res_w: int,
+                          device_res_w: int) -> list[float]:
         """Get a list of different scale ratios to scale template image
         for different device resolutions. They should be ordered so
         that more common resolution scalings are at the top of the list.
@@ -64,12 +64,15 @@ class QIcon:
             Resolution of the device we are testing
         """
 
-        scale_ratios = [1.00, 0.75, 0.50, 0.86, 0.78,
-                        0.58, 1.33, 0.67, 1.15, 2.00, 1.50, 1.25, 1.75]
+        scale_ratios = [
+            1.00, 0.75, 0.50, 0.86, 0.78, 0.58, 1.33, 0.67, 1.15, 2.00, 1.50,
+            1.25, 1.75
+        ]
 
         if device_res_w <= 0 or template_res_w <= 0:
             raise ValueError("Device resolution {} or template resolution {}"
-                             " can't be zero or less".format(device_res_w, template_res_w))
+                             " can't be zero or less".format(
+                                 device_res_w, template_res_w))
 
         if not round(device_res_w / template_res_w, 2) in scale_ratios:
             scale_ratios.insert(0, round(device_res_w / template_res_w, 2))
@@ -77,7 +80,8 @@ class QIcon:
         return scale_ratios
 
     @staticmethod
-    def _get_image_pyramid(image_obj: ndarray, level: int) -> list[tuple[ndarray, float]]:
+    def _get_image_pyramid(image_obj: ndarray,
+                           level: int) -> list[tuple[ndarray, float]]:
         """
         Returns a list of up- and downsampled images of image_obj.
         Each sampling goes 10% up and down in size
@@ -109,22 +113,30 @@ class QIcon:
                     #                 "Scale coefficient: {}."
                     #                 .format(scale))
                 if scale < 1.0:
-                    image_levels.append((cv2.resize(image_obj, None, fx=scale, fy=scale,
-                                                    interpolation=cv2.INTER_LINEAR),
-                                         scale))
+                    image_levels.append(
+                        (cv2.resize(image_obj,
+                                    None,
+                                    fx=scale,
+                                    fy=scale,
+                                    interpolation=cv2.INTER_LINEAR), scale))
                 elif scale == 1.0:
                     image_levels.append((image_obj, scale))
                 else:  # scale > 1.0
-                    image_levels.append((cv2.resize(image_obj, None, fx=scale, fy=scale,
-                                                    interpolation=cv2.INTER_LINEAR),
-                                         scale))
+                    image_levels.append(
+                        (cv2.resize(image_obj,
+                                    None,
+                                    fx=scale,
+                                    fy=scale,
+                                    interpolation=cv2.INTER_LINEAR), scale))
         return image_levels
 
-    def get_template_locations(self, image_obj: ndarray,
-                               template: ndarray,
-                               threshold: float,
-                               level: int=0 # pylint: disable=unused-argument
-                               ) -> list[tuple[int, int]]:  
+    def get_template_locations(
+        self,
+        image_obj: ndarray,
+        template: ndarray,
+        threshold: float,
+        level: int = 0  # pylint: disable=unused-argument
+    ) -> list[tuple[int, int]]:
         """Returns a list of template locations. Uses image pyramid.
         _image_obj_ = Image as uint8 NumPy array in RGB color space.
         _threshold_ = Threshold value for template matching, float.
@@ -141,14 +153,19 @@ class QIcon:
         width, height = self._get_image_size(template)
         img_width, img_height = self._get_image_size(image_obj)
 
-        print("*DEBUG* source haystack (image_obj) image size: {}x{}".format(img_width, img_height))
-        print("*DEBUG* original needle (template) image size: {}x{}".format(width, height))
+        print("*DEBUG* source haystack (image_obj) image size: {}x{}".format(
+            img_width, img_height))
+        print("*DEBUG* original needle (template) image size: {}x{}".format(
+            width, height))
 
         if height > img_height or width > img_width:
-            raise ValueError("Image Size Error: Template image is larger than source image. "
-                             "Template size: {}x{}, source image size: {}x{}."
-                             .format(width, height, img_width, img_height))
-        print("*DEBUG* Resampling by 16 levels for needle, 0 levels for haystack")
+            raise ValueError(
+                "Image Size Error: Template image is larger than source image. "
+                "Template size: {}x{}, source image size: {}x{}.".format(
+                    width, height, img_width, img_height))
+        print(
+            "*DEBUG* Resampling by 16 levels for needle, 0 levels for haystack"
+        )
 
         # temp = image_obj
         # image_obj = template
@@ -166,9 +183,10 @@ class QIcon:
         best_highest_max_val_loc = (-1, -1)
         points = []
         best_scale = 0.0
-        best_matched_image: ndarray # = None
+        best_matched_image: ndarray  # = None
 
-        print("*DEBUG* Different resamplings used: " + str(len(template_levels)))
+        print("*DEBUG* Different resamplings used: "
+              + str(len(template_levels)))
         # for template_level in template_levels:
         #     w, h = self._get_image_size(template_level)
         #     print("template_level image size: {}x{}".format(w, h))
@@ -179,15 +197,14 @@ class QIcon:
             print("*DEBUG* Resampled needle (template_level) with scale {}, "
                   "image size: {}x{}".format(template_level[1], w, h))
             MEAS.start("CV2.MATCHTEMPLATE TIME")
-            res = cv2.matchTemplate(image_levels[0][0], template_level[0], cv2.TM_CCOEFF_NORMED)
+            res = cv2.matchTemplate(image_levels[0][0], template_level[0],
+                                    cv2.TM_CCOEFF_NORMED)
             MEAS.stop()
             # print("did matchTemplate, res:\n")
             # print(res)
             MEAS.start("EXTRACT POINTS TIME")
-            current_points, highest_max_val, highest_max_val_loc = self._extract_points(h,
-                                                                                        res,
-                                                                                        threshold,
-                                                                                        w)
+            current_points, highest_max_val, highest_max_val_loc = self._extract_points(
+                h, res, threshold, w)
             MEAS.stop()
             # print("did extract_points, points:\n")
             # print(current_points)
@@ -206,32 +223,29 @@ class QIcon:
         else:
             print("*INFO* Template image not found. "
                   "Closest match threshold value {} found at {}, {}. "
-                  "Threshold used: {}"
-                  .format(best_highest_max_val,
-                          best_highest_max_val_loc[0],
-                          best_highest_max_val_loc[1],
-                          threshold))
+                  "Threshold used: {}".format(best_highest_max_val,
+                                              best_highest_max_val_loc[0],
+                                              best_highest_max_val_loc[1],
+                                              threshold))
         print("*INFO* Closest match threshold value {} found at {}, {}.\n"
               "Threshold used: {}\n"
-              "Scale with best result: {}"
-              .format(best_highest_max_val,
-                      best_highest_max_val_loc[0],
-                      best_highest_max_val_loc[1],
-                      threshold,
-                      best_scale))
+              "Scale with best result: {}".format(best_highest_max_val,
+                                                  best_highest_max_val_loc[0],
+                                                  best_highest_max_val_loc[1],
+                                                  threshold, best_scale))
         self._log_matched_image(color_image_obj, color_template,
-                                best_matched_image, best_highest_max_val_loc, best_scale)
+                                best_matched_image, best_highest_max_val_loc,
+                                best_scale)
         print("*DEBUG {}".format(points))
         return points
 
     def image_location(self,
                        needle: str,
                        haystack: str,
-                       tolerance: float=0.95,
-                       draw: int=1,
-                       template_res_w: int=1440,
-                       device_res_w: int=1080
-                       ) -> tuple[int, int]:
+                       tolerance: float = 0.95,
+                       draw: int = 1,
+                       template_res_w: int = 1440,
+                       device_res_w: int = 1080) -> tuple[int, int]:
         """Locate an image (needle) within an bigger image (haystack). Tolarance
         is pixel tolerance, i.e. 1.0 = all pixels are correct, 0.5 = 50% of the pixels
         are correct. If we know the original resolution, from which the template
@@ -248,20 +262,23 @@ class QIcon:
 
         needle_path = Path(needle)
         if not needle_path.exists():
-            raise Exception("Needle file does not exist. Tried: {}".format(needle_path))
+            raise Exception(
+                "Needle file does not exist. Tried: {}".format(needle_path))
         template = cv2.imread(str(needle_path.resolve()), 0)
 
         if template is None:
-            raise Exception("Cannot read template image. Tried: {}".format(needle))
+            raise Exception(
+                "Cannot read template image. Tried: {}".format(needle))
         height, width = template.shape[:2]
 
         scale_ratios = self._get_scale_ratios(template_res_w, device_res_w)
-        print("*DEBUG* Scale ratios to be used in order: {}".format(scale_ratios))
+        print("*DEBUG* Scale ratios to be used in order: {}".format(
+            scale_ratios))
 
         best_highest_max_val = 0.0
         best_highest_max_val_loc = (-1, -1)
-        best_scale_ratio: float # = None
-        best_matched_image:ndarray # = None
+        best_scale_ratio: float  # = None
+        best_matched_image: ndarray  # = None
 
         print("*DEBUG* Resampling loop Starts")
         for scale_ratio in scale_ratios:
@@ -272,11 +289,16 @@ class QIcon:
             if math.isclose(scale_ratio, 1.0, rel_tol=0.03):
                 scaled_img_template = template
             else:
-                scaled_img_template = cv2.resize(template, None, fx=scale_ratio,
-                                                 fy=scale_ratio, interpolation=interpolation_method)
+                scaled_img_template = cv2.resize(
+                    template,
+                    None,
+                    fx=scale_ratio,
+                    fy=scale_ratio,
+                    interpolation=interpolation_method)
             print("*DEBUG* matchTemplate Starts:")
 
-            res = cv2.matchTemplate(image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED)
+            res = cv2.matchTemplate(image_gray, scaled_img_template,
+                                    cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
 
@@ -319,7 +341,8 @@ class QIcon:
         print("*DEBUG* Ready to return points:")
         print("*DEBUG* Best match location: {}, best correlation value: {}, "
               "best scale ratio: {}".format(best_highest_max_val_loc,
-                                            best_highest_max_val, best_scale_ratio))
+                                            best_highest_max_val,
+                                            best_scale_ratio))
         self._log_matched_image(image, template, best_matched_image,
                                 best_highest_max_val_loc, best_scale_ratio)
 
@@ -329,12 +352,13 @@ class QIcon:
         return -1, -1
 
     @staticmethod
-    def _extract_points(height: int,
-                        res: ndarray,
-                        threshold: float,
-                        width: int,
-                        coordinate_ratio: float=1.0
-                        ) -> tuple[list[tuple[int, int]], float, tuple[int, int]]:
+    def _extract_points(
+        height: int,
+        res: ndarray,
+        threshold: float,
+        width: int,
+        coordinate_ratio: float = 1.0
+    ) -> tuple[list[tuple[int, int]], float, tuple[int, int]]:
         """Extracts match locations from a result matrix. This goes through the best
         match locations in the result and while the correlation value of a location
         is over the threshold, it adds the location to the list of best locations.
@@ -354,8 +378,11 @@ class QIcon:
             top_left = max_loc
             if max_val >= highest_max_val:
                 highest_max_val = max_val
-                highest_max_val_loc = (int(round((top_left[0] + width / 2) * coordinate_ratio)),
-                                       int(round((top_left[1] + height / 2) * coordinate_ratio)))
+                highest_max_val_loc = (int(
+                    round((top_left[0] + width / 2) * coordinate_ratio)),
+                                       int(
+                                           round((top_left[1] + height / 2)
+                                                 * coordinate_ratio)))
             if max_val > threshold:
                 # flood fill the already found area
                 for loc_x in range(int(round(top_left[0] - width / 2)),
@@ -380,12 +407,9 @@ class QIcon:
         return points, highest_max_val, highest_max_val_loc
 
     @staticmethod
-    def _log_matched_image(haystack: ndarray,
-                           needle: ndarray,
-                           scaled_needle: ndarray,
-                           loc: tuple[int, int],
-                           best_scale: float
-                           ) -> None:
+    def _log_matched_image(haystack: ndarray, needle: ndarray,
+                           scaled_needle: ndarray, loc: tuple[int, int],
+                           best_scale: float) -> None:
         """Draw a composite image with the needle image, the haystack image,
         the scaled needle that matches the best and show where in haystack
         the best match is. This is best used in debugging, but it could be
@@ -397,23 +421,19 @@ class QIcon:
         hs, ws = scaled_needle.shape[:2]
         h2, w2 = haystack.shape[:2]
         max_left_w = max(w1, ws)
-        cv2.rectangle(haystack,
-                      (loc[0] - int(w1 / 2 * best_scale),
-                       loc[1] - int(h1 / 2 * best_scale)),
+        cv2.rectangle(haystack, (loc[0] - int(w1 / 2 * best_scale),
+                                 loc[1] - int(h1 / 2 * best_scale)),
                       (loc[0] + int(w1 / 2 * best_scale),
-                       loc[1] + int(h1 / 2 * best_scale)),
-                      (0, 0, 255), 2)
+                       loc[1] + int(h1 / 2 * best_scale)), (0, 0, 255), 2)
         result = np.zeros((max(h2, h1), w2 + max_left_w, 3), np.uint8)
         result[:h1, :w1, :3] = needle
         result[h1:h1 + hs, :ws, :3] = scaled_needle
         result[:h2, max_left_w:max_left_w + w2, :3] = haystack
 
-        cv2.line(result,
-                 (ws, h1),
+        cv2.line(result, (ws, h1),
                  (loc[0] + max_left_w + int(ws / 2), loc[1] - int(hs / 2)),
                  (0, 0, 255), 2)
-        cv2.line(result,
-                 (0, h1 + hs),
+        cv2.line(result, (0, h1 + hs),
                  (loc[0] + max_left_w - int(ws / 2), loc[1] + int(hs / 2)),
                  (0, 0, 255), 2)
 
@@ -425,11 +445,8 @@ class QIcon:
             log_screenshot_file(filepath)
 
 
-def image_recognition(image_path: str,
-                      template_res_w: int,
-                      browser_res_w: int,
-                      pyautog: bool
-                      ) -> tuple[int, int]:
+def image_recognition(image_path: str, template_res_w: int, browser_res_w: int,
+                      pyautog: bool) -> tuple[int, int]:
     """Return icon's coordinates."""
     image_rec = QIcon()
     frame.wait_page_loaded()

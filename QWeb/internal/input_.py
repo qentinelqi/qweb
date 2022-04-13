@@ -26,8 +26,8 @@ from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
 
-def get_input_element_by_locator(locator: str, anchor:str, **kwargs
-                                ) -> WebElement:
+def get_input_element_by_locator(locator: str, anchor: str,
+                                 **kwargs) -> WebElement:
     """Find input element.
 
     Parameters
@@ -42,7 +42,8 @@ def get_input_element_by_locator(locator: str, anchor:str, **kwargs
         many places where the locator is then anchor is used to get the
         one that is closest to it.
     """
-    if locator.startswith("xpath=") or locator.startswith("//") or locator.startswith("(//"):
+    if locator.startswith("xpath=") or locator.startswith(
+            "//") or locator.startswith("(//"):
         if locator.startswith("xpath="):
             xpath = locator.split("=", 1)[1]
         else:
@@ -50,9 +51,11 @@ def get_input_element_by_locator(locator: str, anchor:str, **kwargs
         input_element = element.get_unique_element_by_xpath(xpath, **kwargs)
     else:  # Search using text
         input_xpath = CONFIG["MatchingInputElement"].format(locator)
-        input_elements = element.get_webelements_in_active_area(input_xpath, **kwargs)
+        input_elements = element.get_webelements_in_active_area(
+            input_xpath, **kwargs)
         if not input_elements:  # Find input element using locator
-            locator_element = text.get_text_using_anchor(locator, anchor, **kwargs)
+            locator_element = text.get_text_using_anchor(
+                locator, anchor, **kwargs)
             input_elements = _get_all_input_elements()
 
             shadow_dom = CONFIG['ShadowDOM']
@@ -63,7 +66,8 @@ def get_input_element_by_locator(locator: str, anchor:str, **kwargs
                     if el not in list(input_elements):
                         input_elements.append(el)
 
-            input_element = element.get_closest_element(locator_element, input_elements)
+            input_element = element.get_closest_element(
+                locator_element, input_elements)
         elif len(input_elements) == 1:
             input_element = input_elements[0]  # pylint: disable=unsubscriptable-object
         else:  # Found many
@@ -78,13 +82,13 @@ def _get_all_input_elements() -> list[WebElement]:
     return input_elements
 
 
-def get_input_elements_from_all_documents(locator: str,
-                                          anchor: str,
-                                          timeout: Union[int,str],
-                                          index: Union[int, str]=1,
-                                          enable_check: bool=False,
-                                          **kwargs
-                                          ) -> WebElement:  # pylint: disable=unused-argument
+def get_input_elements_from_all_documents(
+        locator: str,
+        anchor: str,
+        timeout: Union[int, str],  # pylint: disable=unused-argument
+        index: Union[int, str] = 1,
+        enable_check: bool = False,
+        **kwargs) -> WebElement:
     """Function for finding input elements.
     Parameters
     ----------
@@ -119,7 +123,8 @@ def get_input_elements_from_all_documents(locator: str,
     if Table.is_table_coordinates(locator):
         table = Table.ACTIVE_TABLE.update_table()
         if table is None:
-            raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+            raise QWebInstanceDoesNotExistError(
+                'Table has not been defined with UseTable keyword')
         locator_element = table.get_table_cell(locator, anchor)
         input_elements = element.get_element_from_childnodes(
             locator_element, kwargs['css'], dom_traversing=False)
@@ -127,14 +132,16 @@ def get_input_elements_from_all_documents(locator: str,
             return input_elements[int(index)]
         raise QWebElementNotFoundError('No matching table input found')
     css_selector = CONFIG["CssSelectors"]
-    if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
+    if not css_selector or locator.startswith('xpath=') or locator.startswith(
+            '//'):
         input_element = get_input_element_by_locator(locator, anchor, **kwargs)
     else:
         logger.debug('Uses CSS-selectors to locate element')
         input_element = get_input_element_by_css_selector(
             locator, anchor, int(index), enable_check, **kwargs)
         if not input_element:
-            input_element = get_input_element_by_locator(locator, anchor, **kwargs)
+            input_element = get_input_element_by_locator(
+                locator, anchor, **kwargs)
     if input_element:
         if CONFIG['SearchMode']:
             element.draw_borders(input_element)
@@ -144,10 +151,9 @@ def get_input_elements_from_all_documents(locator: str,
 
 def get_input_element_by_css_selector(locator: str,
                                       anchor: str,
-                                      index: int=0,
-                                      enable_check: bool=False,
-                                      **kwargs
-                                      ) -> Optional[WebElement]:
+                                      index: int = 0,
+                                      enable_check: bool = False,
+                                      **kwargs) -> Optional[WebElement]:
     """Get input element using css selectors.
        Parameters
        ----------
@@ -191,14 +197,18 @@ def get_input_element_by_css_selector(locator: str,
                 input_element = input_element[index]
                 return input_element
             if input_element:
-                input_element = text.get_element_using_anchor(input_element, anchor, **kwargs)
+                input_element = text.get_element_using_anchor(
+                    input_element, anchor, **kwargs)
                 return input_element
     try:
         locator_element = text.get_text_using_anchor(locator, anchor, **kwargs)
-        input_elements = list(dict.fromkeys(element.get_element_from_childnodes(
-            locator_element, **kwargs) + partial_matches))
+        input_elements = list(
+            dict.fromkeys(
+                element.get_element_from_childnodes(locator_element, **kwargs)
+                + partial_matches))
     except QWebElementNotFoundError:
-        logger.trace('Element not found by visible text. Trying with partial match')
+        logger.trace(
+            'Element not found by visible text. Trying with partial match')
         input_elements = partial_matches
     if input_elements:
         visibles = element.get_visible_elements_from_elements(

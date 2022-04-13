@@ -16,17 +16,15 @@
 # ---------------------------
 from __future__ import annotations
 from typing import Optional, Any, Callable, Union
-from selenium.webdriver.remote.webelement import WebElement
-
 import os
 import pyperclip
 from robot.api import logger
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException
 from QWeb.internal.exceptions import QWebInvalidElementStateError, QWebValueError,\
     QWebEnvironmentError
 from QWeb.internal import javascript
-
 
 try:
     if not os.getenv('QWEB_HEADLESS', None):
@@ -36,11 +34,11 @@ except ImportError:
 
 
 class InputHandler:
+
     def __init__(self,
-                 input_method: str="selenium",
-                 line_break_key: str="\ue004",
-                 clear_key: Optional[str]=None
-                 ) -> None:
+                 input_method: str = "selenium",
+                 line_break_key: str = "\ue004",
+                 clear_key: Optional[str] = None) -> None:
         self._input_method = input_method
         self.line_break_key = line_break_key
         self.clear_key = clear_key
@@ -53,11 +51,13 @@ class InputHandler:
     def input_method(self, input_method: str) -> None:
         required = ["selenium", "raw"]
         if input_method not in required:
-            raise QWebValueError('Unknown input_method: {}, required: {}'
-                                 .format(input_method, required))
+            raise QWebValueError(
+                'Unknown input_method: {}, required: {}'.format(
+                    input_method, required))
         self._input_method = input_method
 
-    def write(self, input_element: WebElement, input_text: str, **kwargs) -> None:
+    def write(self, input_element: WebElement, input_text: str,
+              **kwargs) -> None:
         """ Writes the given text using configured writer. """
         write = self._get_writer()
         # By clearing the input field with Javascript,
@@ -67,9 +67,11 @@ class InputHandler:
         shadow_dom = kwargs.get('shadow_dom', False)
         if not clear_key:
             if self.is_editable_text_element(input_element):
-                javascript.execute_javascript('arguments[0].innerText=""', input_element)
+                javascript.execute_javascript('arguments[0].innerText=""',
+                                              input_element)
             else:
-                javascript.execute_javascript("arguments[0].value = \"\"", input_element)
+                javascript.execute_javascript("arguments[0].value = \"\"",
+                                              input_element)
         else:
             input_element.send_keys(clear_key)
         try:
@@ -77,7 +79,8 @@ class InputHandler:
         # workaround for Firefox shadow dom inputs not always being reachable
         except ElementNotInteractableException as e:
             if shadow_dom:
-                javascript.execute_javascript(f'arguments[0].value = "{input_text}"', input_element)
+                javascript.execute_javascript(
+                    f'arguments[0].value = "{input_text}"', input_element)
                 kwargs['key'] = None
             else:
                 raise e from e
@@ -96,7 +99,8 @@ class InputHandler:
     def _selenium_writer(input_element: WebElement, input_text: str) -> None:
         """ Use Selenium librarys input methods clear() and send_keys(). """
         if not input_element.is_enabled():
-            logger.warn("Element not enabled. Try with alternative input method?")
+            logger.warn(
+                "Element not enabled. Try with alternative input method?")
             raise QWebInvalidElementStateError("Input element is not enabled")
         input_element.send_keys(input_text)
 
@@ -123,7 +127,8 @@ class InputHandler:
         return False
 
     @staticmethod
-    def check_key(key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
+    def check_key(
+            key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
         if not key:
             return None
         if key == '{PASTE}':

@@ -24,7 +24,7 @@ class Config:
 
     DROPPED_DELIMITER_CHARS: str = " _-"
 
-    def __init__(self, config_defaults: dict[str,Any]) -> None:
+    def __init__(self, config_defaults: dict[str, Any]) -> None:
         self._config_defaults = {}
         # Clean config_defaults key values before storage
         _config_defaults = {}
@@ -67,7 +67,7 @@ class Config:
         self.config[_par] = (stored_value, adapter_func)
         return old_val
 
-    def reset_value(self, par: Optional[str]=None) -> None:
+    def reset_value(self, par: Optional[str] = None) -> None:
         """ Reset value(s) to original. """
         if par:
             _par = self._clean_string(par)
@@ -90,7 +90,7 @@ class Config:
         config_value, _ = self.config[_par]
         return config_value
 
-    def __repr__(self) -> dict[str,Any]: # type: ignore[override]
+    def __repr__(self) -> dict[str, Any]:  # type: ignore[override]
         return self.config
 
     def __str__(self) -> str:

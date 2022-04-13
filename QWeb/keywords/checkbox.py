@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
-
 """Keywords for checkbox elements.
 
 Checkboxes are those that can be checked/selected and unchecked/unselected.
@@ -31,13 +29,12 @@ from QWeb.internal.exceptions import QWebValueError
 
 @keyword(tags=("Checkbox", "Interaction"))
 @decorators.timeout_decorator
-def click_checkbox(locator:str,
-                   value:str, 
-                   anchor: str="1",
-                   timeout: Union[int, str]=0, 
-                   index: int=1,
-                   **kwargs
-                   ) -> None:
+def click_checkbox(locator: str,
+                   value: str,
+                   anchor: str = "1",
+                   timeout: Union[int, str] = 0,
+                   index: int = 1,
+                   **kwargs) -> None:
     r"""Check or uncheck a checkbox.
 
     Examples
@@ -100,20 +97,26 @@ def click_checkbox(locator:str,
         locator, anchor=anchor, index=index, **kwargs)
     if checkbox_element:
         if value.lower() == "on":
-            actions.checkbox_set(checkbox_element, locator_element, value=True, timeout=timeout)
+            actions.checkbox_set(checkbox_element,
+                                 locator_element,
+                                 value=True,
+                                 timeout=timeout)
         else:
-            actions.checkbox_set(checkbox_element, locator_element, value=False, timeout=timeout)
+            actions.checkbox_set(checkbox_element,
+                                 locator_element,
+                                 value=False,
+                                 timeout=timeout)
 
 
 @keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
-def verify_checkbox_status(locator:str,
-                           status:str, 
-                           anchor: str="1",
-                           timeout: Union[int, str]=0, 
-                           index=1,
-                           **kwargs
-                           ) -> None:  # pylint: disable=unused-argument
+def verify_checkbox_status(
+        locator: str,
+        status: str,
+        anchor: str = "1",
+        timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+        index=1,
+        **kwargs) -> None:
     r"""Verify checkbox is enabled or disabled.
 
     In other words verify can user interact with a checkbox or not.
@@ -188,11 +191,10 @@ def verify_checkbox_status(locator:str,
 @decorators.timeout_decorator
 def verify_checkbox_value(locator: str,
                           value: str,
-                          anchor: str="1",
-                          timeout: Union[int, str]=0,
-                          index: int=1,
-                          **kwargs
-                          ) -> None:  # pylint: disable=unused-argument
+                          anchor: str = "1",
+                          timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                          index: int = 1,
+                          **kwargs) -> None:
     r"""Verify checkbox is on (checked) or off (unchecked).
 
     Examples
@@ -264,11 +266,10 @@ def verify_checkbox_value(locator: str,
 @keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
 def verify_checkbox(locator: str,
-                    anchor: str='1',
-                    timeout: Union[int, str]=0,
-                    index: int=1,
-                    **kwargs
-                    ) -> None:  # pylint: disable=unused-argument
+                    anchor: str = '1',
+                    timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                    index: int = 1,
+                    **kwargs) -> None:
     r"""Verify that checkbox element exist.
 
     Examples

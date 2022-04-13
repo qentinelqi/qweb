@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """
 Default values for configuration items.
 parameter name - (parameter value, adapter function)
@@ -40,14 +39,14 @@ from QWeb.internal.search_strategy import SearchStrategies
 from QWeb.internal import util
 from QWeb.internal.config import Config
 
-
 CONFIG_DEFAULTS: dict[str, Any] = {
     "ScreenshotType": ("screenshot", None),
     "LineBreak": ("\ue004", util.set_line_break),
     "ClearKey": (None, util.set_clear_key),
     "CssSelectors": (True, util.par2bool),
     "LogScreenshot": (True, util.par2bool),
-    "SearchDirection": ("closest", SearchStrategies.search_direction_validation),
+    "SearchDirection":
+    ("closest", SearchStrategies.search_direction_validation),
     "CheckInputValue": (False, util.par2bool),
     "DefaultTimeout": ("10s", SearchStrategies.default_timeout_validation),
     "XHRTimeout": ("30", SearchStrategies.xhr_timeout_validation),
@@ -56,14 +55,16 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "CaseInsensitive": (False, util.par2bool),
     "AllInputElements": (SearchStrategies.ALL_INPUT_ELEMENTS,
                          SearchStrategies.all_input_elements_validation),
-    "MatchingInputElement": (SearchStrategies.MATCHING_INPUT_ELEMENT,
-                             SearchStrategies.matching_input_element_validation),
+    "MatchingInputElement":
+    (SearchStrategies.MATCHING_INPUT_ELEMENT,
+     SearchStrategies.matching_input_element_validation),
     "ActiveAreaXpath": (SearchStrategies.ACTIVE_AREA_XPATH,
                         SearchStrategies.active_area_xpath_validation),
-    "TextMatch": (SearchStrategies.TEXT_MATCH,
-                  SearchStrategies.text_match_validation),
-    "ContainingTextMatch": (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
-                            SearchStrategies.containing_text_match_validation),
+    "TextMatch":
+    (SearchStrategies.TEXT_MATCH, SearchStrategies.text_match_validation),
+    "ContainingTextMatch":
+    (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
+     SearchStrategies.containing_text_match_validation),
     "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH,
                      SearchStrategies.clear_xpath),
     "VerifyAppAccuracy": (0.9999, None),

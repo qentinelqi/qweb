@@ -14,22 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for general elements that are retrieved using XPaths."""
 from __future__ import annotations
 from typing import Union, Optional
 from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api.deco import keyword
+from robot.api import logger
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
 from QWeb.internal import element, decorators, actions, text, input_,\
     dropdown, checkbox
 
 
-
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def click_element(xpath: str, timeout: Union[int, str]=0, js: bool=False, index:int=1, **kwargs) -> None:
+def click_element(xpath: Union[str, WebElement],
+                  timeout: Union[int, str] = 0,
+                  js: bool = False,
+                  index: int = 1,
+                  **kwargs) -> None:
     r"""Click element specified by xpath.
 
     Examples
@@ -81,7 +84,9 @@ def click_element(xpath: str, timeout: Union[int, str]=0, js: bool=False, index:
     \`ClickCell\`, \`ClickCheckbox\`, \`ClickIcon\`, \`ClickItem\`, \`ClickList\`,
     \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`RightClick\`, \`VerifyElement\`
     """
+    #logger.console(f"xpath: {type(xpath)}, {xpath}")
     if isinstance(xpath, WebElement):
+        logger.console("Is webelement!") 
         web_element = xpath
     else:
         index = int(index) - 1
@@ -91,13 +96,19 @@ def click_element(xpath: str, timeout: Union[int, str]=0, js: bool=False, index:
                 kwargs.get('tag'), xpath, **kwargs)[index]
         else:
             web_element = element.get_unique_element_by_xpath(xpath)
-    if actions.execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+    if actions.execute_click_and_verify_condition(web_element,
+                                                  timeout=timeout,
+                                                  js=js,
+                                                  **kwargs):
         return
 
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def right_click(xpath: str, timeout: Union[int, str]=0, index: int=1, **kwargs) -> None:  # pylint: disable=unused-argument
+def right_click(xpath: str,
+                timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                index: int = 1,
+                **kwargs) -> None:
     r"""Right clicks the element.
 
     Examples
@@ -141,7 +152,10 @@ def right_click(xpath: str, timeout: Union[int, str]=0, index: int=1, **kwargs) 
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def hover_element(xpath: str, timeout: Union[int, str]=0, index: int=1, **kwargs) -> None:  # pylint: disable=unused-argument
+def hover_element(xpath: Union[str, WebElement],
+                  timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                  index: int = 1,
+                  **kwargs) -> None:
     r"""Hover the element specified by the xpath selector.
 
     Examples
@@ -190,7 +204,9 @@ def hover_element(xpath: str, timeout: Union[int, str]=0, index: int=1, **kwargs
 
 @keyword(tags=["Getters"])
 @decorators.timeout_decorator
-def get_element_count(locator: str, timeout: Union[int, str]=0, **kwargs) -> int:  # pylint: disable=unused-argument
+def get_element_count(locator: str,
+                      timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                      **kwargs) -> int:
     r"""Get count of appearances for certain web element.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -231,7 +247,10 @@ def get_element_count(locator: str, timeout: Union[int, str]=0, **kwargs) -> int
 
 
 @keyword(tags=["Verification"])
-def is_element(xpath: str, timeout: Union[int, str]='0.1s', index: int=1, **kwargs) -> bool:  # pylint: disable=unused-argument
+def is_element(xpath: str,
+               timeout: Union[int, str] = '0.1s',
+               index: int = 1,  # pylint: disable=unused-argument
+               **kwargs) -> bool:
     r"""Return True if element is visible.
 
     Examples
@@ -276,7 +295,7 @@ def is_element(xpath: str, timeout: Union[int, str]='0.1s', index: int=1, **kwar
 
 @keyword(tags=["Verification"])
 @decorators.timeout_decorator
-def verify_element(xpath: str, timeout: Union[int, str]=0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_element(xpath: str, timeout: Union[int, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Verify that element can be found on the page and it is visible.
 
     Examples
@@ -322,7 +341,8 @@ def verify_element(xpath: str, timeout: Union[int, str]=0, **kwargs) -> None:  #
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
         web_elements = element.get_visible_elements_from_elements(
-            element.get_elements_by_attributes(kwargs.get('tag'), xpath, **kwargs))
+            element.get_elements_by_attributes(kwargs.get('tag'), xpath,
+                                               **kwargs))
     else:
         web_elements = element.get_webelements(xpath, **kwargs)
     if web_elements:
@@ -332,7 +352,9 @@ def verify_element(xpath: str, timeout: Union[int, str]=0, **kwargs) -> None:  #
 
 @keyword(tags=["Verification"])
 @decorators.timeout_decorator
-def verify_no_element(xpath: str, timeout: Union[int, str]=0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_no_element(xpath: str,
+                      timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                      **kwargs) -> None:
     r"""Wait element can not be found on the page.
 
     Examples
@@ -377,8 +399,8 @@ def verify_no_element(xpath: str, timeout: Union[int, str]=0, **kwargs) -> None:
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
         web_elements = element.get_visible_elements_from_elements(
-            element.get_elements_by_attributes(
-                kwargs.get('tag'), xpath, **kwargs))
+            element.get_elements_by_attributes(kwargs.get('tag'), xpath,
+                                               **kwargs))
     else:
         web_elements = element.get_webelements(xpath)
     if not web_elements:
@@ -390,11 +412,10 @@ def verify_no_element(xpath: str, timeout: Union[int, str]=0, **kwargs) -> None:
 @keyword(tags=["Getters"])
 @decorators.timeout_decorator
 def get_webelement(locator: str,
-                   anchor: str='1',
-                   element_type: Optional[str]=None,
-                   timeout: Union[int, str]=0,
-                   **kwargs
-                   ) -> list[WebElement]:
+                   anchor: str = '1',
+                   element_type: Optional[str] = None,
+                   timeout: Union[int, str] = 0,
+                   **kwargs) -> Union[WebElement, list[WebElement]]:
     r"""Get Webelement using any Qword -stylish locator.
 
     Examples
@@ -457,30 +478,37 @@ def get_webelement(locator: str,
     ----------------
     \`ClickElement\`, \`HoverElement\`, \`TypeText\`
     """
+    logger.console(f"element type str= {element_type}")
     kwargs['index'] = kwargs.get('index', 1)
     kwargs['timeout'] = timeout
     if element_type:
         if element_type.lower() == 'text':
-            web_elements = text.get_element_by_locator_text(locator, anchor, **kwargs)
+            web_elements = text.get_element_by_locator_text(
+                locator, anchor, **kwargs)
         if element_type.lower() == 'item':
-            web_elements = text.get_item_using_anchor(locator, anchor, **kwargs)
+            web_elements = text.get_item_using_anchor(locator, anchor,
+                                                      **kwargs)
         if element_type.lower() == "dropdown":
-            web_elements = dropdown.get_dd_elements_from_all_documents(locator, anchor, **kwargs)
+            web_elements = dropdown.get_dd_elements_from_all_documents(
+                locator, anchor, **kwargs)
         if element_type.lower() == "input":
-            web_elements = input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
+            web_elements = input_.get_input_elements_from_all_documents(
+                locator, anchor, **kwargs)
         if element_type.lower() == "checkbox":
             web_elements = checkbox.get_checkbox_elements_from_all_documents(
-                locator, anchor, **kwargs
-            )
+                locator, anchor, **kwargs)[0]
         if element_type.lower() == "css":
             web_elements = element.get_webelement_by_css(locator, **kwargs)
 
-        return web_elements
+        logger.console(f"actual element type = {type(web_elements)}")
+        logger.console(f"str repr = {str(web_elements)}")
+        return [web_elements]
 
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
         web_elements = element.get_visible_elements_from_elements(
-            element.get_elements_by_attributes(kwargs.get('tag'), locator, **kwargs))
+            element.get_elements_by_attributes(kwargs.get('tag'), locator,
+                                               **kwargs))
     else:
         web_elements = element.get_webelements(locator)
     if web_elements:
@@ -492,11 +520,10 @@ def get_webelement(locator: str,
 @decorators.timeout_decorator
 def get_attribute(locator: str,
                   attribute: str,
-                  anchor: str='1',
-                  element_type: Optional[str]=None,
-                  timeout: Union[int, str]=0,
-                  **kwargs
-                  ) -> str:
+                  anchor: str = '1',
+                  element_type: Optional[str] = None,
+                  timeout: Union[int, str] = 0,
+                  **kwargs) -> str:
     r"""Get attribute value of an element.
 
     Examples
@@ -565,20 +592,23 @@ def get_attribute(locator: str,
     ----------------
     \`VerifyAttribute\`, \`VerifyElement\`
     """
-    webelement = get_webelement(locator, anchor, element_type, timeout, **kwargs)
+    webelement = get_webelement(locator, anchor, element_type, timeout,
+                                **kwargs)
 
     if not webelement:
-        raise QWebElementNotFoundError('Could not find element {} with attribute {}'
-                                       .format(locator, attribute))
+        raise QWebElementNotFoundError(
+            'Could not find element {} with attribute {}'.format(
+                locator, attribute))
     if not isinstance(webelement, list):
         return webelement.get_attribute(attribute)
 
     if len(webelement) == 1:
         return webelement[0].get_attribute(attribute)
 
-    raise QWebValueError('Found {} occurences of locator {}. '
-                         'Use index etc. to uniquely identify the element'
-                         .format(len(webelement), locator))
+    raise QWebValueError(
+        'Found {} occurences of locator {}. '
+        'Use index etc. to uniquely identify the element'.format(
+            len(webelement), locator))
 
 
 @keyword(tags=["Verification"])
@@ -586,9 +616,9 @@ def get_attribute(locator: str,
 def verify_attribute(locator: str,
                      attribute: str,
                      value: str,
-                     anchor: str='1',
-                     element_type: Optional[str]=None,
-                     timeout: Union[int,str]=0,
+                     anchor: str = '1',
+                     element_type: Optional[str] = None,
+                     timeout: Union[int, str] = 0,
                      **kwargs) -> None:
     r"""Verify attribute value of an element.
 
@@ -689,7 +719,8 @@ def verify_attribute(locator: str,
     ----------------
     \`GetAttribute\`, \`VerifyElement\`
     """
-    attr_val = get_attribute(locator, attribute, anchor, element_type, timeout, **kwargs)
+    attr_val = get_attribute(locator, attribute, anchor, element_type, timeout,
+                             **kwargs)
     operator = kwargs.get('operator', "equals")
 
     try:

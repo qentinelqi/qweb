@@ -15,15 +15,17 @@ def open_browser() -> WebDriver:
         logger.error('Adb not installed or working incorrectly\n' + str(e))
         raise
     ss_type = 'false'
-    devices = [x for x in adb_output.split()
-               if x not in ('List', 'of', 'device', 'devices', 'attached')]
+    devices = [
+        x for x in adb_output.split()
+        if x not in ('List', 'of', 'device', 'devices', 'attached')
+    ]
     if len(devices) != 1:
         logger.error('Number of attached devices is not 1\n')
         raise ValueError
     if 'emulator' in devices:  # this is here so screenshots work on emulators
         ss_type = 'true'
-    version = subprocess.check_output([
-        'adb', 'shell', 'getprop ro.build.version.release']).decode().strip()
+    version = subprocess.check_output(
+        ['adb', 'shell', 'getprop ro.build.version.release']).decode().strip()
     desired_cap = {
         'platformName': 'Android',
         'platformVersion': version,

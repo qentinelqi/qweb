@@ -28,7 +28,7 @@ import shutil
 from robot.api import logger
 from robot.api.deco import keyword
 
-ACTIVE_FILE:File
+ACTIVE_FILE: File = None  # type: ignore[assignment]
 
 
 @keyword(tags=["File"])
@@ -157,7 +157,7 @@ def get_file_text(**kwargs) -> str:
 
 
 @keyword(tags=("File", "Verification"))
-def verify_pdf_text(text: str, normalize: bool=False) -> None:
+def verify_pdf_text(text: str, normalize: bool = False) -> None:
     r"""Verify text from pdf file.
 
     Examples
@@ -183,7 +183,7 @@ def verify_pdf_text(text: str, normalize: bool=False) -> None:
 
 
 @keyword(tags=("File", "Verification"))
-def verify_file_text(text: str, normalize: bool=False) -> None:
+def verify_file_text(text: str, normalize: bool = False) -> None:
     r"""Verify text from pdf file.
 
     Examples
@@ -208,7 +208,7 @@ def verify_file_text(text: str, normalize: bool=False) -> None:
 
 
 @keyword(tags=("File", "Verification"))
-def verify_no_pdf_text(text: str, normalize: bool=False) -> None:
+def verify_no_pdf_text(text: str, normalize: bool = False) -> None:
     r"""Verify text not exists in pdf-file.
 
     Examples
@@ -231,13 +231,14 @@ def verify_no_pdf_text(text: str, normalize: bool=False) -> None:
     _file_exists()
     try:
         if ACTIVE_FILE.verify(text, normalize) is True:
-            raise QWebUnexpectedConditionError('Text {} exists in pdf file'.format(text))
+            raise QWebUnexpectedConditionError(
+                'Text {} exists in pdf file'.format(text))
     except QWebValueMismatchError:
         return
 
 
 @keyword(tags=("File", "Verification"))
-def verify_no_file_text(text: str, normalize: bool=False) -> None:
+def verify_no_file_text(text: str, normalize: bool = False) -> None:
     r"""Verify text not exists in pdf-file.
 
     Examples
@@ -260,13 +261,14 @@ def verify_no_file_text(text: str, normalize: bool=False) -> None:
     _file_exists()
     try:
         if ACTIVE_FILE.verify(text, normalize) is True:
-            raise QWebUnexpectedConditionError('Text {} exists in file'.format(text))
+            raise QWebUnexpectedConditionError(
+                'Text {} exists in file'.format(text))
     except QWebValueMismatchError:
         return
 
 
 @keyword(tags=("File", "Interaction"))
-def remove_file(file: Optional[str]=None) -> None:
+def remove_file(file: Optional[str] = None) -> None:
     r"""Remove a file.
 
     Examples
@@ -311,13 +313,15 @@ def remove_pdf() -> None:
     ACTIVE_FILE.remove()
 
 
-def _file_exists(file_path: Optional[str]=None) -> bool:
+def _file_exists(file_path: Optional[str] = None) -> bool:
     if not file_path:
         if isinstance(ACTIVE_FILE, File) is False:
-            raise QWebInstanceDoesNotExistError('File has not been defined with UsePdf keyword')
+            raise QWebInstanceDoesNotExistError(
+                'File has not been defined with UsePdf keyword')
         return True
     if isinstance(file_path, File) is False:
-        raise QWebInstanceDoesNotExistError('Could not locate file {}'.format(file_path))
+        raise QWebInstanceDoesNotExistError(
+            'Could not locate file {}'.format(file_path))
     return True
 
 
@@ -357,9 +361,11 @@ def zip_files(name_of_zip: str, files_to_zip: str) -> None:
                     zipped.write(file, _basename(file))
     except OSError as e:
         raise QWebValueError('\nFile name "{}" contained illegal characters.'
-                             '\nError message: {}'.format(name_of_zip, str(e))) from e
-    logger.info('Zipped files {} into the file {}'
-                .format(str(files), name_of_zip), also_console=True)
+                             '\nError message: {}'.format(name_of_zip,
+                                                          str(e))) from e
+    logger.info('Zipped files {} into the file {}'.format(
+        str(files), name_of_zip),
+                also_console=True)
 
 
 @keyword(tags=("File", "Interaction"))

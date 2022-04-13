@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for table elements.
 
 List elements are used to show many kinds of data. Lists have cells in
@@ -31,17 +30,17 @@ from QWeb.internal.actions import execute_click_and_verify_condition \
 from QWeb.internal import decorators, util, element
 from QWeb.internal.lists import List
 
-ACTIVE_LIST: List = None # type: ignore[assignment]
+ACTIVE_LIST: List = None  # type: ignore[assignment]
 
 
 @keyword(tags=("Config", "Lists"))
 @decorators.timeout_decorator
 def use_list(locator: str,
-             anchor: str="1",
-             timeout: Union[int,str]=0,
-             parent: str=None,
-             child: str=None,
-             **kwargs) -> None:  # pylint: disable=unused-argument
+             anchor: str = "1",
+             timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+             parent: str = None,
+             child: str = None,
+             **kwargs) -> None:
     r"""Define list for all other list keywords.
 
     Sets active table for other keywords.
@@ -80,11 +79,15 @@ def use_list(locator: str,
     \`ClickList\`, \`GetList\`, \`VerifyList\`
     """
     global ACTIVE_LIST  # pylint:disable=global-statement
-    ACTIVE_LIST = List.from_list_instance(locator, anchor, parent=parent, child=child, **kwargs)
+    ACTIVE_LIST = List.from_list_instance(locator,
+                                          anchor,
+                                          parent=parent,
+                                          child=child,
+                                          **kwargs)
 
 
 @keyword(tags=("Lists", "Verification"))
-def verify_length(expected_length: Union[int,str]) -> None:
+def verify_length(expected_length: Union[int, str]) -> None:
     """Verify lists length."""
     if _list_exists():
         active = ACTIVE_LIST.update_list()
@@ -92,13 +95,16 @@ def verify_length(expected_length: Union[int,str]) -> None:
         if int(expected_length) == list_length:
             return
         raise QWebValueMismatchError(
-            'Expected length "{}" didn\'t match to list length "{}".'
-            .format(expected_length, list_length))
+            'Expected length "{}" didn\'t match to list length "{}".'.format(
+                expected_length, list_length))
 
 
 @keyword(tags=("Lists", "Verification"))
 @decorators.timeout_decorator
-def verify_list(text: str, index: Optional[Union[int,str]]=None, timeout: Union[int,str]=0) -> None:  # pylint: disable=unused-argument
+def verify_list(
+        text: str,
+        index: Optional[Union[int, str]] = None,
+        timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verify list contains given text.
 
     Examples
@@ -125,7 +131,10 @@ def verify_list(text: str, index: Optional[Union[int,str]]=None, timeout: Union[
 
 @keyword(tags=("Lists", "Interaction"))
 @decorators.timeout_decorator
-def click_list(index: Union[int,str], timeout: Union[int,str]=0, js: bool=True, **kwargs) -> None:  # pylint: disable=unused-argument
+def click_list(index: Union[int, str],
+               timeout: Union[int, str] = 0,
+               js: bool = True,
+               **kwargs) -> None:
     r"""Click list element with in given index.
 
     Examples
@@ -145,12 +154,15 @@ def click_list(index: Union[int,str], timeout: Union[int,str]=0, js: bool=True, 
             index = _check_index(index)
             web_element = element.get_element_to_click_from_list(
                 active.web_element_list, index, **kwargs)
-            if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
+            if _execute_click_and_verify_condition(web_element,
+                                                   timeout=timeout,
+                                                   js=js,
+                                                   **kwargs):
                 return
 
 
 @keyword(tags=("Lists", "Verification"))
-def verify_no_list(text: str, index: Optional[Union[int,str]]=None) -> None:
+def verify_no_list(text: str, index: Optional[Union[int, str]] = None) -> None:
     r"""Verify that text is not in the list.
 
     Examples
@@ -176,7 +188,8 @@ def verify_no_list(text: str, index: Optional[Union[int,str]]=None) -> None:
 
 
 @keyword(tags=("Lists", "Getters"))
-def get_list(index: Optional[Union[int,str]]=None, **kwargs) -> Union[str, int, float, list[str]]:
+def get_list(index: Optional[Union[int, str]] = None,
+             **kwargs) -> Union[str, int, float, list[str]]:
     r"""Get value(s) from a list.
 
     Examples
@@ -217,11 +230,12 @@ def get_list(index: Optional[Union[int,str]]=None, **kwargs) -> Union[str, int, 
 
 def _list_exists() -> bool:
     if isinstance(ACTIVE_LIST, List) is False:
-        raise QWebInstanceDoesNotExistError('List has not been defined with UseList keyword')
+        raise QWebInstanceDoesNotExistError(
+            'List has not been defined with UseList keyword')
     return True
 
 
-def _check_index(index: Union[int,str]) -> int:
+def _check_index(index: Union[int, str]) -> int:
     try:
         if int(index) - 1 < len(ACTIVE_LIST.web_list):
             return int(index) - 1

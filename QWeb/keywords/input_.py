@@ -14,12 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for input elements.
 
 Input elements are those in which one can input text in.
 """
-from typing import Optional, Union
+from typing import Union
 
 from robot.api import logger
 from robot.api.deco import keyword
@@ -77,11 +76,10 @@ secrets.add_filter("Type Secret3", 1, "hint")
 
 def type_secret3(locator: str,
                  input_text: str,
-                 anchor: str="1",
-                 timeout: Union[int,str]=0,
-                 index: int=1,
-                 **kwargs
-                 ) -> None:
+                 anchor: str = "1",
+                 timeout: Union[int, str] = 0,
+                 index: int = 1,
+                 **kwargs) -> None:
     """Type sensitive information such as personal data.
 
     the first 1 or 3 digits of the secret value are displayed
@@ -107,7 +105,12 @@ def type_secret3(locator: str,
         logger.info('SECRET: {}'.format(input_text[:3]) + (length - 3) * '*')
     else:
         logger.info('SECRET: {}'.format(input_text[:1]) + (length - 1) * '*')
-    type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
+    type_text(locator,
+              input_text,
+              anchor,
+              timeout=timeout,
+              index=index,
+              **kwargs)
 
 
 # Filter out input_text parameter in type_secret
@@ -117,11 +120,10 @@ secrets.add_filter("Type Secret", 1, None)
 @keyword(tags=("Input", "Interaction"))
 def type_secret(locator: str,
                 input_text: str,
-                anchor: str="1",
-                timeout: Union[int,str]=0,
-                index: int=1,
-                **kwargs
-                ) -> None:
+                anchor: str = "1",
+                timeout: Union[int, str] = 0,
+                index: int = 1,
+                **kwargs) -> None:
     r"""Type secret information such as password.
 
     Logging in start_keyword and end_keyword is filtered,
@@ -146,18 +148,22 @@ def type_secret(locator: str,
     ----------------
     \`TypeText\`
     """
-    type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
+    type_text(locator,
+              input_text,
+              anchor,
+              timeout=timeout,
+              index=index,
+              **kwargs)
 
 
 @keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
 def type_text(locator: str,
               input_text: str,
-              anchor: str="1",
-              timeout: Union[int,str]=0,
-              index: int=1,
-              **kwargs
-              ) -> None:
+              anchor: str = "1",
+              timeout: Union[int, str] = 0,
+              index: int = 1,
+              **kwargs) -> None:
     r"""Type given text to a text field.
 
     First look through if there are any input fields that have the
@@ -279,7 +285,8 @@ def type_text(locator: str,
 
 @keyword(tags=("File", "Input", "Interaction"))
 @decorators.timeout_decorator
-def type_texts(input_texts: dict[str,str], timeout: Union[int, str]='0') -> None:
+def type_texts(input_texts: dict[str, str],
+               timeout: Union[int, str] = '0') -> None:
     r"""Type text to multiple fields.
 
     Accepts a .txt file or Robot FW dictionary as a parameter. If using a text file, the locator
@@ -302,7 +309,8 @@ def type_texts(input_texts: dict[str,str], timeout: Union[int, str]='0') -> None
     """
     if isinstance(input_texts, dict):
         for locator in input_texts:
-            logger.info('Typing "{}", locator "{}"'.format(locator, input_texts[locator]))
+            logger.info('Typing "{}", locator "{}"'.format(
+                locator, input_texts[locator]))
             type_text(locator, input_texts[locator])
     elif input_texts.endswith('.txt') or input_texts.endswith('.csv'):
         file = download.get_path(input_texts)
@@ -314,18 +322,18 @@ def type_texts(input_texts: dict[str,str], timeout: Union[int, str]='0') -> None
                 logger.info('Typing "{}", locator "{}"'.format(text, locator))
                 type_text(locator, text, timeout=timeout)
     else:
-        raise QWebValueError('Unknown input value. Text file or dictionary required.')
+        raise QWebValueError(
+            'Unknown input value. Text file or dictionary required.')
 
 
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_value(locator: str,
                        expected_value: str,
-                       anchor: str="1",
-                       timeout: Union[int,str]=0,
-                       index: int=1,
-                       **kwargs
-                       ) -> None:
+                       anchor: str = "1",
+                       timeout: Union[int, str] = 0,
+                       index: int = 1,
+                       **kwargs) -> None:
     r"""Verify input field has given value.
 
     Examples
@@ -384,12 +392,15 @@ def verify_input_value(locator: str,
     else:
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs)
-    actions.compare_input_values(input_element, expected_value, timeout=timeout)
+    actions.compare_input_values(input_element,
+                                 expected_value,
+                                 timeout=timeout)
 
 
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
-def verify_input_values(input_values: dict[str, str], timeout: Union[int, str]='0') -> None:
+def verify_input_values(input_values: dict[str, str],
+                        timeout: Union[int, str] = '0') -> None:
     r"""Verify input fields have given values.
 
     Accepts a .txt file or Robot FW dictionary as a parameter. If using a text file, the locator
@@ -412,7 +423,8 @@ def verify_input_values(input_values: dict[str, str], timeout: Union[int, str]='
     """
     if isinstance(input_values, dict):
         for locator in input_values:
-            logger.info('Locator: {}, Expected value: {}'.format(locator, input_values[locator]),
+            logger.info('Locator: {}, Expected value: {}'.format(
+                locator, input_values[locator]),
                         also_console=True)
             verify_input_value(locator, input_values[locator])
     elif input_values.endswith('.txt') or input_values.endswith('.csv'):
@@ -422,22 +434,23 @@ def verify_input_values(input_values: dict[str, str], timeout: Union[int, str]='
             for x in params:
                 x = x.decode('utf-8').split(',')
                 locator, value = x[0].strip(), x[1].strip()
-                logger.info('Locator: {}, Expected value: {}'.format(locator, value),
+                logger.info('Locator: {}, Expected value: {}'.format(
+                    locator, value),
                             also_console=True)
                 verify_input_value(locator, value, timeout=timeout)
     else:
-        raise QWebValueError('Unknown input value. Text file or dictionary required.')
+        raise QWebValueError(
+            'Unknown input value. Text file or dictionary required.')
 
 
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_status(locator: str,
                         status: str,
-                        anchor: str="1",
-                        timeout: Union[int,str]=0,
-                        index: int=1,
-                        **kwargs
-                        ) -> None:
+                        anchor: str = "1",
+                        timeout: Union[int, str] = 0,
+                        index: int = 1,
+                        **kwargs) -> None:
     r"""Verify input field is enabled or disabled.
 
     In other words verify can user interact with an input field or not.
@@ -496,9 +509,15 @@ def verify_input_status(locator: str,
     \`GetInputValue\`, \`VerifyInputElement\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
     input_element = input_.get_input_elements_from_all_documents(
-        locator, anchor, timeout=timeout, index=index, enable_check=True, **kwargs)
+        locator,
+        anchor,
+        timeout=timeout,
+        index=index,
+        enable_check=True,
+        **kwargs)
     if status.lower() == "enabled":
-        if not element.is_enabled(input_element) or element.is_readonly(input_element):
+        if not element.is_enabled(input_element) or element.is_readonly(
+                input_element):
             raise QWebValueError('The input field was disabled')
     elif status.lower() == "disabled":
         if element.is_enabled(input_element):
@@ -513,11 +532,10 @@ def verify_input_status(locator: str,
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_element(locator: str,
-                         anchor: str="1",
-                         timeout: Union[int,str]=0,
-                         index: int=1,
-                         **kwargs
-                         ) -> None:
+                         anchor: str = "1",
+                         timeout: Union[int, str] = 0,
+                         index: int = 1,
+                         **kwargs) -> None:
     r"""Verify that input element exist.
 
     Examples
@@ -576,11 +594,10 @@ def verify_input_element(locator: str,
 @keyword(tags=("Input", "Getters"))
 @decorators.timeout_decorator
 def get_input_value(locator: str,
-                    anchor: str="1",
-                    timeout: Union[int,str]=0,
-                    index: int=1,
-                    **kwargs
-                    ) -> Union[int, float, str]:
+                    anchor: str = "1",
+                    timeout: Union[int, str] = 0,
+                    index: int = 1,
+                    **kwargs) -> Union[int, float, str]:
     r"""Get input value from input field.
 
     Examples
@@ -647,11 +664,10 @@ def get_input_value(locator: str,
 @decorators.timeout_decorator
 def upload_file(locator: str,
                 filename: str,
-                anchor: str="1",
-                timeout: Union[int,str]=0,
-                index: int=1,
-                **kwargs
-                ) -> None:
+                anchor: str = "1",
+                timeout: Union[int, str] = 0,
+                index: int = 1,
+                **kwargs) -> None:
     r"""Upload file.
 
     Examples
@@ -707,18 +723,17 @@ def upload_file(locator: str,
         input_element.send_keys(str(filepath.resolve()))
         return
     raise QWebFileNotFoundError(
-        'Unable to find file {}. Tried from project/files and users/downloads'
-        .format(filename))
+        'Unable to find file {}. Tried from project/files and users/downloads'.
+        format(filename))
 
 
 @keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
 def press_key(locator: str,
               key: str,
-              anchor: str="1",
-              timeout: Union[int,str]=0,
-              **kwargs
-              ) -> None:
+              anchor: str = "1",
+              timeout: Union[int, str] = 0,
+              **kwargs) -> None:
     r"""Simulate user pressing keyboard key on element identified by "locator".
 
     The parameter "key" is either a single character or a keyboard key surrounded by '{ }'.
@@ -749,7 +764,8 @@ def press_key(locator: str,
         # supports normal text field CMD operations only
         # (i.e. CMD+C, CMD+A, CMD+V etc.)
         if len(key) == 2 and key[0] == '\ue03d' and util.is_safari():
-            javascript.execute_javascript("arguments[0].focus();", input_element)
+            javascript.execute_javascript("arguments[0].focus();",
+                                          input_element)
             action.key_down(key[0]) \
                   .send_keys(key[1]) \
                   .key_up(key[0]).perform()

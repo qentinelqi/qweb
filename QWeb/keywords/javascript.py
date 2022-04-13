@@ -25,7 +25,8 @@ from QWeb.internal.exceptions import QWebValueError
 
 
 @keyword(tags=("Javascript", "Interaction"))
-def execute_javascript(script: str, variable_name: Optional[str]=None) -> None:
+def execute_javascript(script: str,
+                       variable_name: Optional[str] = None) -> None:
     """Execute javascript and save the result to suite variable.
 
     Examples
@@ -49,4 +50,5 @@ def execute_javascript(script: str, variable_name: Optional[str]=None) -> None:
             BuiltIn().set_suite_variable(variable_name, output)
         except Exception as e:
             logger.warn(e.__str__())
-            raise QWebValueError("Invalid variable syntax '{}'.".format(variable_name)) from e
+            raise QWebValueError(
+                "Invalid variable syntax '{}'.".format(variable_name)) from e

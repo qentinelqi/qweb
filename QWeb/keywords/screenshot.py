@@ -28,13 +28,15 @@ def verify_app(imagename: str) -> None:
     :param imagename:
     :return:
     """
-    status = screenshot.compare_screenshots(imagename, CONFIG["VerifyAppAccuracy"])
+    status = screenshot.compare_screenshots(imagename,
+                                            CONFIG["VerifyAppAccuracy"])
     if status is False:
         raise Exception('Images differ')
 
 
 @keyword(tags=["Logging"])
-def log_screenshot(filename: str='screenshot_{}.png', fullpage: bool=False) -> Optional[str]:
+def log_screenshot(filename: str = 'screenshot_{}.png',
+                   fullpage: bool = False) -> Optional[str]:
     r"""Log screenshot to Robot Framework log.
 
     Examples
@@ -75,9 +77,10 @@ def log_screenshot(filename: str='screenshot_{}.png', fullpage: bool=False) -> O
             screenshot.log_screenshot_file(filepath)
             screenshot.log_html()
         else:
-            raise ValueError('Unknown screenshot type: {}'
-                             .format(screenshot_type))
+            raise ValueError(
+                'Unknown screenshot type: {}'.format(screenshot_type))
     else:
-        logger.info('Screenshots have been disabled with the SetConfig keyword.')
+        logger.info(
+            'Screenshots have been disabled with the SetConfig keyword.')
 
     return filepath

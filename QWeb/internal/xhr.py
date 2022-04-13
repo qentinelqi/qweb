@@ -53,7 +53,7 @@ def setup_xhr_monitor() -> bool:
 
 def get_ready_state() -> bool:
     ready_state = javascript.execute_javascript(
-                'return document.readyState === "complete"')
+        'return document.readyState === "complete"')
     logger.debug('Readystate = {}'.format(ready_state))
     return ready_state
 
@@ -64,7 +64,7 @@ def get_jquery_ready() -> bool:
     return jqueries_ready
 
 
-def wait_xhr(timeout: float=0.0) -> None:
+def wait_xhr(timeout: float = 0.0) -> None:
     """Uses jQuery.active to check if page is ready
 
     if jQuery is not available, calls setup_xhr_monitor

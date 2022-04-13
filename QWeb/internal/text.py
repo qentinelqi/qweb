@@ -29,10 +29,9 @@ from QWeb.internal.config_defaults import CONFIG
 
 
 def get_element_by_locator_text(locator: str,
-                                anchor: str="1",
-                                index: Union[int, str]=1,
-                                **kwargs
-                                ) -> WebElement:
+                                anchor: str = "1",
+                                index: Union[int, str] = 1,
+                                **kwargs) -> WebElement:
     """Find element by it's visible text.
 
     Accepted kwargs:
@@ -44,11 +43,12 @@ def get_element_by_locator_text(locator: str,
     index = int(index) - 1
     try:
         web_element = get_text_using_anchor(locator, anchor, **kwargs)
-    except (QWebElementNotFoundError, InvalidSelectorException, JavascriptException,
-            WebDriverException):
+    except (QWebElementNotFoundError, InvalidSelectorException,
+            JavascriptException, WebDriverException):
         try:
             web_element = element.get_unique_element_by_xpath(locator)
-        except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
+        except (QWebElementNotFoundError, InvalidSelectorException,
+                NoSuchFrameException) as e:
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
@@ -56,8 +56,7 @@ def get_element_by_locator_text(locator: str,
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
-            web_element = element.get_parent_element(
-                web_element, tag_name)
+            web_element = element.get_parent_element(web_element, tag_name)
         elif 'child' in kwargs and kwargs['child']:
             tag_name = kwargs['child']
             web_element = element.get_element_from_childnodes(
@@ -71,11 +70,12 @@ def get_element_by_locator_text(locator: str,
 @frame.all_frames
 def find_text(text: str) -> bool:
     try:
-        if javascript.execute_javascript(
-                "return window.find('{}')".format(text.replace("\'", "\\'"))):
+        if javascript.execute_javascript("return window.find('{}')".format(
+                text.replace("\'", "\\'"))):
             return True
     except WebDriverException as e:
-        logger.debug('Got webdriver exception from find text func: {}'.format(e))
+        logger.debug(
+            'Got webdriver exception from find text func: {}'.format(e))
     raise QWebElementNotFoundError('Text not found')
 
 
@@ -85,7 +85,8 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
         web_elements = _get_exact_text_element(text, **kwargs)
     except NoSuchFrameException:
         logger.debug('Got no such frame from get exact text')
-    partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
+    partial = util.par2bool(kwargs.get('partial_match',
+                                       CONFIG['PartialMatch']))
     if partial:
         try:
             web_elements = _get_contains_text_element(text, **kwargs)
@@ -93,11 +94,12 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
             logger.debug('Got no such frame from contains text')
     shadow_dom = CONFIG['ShadowDOM']
     if shadow_dom:
-        shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
+        shadow_elements = get_texts_including_shadow_dom(
+            text, partial, **kwargs)
         #  remove duplicates (normal search and including shadow search)
         for el in shadow_elements:
-            if web_elements is not None and el not in list(web_elements): 
-                web_elements.append(el) # type: ignore[union-attr]
+            if web_elements is not None and el not in list(web_elements):
+                web_elements.append(el)  # type: ignore[union-attr]
     return web_elements
 
 
@@ -126,11 +128,13 @@ def get_unique_text_element(text: str, **kwargs) -> WebElement:
     """
     web_elements = get_text_elements(text, **kwargs)
     if not web_elements:
-        raise QWebValueError('Text "{}" did not match any elements'.format(text))
+        raise QWebValueError(
+            'Text "{}" did not match any elements'.format(text))
     if len(web_elements) == 1:
         return web_elements[0]  # pylint: disable=unsubscriptable-object
-    raise QWebValueError('Text "{}" matched {} elements. Needs to be unique'
-                         .format(text, len(web_elements)))
+    raise QWebValueError(
+        'Text "{}" matched {} elements. Needs to be unique'.format(
+            text, len(web_elements)))
 
 
 @frame.all_frames
@@ -138,17 +142,19 @@ def check_all_nodes(text: str, **kwargs) -> Optional[list[WebElement]]:
     try:
         return element.get_visible_elements_from_elements(
             javascript.find_text_from_textnodes(text, **kwargs))
-    except(WebDriverException, NoSuchFrameException, JavascriptException,
-           QWebStalingElementError) as e:
+    except (WebDriverException, NoSuchFrameException, JavascriptException,
+            QWebStalingElementError) as e:
         logger.info('Got {} from check all nodes'.format(e))
         return None
 
 
-def get_all_text_elements(text: str, **kwargs) -> WebElement:
+def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
     """Get all webelements found by text"""
-    web_elements: Optional[list[WebElement]]
-    all_text_nodes = util.par2bool(kwargs.get('all_text_nodes', CONFIG['AllTextNodes']))
-    kwargs['partial_match'] = kwargs.get('partial_match', CONFIG['PartialMatch'])
+    web_elements: list[WebElement] = []
+    all_text_nodes = util.par2bool(
+        kwargs.get('all_text_nodes', CONFIG['AllTextNodes']))
+    kwargs['partial_match'] = kwargs.get('partial_match',
+                                         CONFIG['PartialMatch'])
     if all_text_nodes:
         web_elements = check_all_nodes(text, **kwargs)
         if web_elements:
@@ -160,9 +166,10 @@ def get_all_text_elements(text: str, **kwargs) -> WebElement:
                 QWebStalingElementError) as e:
             logger.debug('got {}. Syntax might be invalid'.format(e))
     if not web_elements:
-        web_elements = get_text_elements(text, **kwargs)
+        web_elements = get_text_elements(text, **kwargs)  # type: ignore[assignment]
     if not web_elements:
-        raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
+        raise QWebElementNotFoundError(
+            'Webpage did not contain text "{}"'.format(text))
     return web_elements
 
 
@@ -200,9 +207,12 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
         modal_exists = driver.find_elements(By.XPATH, modal_xpath)
         if modal_exists:
             web_elements = _filter_by_modal_ancestor(web_elements)
-            logger.debug(f"after filtering there are: {len(web_elements)} matching elements")
+            logger.debug(
+                f"after filtering there are: {len(web_elements)} matching elements"
+            )
             if not web_elements:
-                raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
+                raise QWebElementNotFoundError(
+                    'Webpage did not contain text "{}"'.format(text))
 
     if len(web_elements) == 1:
         return web_elements[0]
@@ -234,15 +244,17 @@ def _filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
             elem.find_element(By.XPATH, f"./../ancestor::{xpath}")
             elems_in_modal.append(elem)
         except NoSuchElementException:
-            logger.debug("Filtering out element, modal open but not under modal")
+            logger.debug(
+                "Filtering out element, modal open but not under modal")
             continue
 
     logger.debug(f"length after filtering: {len(elems_in_modal)}")
     return elems_in_modal
 
 
-def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[str,int]], **kwargs
-                            ) -> WebElement:
+def get_element_using_anchor(elements: list[WebElement],
+                             anchor: Optional[Union[str, int]],
+                             **kwargs) -> WebElement:
     """Determine correct element from list of elements using anchor.
 
     Parameters
@@ -257,22 +269,27 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
     if anchor is None:
         # Element was not unique and anchor was not used.
         raise QWebValueError(
-            'Found {} elements. Use anchor to determine which is wanted'.format(len(elements)))
+            'Found {} elements. Use anchor to determine which is wanted'.
+            format(len(elements)))
     # Select by index unless anchor type is text
-    if str(anchor).isdigit() and kwargs.get("anchor_type", "auto").lower() != "text":
+    if str(anchor).isdigit() and kwargs.get("anchor_type",
+                                            "auto").lower() != "text":
         anchor_int = int(anchor) - 1
         if anchor_int < len(elements):
             return elements[anchor_int]
-        raise QWebInstanceDoesNotExistError('Found {} elements. Given anchor was {}'
-                                            .format(len(elements), anchor_int + 1))
+        raise QWebInstanceDoesNotExistError(
+            'Found {} elements. Given anchor was {}'.format(
+                len(elements), anchor_int + 1))
     if isinstance(anchor, str):  # Get closest element to anchor
         kwargs['stay_in_current_frame'] = True
         anchor_element = None
         if CONFIG['MultipleAnchors']:
             anchor_elements: list[WebElement] = []
-            logger.debug('Multiple anchors enabled, trying to find first exact match')
+            logger.debug(
+                'Multiple anchors enabled, trying to find first exact match')
             try:
-                anchor_elements = _get_exact_text_element(anchor, **kwargs) # type: ignore[assignment]
+                anchor_elements = _get_exact_text_element(
+                    anchor, **kwargs)  # type: ignore[assignment]
             except NoSuchFrameException:
                 logger.debug('Got no such frame from get exact text')
             if len(anchor_elements) > 0:
@@ -280,9 +297,11 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
                 anchor_element = anchor_elements[0]
             else:
                 # No exact matches found, trying to find partial
-                anchor_elements = get_text_elements(anchor, **kwargs) # type: ignore[assignment]
+                anchor_elements = get_text_elements(
+                    anchor, **kwargs)  # type: ignore[assignment]
                 if len(anchor_elements) > 0:
-                    logger.debug('No exact match found, using first partial match')
+                    logger.debug(
+                        'No exact match found, using first partial match')
                     anchor_element = anchor_elements[0]
         else:
             anchor_element = get_unique_text_element(anchor, **kwargs)
@@ -290,7 +309,8 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
     raise TypeError("Unknown argument type {}".format(type(anchor)))
 
 
-def get_item_using_anchor(text: str, anchor: str, **kwargs) -> Optional[WebElement]:
+def get_item_using_anchor(text: str, anchor: str,
+                          **kwargs) -> Optional[WebElement]:
     xpath = '//*[@title="{0}" or @alt="{0}" or @data-tooltip="{0}" or ' \
             '@tooltip="{0}" or @aria-label="{0}" or @data-icon="{0}"]'.format(text)
     if CONFIG["CssSelectors"]:
@@ -317,14 +337,15 @@ def get_item_using_anchor(text: str, anchor: str, **kwargs) -> Optional[WebEleme
     no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
     if no_raise:
         return None
-    raise QWebElementNotFoundError('Cannot find item for locator {}'.format(text))
+    raise QWebElementNotFoundError(
+        'Cannot find item for locator {}'.format(text))
 
 
-def _get_correct_element(web_elements: list[WebElement], anchor: str, **kwargs) -> WebElement:
+def _get_correct_element(web_elements: list[WebElement], anchor: str,
+                         **kwargs) -> WebElement:
     if len(web_elements) == 1:
         return web_elements[0]
-    correct_element = get_element_using_anchor(
-        web_elements, anchor, **kwargs)
+    correct_element = get_element_using_anchor(web_elements, anchor, **kwargs)
     return correct_element
 
 
@@ -341,14 +362,16 @@ def _get_item_by_css(text: str, **kwargs) -> Optional[list[WebElement]]:
     css = 'a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input' \
           ':not([type="text"]):not([type="password"]):not([type="email"])'
     full, partial = element.get_elements_by_attributes(css, text, **kwargs)
-    web_elements = element.get_visible_elements_from_elements(full + partial, **kwargs)
+    web_elements = element.get_visible_elements_from_elements(
+        full + partial, **kwargs)
     if web_elements:
         return web_elements
     return None
 
 
 @frame.all_frames
-def get_clickable_element_by_js(locator: str, **kwargs) -> Optional[list[WebElement]]:
+def get_clickable_element_by_js(locator: str,
+                                **kwargs) -> Optional[list[WebElement]]:
     web_elements = element.get_visible_elements_from_elements(
         javascript.get_clickable(locator), **kwargs)
     if web_elements:
@@ -358,25 +381,27 @@ def get_clickable_element_by_js(locator: str, **kwargs) -> Optional[list[WebElem
 
 
 @frame.all_frames
-def get_texts_including_shadow_dom(locator: str,
-                                   partial: bool,
-                                   **kwargs
-                                   ) -> list[WebElement]:
+def get_texts_including_shadow_dom(locator: str, partial: bool,
+                                   **kwargs) -> list[WebElement]:
     web_elements = element.get_visible_elements_from_elements(
-        javascript.get_text_elements_from_shadow_dom(locator, partial), **kwargs)
+        javascript.get_text_elements_from_shadow_dom(locator, partial),
+        **kwargs)
     if web_elements:
         logger.debug('Found elements from shadow dom: {}'.format(web_elements))
     return web_elements
 
 
 @frame.all_frames
-def get_items_including_shadow_dom(text: str, tag: str, **kwargs) -> list[WebElement]:
+def get_items_including_shadow_dom(text: str, tag: str,
+                                   **kwargs) -> list[WebElement]:
     web_elements = element.get_visible_elements_from_elements(
         javascript.get_item_elements_from_shadow_dom(tag), **kwargs)
 
     matches = javascript.get_by_attributes(web_elements, text, False)
     full, partial = matches.get('full', []), matches.get('partial', [])
-    shadow_elements = full + partial 
+    shadow_elements = full + partial
     if shadow_elements:
-        logger.debug(f'Found {len(shadow_elements)} items when extending search to shadow dom')
+        logger.debug(
+            f'Found {len(shadow_elements)} items when extending search to shadow dom'
+        )
     return shadow_elements

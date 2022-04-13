@@ -16,11 +16,11 @@
 # ---------------------------
 from __future__ import annotations
 
-FATAL_MESSAGES: list[str] = ["Failed to decode response",
-                  "chrome not reachable",
-                  "window was already closed",
-                  "Unable to get browser",
-                  "session deleted", "0 tabs open"]
+FATAL_MESSAGES: list[str] = [
+    "Failed to decode response", "chrome not reachable",
+    "window was already closed", "Unable to get browser", "session deleted",
+    "0 tabs open"
+]
 
 
 class QWebException(Exception):

@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 from pathlib import Path
 import re
 from robot.libraries.BuiltIn import BuiltIn
@@ -36,7 +36,8 @@ def set_robot_args(*args: Any, **kwargs: Any) -> list[Any]:
     return new_args
 
 
-def get_steps(name: str, caller_fn: str, **kwargs: Any) -> Optional[list[dict[str,Any]]]:
+def get_steps(name: str, caller_fn: str,
+              **kwargs: Any) -> Optional[list[dict[str, Any]]]:
     file = Path(BuiltIn().get_variable_value('${SUITE SOURCE}'))
     test_case = BuiltIn().get_variable_value('${TEST_NAME}')
     with open(file, "r+") as fo:
@@ -44,18 +45,21 @@ def get_steps(name: str, caller_fn: str, **kwargs: Any) -> Optional[list[dict[st
     idx = 0
     while data:
         if data[idx].strip() == test_case:
-            data = data[idx: len(data)]
+            data = data[idx:len(data)]
             for i, line in enumerate(data):
-                if caller_fn in line.replace(' ', '').strip().lower() and name in line.strip():
+                if caller_fn in line.replace(
+                        ' ', '').strip().lower() and name in line.strip():
                     steps = _parse_steps(data, i + 1, **kwargs)
                     return steps
         idx += 1
     return None
 
 
-def _parse_steps(data: list[str], iterator: int, **kwargs: Any) -> list[dict[str,Any]]:
+def _parse_steps(data: list[str], iterator: int,
+                 **kwargs: Any) -> list[dict[str, Any]]:
     steps = []
-    while not data[iterator].replace(' ', '').lower().strip().startswith('endblock'):
+    while not data[iterator].replace(
+            ' ', '').lower().strip().startswith('endblock'):
         varname = None
         line = re.split(r'\s{2,}', data[iterator].strip())
         if line[0].startswith('#'):
@@ -79,10 +83,8 @@ def _parse_steps(data: list[str], iterator: int, **kwargs: Any) -> list[dict[str
     return steps
 
 
-def _parse_arguments(line: list[str],
-                     starting_point: int,
-                     **kwargs: Any
-                     ) -> tuple[list[str], dict[Any, Any]]:
+def _parse_arguments(line: list[str], starting_point: int,
+                     **kwargs: Any) -> tuple[list[str], dict[Any, Any]]:
     args = []
     for a in range(starting_point, len(line)):
         if line[a].strip() != '':
@@ -96,7 +98,7 @@ def _parse_arguments(line: list[str],
     return args, kwargs
 
 
-def _contains_var(arg: str, from_start: bool=True) -> bool:
+def _contains_var(arg: str, from_start: bool = True) -> bool:
     var_types = ['${', '@{', '&{']
     if from_start:
         return any(arg.strip().startswith(v) for v in var_types)

@@ -27,7 +27,7 @@ from QWeb.internal.config_defaults import CONFIG
 
 @keyword(tags=("Browser", "Interaction"))
 @decorators.timeout_decorator
-def go_to(url: str, timeout: Union[int, str]=0) -> None:  # pylint: disable=unused-argument
+def go_to(url: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch current page to given url.
 
     Examples
@@ -194,7 +194,7 @@ def close_window() -> None:
 
 @keyword(tags=("Browser", "Interaction", "Window"))
 @decorators.timeout_decorator
-def switch_window(index: str, timeout: Union[int, str]=0) -> None:  # pylint: disable=unused-argument
+def switch_window(index: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch to another tab.
 
     Examples
@@ -236,7 +236,8 @@ def switch_window(index: str, timeout: Union[int, str]=0) -> None:  # pylint: di
             window.switch_to_window(correct_window_handle)
             return
         logger.debug('Tried to select tab with index {} but there'
-                     ' are only {} tabs open'.format(index, len(window_handles)))
+                     ' are only {} tabs open'.format(index,
+                                                     len(window_handles)))
     elif index == "NEW":
         window.switch_to_window(window_handles[-1])
         return
@@ -244,8 +245,8 @@ def switch_window(index: str, timeout: Union[int, str]=0) -> None:  # pylint: di
         raise QWebValueError(
             'Given argument "{}" is not a digit or NEW'.format(index))
     raise QWebDriverError(
-        'Tried to select tab with index {} but there are only {} tabs open'
-        .format(index, len(window_handles)))
+        'Tried to select tab with index {} but there are only {} tabs open'.
+        format(index, len(window_handles)))
 
 
 def set_window_size(width: int, height: int) -> None:
@@ -311,7 +312,8 @@ def maximize_window() -> None:
         driver.maximize_window()
 
     size = driver.get_window_size()
-    logger.debug("Window size set to {}x{}".format(size["width"], size["height"]))
+    logger.debug("Window size set to {}x{}".format(size["width"],
+                                                   size["height"]))
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -343,7 +345,7 @@ def get_url() -> str:
 
 @keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
-def verify_url(url: str, timeout: Union[int, str]=0) -> None:  # pylint: disable=unused-argument
+def verify_url(url: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verifies that current page url/location matches expected url.
 
 
@@ -378,7 +380,8 @@ def verify_url(url: str, timeout: Union[int, str]=0) -> None:  # pylint: disable
     current = driver.current_url
 
     if current.lower() != url.lower():
-        raise QWebValueError(f"Current url '{current}'' does not match expected url '{url}'")
+        raise QWebValueError(
+            f"Current url '{current}'' does not match expected url '{url}'")
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -410,7 +413,7 @@ def get_title() -> str:
 
 @keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
-def verify_title(title: str, timeout: Union[int, str]=0) -> None:  # pylint: disable=unused-argument
+def verify_title(title: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verifies that current page's title matches expected title.
 
 
@@ -445,11 +448,12 @@ def verify_title(title: str, timeout: Union[int, str]=0) -> None:  # pylint: dis
     actual = driver.title
 
     if actual != title:
-        raise QWebValueError(f"Page title '{actual}'' does not match expected '{title}'")
+        raise QWebValueError(
+            f"Page title '{actual}'' does not match expected '{title}'")
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_down(times: str='1', start: Optional[str]=None) -> None:
+def swipe_down(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes down on the screen.
 
     Examples
@@ -481,7 +485,7 @@ def swipe_down(times: str='1', start: Optional[str]=None) -> None:
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_up(times: str='1', start: Optional[str]=None) -> None:
+def swipe_up(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes up on the screen.
 
     Examples
@@ -513,7 +517,7 @@ def swipe_up(times: str='1', start: Optional[str]=None) -> None:
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_left(times: str='1', start: Optional[str]=None) -> None:
+def swipe_left(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes left on the screen.
 
     Examples
@@ -545,7 +549,7 @@ def swipe_left(times: str='1', start: Optional[str]=None) -> None:
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_right(times: str='1', start: Optional[str]=None) -> None:
+def swipe_right(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes right on the screen.
 
     Examples

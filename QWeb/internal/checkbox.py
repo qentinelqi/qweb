@@ -46,11 +46,13 @@ def is_checked(checkbox_element: WebElement) -> bool:
         }
         return checked(arguments[0]);
         """
-    checked = util.par2bool(javascript.execute_javascript(js, checkbox_element))
+    checked = util.par2bool(javascript.execute_javascript(
+        js, checkbox_element))
     return bool(checked)
 
 
-def get_checkbox_by_locator(locator: str, anchor: str) -> tuple[WebElement, None]:
+def get_checkbox_by_locator(locator: str,
+                            anchor: str) -> tuple[WebElement, None]:
     """Get checkbox element.
 
     Parameters
@@ -73,16 +75,14 @@ def get_checkbox_by_locator(locator: str, anchor: str) -> tuple[WebElement, None
         xpath = '//input[@type="checkbox"]|//*[@role="checkbox"]'
         checkbox_elements = element.get_webelements_in_active_area(
             xpath, stay_in_current_frame=True)
-        checkbox_element = element.get_closest_element(
-            text_element, checkbox_elements)
+        checkbox_element = element.get_closest_element(text_element,
+                                                       checkbox_elements)
     return checkbox_element, None
 
 
-def get_checkbox_elements_from_all_documents(locator:str,
-                                             anchor:str,
-                                             index: Union[int, str],
-                                             **kwargs: Any
-                                             ) -> tuple[WebElement, WebElement]:
+def get_checkbox_elements_from_all_documents(
+        locator: str, anchor: str, index: Union[int, str],
+        **kwargs: Any) -> tuple[WebElement, WebElement]:
     """Function for finding checkbox elements.
     Parameters
     ----------
@@ -110,24 +110,24 @@ def get_checkbox_elements_from_all_documents(locator:str,
         if checkbox_elements:
             return checkbox_elements[index], locator_element
         raise QWebElementNotFoundError('No matching checkbox found')
-    if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
+    if not css_selector or locator.startswith('xpath=') or locator.startswith(
+            '//'):
         checkbox_element, locator_element = get_checkbox_by_locator(
             locator, anchor=anchor)
     else:
         checkbox_element, locator_element = get_checkbox_by_css_selector(
             locator, anchor=anchor, index=index, **kwargs)
         if not checkbox_element:
-            checkbox_element, locator_element = get_checkbox_by_locator(locator, anchor)
+            checkbox_element, locator_element = get_checkbox_by_locator(
+                locator, anchor)
     if checkbox_element:
         return checkbox_element, locator_element
     raise QWebElementNotFoundError('No matching element found')
 
 
-def get_checkbox_by_css_selector(locator: str,
-                                 anchor: str,
-                                 index: int,
-                                 **kwargs: Any
-                                 ) -> tuple[Optional[WebElement], Optional[WebElement]]:
+def get_checkbox_by_css_selector(
+        locator: str, anchor: str, index: int,
+        **kwargs: Any) -> tuple[Optional[WebElement], Optional[WebElement]]:
     """Get checkbox using css selectors."""
     checkbox_elements = []
     partial_matches: list[WebElement] = []
@@ -142,13 +142,17 @@ def get_checkbox_by_css_selector(locator: str,
                 return checkbox_elements[index], None
     try:
         locator_element = text.get_text_using_anchor(locator, anchor)
-        checkbox_elements = list(dict.fromkeys(element.get_element_from_childnodes(
-            locator_element, css, **kwargs) + partial_matches))
+        checkbox_elements = list(
+            dict.fromkeys(
+                element.get_element_from_childnodes(locator_element, css,
+                                                    **kwargs) + partial_matches))
         return checkbox_elements[index], locator_element
     except QWebElementNotFoundError:
-        logger.trace('Element not found by visible text. Trying with partial match')
+        logger.trace(
+            'Element not found by visible text. Trying with partial match')
         checkbox_elements = partial_matches
     if checkbox_elements:
-        logger.debug("Found element {}, index {}".format(checkbox_elements, index))
+        logger.debug("Found element {}, index {}".format(
+            checkbox_elements, index))
         return checkbox_elements[index], None
     return None, None

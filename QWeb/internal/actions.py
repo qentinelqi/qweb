@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Re-usable functions and private sub functions for common actions.
 
 Timeouts and exceptions are handled in decorators.
@@ -26,15 +25,13 @@ Coding rules:
         in decorators for consistency and usability reasons.
 """
 from __future__ import annotations
-
 from typing import Optional, Union, Any
-from numpy import character
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.select import Select
 
 import time
 import fnmatch
 from robot.api import logger
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, \
     MoveTargetOutOfBoundsException, ElementNotInteractableException
@@ -48,17 +45,15 @@ from QWeb.internal.config_defaults import CONFIG
 
 
 @decorators.timeout_decorator_for_actions
-def write(input_element: WebElement,
-          input_text: str, 
-          timeout: int,
-           **kwargs: Any
-           ) -> None:  # pylint: disable=unused-argument
+def write(input_element: WebElement, input_text: str, timeout: int,  # pylint: disable=unused-argument
+          **kwargs: Any) -> None:
     click = util.par2bool(kwargs.get('click', CONFIG['ClickToFocus']))
     if click:
         wd_click(input_element)
     if _ends_with_line_break(input_text):
         # input_text might be set to None from _remove_ending_line_break(input_text)
-        input_text, key = _remove_ending_line_break(input_text) # type: ignore[assignment]
+        input_text, key = _remove_ending_line_break(  # type: ignore[assignment]
+            input_text)
         kwargs['key'] = key
     check = util.par2bool(kwargs.get('check', CONFIG['CheckInputValue']))
     kwargs['shadow_dom'] = CONFIG['ShadowDOM']
@@ -66,9 +61,13 @@ def write(input_element: WebElement,
         kwargs['check'] = True
         input_handler.write(input_element, input_text, **kwargs)
         time.sleep(1)
-        compare_input_values(input_element, kwargs.get('expected', input_text), timeout=2, **kwargs)
+        compare_input_values(input_element,
+                             kwargs.get('expected', input_text),
+                             timeout=2,
+                             **kwargs)
         try:
-            input_element.send_keys(kwargs.get('key', input_handler.line_break_key))
+            input_element.send_keys(
+                kwargs.get('key', input_handler.line_break_key))
         except ElementNotInteractableException:
             # this can happen with firefox for shadow dom elements
             # log, but do not fail the test case as value was written correctly
@@ -79,20 +78,21 @@ def write(input_element: WebElement,
 
 
 @decorators.timeout_decorator_for_actions
-def compare_input_values(input_element: WebElement, 
-                         expected_value: str,
-                         timeout: int,
-                         **kwargs: Any
-                         ) -> bool:  # pylint: disable=unused-argument
+def compare_input_values(
+        input_element: WebElement, expected_value: str, timeout: int,  # pylint: disable=unused-argument
+        **kwargs: Any) -> bool:
     try:
-        real_value = util.get_substring(input_value(input_element, timeout="0.5s", **kwargs))
+        real_value = util.get_substring(
+            input_value(input_element, timeout="0.5s", **kwargs))
     except QWebValueError:
         real_value = ""
-    logger.debug('Real value: {}, expected value {}'.format(real_value, expected_value))
+    logger.debug('Real value: {}, expected value {}'.format(
+        real_value, expected_value))
     if fnmatch.fnmatch(str(real_value).strip(), expected_value):
         return True
-    raise QWebValueMismatchError('Expected value "{}" didn\'t match to real value "{}"'
-                                 .format(expected_value, real_value))
+    raise QWebValueMismatchError(
+        'Expected value "{}" didn\'t match to real value "{}"'.format(
+            expected_value, real_value))
 
 
 @decorators.timeout_decorator_for_actions
@@ -100,7 +100,8 @@ def input_value(input_element: WebElement, timeout: int, **kwargs: Any) -> str:
     blind = util.par2bool(kwargs.get('blind', CONFIG['BlindReturn']))
     shadow_dom = CONFIG['ShadowDOM']
 
-    if input_handler.is_editable_text_element(input_element) and not shadow_dom:
+    if input_handler.is_editable_text_element(
+            input_element) and not shadow_dom:
         value = input_element.get_attribute('innerText')
     else:
         value = input_element.get_attribute('value')
@@ -113,14 +114,14 @@ def input_value(input_element: WebElement, timeout: int, **kwargs: Any) -> str:
 
 @decorators.timeout_decorator_for_actions
 def scroll(web_element: WebElement, timeout: int) -> None:  # pylint: disable=unused-argument
-    javascript.execute_javascript('arguments[0].scrollIntoView();', web_element)
+    javascript.execute_javascript('arguments[0].scrollIntoView();',
+                                  web_element)
 
 
 @decorators.timeout_decorator_for_actions
-def execute_click_and_verify_condition(web_element: WebElement, 
-                                       text_appear: bool=True,
-                                       **kwargs: Any
-                                       ) -> bool:
+def execute_click_and_verify_condition(web_element: WebElement,
+                                       text_appear: bool = True,
+                                       **kwargs: Any) -> bool:
     """Click and optionally verify condition after click.
 
     Accepted kwargs:
@@ -150,12 +151,14 @@ def execute_click_and_verify_condition(web_element: WebElement,
         if 'text' in kwargs:
             logger.debug('button clicked. Verifying expected condition..')
             try:
-                if text_appearance(kwargs['text'], text_appear=text_appear,
+                if text_appearance(kwargs['text'],
+                                   text_appear=text_appear,
                                    timeout=kwargs.get('interval')):
                     return True
             except QWebTimeoutError as e:
                 logger.debug('timeout err')
-                raise QWebUnexpectedConditionError('Unexpected condition') from e
+                raise QWebUnexpectedConditionError(
+                    'Unexpected condition') from e
         return True
     raise QWebInvalidElementStateError('Element is not enabled')
 
@@ -199,11 +202,8 @@ def wd_click(web_element: WebElement, **kwargs: Any) -> None:
 
 
 @decorators.timeout_decorator_for_actions
-def checkbox_set(checkbox_element: WebElement,
-                 locator_element: WebElement,
-                 value: bool,
-                 **kwargs: Any
-                 ) -> None:  # pylint: disable=unused-argument
+def checkbox_set(checkbox_element: WebElement, locator_element: WebElement,    # pylint: disable=unused-argument
+                 value: bool, **kwargs: Any) -> None:
     if checkbox.is_checked(checkbox_element) != value:
         try:
             checkbox_element.click()
@@ -212,17 +212,16 @@ def checkbox_set(checkbox_element: WebElement,
                 locator_element.click()
             else:
                 javascript.execute_javascript(
-                    "arguments[0].checked={}".format("true" if value else "false"),
-                    checkbox_element)
+                    "arguments[0].checked={}".format(
+                        "true" if value else "false"), checkbox_element)
 
 
 # pylint: disable=too-many-branches
 @decorators.timeout_decorator_for_actions
-def select_option(select: Select, 
-                  option: str, 
-                  unselect: bool=False, 
-                  **kwargs: Any
-                  ) -> bool:  # pylint: disable=unused-argument
+def select_option(select: Select,  # pylint: disable=unused-argument
+                  option: str,
+                  unselect: bool = False,
+                  **kwargs: Any) -> bool:
     """Click and optionally verify condition after click.
 
     Parameters
@@ -266,11 +265,13 @@ def select_option(select: Select,
                     option_list.append(opt.text)
                     value_list.append(opt.get_attribute('value'))
         if option_list != value_list:
-            raise QWebValueMismatchError(f'Option "{option}" is not in the options list.\n'  # pylint: disable=W0707
-                                         f'The list contained these options: {option_list}.\n'
-                                         f'The list contained these values: {value_list}.')
-        raise QWebValueMismatchError(f'Option "{option}" is not in the options list.\n'  # pylint: disable=W0707
-                                     'The list contained these options: {option_list}.\n')
+            raise QWebValueMismatchError(  # pylint: disable=W0707
+                f'Option "{option}" is not in the options list.\n'
+                f'The list contained these options: {option_list}.\n'
+                f'The list contained these values: {value_list}.')
+        raise QWebValueMismatchError(  # pylint: disable=W0707
+            f'Option "{option}" is not in the options list.\n'
+            'The list contained these options: {option_list}.\n')
 
 
 @decorators.timeout_decorator_for_actions
@@ -278,16 +279,16 @@ def is_not_in_dropdown(select: Select, option: str, **kwargs: Any) -> bool:
     """"Verifies that the selected option is not in the dropdown list"""
     option_list = get_select_options(select, **kwargs)
     if option in option_list:
-        raise QWebValueError("Found the value {} from the dropdown menu: {}."
-                             .format(option, option_list))
+        raise QWebValueError(
+            "Found the value {} from the dropdown menu: {}.".format(
+                option, option_list))
     return True
 
 
 @decorators.timeout_decorator_for_actions
-def get_selected_value(select: Select, 
-                       expected: Optional[str]=None,
-                       **kwargs: Any
-                       ) -> Union[bool, str]:  # pylint: disable=unused-argument
+def get_selected_value(select: Select,  # pylint: disable=unused-argument
+                       expected: Optional[str] = None,
+                       **kwargs: Any) -> Union[bool, str]:
     """Get or verify selected value.
 
     Parameters
@@ -305,16 +306,16 @@ def get_selected_value(select: Select,
     if expected:
         if expected in selected:
             return True
-        raise QWebValueMismatchError('Expected value "{}" didn\'t match to real value "{}".'
-                                     .format(expected, txt_selected))
+        raise QWebValueMismatchError(
+            'Expected value "{}" didn\'t match to real value "{}".'.format(
+                expected, txt_selected))
     return txt_selected
 
 
 @decorators.timeout_decorator_for_actions
-def get_select_options(select: Select,
-                       expected: Optional[str]=None,
-                       **kwargs: Any
-                       ) -> Union[bool, list[str]]:  # pylint: disable=unused-argument
+def get_select_options(select: Select,  # pylint: disable=unused-argument
+                       expected: Optional[str] = None,
+                       **kwargs: Any) -> Union[bool, list[str]]:
     options = select.options
     if expected:
         for option in options:
@@ -322,7 +323,8 @@ def get_select_options(select: Select,
             if fnmatch.fnmatch(expected, option.text):
                 return True
         raise QWebValueMismatchError(
-            'Expected value "{}" not found from selectable options'.format(expected))
+            'Expected value "{}" not found from selectable options'.format(
+                expected))
     # parse all options to a list and return it
     option_list = []
     for option in options:
@@ -331,25 +333,29 @@ def get_select_options(select: Select,
 
 
 @decorators.timeout_decorator_for_actions
-def hover_to(web_element: WebElement, timeout: int=0) -> None:  # pylint: disable=unused-argument
+def hover_to(web_element: WebElement, timeout: int = 0) -> None:  # pylint: disable=unused-argument
     driver = browser.get_current_browser()
     # firefox & safari specific fix
-    needs_js_scroll = [x for x in [browser.firefox.NAMES, browser.safari.NAMES]
-                       if driver.capabilities['browserName'].lower() in x]
+    needs_js_scroll = [
+        x for x in [browser.firefox.NAMES, browser.safari.NAMES]
+        if driver.capabilities['browserName'].lower() in x
+    ]
     if needs_js_scroll:
         # use javascript to scroll
         logger.debug("Needs javascript to scoll")
-        driver.execute_script("arguments[0].scrollIntoView(true);", web_element)
+        driver.execute_script("arguments[0].scrollIntoView(true);",
+                              web_element)
     try:
         hover = ActionChains(driver).move_to_element(web_element)
         hover.perform()
     except MoveTargetOutOfBoundsException:
         # chrome > 90, use javascript
-        driver.execute_script("arguments[0].scrollIntoView(true);", web_element)
+        driver.execute_script("arguments[0].scrollIntoView(true);",
+                              web_element)
 
 
 @decorators.timeout_decorator_for_actions
-def text_appearance(text:str, **kwargs: Any) -> bool:
+def text_appearance(text: str, **kwargs: Any) -> bool:
     """ Sub for retry click.
 
     Works as keywords is_text and is_no_text. Returns True if
@@ -374,28 +380,26 @@ def text_appearance(text:str, **kwargs: Any) -> bool:
 
 
 @decorators.timeout_decorator_for_actions
-def get_element_text(web_element: WebElement,
-                     expected=None,
-                     timeout:int =0
-                     ) -> Union[bool,str]:  # pylint: disable=unused-argument
+def get_element_text(
+        web_element: WebElement,
+        expected=None,
+        timeout: int = 0) -> Union[bool, str]:  # pylint: disable=unused-argument
     real_text = web_element.text.strip()
     if expected is not None:
         try:
             return _compare_texts(real_text, expected.strip(), timeout)
         except QWebValueMismatchError as e:
-            raise QWebValueError('Expected {}, found {}'.format(expected, real_text)) from e
+            raise QWebValueError('Expected {}, found {}'.format(
+                expected, real_text)) from e
     if real_text is not None:
         return real_text
     raise QWebValueMismatchError('Text not found')
 
 
-def _compare_texts(text_to_compare: str,
-                   expected: str,
-                   timeout: int
-                   ) -> bool:  # pylint: disable=unused-argument
+def _compare_texts(text_to_compare: str, expected: str, timeout: int) -> bool:  # pylint: disable=unused-argument
     if fnmatch.fnmatch(text_to_compare, expected) is False:
-        raise QWebValueMismatchError(
-            'Expected {0}, found {1}'.format(expected, text_to_compare))
+        raise QWebValueMismatchError('Expected {0}, found {1}'.format(
+            expected, text_to_compare))
     return True
 
 
@@ -404,7 +408,8 @@ def _ends_with_line_break(input_text: str) -> bool:
     return input_text.endswith(line_break)
 
 
-def _remove_ending_line_break(input_text: str) -> tuple[Optional[str], Optional[str]]:
+def _remove_ending_line_break(
+        input_text: str) -> tuple[Optional[str], Optional[str]]:
     enter_key = ('\n', '\ue007')
     tab_key = ('\t', '\ue004')
     if input_text.endswith(enter_key):
@@ -424,13 +429,10 @@ def _contains_tab(input_text: str) -> bool:
     return bool('\t' in input_text or '\ue004' in input_text)
 
 
-def scroll_first_scrollable_parent_element(locator: str,
-                                           anchor: str,
-                                           text_to_find: str,
-                                           scroll_length: Optional[Union[int,str]],
-                                           slow_mode: bool,
-                                           timeout: Union[int, float, str]
-                                           ) -> None:
+def scroll_first_scrollable_parent_element(
+        locator: str, anchor: str, text_to_find: str,
+        scroll_length: Optional[Union[int, str]], slow_mode: bool,
+        timeout: Union[int, float, str]) -> None:
     visible = None
     js_get_parent_element = """
         function getScrollParent(node) {
@@ -447,30 +449,41 @@ def scroll_first_scrollable_parent_element(locator: str,
         return getScrollParent(arguments[0]);
     """
     js_element_position = "return arguments[0].scrollTop;"
-    js_element_scroll = "arguments[0].scrollBy(0, {})".format(scroll_length or '1000')
+    js_element_scroll = "arguments[0].scrollBy(0, {})".format(scroll_length
+                                                              or '1000')
     web_element = internal_text.get_element_by_locator_text(locator, anchor)
-    scrollable_element = javascript.execute_javascript(js_get_parent_element, web_element)
-    current_pos = javascript.execute_javascript(js_element_position, scrollable_element)
+    scrollable_element = javascript.execute_javascript(js_get_parent_element,
+                                                       web_element)
+    current_pos = javascript.execute_javascript(js_element_position,
+                                                scrollable_element)
     old_pos = None
     start = time.time()
     if not slow_mode:
-        while not visible and old_pos != current_pos and time.time() < float(timeout) + start:
-            old_pos = javascript.execute_javascript(js_element_position, scrollable_element)
-            javascript.execute_javascript(js_element_scroll, scrollable_element)
+        while not visible and old_pos != current_pos and time.time(
+        ) < float(timeout) + start:
+            old_pos = javascript.execute_javascript(js_element_position,
+                                                    scrollable_element)
+            javascript.execute_javascript(js_element_scroll,
+                                          scrollable_element)
             time.sleep(.5)
-            current_pos = javascript.execute_javascript(js_element_position, scrollable_element)
-            visible = internal_text.get_element_by_locator_text(text_to_find,
-                                                                allow_non_existent=True)
-            logger.info('Old pos: {}\nNew pos: {}\nVisible: {}'
-                        .format(old_pos, current_pos, visible), also_console=True)
+            current_pos = javascript.execute_javascript(
+                js_element_position, scrollable_element)
+            visible = internal_text.get_element_by_locator_text(
+                text_to_find, allow_non_existent=True)
+            logger.info('Old pos: {}\nNew pos: {}\nVisible: {}'.format(
+                old_pos, current_pos, visible),
+                        also_console=True)
     else:
-        logger.info('\nSlow mode is on, execution will only stop if the text "{}" is found or if '
-                    'the timeout is reached.'.format(text_to_find), also_console=True)
+        logger.info(
+            '\nSlow mode is on, execution will only stop if the text "{}" is found or if '
+            'the timeout is reached.'.format(text_to_find),
+            also_console=True)
         while not visible and time.time() < float(timeout) + start:
-            javascript.execute_javascript(js_element_scroll, scrollable_element)
+            javascript.execute_javascript(js_element_scroll,
+                                          scrollable_element)
             time.sleep(.5)
-            visible = internal_text.get_element_by_locator_text(text_to_find,
-                                                                allow_non_existent=True)
+            visible = internal_text.get_element_by_locator_text(
+                text_to_find, allow_non_existent=True)
             logger.info('\nVisible: {}'.format(visible), also_console=True)
     if visible:
         return
@@ -478,39 +491,44 @@ def scroll_first_scrollable_parent_element(locator: str,
 
 
 def scroll_dynamic_web_page(text_to_find: str,
-                            scroll_length: Optional[Union[int,str]],
-                            slow_mode: bool,
-                            timeout: Union[int, float, str]
-                            ) -> bool:
+                            scroll_length: Optional[Union[int, str]],
+                            slow_mode: bool, timeout: Union[int, float,
+                                                            str]) -> bool:
     visible = None
     js_browser_height = "return window.innerHeight"
-    height = javascript.execute_javascript(js_browser_height)  # Length of one scroll
+    height = javascript.execute_javascript(
+        js_browser_height)  # Length of one scroll
     js_current_pos = "return window.pageYOffset;"
     js_scroll = 'window.scrollBy(0,{})'.format(scroll_length or height)
     current_pos = javascript.execute_javascript(js_current_pos)
     old_pos = None
     start = time.time()
     if not slow_mode:
-        while not visible and old_pos != current_pos and time.time() < float(timeout) + start:
+        while not visible and old_pos != current_pos and time.time(
+        ) < float(timeout) + start:
             old_pos = javascript.execute_javascript(js_current_pos)
             javascript.execute_javascript(js_scroll)
             time.sleep(.5)
             current_pos = javascript.execute_javascript(js_current_pos)
-            visible = internal_text.get_element_by_locator_text(text_to_find,
-                                                                allow_non_existent=True)
-            logger.info('\nOld pos: {}\nCurrent pos: {}\nVisible: {}'
-                        .format(old_pos, current_pos, visible), also_console=True)
+            visible = internal_text.get_element_by_locator_text(
+                text_to_find, allow_non_existent=True)
+            logger.info('\nOld pos: {}\nCurrent pos: {}\nVisible: {}'.format(
+                old_pos, current_pos, visible),
+                        also_console=True)
     else:
-        logger.info('\nSlow mode is on, execution will only stop if the text "{}" is found or if '
-                    'the timeout is reached.'.format(text_to_find), also_console=True)
+        logger.info(
+            '\nSlow mode is on, execution will only stop if the text "{}" is found or if '
+            'the timeout is reached.'.format(text_to_find),
+            also_console=True)
         while not visible and time.time() < float(timeout) + start:
             javascript.execute_javascript(js_scroll)
             time.sleep(.5)
-            visible = internal_text.get_element_by_locator_text(text_to_find,
-                                                                allow_non_existent=True)
+            visible = internal_text.get_element_by_locator_text(
+                text_to_find, allow_non_existent=True)
             logger.info('\nVisible: {}'.format(visible), also_console=True)
 
     if visible:
         return True
-    raise QWebTextNotFoundError('Could not find text "{}" after scrolling for {} pixels.'
-                                .format(text_to_find, current_pos))
+    raise QWebTextNotFoundError(
+        'Could not find text "{}" after scrolling for {} pixels.'.format(
+            text_to_find, current_pos))

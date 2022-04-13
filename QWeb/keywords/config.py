@@ -907,7 +907,7 @@ def set_config(par: str, val: str) -> Any:
 
 
 @keyword(tags=("Config", "Getters"))
-def get_config(par: Optional[str]=None) -> Union[dict[str,Any], Any]:
+def get_config(par: Optional[str] = None) -> Union[dict[str, Any], Any]:
     r"""Return value of given configuration parameter.
 
     If no parameter is given the GetConfig returns
@@ -944,7 +944,7 @@ def get_config(par: Optional[str]=None) -> Union[dict[str,Any], Any]:
 
 
 @keyword(tags=["Config"])
-def reset_config(par: Optional[str]=None) -> Union[dict[str,Any], Any]:
+def reset_config(par: Optional[str] = None) -> Union[dict[str, Any], Any]:
     r"""Reset the value of given parameter to default value.
 
     If no parameter is given, reset all
@@ -985,8 +985,9 @@ def _set_case_insensitivity(val: str) -> None:
     check = util.par2bool(val)
 
     if check:
-        CONFIG.set_value("ContainingTextMatch",
-                         SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
+        CONFIG.set_value(
+            "ContainingTextMatch",
+            SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
     else:
         CONFIG.set_value("ContainingTextMatch",
                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)

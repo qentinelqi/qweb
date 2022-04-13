@@ -15,7 +15,6 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional
 
 import os
 from pathlib import Path
@@ -136,4 +135,5 @@ def get_path(filename: str) -> Path:
         return Path(full_path)
     except TypeError as e:
         raise QWebFileNotFoundError(
-            'File not found from default folders. Set variable for base image path') from e
+            'File not found from default folders. Set variable for base image path'
+        ) from e

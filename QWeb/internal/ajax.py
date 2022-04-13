@@ -16,9 +16,8 @@
 # ---------------------------
 
 from __future__ import annotations
-from typing import Optional, Any, Union
+from typing import Optional, Any
 from requests import Response
-from pathlib import Path
 
 import os
 import requests
@@ -29,16 +28,18 @@ from QWeb.internal import javascript as js
 from robot.api import logger
 
 
-def http_request_with_browser_cookies(url: str, 
-                                      headers: Optional[dict[str,Any]]=None
+def http_request_with_browser_cookies(url: str,
+                                      headers: Optional[dict[str, Any]] = None
                                       ) -> Response:
     """ Copy cookies from current browser session
         and use them with request session
     """
     driver = browser.get_current_browser()
     if not headers:
-        headers = {'User-Agent': '{}'.format(
-            js.execute_javascript('return navigator.userAgent'))}
+        headers = {
+            'User-Agent':
+            '{}'.format(js.execute_javascript('return navigator.userAgent'))
+        }
     cookies = driver.get_cookies()
     s = requests.Session()
     for cookie in cookies:
@@ -67,21 +68,21 @@ def get_url_for_http_request(locator: str, anchor: str, **kwargs: Any) -> str:
     if not elem:
         elem = text.get_text_using_anchor(locator, anchor, **kwargs)
     if kwargs.get('parent', None):
-        elem = element.get_parent_element(
-            elem, str(kwargs.get('parent')))
+        elem = element.get_parent_element(elem, str(kwargs.get('parent')))
     if kwargs.get('child', None):
-        elem = element.get_element_from_childnodes(
-            elem, str(kwargs.get('child')), dom_traversing=False)[index]
+        elem = element.get_element_from_childnodes(elem,
+                                                   str(kwargs.get('child')),
+                                                   dom_traversing=False)[index]
     url = js.execute_javascript(script, elem)
     if url:
         return url
-    raise QWebValueError('Unable to find valid url for locator {}'.format(locator))
+    raise QWebValueError(
+        'Unable to find valid url for locator {}'.format(locator))
 
 
 def save_response_as_file(response: Response,
                           filename: str,
-                          root_path: Optional[str]=None
-                          ) -> None:
+                          root_path: Optional[str] = None) -> None:
     if root_path is None:
         path = download.get_downloads_dir()
     else:

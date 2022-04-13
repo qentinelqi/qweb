@@ -83,7 +83,6 @@ MIME_TYPES = (
     "video/webm;"
     "video/x-msvideo")
 
-
 _current_browser: Optional[WebDriver] = None
 _open_browsers: list[WebDriver] = []
 
@@ -105,7 +104,8 @@ def set_current_browser(index: str) -> None:
         if i < len(_open_browsers):
             _current_browser = _open_browsers[i]
         else:
-            raise QWebDriverError(f'Tried to select browser with index {index} but there are \
+            raise QWebDriverError(
+                f'Tried to select browser with index {index} but there are \
                                   {len(_open_browsers)} browsers open')
     elif index == "NEW":
         _current_browser = _open_browsers[-1]

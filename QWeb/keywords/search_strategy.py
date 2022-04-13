@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for search strategies.
 
 Search strategies define how elements are searched. With these settings
@@ -183,7 +182,7 @@ def css_selectors(state: str) -> str:
     return str(config.set_config("CssSelectors", state))
 
 
-def check_input_value(state: Union[str,bool]) -> Union[str,bool]:
+def check_input_value(state: Union[str, bool]) -> Union[str, bool]:
     r"""*DEPRECATED!!* Use keyword `SetConfig  CheckInputValue` instead.
 
     Check that real value matches to preferred value after TypeText.
@@ -236,7 +235,7 @@ def default_document(state: Union[str, bool]) -> Union[str, bool]:
     return config.set_config("DefaultDocument", state)
 
 
-def case_insensitive(state: Union[str,bool]) -> Union[str,bool]:
+def case_insensitive(state: Union[str, bool]) -> Union[str, bool]:
     """*DEPRECATED!!* Use keyword `SetConfig  CaseInsensitive` instead.
 
     Set containing_text_match according to selected case sensitivity.
@@ -255,9 +254,11 @@ def case_insensitive(state: Union[str,bool]) -> Union[str,bool]:
     """
     case_state = config.set_config("CaseInsensitive", state)
     if case_state:
-        config.set_config("ContainingTextMatch",
-                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
+        config.set_config(
+            "ContainingTextMatch",
+            SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
     else:
-        config.set_config("ContainingTextMatch",
-                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)
+        config.set_config(
+            "ContainingTextMatch",
+            SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)
     return case_state
