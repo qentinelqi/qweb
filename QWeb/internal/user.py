@@ -18,11 +18,11 @@
 import os
 
 
-def is_root():
+def is_root() -> bool:
     try:
         # Windows doesn't have getuid. We just assume that user is not root. We
         # most likely won't need proper Windows support here anyway.
-        uid = os.getuid()  # pylint: disable=no-member
+        uid = os.getuid()  # type: ignore[attr-defined] # pylint: disable=no-member 
     except AttributeError:
         return False
     # User id 0 is reserved for superuser aka root
@@ -31,7 +31,7 @@ def is_root():
     return False
 
 
-def is_docker():
+def is_docker() -> bool:
     path = '/proc/self/cgroup'
     return (
         os.path.exists('/.dockerenv')

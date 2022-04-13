@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional
+from numpy import ndarray
 
 import cv2
 import numpy as np
@@ -35,7 +38,7 @@ class QIcon:
         pass
 
     @staticmethod
-    def _get_image_size(image):
+    def _get_image_size(image: ndarray) -> tuple[int, int]:
         """Returns image width and height
         """
         # pylint: disable=no-self-use
@@ -43,7 +46,7 @@ class QIcon:
         return screen_w, screen_h
 
     @staticmethod
-    def _get_scale_ratios(template_res_w, device_res_w):
+    def _get_scale_ratios(template_res_w: int, device_res_w: int) -> list[float]:
         """Get a list of different scale ratios to scale template image
         for different device resolutions. They should be ordered so
         that more common resolution scalings are at the top of the list.
@@ -74,7 +77,7 @@ class QIcon:
         return scale_ratios
 
     @staticmethod
-    def _get_image_pyramid(image_obj, level):
+    def _get_image_pyramid(image_obj: ndarray, level: int) -> list[tuple[ndarray, float]]:
         """
         Returns a list of up- and downsampled images of image_obj.
         Each sampling goes 10% up and down in size
@@ -117,7 +120,11 @@ class QIcon:
                                          scale))
         return image_levels
 
-    def get_template_locations(self, image_obj, template, threshold, level=0):  # pylint: disable=unused-argument
+    def get_template_locations(self, image_obj: ndarray,
+                               template: ndarray,
+                               threshold: float,
+                               level: int=0 # pylint: disable=unused-argument
+                               ) -> list[tuple[int, int]]:  
         """Returns a list of template locations. Uses image pyramid.
         _image_obj_ = Image as uint8 NumPy array in RGB color space.
         _threshold_ = Threshold value for template matching, float.
@@ -159,7 +166,7 @@ class QIcon:
         best_highest_max_val_loc = (-1, -1)
         points = []
         best_scale = 0.0
-        best_matched_image = None
+        best_matched_image: ndarray # = None
 
         print("*DEBUG* Different resamplings used: " + str(len(template_levels)))
         # for template_level in template_levels:
@@ -218,12 +225,13 @@ class QIcon:
         return points
 
     def image_location(self,
-                       needle,
-                       haystack,
-                       tolerance=0.95,
-                       draw=1,
-                       template_res_w=1440,
-                       device_res_w=1080):
+                       needle: str,
+                       haystack: str,
+                       tolerance: float=0.95,
+                       draw: int=1,
+                       template_res_w: int=1440,
+                       device_res_w: int=1080
+                       ) -> tuple[int, int]:
         """Locate an image (needle) within an bigger image (haystack). Tolarance
         is pixel tolerance, i.e. 1.0 = all pixels are correct, 0.5 = 50% of the pixels
         are correct. If we know the original resolution, from which the template
@@ -252,8 +260,8 @@ class QIcon:
 
         best_highest_max_val = 0.0
         best_highest_max_val_loc = (-1, -1)
-        best_scale_ratio = None
-        best_matched_image = None
+        best_scale_ratio: float # = None
+        best_matched_image:ndarray # = None
 
         print("*DEBUG* Resampling loop Starts")
         for scale_ratio in scale_ratios:
@@ -321,7 +329,12 @@ class QIcon:
         return -1, -1
 
     @staticmethod
-    def _extract_points(height, res, threshold, width, coordinate_ratio=1.0):
+    def _extract_points(height: int,
+                        res: ndarray,
+                        threshold: float,
+                        width: int,
+                        coordinate_ratio: float=1.0
+                        ) -> tuple[list[tuple[int, int]], float, tuple[int, int]]:
         """Extracts match locations from a result matrix. This goes through the best
         match locations in the result and while the correlation value of a location
         is over the threshold, it adds the location to the list of best locations.
@@ -367,7 +380,12 @@ class QIcon:
         return points, highest_max_val, highest_max_val_loc
 
     @staticmethod
-    def _log_matched_image(haystack, needle, scaled_needle, loc, best_scale):
+    def _log_matched_image(haystack: ndarray,
+                           needle: ndarray,
+                           scaled_needle: ndarray,
+                           loc: tuple[int, int],
+                           best_scale: float
+                           ) -> None:
         """Draw a composite image with the needle image, the haystack image,
         the scaled needle that matches the best and show where in haystack
         the best match is. This is best used in debugging, but it could be
@@ -407,7 +425,11 @@ class QIcon:
             log_screenshot_file(filepath)
 
 
-def image_recognition(image_path, template_res_w, browser_res_w, pyautog):
+def image_recognition(image_path: str,
+                      template_res_w: int,
+                      browser_res_w: int,
+                      pyautog: bool
+                      ) -> tuple[int, int]:
     """Return icon's coordinates."""
     image_rec = QIcon()
     frame.wait_page_loaded()
@@ -419,7 +441,7 @@ def image_recognition(image_path, template_res_w, browser_res_w, pyautog):
     return x, y
 
 
-def get_full_image_path(icon):
+def get_full_image_path(icon: str) -> Path:
     """Return image's full path."""
     if icon.endswith('.png') or icon.endswith('.jpg'):
         full_path = download.get_path(icon)

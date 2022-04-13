@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Union, Optional, Any
 from robot.api.deco import keyword
 from QWeb.internal import util
 from QWeb.internal.config_defaults import CONFIG
@@ -22,7 +23,7 @@ from QWeb.internal.search_strategy import SearchStrategies
 
 
 @keyword(tags=["Config"])
-def set_config(par, val):
+def set_config(par: str, val: str) -> Any:
     r"""Set configuration parameter to given value. Return previous value.
 
     Summary of possible configurations and their purpose. More information below.
@@ -906,7 +907,7 @@ def set_config(par, val):
 
 
 @keyword(tags=("Config", "Getters"))
-def get_config(par=None):
+def get_config(par: Optional[str]=None) -> Union[dict[str,Any], Any]:
     r"""Return value of given configuration parameter.
 
     If no parameter is given the GetConfig returns
@@ -943,7 +944,7 @@ def get_config(par=None):
 
 
 @keyword(tags=["Config"])
-def reset_config(par=None):
+def reset_config(par: Optional[str]=None) -> Union[dict[str,Any], Any]:
     r"""Reset the value of given parameter to default value.
 
     If no parameter is given, reset all
@@ -980,7 +981,7 @@ def reset_config(par=None):
     return current_config
 
 
-def _set_case_insensitivity(val):
+def _set_case_insensitivity(val: str) -> None:
     check = util.par2bool(val)
 
     if check:

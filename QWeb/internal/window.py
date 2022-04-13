@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Union, Optional
 from QWeb.internal import browser, text, util
 from QWeb.internal.exceptions import QWebDriverError
 from QWeb.internal.browser.safari import open_windows
@@ -24,7 +25,7 @@ from robot.api import logger
 import time
 
 
-def get_window_handles():
+def get_window_handles() -> list[str]:
     driver = browser.get_current_browser()
     if driver is None:
         raise QWebDriverError("No browser open. Use OpenBrowser keyword"
@@ -32,7 +33,7 @@ def get_window_handles():
     return open_windows if util.is_safari() else driver.window_handles
 
 
-def get_current_window_handle():
+def get_current_window_handle() -> str:
     driver = browser.get_current_browser()
     if driver is None:
         raise QWebDriverError("No browser open. Use OpenBrowser keyword"
@@ -40,7 +41,7 @@ def get_current_window_handle():
     return driver.current_window_handle
 
 
-def append_new_windows_safari():
+def append_new_windows_safari() -> None:
     """ Safari returns window handles in random order.
         We must keep track of opened windows in safari.
         This function will append new open windows to global list."""
@@ -51,7 +52,7 @@ def append_new_windows_safari():
             open_windows.append(i)
 
 
-def get_url():
+def get_url() -> str:
     driver = browser.get_current_browser()
     if driver is None:
         raise QWebDriverError("No browser open. Use OpenBrowser keyword"
@@ -59,7 +60,7 @@ def get_url():
     return driver.current_url
 
 
-def switch_to_window(handle):
+def switch_to_window(handle) -> None:
     driver = browser.get_current_browser()
     if driver is None:
         raise QWebDriverError("No browser open. Use OpenBrowser keyword"
@@ -67,7 +68,7 @@ def switch_to_window(handle):
     driver.switch_to.window(handle)
 
 
-def swipe(direction, times='1', start=None):
+def swipe(direction: str, times: Union[str, int]='1', start: Optional[str]=None) -> None:
     """
     Internal swipe function used by the swipe keywords. Uses the arrow keys to "swipe",
     unless a starting point is given. If a starting point is given, drag and drop is used.
@@ -93,7 +94,7 @@ def swipe(direction, times='1', start=None):
     if not start:
         default_swipe_length = 20
         times = default_swipe_length * times
-        for _ in range(times):
+        for _ in range(int(times)):
             action_chains.send_keys(directions[direction][0])
             action_chains.pause(0.05)
         action_chains.perform()

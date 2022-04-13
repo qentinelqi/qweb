@@ -68,10 +68,10 @@ def get_url_for_http_request(locator: str, anchor: str, **kwargs: Any) -> str:
         elem = text.get_text_using_anchor(locator, anchor, **kwargs)
     if kwargs.get('parent', None):
         elem = element.get_parent_element(
-            elem, kwargs.get('parent'))
+            elem, str(kwargs.get('parent')))
     if kwargs.get('child', None):
         elem = element.get_element_from_childnodes(
-            elem, kwargs.get('child'), dom_traversing=False)[index]
+            elem, str(kwargs.get('child')), dom_traversing=False)[index]
     url = js.execute_javascript(script, elem)
     if url:
         return url
@@ -86,7 +86,7 @@ def save_response_as_file(response: Response,
         path = download.get_downloads_dir()
     else:
         path = root_path
-        
+
     logger.debug('path before {}'.format(path))
     if '/' in filename:
         folders = filename.split('/')

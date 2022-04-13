@@ -14,6 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Union, Optional
+from numpy import ndarray
+from selenium.webdriver.remote.webdriver import WebDriver
 
 import base64
 import json
@@ -38,7 +42,7 @@ VERIFYAPP_DIR_NAME = 'verifyapp'
 VALID_FILENAME_CHARS = '-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 
-def _create_screenshot_folder(foldername):
+def _create_screenshot_folder(foldername: str) -> str:
     try:
         robot_output = BuiltIn().get_variable_value('${OUTPUT DIR}')
         screen_shot_dir = os.path.join(robot_output, foldername)
@@ -54,7 +58,7 @@ def _create_screenshot_folder(foldername):
     return screen_shot_dir
 
 
-def _remove_invalid_chars(text_to_check):
+def _remove_invalid_chars(text_to_check: str) -> str:
     """
     Removes invalid characters from filename
     :param text_to_check:
@@ -63,7 +67,7 @@ def _remove_invalid_chars(text_to_check):
     return "".join(c for c in text_to_check if c in VALID_FILENAME_CHARS)
 
 
-def compare_screenshots(filename, accuracy):
+def compare_screenshots(filename: str, accuracy: Union[str, float]) -> bool:
     # pylint: disable=no-member
     """Compare screenshot against reference, take reference if missing.
 
@@ -121,7 +125,7 @@ def compare_screenshots(filename, accuracy):
     return status
 
 
-def _draw_contours(diff, ref_image_c):
+def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     # pylint: disable=no-member
     """Draw contours on ref_image_c based on diff
 
@@ -144,10 +148,11 @@ def _draw_contours(diff, ref_image_c):
     return ref_image_c
 
 
-def save_screenshot(filename='screenshot_{}.png',
-                    folder=SCREEN_SHOT_DIR_NAME,
-                    pyautog=False,
-                    fullpage=False):
+def save_screenshot(filename: str='screenshot_{}.png',
+                    folder: str=SCREEN_SHOT_DIR_NAME,
+                    pyautog: bool=False,
+                    fullpage: bool=False
+                    ) -> str:
     """Save screenshot of web page to a file.
 
     If robot framework is running then screenshots are saved to
@@ -189,7 +194,7 @@ def save_screenshot(filename='screenshot_{}.png',
         filename = filename.format(uuid4())
 
     elif filename == 'screenshot_{}.png':
-        name_with_underscores = test_name.replace(" ", "_")
+        name_with_underscores = str(test_name).replace(" ", "_")
         valid_name = _remove_invalid_chars(name_with_underscores)
         filename = "screenshot-" + valid_name + "-{}".format(uuid4()) + '.png'
 
@@ -225,7 +230,7 @@ def save_screenshot(filename='screenshot_{}.png',
     return filepath
 
 
-def log_screenshot_file(filepath):
+def log_screenshot_file(filepath: str) -> None:
     """Log screenshot file to robot framework log.
 
     Uses robot.utils.get_link_path to determine the relative path to the robot
@@ -249,7 +254,7 @@ def log_screenshot_file(filepath):
         return
 
 
-def log_html():
+def log_html() -> None:
     source_html_counter = 1
     url = get_url()
     logger.info('Current url: {}'.format(url))
@@ -272,7 +277,7 @@ def log_html():
     source_html_counter += 1
 
 
-def get_url():
+def get_url() -> Optional[str]:
     driver = browser.get_current_browser()
     if driver:
         return driver.current_url
@@ -280,12 +285,12 @@ def get_url():
     return None
 
 
-def get_source():
+def get_source() -> str:
     driver = browser.get_current_browser()
     return driver.page_source
 
 
-def chromium_full_screenshot(driver, filepath):
+def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
 
     def send(cmd, params):
         resource = f"/session/{driver.session_id}/chromium/send_command_and_get_result"
@@ -326,7 +331,7 @@ def chromium_full_screenshot(driver, filepath):
     return filepath
 
 
-def full_page_screenshot(driver, filepath, browser_name):
+def full_page_screenshot(driver: WebDriver, filepath: str, browser_name: str) -> str:
     if browser_name in firefox.NAMES:
         saved = driver.get_full_page_screenshot_as_file(filepath)
     elif browser_name in chrome.NAMES or browser_name in edge.NAMES:

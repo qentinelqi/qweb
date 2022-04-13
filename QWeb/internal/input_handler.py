@@ -14,7 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Optional, Any, Callable, Union
+from selenium.webdriver.remote.webelement import WebElement
 
 import os
 import pyperclip
@@ -34,24 +36,28 @@ except ImportError:
 
 
 class InputHandler:
-    def __init__(self, input_method="selenium", line_break_key="\ue004", clear_key=None):
+    def __init__(self,
+                 input_method: str="selenium",
+                 line_break_key: str="\ue004",
+                 clear_key: Optional[str]=None
+                 ) -> None:
         self._input_method = input_method
         self.line_break_key = line_break_key
         self.clear_key = clear_key
 
     @property
-    def input_method(self):
+    def input_method(self) -> str:
         return self._input_method
 
     @input_method.setter
-    def input_method(self, input_method):
+    def input_method(self, input_method: str) -> None:
         required = ["selenium", "raw"]
         if input_method not in required:
             raise QWebValueError('Unknown input_method: {}, required: {}'
                                  .format(input_method, required))
         self._input_method = input_method
 
-    def write(self, input_element, input_text, **kwargs):
+    def write(self, input_element: WebElement, input_text: str, **kwargs) -> None:
         """ Writes the given text using configured writer. """
         write = self._get_writer()
         # By clearing the input field with Javascript,
@@ -81,13 +87,13 @@ class InputHandler:
             if line_break:
                 input_element.send_keys(line_break)
 
-    def _get_writer(self):
+    def _get_writer(self) -> Callable[..., Any]:
         if self._input_method == "selenium":
             return InputHandler._selenium_writer
         return self._raw_writer
 
     @staticmethod
-    def _selenium_writer(input_element, input_text):
+    def _selenium_writer(input_element: WebElement, input_text: str) -> None:
         """ Use Selenium librarys input methods clear() and send_keys(). """
         if not input_element.is_enabled():
             logger.warn("Element not enabled. Try with alternative input method?")
@@ -95,7 +101,7 @@ class InputHandler:
         input_element.send_keys(input_text)
 
     @staticmethod
-    def _raw_writer(input_element, input_text):
+    def _raw_writer(input_element: WebElement, input_text: str) -> None:
         """ Control keyboard and text input with pyautogui. This doesn't
             do any checks for the element state.
         """
@@ -109,7 +115,7 @@ class InputHandler:
         keyboard.type(input_text)
 
     @staticmethod
-    def is_editable_text_element(input_element):
+    def is_editable_text_element(input_element: WebElement) -> bool:
         if javascript.execute_javascript(
                 'return arguments[0].getAttribute("contenteditable") == "true"',
                 input_element):
@@ -117,7 +123,7 @@ class InputHandler:
         return False
 
     @staticmethod
-    def check_key(key):
+    def check_key(key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
         if not key:
             return None
         if key == '{PASTE}':
@@ -139,4 +145,4 @@ class InputHandler:
 
 
 # Instantiate here as global
-INPUT_HANDLER = InputHandler()
+INPUT_HANDLER: InputHandler = InputHandler()

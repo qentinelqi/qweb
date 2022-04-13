@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from typing import Optional
+from pathlib import Path
 
 from QWeb.internal.file import File
 from QWeb.internal import download
@@ -26,11 +28,11 @@ import shutil
 from robot.api import logger
 from robot.api.deco import keyword
 
-ACTIVE_FILE = None
+ACTIVE_FILE:File
 
 
 @keyword(tags=["File"])
-def use_pdf(filename):
+def use_pdf(filename: str) -> None:
     r"""Define pdf file for all other pdf keywords.
 
     Sets active file for other keywords.
@@ -57,7 +59,7 @@ def use_pdf(filename):
 
 
 @keyword(tags=["File"])
-def use_file(filename):
+def use_file(filename: str) -> None:
     r"""Define text file for all other file keywords.
 
     Sets active file for other keywords.
@@ -85,7 +87,7 @@ def use_file(filename):
 
 
 @keyword(tags=("File", "Getters"))
-def get_pdf_text(**kwargs):
+def get_pdf_text(**kwargs) -> str:
     r"""Get text from pdf file.
 
     Examples
@@ -116,11 +118,11 @@ def get_pdf_text(**kwargs):
     \`RemovePdf\`, \`UsePdf\`, \`VerifyPdfText\`
     """
     _file_exists()
-    return ACTIVE_FILE.get(**kwargs)
+    return str(ACTIVE_FILE.get(**kwargs))
 
 
 @keyword(tags=("File", "Getters"))
-def get_file_text(**kwargs):
+def get_file_text(**kwargs) -> str:
     r"""Get text from pdf file.
 
     Examples
@@ -151,11 +153,11 @@ def get_file_text(**kwargs):
     \`RemoveFile\`, \`UseFile\`, \`VerifyFileText\`
     """
     _file_exists()
-    return ACTIVE_FILE.get(**kwargs)
+    return str(ACTIVE_FILE.get(**kwargs))
 
 
 @keyword(tags=("File", "Verification"))
-def verify_pdf_text(text, normalize=False):
+def verify_pdf_text(text: str, normalize: bool=False) -> None:
     r"""Verify text from pdf file.
 
     Examples
@@ -181,7 +183,7 @@ def verify_pdf_text(text, normalize=False):
 
 
 @keyword(tags=("File", "Verification"))
-def verify_file_text(text, normalize=False):
+def verify_file_text(text: str, normalize: bool=False) -> None:
     r"""Verify text from pdf file.
 
     Examples
@@ -206,7 +208,7 @@ def verify_file_text(text, normalize=False):
 
 
 @keyword(tags=("File", "Verification"))
-def verify_no_pdf_text(text, normalize=False):
+def verify_no_pdf_text(text: str, normalize: bool=False) -> None:
     r"""Verify text not exists in pdf-file.
 
     Examples
@@ -235,7 +237,7 @@ def verify_no_pdf_text(text, normalize=False):
 
 
 @keyword(tags=("File", "Verification"))
-def verify_no_file_text(text, normalize=False):
+def verify_no_file_text(text: str, normalize: bool=False) -> None:
     r"""Verify text not exists in pdf-file.
 
     Examples
@@ -264,7 +266,7 @@ def verify_no_file_text(text, normalize=False):
 
 
 @keyword(tags=("File", "Interaction"))
-def remove_file(file=None):
+def remove_file(file: Optional[str]=None) -> None:
     r"""Remove a file.
 
     Examples
@@ -289,7 +291,7 @@ def remove_file(file=None):
 
 
 @keyword(tags=("File", "Interaction"))
-def remove_pdf():
+def remove_pdf() -> None:
     r"""Remove a file.
 
     Examples
@@ -309,7 +311,7 @@ def remove_pdf():
     ACTIVE_FILE.remove()
 
 
-def _file_exists(file_path=None):
+def _file_exists(file_path: Optional[str]=None) -> bool:
     if not file_path:
         if isinstance(ACTIVE_FILE, File) is False:
             raise QWebInstanceDoesNotExistError('File has not been defined with UsePdf keyword')
@@ -320,7 +322,7 @@ def _file_exists(file_path=None):
 
 
 @keyword(tags=("File", "Interaction"))
-def zip_files(name_of_zip, files_to_zip):
+def zip_files(name_of_zip: str, files_to_zip: str) -> None:
     """Zip files.
 
     Examples
@@ -346,7 +348,7 @@ def zip_files(name_of_zip, files_to_zip):
     try:
         with ZipFile(name_of_zip, 'w') as zipped:
             for file in files:
-                file = download.get_path(file.strip())
+                file = str(download.get_path(file.strip()))
                 if os.path.isdir(file):
                     for root, _, files2 in os.walk(file):
                         for file2 in files2:
@@ -361,7 +363,7 @@ def zip_files(name_of_zip, files_to_zip):
 
 
 @keyword(tags=("File", "Interaction"))
-def move_files(files_to_move, destination_folder):
+def move_files(files_to_move: str, destination_folder: str) -> None:
     r"""Move files.
 
     Examples
@@ -391,7 +393,7 @@ def move_files(files_to_move, destination_folder):
 
 
 @keyword(tags=("File", "Verification"))
-def verify_file(filename):
+def verify_file(filename: str) -> Path:
     """Verify file exists.
 
     If reference file are not in default folders (images, files, downloads) then

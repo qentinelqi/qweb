@@ -16,7 +16,6 @@
 # ---------------------------
 
 """Keywords for controlling debugger."""
-
 import pyautogui
 from DebugLibrary import DebugLibrary
 from robot.api.deco import keyword
@@ -27,7 +26,7 @@ cur_mode = None
 
 
 @keyword(tags=("Debug", "Error handling"))
-def debug_on(mode='draw'):
+def debug_on(mode: str='draw') -> None:
     r"""Start debugger with drawing mode and set default timeout down to 2 sec.
 
     Examples
@@ -51,7 +50,7 @@ def debug_on(mode='draw'):
     global cur_mode  # pylint: disable=global-statement
     global cur_timeout  # pylint: disable=global-statement
     cur_mode = CONFIG.get_value('SearchMode')
-    cur_timeout = CONFIG.get_value('DefaultTimeout')
+    cur_timeout = CONFIG.get_value('DefaultTimeout') # type: ignore[assignment]
     CONFIG.set_value('SearchMode', mode)
     CONFIG.set_value('DefaultTimeout', 2)
     CONFIG.set_value('Debug_Run', True)
@@ -60,7 +59,7 @@ def debug_on(mode='draw'):
 
 
 @keyword(tags=("Debug", "Error handling"))
-def debug_off():
+def debug_off() -> None:
     r"""Exit debugger. Set timeout and SearchMode back to default.
 
     Examples

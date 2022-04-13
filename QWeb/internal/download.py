@@ -15,7 +15,8 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Union
+from typing import Optional
+
 import os
 from pathlib import Path
 import re
@@ -27,7 +28,7 @@ from selenium import webdriver
 from QWeb.internal import browser, platform
 from QWeb.internal.exceptions import QWebFileNotFoundError
 
-start_epoch = None
+start_epoch: float
 
 
 def get_downloads_dir() -> str:

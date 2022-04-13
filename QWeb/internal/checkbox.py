@@ -105,10 +105,10 @@ def get_checkbox_elements_from_all_documents(locator:str,
             raise QWebInstanceDoesNotExistError(
                 'Table has not been defined with UseTable keyword')
         locator_element = table.get_table_cell(locator, anchor)
-        checkbox_element = element.get_element_from_childnodes(
+        checkbox_elements = element.get_element_from_childnodes(
             locator_element, css, dom_traversing=False, **kwargs)
-        if checkbox_element:
-            return checkbox_element[index], locator_element
+        if checkbox_elements:
+            return checkbox_elements[index], locator_element
         raise QWebElementNotFoundError('No matching checkbox found')
     if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
         checkbox_element, locator_element = get_checkbox_by_locator(
@@ -130,7 +130,7 @@ def get_checkbox_by_css_selector(locator: str,
                                  ) -> tuple[Optional[WebElement], Optional[WebElement]]:
     """Get checkbox using css selectors."""
     checkbox_elements = []
-    partial_matches = []
+    partial_matches: list[WebElement] = []
     css = '[type="checkbox"], [role="checkbox"]'
     if 'qweb_old' not in kwargs:
         full_matches, partial_matches = element.get_elements_by_css(

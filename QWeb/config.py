@@ -1,5 +1,4 @@
 from typing import Callable, Any
-from QWeb.types import FuncType
 from QWeb.internal import element, frame
 
 

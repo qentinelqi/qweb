@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional, Union
+from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
 from QWeb.internal.exceptions import QWebElementNotFoundError, \
@@ -23,7 +26,8 @@ from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
 
-def get_input_element_by_locator(locator, anchor, **kwargs):
+def get_input_element_by_locator(locator: str, anchor:str, **kwargs
+                                ) -> WebElement:
     """Find input element.
 
     Parameters
@@ -68,14 +72,19 @@ def get_input_element_by_locator(locator, anchor, **kwargs):
     return input_element
 
 
-def _get_all_input_elements():
+def _get_all_input_elements() -> list[WebElement]:
     input_elements = element.get_webelements_in_active_area(
         CONFIG["AllInputElements"], stay_in_current_frame=True)
     return input_elements
 
 
-def get_input_elements_from_all_documents(
-        locator, anchor, timeout, index=1, enable_check=False, **kwargs):  # pylint: disable=unused-argument
+def get_input_elements_from_all_documents(locator: str,
+                                          anchor: str,
+                                          timeout: Union[int,str],
+                                          index: Union[int, str]=1,
+                                          enable_check: bool=False,
+                                          **kwargs
+                                          ) -> WebElement:  # pylint: disable=unused-argument
     """Function for finding input elements.
     Parameters
     ----------
@@ -112,10 +121,10 @@ def get_input_elements_from_all_documents(
         if table is None:
             raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
         locator_element = table.get_table_cell(locator, anchor)
-        input_element = element.get_element_from_childnodes(
+        input_elements = element.get_element_from_childnodes(
             locator_element, kwargs['css'], dom_traversing=False)
-        if input_element:
-            return input_element[index]
+        if input_elements:
+            return input_elements[int(index)]
         raise QWebElementNotFoundError('No matching table input found')
     css_selector = CONFIG["CssSelectors"]
     if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
@@ -123,7 +132,7 @@ def get_input_elements_from_all_documents(
     else:
         logger.debug('Uses CSS-selectors to locate element')
         input_element = get_input_element_by_css_selector(
-            locator, anchor, index, enable_check, **kwargs)
+            locator, anchor, int(index), enable_check, **kwargs)
         if not input_element:
             input_element = get_input_element_by_locator(locator, anchor, **kwargs)
     if input_element:
@@ -133,7 +142,12 @@ def get_input_elements_from_all_documents(
     raise QWebElementNotFoundError('No matching input elements found')
 
 
-def get_input_element_by_css_selector(locator, anchor, index=0, enable_check=False, **kwargs):
+def get_input_element_by_css_selector(locator: str,
+                                      anchor: str,
+                                      index: int=0,
+                                      enable_check: bool=False,
+                                      **kwargs
+                                      ) -> Optional[WebElement]:
     """Get input element using css selectors.
        Parameters
        ----------
@@ -156,7 +170,7 @@ def get_input_element_by_css_selector(locator, anchor, index=0, enable_check=Fal
        -------
        WebElement
        """
-    partial_matches = []
+    partial_matches: WebElement = []
     upload = kwargs.get('upload')
     if upload:
         try:

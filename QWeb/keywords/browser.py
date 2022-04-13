@@ -14,6 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Union, Optional
+from selenium.webdriver.remote.webdriver import WebDriver
+
 import os
 import pkg_resources
 import requests
@@ -28,7 +32,7 @@ from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
 
 
 @keyword(tags=("Browser", "Getters"))
-def return_browser():
+def return_browser() -> WebDriver:
     r"""Return browser instance.
 
     Use this function if you need to expand QWeb and require direct browser access.
@@ -48,7 +52,7 @@ def return_browser():
 
 
 @keyword(tags=("Browser", "Interaction"))
-def open_browser(url, browser_alias, options=None, **kwargs):
+def open_browser(url: str, browser_alias: str, options: Optional[str]=None, **kwargs):
     r"""Open new browser to given url.
 
     Uses the Selenium2Library open_browser method if the browser is not Chrome.
@@ -139,18 +143,18 @@ def open_browser(url, browser_alias, options=None, **kwargs):
     number_of_open_sessions = _sessions_open()
     if number_of_open_sessions > 0:
         logger.warn('You have {} browser sessions already open'.format(number_of_open_sessions))
-    options = util.option_handler(options)
+    option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
     bs_project_name = BuiltIn().get_variable_value('${PROJECTNAME}') or ""
     bs_run_id = BuiltIn().get_variable_value('${RUNID}') or ""
     if os.getenv('QWEB_HEADLESS'):
         kwargs = dict(headless=True)
     if os.getenv('CHROME_ARGS') is not None:
-        if options is None:
-            options = os.getenv('CHROME_ARGS').split(',')
+        if option_list is None:
+            option_list = os.getenv('CHROME_ARGS').split(',')
         else:
-            options = options + os.getenv('CHROME_ARGS').split(',')
-    logger.debug('Options: {}'.format(options))
+            option_list = option_list + os.getenv('CHROME_ARGS','').split(',')
+    logger.debug('Options: {}'.format(option_list))
     provider = BuiltIn().get_variable_value('${PROVIDER}')
     if provider in ('bs', 'browserstack'):
         bs_device = BuiltIn().get_variable_value('${DEVICE}')
@@ -161,7 +165,7 @@ def open_browser(url, browser_alias, options=None, **kwargs):
         else:
             raise exceptions.QWebException('Unknown browserstack browser {}'.format(browser_alias))
     else:
-        driver = _browser_checker(b_lower, options, **kwargs)
+        driver = _browser_checker(b_lower, option_list, **kwargs)
     util.initial_logging(driver.capabilities)
 
     # If user wants to re-use Chrome browser then he/she has to give
@@ -175,7 +179,7 @@ def open_browser(url, browser_alias, options=None, **kwargs):
 
 
 @keyword(tags=("Browser", "Interaction"))
-def switch_browser(index):
+def switch_browser(index: Union[int, str]) -> None:
     r"""Switches to another browser instance in browser cache.
 
 
@@ -197,15 +201,15 @@ def switch_browser(index):
     ----------------
      \`OpenBrowser\,  \`CloseBrowser\,  \`SwitchWindow\, \`GetWebElement\`
     """
-    browser.set_current_browser(index)
+    browser.set_current_browser(str(index))
 
 
-def _sessions_open():
+def _sessions_open() -> int:
     sessions = browser.get_open_browsers()
     return len(sessions)
 
 
-def _close_remote_browser_session(driver, close_only=False):
+def _close_remote_browser_session(driver: WebDriver, close_only: bool=False) -> bool:
     driver_type = str(type(driver))
     if 'remote.webdriver' in driver_type:
         session_id = driver.session_id
@@ -227,7 +231,7 @@ def _close_remote_browser_session(driver, close_only=False):
 
 
 @keyword(tags=("Browser", "Interaction"))
-def close_browser():
+def close_browser() -> None:
     r"""Close current browser.
 
     This will also close remote browser sessions if open.
@@ -257,7 +261,7 @@ def close_browser():
 
 
 @keyword(tags=("Browser", "Interaction", "Remote"))
-def close_remote_browser():
+def close_remote_browser() -> None:
     r"""Close remote browser session which is connected to the target browser.
 
     Closes only the remote browser session and leaves the target browser
@@ -288,7 +292,7 @@ def close_remote_browser():
 
 
 @keyword(tags=("Browser", "Interaction"))
-def close_all_browsers():
+def close_all_browsers() -> None:
     r"""Close all opened browsers.
 
     Examples
@@ -320,7 +324,7 @@ def close_all_browsers():
 
 
 @keyword(tags=("Browser", "Verification"))
-def verify_links(url='current', log_all=False, header_only=True):
+def verify_links(url: str='current', log_all: bool=False, header_only: bool=True) -> None:
     r"""Verify that all links on a given website return good HTTP status codes.
 
     Examples
@@ -412,7 +416,7 @@ def verify_links(url='current', log_all=False, header_only=True):
         raise exceptions.QWebException('Found {} broken link(s): {}'.format(errors, broken))
 
 
-def _browser_checker(browser_x, options, *args, **kwargs):
+def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> WebDriver:
     """Determine the correct local browser in open_browser."""
     def use_chrome():
         return chrome.open_browser(chrome_args=options, **kwargs)

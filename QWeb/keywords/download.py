@@ -15,6 +15,8 @@
 # limitations under the License.
 # ---------------------------
 
+from __future__ import annotations
+from typing import Union
 import time
 
 from robot.api import logger
@@ -26,7 +28,7 @@ from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 
 
 @keyword(tags=("Browser", "Verification"))
-def verify_file_download(timeout=0):
+def verify_file_download(timeout: Union[int, str]=0) -> str:
     r"""Verify file has been downloaded and return file path.
 
     Examples
@@ -89,7 +91,7 @@ def verify_file_download(timeout=0):
 
 
 @keyword(tags=("Browser", "Verification"))
-def expect_file_download():
+def expect_file_download() -> None:
     r"""Turns on polling for time after which file download should happen.
 
     Run this keyword everytime before \`VerifyFileDownload\` and the action that

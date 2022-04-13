@@ -21,14 +21,15 @@
 When Selenium gets cookies from browser, it return them as dictionaries
 in a list. This list can be searched for key - value pairs.
 """
-
+from __future__ import annotations
+from typing import Any
 from robot.api import logger
 from robot.api.deco import keyword
 from QWeb.internal import cookies
 
 
 @keyword(tags=("Browser", "Interaction"))
-def delete_all_cookies():
+def delete_all_cookies() -> None:
     r"""Delete all cookies in browser.
 
     Cookies can be only deleted when browser is open. Cookies are automatically
@@ -48,7 +49,7 @@ def delete_all_cookies():
 
 
 @keyword(tags=("Browser", "Getters"))
-def list_cookies():
+def list_cookies() -> set[dict[str,Any]]:
     r"""List all cookies in browser.
 
     Cookies can be only listed when browser is open. Cookies are automatically
@@ -70,7 +71,7 @@ def list_cookies():
 
 
 @keyword(tags=("Browser", "Verification"))
-def is_cookie(name, value):
+def is_cookie(name: str, value: str) -> bool:
     r"""Return True if cookie with name and value is found.
 
     Cookies are a good way to detect if user has already logged in.

@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional, Union, Any
+from selenium.webdriver.remote.webelement import WebElement
 
 from QWeb.internal import browser
 
 
-def execute_javascript(script, *args):
+def execute_javascript(script: str, *args) -> Any:
     """Run given javascript on current window.
 
     Parameters
@@ -42,7 +45,7 @@ def execute_javascript(script, *args):
     return driver.execute_script(script, *args)
 
 
-def get_visibility(web_elements):
+def get_visibility(web_elements: list[WebElement]) -> list[WebElement]:
     """Return web element objects.
 
     Object contains element itself, offset-status,
@@ -73,7 +76,11 @@ def get_visibility(web_elements):
     return execute_javascript(js, web_elements)
 
 
-def highlight_element(element, draw_only, flash_border=False, color="blue"):
+def highlight_element(element: WebElement,
+                      draw_only: bool,
+                      flash_border: bool=False,
+                      color: str="blue"
+                      ) -> None:
     """Highlight borders for given web element.
 
     Parameters
@@ -123,7 +130,10 @@ def highlight_element(element, draw_only, flash_border=False, color="blue"):
     execute_javascript(js, element, draw_only, flash_border, color)
 
 
-def get_by_attributes(elements, locator, partial_match):
+def get_by_attributes(elements: list[WebElement],
+                      locator: str,
+                      partial_match: bool
+                      ) -> dict[str, list[WebElement]]:
     """Return web element by it's attribute value.
 
     Parameters
@@ -166,7 +176,7 @@ def get_by_attributes(elements, locator, partial_match):
     return execute_javascript(js, elements, locator.replace("\'", "\\'"), partial_match)
 
 
-def get_all_elements(css):
+def get_all_elements(css: str) -> list[WebElement]:
     """Return all web elements for given css-locator.
     Parameters
     ----------
@@ -180,7 +190,11 @@ def get_all_elements(css):
     return execute_javascript("return document.querySelectorAll('{}')".format(css))
 
 
-def get_childnodes(locator_element, css, level=3, traverse=True):
+def get_childnodes(locator_element: WebElement,
+                   css: str,
+                   level: int=3,
+                   traverse: bool=True
+                   ) -> list[WebElement]:
     """Find matching childs for given locator element.
     Parameters
     ----------
@@ -216,7 +230,11 @@ def get_childnodes(locator_element, css, level=3, traverse=True):
     return execute_javascript(js, locator_element, css, level, traverse)
 
 
-def get_by_label(locator_text, css, level, partial_match):
+def get_by_label(locator_text: str,
+                 css: str,
+                 level: int,
+                 partial_match: bool
+                 ) -> dict[str, list[WebElement]]:
     """Find element based on it's label.
 
     First we sneak if there is for-attribute available. If so, it's used
@@ -316,7 +334,7 @@ def get_by_label(locator_text, css, level, partial_match):
     return execute_javascript(js, locator_text.replace("\'", "\\'"), css, level, partial_match)
 
 
-def get_parent_list(locator_element, css):
+def get_parent_list(locator_element: str, css: str) -> list[WebElement]:
     """Get parent list for web element.
 
     Parameters
@@ -350,7 +368,7 @@ def get_parent_list(locator_element, css):
     return execute_javascript(js, locator_element, css)
 
 
-def find_text_from_textnodes(text, **kwargs):
+def find_text_from_textnodes(text: str, **kwargs) -> list[WebElement]:
     """Get parent list for web element.
 
     Parameters
@@ -385,7 +403,7 @@ def find_text_from_textnodes(text, **kwargs):
     return execute_javascript(js, text, doc, partial)
 
 
-def get_clickable(locator):
+def get_clickable(locator: str) -> list[WebElement]:
     js = """
     var web_elements = function(locator){
         var full = [];
@@ -416,7 +434,7 @@ def get_clickable(locator):
     return execute_javascript(js)
 
 
-def get_recursive_walk():
+def get_recursive_walk() -> str:
     return """var recursiveWalk = function(node, func) {
     var done = func(node);
     if(done) {
@@ -441,7 +459,7 @@ def get_recursive_walk():
     }"""
 
 
-def get_text_elements_from_shadow_dom(locator, partial):
+def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_text_from_shadow_dom(text, partial){
         var results = [];
@@ -467,7 +485,7 @@ def get_text_elements_from_shadow_dom(locator, partial):
     return execute_javascript(js, locator, partial)
 
 
-def get_all_input_elements_from_shadow_dom():
+def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_all_input_elements_from_shadow_dom(){
         var results = [];
@@ -484,7 +502,7 @@ def get_all_input_elements_from_shadow_dom():
     return execute_javascript(js)
 
 
-def get_item_elements_from_shadow_dom(tag):
+def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_item_elements_from_shadow_dom(tag){
         var results = [];

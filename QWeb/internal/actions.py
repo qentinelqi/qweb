@@ -89,7 +89,7 @@ def compare_input_values(input_element: WebElement,
     except QWebValueError:
         real_value = ""
     logger.debug('Real value: {}, expected value {}'.format(real_value, expected_value))
-    if fnmatch.fnmatch(real_value.strip(), expected_value):
+    if fnmatch.fnmatch(str(real_value).strip(), expected_value):
         return True
     raise QWebValueMismatchError('Expected value "{}" didn\'t match to real value "{}"'
                                  .format(expected_value, real_value))
@@ -427,9 +427,9 @@ def _contains_tab(input_text: str) -> bool:
 def scroll_first_scrollable_parent_element(locator: str,
                                            anchor: str,
                                            text_to_find: str,
-                                           scroll_length: int,
+                                           scroll_length: Optional[Union[int,str]],
                                            slow_mode: bool,
-                                           timeout: int
+                                           timeout: Union[int, float, str]
                                            ) -> None:
     visible = None
     js_get_parent_element = """
@@ -454,7 +454,7 @@ def scroll_first_scrollable_parent_element(locator: str,
     old_pos = None
     start = time.time()
     if not slow_mode:
-        while not visible and old_pos != current_pos and time.time() < timeout + start:
+        while not visible and old_pos != current_pos and time.time() < float(timeout) + start:
             old_pos = javascript.execute_javascript(js_element_position, scrollable_element)
             javascript.execute_javascript(js_element_scroll, scrollable_element)
             time.sleep(.5)
@@ -466,7 +466,7 @@ def scroll_first_scrollable_parent_element(locator: str,
     else:
         logger.info('\nSlow mode is on, execution will only stop if the text "{}" is found or if '
                     'the timeout is reached.'.format(text_to_find), also_console=True)
-        while not visible and time.time() < timeout + start:
+        while not visible and time.time() < float(timeout) + start:
             javascript.execute_javascript(js_element_scroll, scrollable_element)
             time.sleep(.5)
             visible = internal_text.get_element_by_locator_text(text_to_find,
@@ -478,9 +478,9 @@ def scroll_first_scrollable_parent_element(locator: str,
 
 
 def scroll_dynamic_web_page(text_to_find: str,
-                            scroll_length: int,
+                            scroll_length: Optional[Union[int,str]],
                             slow_mode: bool,
-                            timeout: int
+                            timeout: Union[int, float, str]
                             ) -> bool:
     visible = None
     js_browser_height = "return window.innerHeight"
@@ -491,7 +491,7 @@ def scroll_dynamic_web_page(text_to_find: str,
     old_pos = None
     start = time.time()
     if not slow_mode:
-        while not visible and old_pos != current_pos and time.time() < timeout + start:
+        while not visible and old_pos != current_pos and time.time() < float(timeout) + start:
             old_pos = javascript.execute_javascript(js_current_pos)
             javascript.execute_javascript(js_scroll)
             time.sleep(.5)
@@ -503,7 +503,7 @@ def scroll_dynamic_web_page(text_to_find: str,
     else:
         logger.info('\nSlow mode is on, execution will only stop if the text "{}" is found or if '
                     'the timeout is reached.'.format(text_to_find), also_console=True)
-        while not visible and time.time() < timeout + start:
+        while not visible and time.time() < float(timeout) + start:
             javascript.execute_javascript(js_scroll)
             time.sleep(.5)
             visible = internal_text.get_element_by_locator_text(text_to_find,

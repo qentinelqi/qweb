@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Union, Any, Callable, Optional
 
 from QWeb.internal import browser, javascript
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
@@ -26,7 +28,7 @@ import re
 import subprocess
 
 
-def par2bool(s) -> bool:
+def par2bool(s: Union[bool, str, int]) -> bool:
     """
     Returns boolean (True, False) from given parameter.
     Accepts booleans, strings or integers.
@@ -36,7 +38,7 @@ def par2bool(s) -> bool:
     return s in ["true", "1", "on", True, 1]
 
 
-def xpath_validator(locator):
+def xpath_validator(locator: str) -> bool:
     """Checks if given locator is an xpath and returns boolean (True, False)
     """
     # TODO: Make this more reliable
@@ -45,7 +47,7 @@ def xpath_validator(locator):
     return False
 
 
-def url_validator(url):
+def url_validator(url: str) -> bool:
     """Checks if given url is valid and returns boolean (True, False)
     """
     regex = re.compile(
@@ -59,43 +61,43 @@ def url_validator(url):
     return re.match(regex, url) is not None
 
 
-def calculate_interval(timeout_int):
+def calculate_interval(timeout_int: int) -> float:
     """Calculates interval based on timeout.
 
     Some customers require long timeouts and polling every 0.1s results
     very longs logs. Poll less often if timeout is large.
     """
     if timeout_int > 60:
-        interval = 3
+        interval = 3.0
     elif timeout_int > 10:
-        interval = 1
+        interval = 1.0
     else:
         interval = 0.1
     return interval
 
 
-def set_window_size(pixels):
-    width, height = _parse_pixels(pixels)
-    width = int(width)
-    height = int(height)
+def set_window_size(pixels: str) -> tuple[int, int]:
+    width_str, height_str = _parse_pixels(pixels)
+    width = int(width_str)
+    height = int(height_str)
     driver = browser.get_current_browser()
     driver.set_window_size(width, height)
     return width, height
 
 
-def _parse_pixels(pixels, split='x'):
+def _parse_pixels(pixels: str, split: str='x') -> tuple[str, str]:
     pixel_list = pixels.lower().split(split)
     if len(pixel_list) == 1:
         raise ValueError("Pixels needs to be given with '1920x1080' syntax")
     return pixel_list[0], pixel_list[1]
 
 
-def set_input_handler(input_method):
+def set_input_handler(input_method: str) -> str:
     input_handler.input_method = input_method.lower()
     return input_method.lower()
 
 
-def set_line_break(key):
+def set_line_break(key: str) -> str:
     if key == '\ue000':
         current_browser = browser.get_current_browser().capabilities['browserName']
         if current_browser == 'firefox':
@@ -113,14 +115,15 @@ def set_line_break(key):
     return key
 
 
-def set_clear_key(key):
+def set_clear_key(key: str) -> Optional[str]:
     if key.lower() == 'none':
-        key = None
-    input_handler.clear_key = key
-    return key
+        input_handler.clear_key = None
+    else:
+        input_handler.clear_key = key
+    return input_handler.clear_key
 
 
-def highlight_validation(color):
+def highlight_validation(color: str) -> str:
     """ Validates the given highligh color is among supported basic colors """
     if not color.lower() in ["red",
                              "green",
@@ -139,7 +142,7 @@ def highlight_validation(color):
     return color
 
 
-def get_substring(text, **kwargs):
+def get_substring(text: str, **kwargs) -> Union[int, float, str]:
     if '\xa0' in text:
         text = text.replace('\xa0', ' ')
     start, end = kwargs.get('between', '{}???{}').format(0, len(text)).split('???')
@@ -150,9 +153,9 @@ def get_substring(text, **kwargs):
     if end == 0:
         end = len(text)
     if 'from_start' in kwargs:
-        end = start + int(kwargs.get('from_start'))
+        end = start + kwargs.get('from_start')
     if 'from_end' in kwargs:
-        start = end - int(kwargs.get('from_end'))
+        start = end - kwargs.get('from_end')
     logger.debug('substring start: {}'.format(start))
     logger.debug('substring end: {}'.format(end))
     text = str(text[start:end]).strip().replace('\n', "")
@@ -167,7 +170,7 @@ def get_substring(text, **kwargs):
     return text
 
 
-def get_index_of(text, locator, condition):
+def get_index_of(text: str, locator: str, condition: Union[bool, int, str]) -> int:
     try:
         return int(locator.strip())
     except ValueError:
@@ -181,11 +184,11 @@ def get_index_of(text, locator, condition):
     raise QWebValueMismatchError('File did not contain the text "{}"'.format(locator))
 
 
-def is_py_func(text):
+def is_py_func(text: str) -> bool:
     return bool("(" and ")" in text)  # pylint: disable=R1726
 
 
-def is_retina():
+def is_retina() -> bool:
     if platform.system().lower() == "darwin":
         if "arm" in platform.machine().lower():
             return True
@@ -198,22 +201,22 @@ def is_retina():
     return False
 
 
-def is_safari():
+def is_safari() -> bool:
     driver = browser.get_current_browser()
     return driver.capabilities['browserName'].lower() in browser.safari.NAMES
 
 
-def get_browser_width():
+def get_browser_width() -> int:
     driver = browser.get_current_browser()
     size = driver.get_window_size()
     return size["width"]
 
 
-def get_monitor_width():
+def get_monitor_width() -> int:
     return javascript.execute_javascript("return screen.width")
 
 
-def prefs_to_dict(prefs):
+def prefs_to_dict(prefs: Union[dict, str]) -> dict[str, Any]:
     if isinstance(prefs, dict):
         d = prefs
     else:
@@ -230,8 +233,9 @@ def prefs_to_dict(prefs):
     return d
 
 
-def _handle_old_style_prefs(prefs):
+def _handle_old_style_prefs(prefs: str) -> dict:
     d = {}
+    val: Union[bool, str]
     separated = prefs.split(',')
     for s in separated:
         splitted = s.split(':', maxsplit=1)
@@ -248,7 +252,7 @@ def _handle_old_style_prefs(prefs):
     return d
 
 
-def validate_run_before(value):
+def validate_run_before(value: str) -> Optional[str]:
     if isinstance(value, list):
         if value[0].lower().startswith("verify"):
             return value
@@ -262,7 +266,7 @@ def validate_run_before(value):
     return None
 
 
-def initial_logging(capabilities):
+def initial_logging(capabilities: dict[str, Any]) -> None:
     """Log version numbers at the start of test runs."""
     logger.debug(capabilities)
     try:
@@ -282,7 +286,7 @@ def initial_logging(capabilities):
         logger.debug('Could not get browser/driver version data.')
 
 
-def option_handler(options):
+def option_handler(options: Optional[str]) -> list[str]:
     options2 = []
     if options:
         options2 += options.split(',')
@@ -291,7 +295,7 @@ def option_handler(options):
     return options2
 
 
-def get_callable(pw):
+def get_callable(pw: str) -> Callable[..., Any]:
     """Return function by Paceword name if exists."""
     lib = BuiltIn().get_library_instance('QWeb')
     pacewords = lib.__dir__()

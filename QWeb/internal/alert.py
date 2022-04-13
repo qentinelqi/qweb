@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from typing import Union
 from selenium.webdriver.common.alert import Alert
 
 from QWeb.internal.exceptions import QWebDriverError
@@ -35,11 +36,11 @@ def close_alert(alert: Alert, action: str) -> None:
 
 
 @decorators.timeout_decorator_for_actions
-def wait_alert(timeout: int) -> Alert:  # pylint: disable=unused-argument
+def wait_alert(timeout: Union[str,int]) -> Alert:  # pylint: disable=unused-argument
     driver = browser.get_current_browser()
     return driver.switch_to.alert
 
 
 @decorators.timeout_decorator_for_actions
-def type_alert(alert: Alert, text: str, timeout: int) -> None:  # pylint: disable=unused-argument
+def type_alert(alert: Alert, text: str, timeout: Union[str,int]) -> None:  # pylint: disable=unused-argument
     alert.send_keys(text)

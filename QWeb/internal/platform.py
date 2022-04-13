@@ -19,5 +19,5 @@ import os
 from pathlib import Path
 
 
-def get_home_dir():
+def get_home_dir() -> Path:
     return Path(os.getenv("HOMEPATH") or os.path.expanduser("~"))

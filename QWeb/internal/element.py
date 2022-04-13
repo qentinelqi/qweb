@@ -104,7 +104,7 @@ def get_closest_element(locator_element: WebElement, candidate_elements: list[We
     if not candidate_elements:
         raise QWebElementNotFoundError('No elements visible')
     closest_element_list = []
-    closest_distance = 1000000  # Just some large number
+    closest_distance = 1000000.0  # Just some large number
     for candidate_element in candidate_elements:
         element_info = _list_info(candidate_element)
         logger.debug("Measuring distance for: {}".format(element_info))
@@ -320,7 +320,7 @@ def get_all_inputs_from_shadow_dom() -> WebElement:
     return javascript.get_all_input_elements_from_shadow_dom()
 
 
-def draw_borders(elements: list[WebElement]) -> None:
+def draw_borders(elements: Union[WebElement, list[WebElement]]) -> None:
     mode = CONFIG['SearchMode']
     color = CONFIG['HighlightColor']
     if not isinstance(elements, list):
@@ -355,7 +355,7 @@ def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> f
     search_direction = CONFIG["SearchDirection"]
     corners_locations1 = _get_corners_locations(element1)
     corners_locations2 = _get_corners_locations(element2)
-    closest_distance = 1000000  # Some large number
+    closest_distance = 1000000.0  # Some large number
     for corner1 in corners_locations1:
         for corner2 in corners_locations2:
             distance = _manhattan_distance(corner1['x'], corner1['y'],
@@ -369,22 +369,22 @@ def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> f
                 if not 5 < angle < 175:
                     logger.debug('Search direction is {} and element is not in arc'.
                                  format(search_direction))
-                    distance = 1000000
+                    distance = 1000000.0
             elif search_direction == 'up':
                 if not -175 < angle < -5:
                     logger.debug('Search direction is {} and element is not in arc'.
                                  format(search_direction))
-                    distance = 1000000
+                    distance = 1000000.0
             elif search_direction == 'left':
                 if not abs(angle) > 95:
                     logger.debug('Search direction is {} and element is not in arc'.
                                  format(search_direction))
-                    distance = 1000000
+                    distance = 1000000.0
             elif search_direction == 'right':
                 if not -85 < angle < 85:
                     logger.debug('Search direction is {} and element is not in arc'.
                                  format(search_direction))
-                    distance = 1000000
+                    distance = 1000000.0
             if closest_distance > distance > 0:
                 closest_distance = distance
     return closest_distance
@@ -409,7 +409,7 @@ def _calculate_closest_ortho_distance(element1: WebElement, element2: WebElement
     return min(distance_h, distance_v)
 
 
-def _get_center_location(element: WebElement) -> tuple[float, float]:
+def _get_center_location(element: WebElement) -> dict[str, float]:
     """ Calculate rectangle's center locations
 
        Each element on a web page is in a rectangle. Uses the WebElement's
@@ -431,7 +431,11 @@ def _get_center_location(element: WebElement) -> tuple[float, float]:
     return center
 
 
-def _get_corners_locations(element: WebElement) -> tuple[float, float]:
+def _get_corners_locations(element: WebElement) -> tuple[dict[str, float], 
+                                                         dict[str, float],
+                                                         dict[str, float],
+                                                         dict[str, float]
+                                                        ]:
     """Calculate rectangle's corners' locations
 
     Each element on a web page is in a rectangle. Uses the WebElement's
@@ -466,7 +470,7 @@ def _manhattan_distance(x0: float, y0: float, x1: float, y1: float) -> float:
     return abs(x0 - x1) + abs(y0 - y1)
 
 
-def _overlap(element1: WebElement, element2: WebElement) -> bool:
+def _overlap(element1: WebElement, element2: WebElement) -> float:
     """Detects if two rectangles overlap
     """
     corners_locations1 = _get_corners_locations(element1)
@@ -515,7 +519,7 @@ def _get_closest_ortho_element(locator_element: WebElement, element_list: list[W
     elif list_len == 0:
         raise IndexError
 
-    closest_distance = 1000000
+    closest_distance = 1000000.0
     for candidate_element in element_list:
         distance = _calculate_closest_ortho_distance(locator_element, candidate_element)
         logger.debug("Candidate {}: horizontal distance: {}".format(candidate_element,
@@ -599,37 +603,37 @@ def _list_info(candidate_element):
     return candidate_element
 
 
-#TODO what type are full, partial
 @frame.all_frames
 def get_elements_by_attributes(css: str, locator: Optional[str]=None, **kwargs
-                              ) -> Union[list[WebElement], tuple]: 
+                              ) -> Union[list[WebElement], tuple[list[WebElement], list[WebElement]]]: 
     any_element = util.par2bool(kwargs.get('any_element', None))
     partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
     if 'tag' in kwargs:
-        css = kwargs.get('tag')
+        css = str(kwargs.get('tag'))
     try:
         elements = javascript.get_all_elements(css)
         if any_element:
             return elements
-        matches = javascript.get_by_attributes(elements, locator.replace("\'", "\\'"), partial)
+        matches = javascript.get_by_attributes(elements, locator.replace("\'", "\\'"), partial) # type: ignore[union-attr]
         logger.debug('attrfunc found full matches: {}, partial matches: {}'
                      .format(matches.get('full'), matches.get('partial')))
-        full, partial = matches.get('full'), matches.get('partial')
+        full_matches, partial_matches = matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException, AttributeError) as e:
         logger.debug('Got exception from get elements by attributes: {}'.format(e))
-        full, partial = [], []
+        full_matches, partial_matches = [], []
     if 'element_kw' not in kwargs:
-        return full, partial
-    web_elements = full + partial
+        return full_matches, partial_matches
+    web_elements = full_matches + partial_matches
     if web_elements:
         if CONFIG['SearchMode']:
             draw_borders(web_elements)
         return web_elements
     raise QWebElementNotFoundError('Element with {} attribute not found'.format(locator))
 
-
+#TODO what type are full, partial
 @frame.all_frames
-def get_element_by_label_for(locator, css, **kwargs):  # pylint: disable=unused-argument
+def get_element_by_label_for(locator: str, css: str, **kwargs
+                            ) -> tuple[list[WebElement], list[WebElement]]:  # pylint: disable=unused-argument
     partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
     limit = util.par2bool(kwargs.get('limit_traverse', CONFIG['LimitTraverse']))
     level = 3 if limit is True else 6
@@ -637,13 +641,14 @@ def get_element_by_label_for(locator, css, **kwargs):  # pylint: disable=unused-
         matches = javascript.get_by_label(locator.replace("\'", "\\'"), css, level, partial)
         logger.debug('labelfunc found full matches: {}, partial matches: {}'
                      .format(matches.get('full'), matches.get('partial')))
-        return matches.get('full'), matches.get('partial')
+        return matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException) as e:
         logger.warn('Exception from label func: {}'.format(e))
         return [], []
 
 
-def get_element_from_childnodes(locator_element, css, dom_traversing=True, **kwargs):
+def get_element_from_childnodes(locator_element: WebElement, css: str, dom_traversing: bool=True, **kwargs
+                               ) -> list[WebElement]:
     limit = util.par2bool(kwargs.get('limit_traverse', CONFIG['LimitTraverse']))
     level = 3 if limit is True else 6
     try:
@@ -657,7 +662,7 @@ def get_element_from_childnodes(locator_element, css, dom_traversing=True, **kwa
     raise QWebElementNotFoundError('Child with tag {} not found.'.format(css))
 
 
-def get_elements_by_css(locator, css, **kwargs):
+def get_elements_by_css(locator: str, css: str, **kwargs) -> tuple[list[WebElement], list[WebElement]]:
     try:
         f0, p0 = get_elements_by_attributes(css, locator, **kwargs)
     except NoSuchFrameException:
@@ -675,7 +680,7 @@ def get_elements_by_css(locator, css, **kwargs):
     return full_matches, partial_matches
 
 
-def get_parent_element(web_element, tag):
+def get_parent_element(web_element: WebElement, tag: str) -> WebElement:
     web_element = javascript.execute_javascript(
         'return arguments[0].closest(\'{}\')'.format(tag), web_element)
     if web_element:
@@ -683,7 +688,7 @@ def get_parent_element(web_element, tag):
     raise QWebElementNotFoundError('Parent with tag {} not found.'.format(tag))
 
 
-def get_parent_list_element(locator_element, css):
+def get_parent_list_element(locator_element: WebElement, css: str) -> WebElement:
     try:
         web_element = javascript.get_parent_list(locator_element, css)
     except (WebDriverException, JavascriptException) as e:
@@ -694,7 +699,10 @@ def get_parent_list_element(locator_element, css):
     raise QWebElementNotFoundError('Parent with tag {} not found.'.format(css))
 
 
-def get_element_to_click_from_list(active_list, index, **kwargs):
+def get_element_to_click_from_list(active_list: list[WebElement],
+                                   index: int, 
+                                   **kwargs
+                                   ) -> WebElement:
     if 'tag' in kwargs:
         element = javascript.execute_javascript(
             'return arguments[0].querySelector("{}")'.format(kwargs['tag']), active_list[index])

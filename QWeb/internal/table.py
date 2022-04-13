@@ -14,8 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
-from typing import Any
+from __future__ import annotations
+from typing import Optional, Union, Any, TypeVar
+from selenium.webdriver.remote.webelement import WebElement
 
 import fnmatch
 import re
@@ -26,11 +27,20 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError
 from QWeb.internal import element, text, javascript, frame, util
 from QWeb.internal.config_defaults import CONFIG
 
+
 class Table:
 
-    ACTIVE_TABLE: Any = None
+    ACTIVE_TABLE: Table
 
-    def __init__(self, table, locator, anchor, parent=None, child=None, level=1, index=1):
+    def __init__(self, 
+                 table: WebElement,
+                 locator: str,
+                 anchor: str,
+                 parent: bool=False,
+                 child: bool=False,
+                 level: int=1,
+                 index: int=1
+                 ) -> None:
         self.table = table
         self.locator = locator
         self.anchor = anchor
@@ -42,7 +52,14 @@ class Table:
 
     @classmethod
     @frame.all_frames
-    def from_table_instance(cls, locator, anchor, parent=None, child=None, level=1, index=1):
+    def from_table_instance(cls,
+                            locator: str,
+                            anchor: str,
+                            parent: bool=False,
+                            child: bool=False,
+                            level: int=1,
+                            index: int=1
+                            ) -> Table:
         """Create table instance by finding table based on locator
 
         Parameters
@@ -60,7 +77,7 @@ class Table:
         if CONFIG["CssSelectors"] and not util.xpath_validator(locator):
             table_element = cls.get_table_element_by_css(locator, anchor)
         else:
-            table_element = cls.get_table_element(cls, locator, anchor)
+            table_element = cls.get_table_element(cls, locator, anchor) # type: ignore[arg-type]
         if parent is None and child is None:
             if CONFIG['SearchMode']:
                 element.draw_borders(table_element)
@@ -72,7 +89,12 @@ class Table:
         return Table(table_element, locator, anchor, parent, child, level, index)
 
     @staticmethod
-    def get_table_by_locator_table(locator, parent, child, level, index):
+    def get_table_by_locator_table(locator: WebElement,
+                                   parent: bool=False,
+                                   child: bool=False,
+                                   level: int=1,
+                                   index: int=1
+                                   ) -> WebElement:
         if parent:
             script = ".parentElement.closest('table')" * int(level)
             parent_table = javascript.execute_javascript(
@@ -92,7 +114,7 @@ class Table:
             raise QWebElementNotFoundError('No child table found')
         raise QWebElementNotFoundError('Sub/parent table not found')
 
-    def get_table_element(self, locator, anchor):
+    def get_table_element(self, locator: str, anchor: str) -> WebElement:
         if util.xpath_validator(locator):
             table_element = element.get_unique_element_by_xpath(locator)
         else:  # Search using text
@@ -112,7 +134,7 @@ class Table:
             return table_element
         raise QWebElementNotFoundError('Table element not found by locator {}'.format(locator))
 
-    def get_table_cell(self, coordinates, anchor, **kwargs):  # pylint: disable=unused-argument
+    def get_table_cell(self, coordinates: str, anchor: str, **kwargs) -> WebElement:  # pylint: disable=unused-argument
         cell = None
         try:
             if '/' in coordinates:
@@ -136,7 +158,9 @@ class Table:
         raise QWebElementNotFoundError(
             'Cell for coords {} not found after'.format(coordinates))
 
-    def get_using_text_in_coordinates(self, coordinates, anchor):
+    def get_using_text_in_coordinates(self, coordinates: str, anchor: str) -> WebElement:
+        row: Optional[int]
+        column: Optional[int]
         row_elem = None
         cell = None
         locator = coordinates.split('/')
@@ -150,28 +174,28 @@ class Table:
             _, column = self._convert_coordinates(locator[1])
         if row_elem:
             cell = javascript.execute_javascript(
-                'return arguments[0].cells[{}]'.format(column - 1), row_elem)
+                'return arguments[0].cells[{}]'.format(column - 1), row_elem) # type:ignore[operator]
         else:
             cell = javascript.execute_javascript(
                 'return arguments[0].rows[{}].cells[{}]'.format(
-                    row - 1, column - 1), self.table)
+                    row - 1, column - 1), self.table) # type:ignore[operator]
         return cell
 
-    def get_clickable_cell(self, coordinates, anchor, index=1, **kwargs):
+    def get_clickable_cell(self, coordinates: str, anchor: str, index: int=1, **kwargs) -> WebElement:
         if int(index) < 1:
             raise QWebValueError(
                 'Index should be greater than 0.')
         table_cell = self.get_table_cell(coordinates, anchor)
         if 'tag' in kwargs:
             clickable_child = element.get_element_from_childnodes(
-                table_cell, kwargs.get('tag'), dom_traversing=False)
+                table_cell, str(kwargs.get('tag')), dom_traversing=False)
             if int(index) > len(clickable_child):
                 raise QWebValueError(
                     'Index exceeds the number of clickable elements in cell.')
             return clickable_child[int(index) - 1]
         return table_cell
 
-    def get_cell_by_locator(self, locator):
+    def get_cell_by_locator(self, locator: str) -> int:
         rows = self.get_all_rows()
         for i, r in enumerate(rows):  # pylint: disable=unused-variable
             cells = self.get_cells_from_row(r)
@@ -189,7 +213,8 @@ class Table:
         raise QWebValueError(
             'Matching table cell not found for locator {}.'.format(locator))
 
-    def get_row(self, locator, anchor, row_index=False, **kwargs):
+    def get_row(self, locator: str, anchor: str, row_index: bool=False, **kwargs
+               ) -> WebElement:
         skip_header = util.par2bool(kwargs.get('skip_header', False))
         rows = self.get_all_rows()
         if locator.startswith('//last'):
@@ -206,16 +231,17 @@ class Table:
         raise QWebValueError(
             'Matching table row not found for locator {}.'.format(locator))
 
-    def get_all_rows(self):
+    def get_all_rows(self) -> list[WebElement]:
         return javascript.execute_javascript(
             'return arguments[0].rows', self.table)
 
     @staticmethod
-    def get_cells_from_row(row):
+    def get_cells_from_row(row: WebElement) -> list[WebElement]:
         return javascript.execute_javascript('return arguments[0].cells', row)
 
     @staticmethod
-    def _get_row_by_locator_text(rows, locator, anchor):
+    def _get_row_by_locator_text(rows: list[WebElement], locator: str, anchor: Union[str, int]
+                                ) -> tuple[WebElement, WebElement]:
         matches = []
         input_elements = []
         row_index = []
@@ -239,11 +265,11 @@ class Table:
                 row_index.append(index)
                 matches.append(row)
         if matches and not anchor_text:
-            return matches[anchor], row_index[anchor]
+            return matches[int(anchor)], row_index[int(anchor)]
         raise QWebElementNotFoundError(
             'Row that includes texts {} and {} not found'.format(locator, anchor_text))
 
-    def _convert_coordinates(self, coordinate_str):
+    def _convert_coordinates(self, coordinate_str: str) -> tuple[Optional[int], Optional[int]]:
         """Return row and column from coordinate string."""
         try:
             row = int(re.findall('r([+-]?[0-9]+)', coordinate_str)[0])
@@ -254,7 +280,7 @@ class Table:
         try:
             col = int(re.findall('c([+-]?[0-9]+)', coordinate_str)[0])
             if col < 0:
-                row_index = row - 1
+                row_index = row - 1 # type: ignore[operator]
                 col = int(javascript.execute_javascript(
                     ' return arguments[0].rows[{0}].cells.length'
                     .format(row_index), self.table)) + (col + 1)
@@ -263,7 +289,7 @@ class Table:
         return row, col
 
     @staticmethod
-    def get_table_element_by_css(locator, anchor):
+    def get_table_element_by_css(locator: str, anchor: Union[str, int]) -> Optional[WebElement]:
         table_element = javascript.execute_javascript(
             'return document.querySelectorAll(\'table[summary^="{0}"], '
             'table[name^="{0}"], table[title^="{0}"], th[title^="{0}"], '
@@ -271,8 +297,8 @@ class Table:
         if table_element:
             try:
                 anchor = int(anchor) - 1
-                if table_element[anchor].tag_name == 'table':
-                    return table_element[anchor]
+                if table_element[int(anchor)].tag_name == 'table':
+                    return table_element[int(anchor)]
                 table_element = javascript.execute_javascript(
                     'return arguments[0].closest("table")', table_element[anchor])
                 return table_element
@@ -284,7 +310,7 @@ class Table:
                 logger.debug('Staling element..Retrying')
                 return None
         try:
-            locator_element = text.get_text_using_anchor(locator, anchor)
+            locator_element = text.get_text_using_anchor(locator, str(anchor))
             table_element = javascript.execute_javascript(
                 'return arguments[0].closest("table")', locator_element)
         except (ValueError, NoSuchElementException, StaleElementReferenceException):
@@ -294,11 +320,11 @@ class Table:
         return None
 
     @staticmethod
-    def _get_all_table_elements():
+    def _get_all_table_elements() -> list[WebElement]:
         return element.get_webelements_in_active_area('//table')
 
     @staticmethod
-    def is_table_coordinates(locator):
+    def is_table_coordinates(locator: str) -> bool:
         if '/' in locator:
             parts = locator.split('/')
             if parts[0].startswith('r') and parts[1].startswith('c'):
@@ -307,7 +333,7 @@ class Table:
             return True
         return False
 
-    def update_table(self):
+    def update_table(self) -> Table:
         table = self.from_table_instance(self.locator, self.anchor, self.parent,
                                          self.child, self.level, self.index)
         return table

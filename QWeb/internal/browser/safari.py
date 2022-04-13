@@ -7,7 +7,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from QWeb.internal import browser
 
 NAMES: list[str] = ["safari", "sf"]
-open_windows = []
+open_windows: list[str] = []
 
 def open_browser(port: int=0,
                  executable_path: str='/usr/bin/safaridriver',

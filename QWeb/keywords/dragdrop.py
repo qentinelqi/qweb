@@ -16,6 +16,10 @@
 # ---------------------------
 
 """Keywords for draggable elements."""
+from __future__ import annotations
+from typing import Union
+from selenium.webdriver.remote.webelement import WebElement
+
 import pyautogui
 from robot.api import logger
 from robot.api.deco import keyword
@@ -27,9 +31,18 @@ from QWeb.internal import javascript
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def drag_drop(locator, target_locator, index=1, anchor="1",
-              target_anchor="1", timeout=0, dragtime='0.5s',
-              left=0, right=0, above=0, below=0):
+def drag_drop(locator: str,
+              target_locator: str,
+              index: int=1,
+              anchor: str="1",
+              target_anchor: str="1",
+              timeout: Union[int, str]=0,
+              dragtime: Union[int, str]='0.5s',
+              left: int=0,
+              right: int=0,
+              above: int=0,
+              below: int=0
+              ) -> None:
     # pylint: disable=unused-argument
     r"""Drag and drop element.
 
@@ -110,7 +123,7 @@ def drag_drop(locator, target_locator, index=1, anchor="1",
     pyautogui.FAILSAFE = True
 
 
-def _get_coordinates(web_element):
+def _get_coordinates(web_element: WebElement) -> tuple[int, int]:
     x_diff = javascript.execute_javascript(
         'return window.outerWidth-window.innerWidth+screen.availLeft')
     y_diff = javascript.execute_javascript(
@@ -121,4 +134,4 @@ def _get_coordinates(web_element):
 
     x_coord = web_element.location['x'] + x_diff + web_element.size['width'] / 2
     y_coord = y + y_diff + web_element.size['height'] / 2
-    return x_coord, y_coord
+    return int(x_coord), int(y_coord)

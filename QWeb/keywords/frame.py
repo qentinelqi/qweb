@@ -31,7 +31,7 @@ from QWeb.internal import browser, element, frame, javascript
 
 
 @keyword(tags=["Config"])
-def use_frame(locator):
+def use_frame(locator: str) -> None:
     """Make following keywords to use frame on a page.
 
     Examples
@@ -65,7 +65,7 @@ def use_frame(locator):
 
 
 @keyword(tags=["Config"])
-def use_page():
+def use_page() -> None:
     """Make following keywords to use the page and not a frame on a page.
 
     Examples
@@ -81,7 +81,7 @@ def use_page():
 
 
 @keyword(tags=("Browser", "Interaction"))
-def refresh_page():
+def refresh_page() -> None:
     r"""Refresh the current window.
 
     Examples
@@ -100,7 +100,7 @@ def refresh_page():
 
 
 @keyword(tags=("Browser", "Interaction"))
-def back():
+def back() -> None:
     r"""Navigates back in the current window.
 
     Examples
@@ -121,7 +121,7 @@ def back():
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def forward():
+def forward() -> None:
     r"""Navigates forward in the current window.
 
     Examples
@@ -142,7 +142,7 @@ def forward():
 
 
 @keyword(tags=["Logging"])
-def log_page():
+def log_page() -> None:
     r"""Save and log current html.
 
     The html content is saved as html file in the same folder where log is.
