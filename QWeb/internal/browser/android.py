@@ -1,12 +1,14 @@
+from __future__ import annotations
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from QWeb.internal import browser
 from robot.api import logger
 import subprocess
 
-NAMES = ["android", "androidphone", "androidmobile"]
+NAMES: list[str] = ["android", "androidphone", "androidmobile"]
 
 
-def open_browser():
+def open_browser() -> WebDriver:
     try:
         adb_output = subprocess.check_output(['adb', 'devices']).decode()
     except IOError as e:

@@ -25,6 +25,13 @@ Coding rules:
     3.) All exception and retry related logic should be handle
         in decorators for consistency and usability reasons.
 """
+from __future__ import annotations
+
+from typing import Optional, Union, Any
+from numpy import character
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
+
 import time
 import fnmatch
 from robot.api import logger
@@ -41,12 +48,17 @@ from QWeb.internal.config_defaults import CONFIG
 
 
 @decorators.timeout_decorator_for_actions
-def write(input_element, input_text, timeout, **kwargs):  # pylint: disable=unused-argument
+def write(input_element: WebElement,
+          input_text: str, 
+          timeout: int,
+           **kwargs: Any
+           ) -> None:  # pylint: disable=unused-argument
     click = util.par2bool(kwargs.get('click', CONFIG['ClickToFocus']))
     if click:
         wd_click(input_element)
     if _ends_with_line_break(input_text):
-        input_text, key = _remove_ending_line_break(input_text)
+        # input_text might be set to None from _remove_ending_line_break(input_text)
+        input_text, key = _remove_ending_line_break(input_text) # type: ignore[assignment]
         kwargs['key'] = key
     check = util.par2bool(kwargs.get('check', CONFIG['CheckInputValue']))
     kwargs['shadow_dom'] = CONFIG['ShadowDOM']
@@ -67,7 +79,11 @@ def write(input_element, input_text, timeout, **kwargs):  # pylint: disable=unus
 
 
 @decorators.timeout_decorator_for_actions
-def compare_input_values(input_element, expected_value, timeout, **kwargs):  # pylint: disable=unused-argument
+def compare_input_values(input_element: WebElement, 
+                         expected_value: str,
+                         timeout: int,
+                         **kwargs: Any
+                         ) -> bool:  # pylint: disable=unused-argument
     try:
         real_value = util.get_substring(input_value(input_element, timeout="0.5s", **kwargs))
     except QWebValueError:
@@ -80,7 +96,7 @@ def compare_input_values(input_element, expected_value, timeout, **kwargs):  # p
 
 
 @decorators.timeout_decorator_for_actions
-def input_value(input_element, timeout, **kwargs):
+def input_value(input_element: WebElement, timeout: int, **kwargs: Any) -> str:
     blind = util.par2bool(kwargs.get('blind', CONFIG['BlindReturn']))
     shadow_dom = CONFIG['ShadowDOM']
 
@@ -96,12 +112,15 @@ def input_value(input_element, timeout, **kwargs):
 
 
 @decorators.timeout_decorator_for_actions
-def scroll(web_element, timeout):  # pylint: disable=unused-argument
+def scroll(web_element: WebElement, timeout: int) -> None:  # pylint: disable=unused-argument
     javascript.execute_javascript('arguments[0].scrollIntoView();', web_element)
 
 
 @decorators.timeout_decorator_for_actions
-def execute_click_and_verify_condition(web_element, text_appear=True, **kwargs):
+def execute_click_and_verify_condition(web_element: WebElement, 
+                                       text_appear: bool=True,
+                                       **kwargs: Any
+                                       ) -> bool:
     """Click and optionally verify condition after click.
 
     Accepted kwargs:
@@ -141,18 +160,18 @@ def execute_click_and_verify_condition(web_element, text_appear=True, **kwargs):
     raise QWebInvalidElementStateError('Element is not enabled')
 
 
-def right_click(element):
+def right_click(element: WebElement) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
     ac.context_click(element).perform()
 
 
-def js_click(web_element):
+def js_click(web_element: WebElement) -> None:
     javascript.execute_javascript('arguments[0].click()', web_element)
     logger.debug("Js click performed")
 
 
-def js_double_click(web_element):
+def js_double_click(web_element: WebElement) -> None:
     js = """var target = arguments[0];
             var clickEvent = document.createEvent('MouseEvents');
             clickEvent.initEvent ('dblclick', true, true);
@@ -161,7 +180,7 @@ def js_double_click(web_element):
     logger.debug("Js double-click performed")
 
 
-def double_click(web_element):
+def double_click(web_element: WebElement) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
     ac.double_click(web_element)
@@ -169,7 +188,7 @@ def double_click(web_element):
     logger.debug('element double-clicked')
 
 
-def wd_click(web_element, **kwargs):
+def wd_click(web_element: WebElement, **kwargs: Any) -> None:
     try:
         web_element.click()
     except WebDriverException as e:
@@ -180,8 +199,11 @@ def wd_click(web_element, **kwargs):
 
 
 @decorators.timeout_decorator_for_actions
-def checkbox_set(checkbox_element, locator_element, value,
-                 **kwargs):  # pylint: disable=unused-argument
+def checkbox_set(checkbox_element: WebElement,
+                 locator_element: WebElement,
+                 value: bool,
+                 **kwargs: Any
+                 ) -> None:  # pylint: disable=unused-argument
     if checkbox.is_checked(checkbox_element) != value:
         try:
             checkbox_element.click()
@@ -196,7 +218,11 @@ def checkbox_set(checkbox_element, locator_element, value,
 
 # pylint: disable=too-many-branches
 @decorators.timeout_decorator_for_actions
-def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=unused-argument
+def select_option(select: Select, 
+                  option: str, 
+                  unselect: bool=False, 
+                  **kwargs: Any
+                  ) -> bool:  # pylint: disable=unused-argument
     """Click and optionally verify condition after click.
 
     Parameters
@@ -248,7 +274,7 @@ def select_option(select, option, unselect=False, **kwargs):  # pylint: disable=
 
 
 @decorators.timeout_decorator_for_actions
-def is_not_in_dropdown(select, option, **kwargs):
+def is_not_in_dropdown(select: Select, option: str, **kwargs: Any) -> bool:
     """"Verifies that the selected option is not in the dropdown list"""
     option_list = get_select_options(select, **kwargs)
     if option in option_list:
@@ -258,7 +284,10 @@ def is_not_in_dropdown(select, option, **kwargs):
 
 
 @decorators.timeout_decorator_for_actions
-def get_selected_value(select, expected=None, **kwargs):  # pylint: disable=unused-argument
+def get_selected_value(select: Select, 
+                       expected: Optional[str]=None,
+                       **kwargs: Any
+                       ) -> Union[bool, str]:  # pylint: disable=unused-argument
     """Get or verify selected value.
 
     Parameters
@@ -282,7 +311,10 @@ def get_selected_value(select, expected=None, **kwargs):  # pylint: disable=unus
 
 
 @decorators.timeout_decorator_for_actions
-def get_select_options(select, expected=None, **kwargs):  # pylint: disable=unused-argument
+def get_select_options(select: Select,
+                       expected: Optional[str]=None,
+                       **kwargs: Any
+                       ) -> Union[bool, list[str]]:  # pylint: disable=unused-argument
     options = select.options
     if expected:
         for option in options:
@@ -299,7 +331,7 @@ def get_select_options(select, expected=None, **kwargs):  # pylint: disable=unus
 
 
 @decorators.timeout_decorator_for_actions
-def hover_to(web_element, timeout=0):  # pylint: disable=unused-argument
+def hover_to(web_element: WebElement, timeout: int=0) -> None:  # pylint: disable=unused-argument
     driver = browser.get_current_browser()
     # firefox & safari specific fix
     needs_js_scroll = [x for x in [browser.firefox.NAMES, browser.safari.NAMES]
@@ -317,7 +349,7 @@ def hover_to(web_element, timeout=0):  # pylint: disable=unused-argument
 
 
 @decorators.timeout_decorator_for_actions
-def text_appearance(text, **kwargs):
+def text_appearance(text:str, **kwargs: Any) -> bool:
     """ Sub for retry click.
 
     Works as keywords is_text and is_no_text. Returns True if
@@ -342,7 +374,10 @@ def text_appearance(text, **kwargs):
 
 
 @decorators.timeout_decorator_for_actions
-def get_element_text(web_element, expected=None, timeout=0):  # pylint: disable=unused-argument
+def get_element_text(web_element: WebElement,
+                     expected=None,
+                     timeout:int =0
+                     ) -> Union[bool,str]:  # pylint: disable=unused-argument
     real_text = web_element.text.strip()
     if expected is not None:
         try:
@@ -354,40 +389,48 @@ def get_element_text(web_element, expected=None, timeout=0):  # pylint: disable=
     raise QWebValueMismatchError('Text not found')
 
 
-def _compare_texts(text_to_compare, expected, timeout):  # pylint: disable=unused-argument
+def _compare_texts(text_to_compare: str,
+                   expected: str,
+                   timeout: int
+                   ) -> bool:  # pylint: disable=unused-argument
     if fnmatch.fnmatch(text_to_compare, expected) is False:
         raise QWebValueMismatchError(
             'Expected {0}, found {1}'.format(expected, text_to_compare))
     return True
 
 
-def _ends_with_line_break(input_text):
+def _ends_with_line_break(input_text: str) -> bool:
     line_break = ('\n', '\ue007', '\t', '\ue004')
     return input_text.endswith(line_break)
 
 
-def _remove_ending_line_break(input_text):
+def _remove_ending_line_break(input_text: str) -> tuple[Optional[str], Optional[str]]:
     enter_key = ('\n', '\ue007')
     tab_key = ('\t', '\ue004')
     if input_text.endswith(enter_key):
-        input_text = input_text.replace('\n', '\ue007').rsplit('\ue007', 1)
-        return input_text[0], '\ue007'
+        input_list = input_text.replace('\n', '\ue007').rsplit('\ue007', 1)
+        return input_list[0], '\ue007'
     if input_text.endswith(tab_key):
-        input_text = input_text.replace('\t', '\ue004').rsplit('\ue004', 1)
-        return input_text[0], '\ue004'
+        input_list = input_text.replace('\t', '\ue004').rsplit('\ue004', 1)
+        return input_list[0], '\ue004'
     return None, None
 
 
-def _contains_enter(input_text):
+def _contains_enter(input_text: str) -> bool:
     return bool('\n' in input_text or '\ue007' in input_text)
 
 
-def _contains_tab(input_text):
+def _contains_tab(input_text: str) -> bool:
     return bool('\t' in input_text or '\ue004' in input_text)
 
 
-def scroll_first_scrollable_parent_element(locator, anchor, text_to_find, scroll_length,
-                                           slow_mode, timeout):
+def scroll_first_scrollable_parent_element(locator: str,
+                                           anchor: str,
+                                           text_to_find: str,
+                                           scroll_length: int,
+                                           slow_mode: bool,
+                                           timeout: int
+                                           ) -> None:
     visible = None
     js_get_parent_element = """
         function getScrollParent(node) {
@@ -434,7 +477,11 @@ def scroll_first_scrollable_parent_element(locator, anchor, text_to_find, scroll
     raise QWebTextNotFoundError('Text {} not found.'.format(text_to_find))
 
 
-def scroll_dynamic_web_page(text_to_find, scroll_length, slow_mode, timeout):
+def scroll_dynamic_web_page(text_to_find: str,
+                            scroll_length: int,
+                            slow_mode: bool,
+                            timeout: int
+                            ) -> bool:
     visible = None
     js_browser_height = "return window.innerHeight"
     height = javascript.execute_javascript(js_browser_height)  # Length of one scroll

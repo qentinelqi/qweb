@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional, Any, Union
+from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebElementNotFoundError
@@ -22,7 +25,7 @@ from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
 
-def is_checked(checkbox_element):
+def is_checked(checkbox_element: WebElement) -> bool:
     """Is checkbox checked.
 
     Parameters
@@ -47,7 +50,7 @@ def is_checked(checkbox_element):
     return bool(checked)
 
 
-def get_checkbox_by_locator(locator, anchor):
+def get_checkbox_by_locator(locator: str, anchor: str) -> tuple[WebElement, None]:
     """Get checkbox element.
 
     Parameters
@@ -75,7 +78,11 @@ def get_checkbox_by_locator(locator, anchor):
     return checkbox_element, None
 
 
-def get_checkbox_elements_from_all_documents(locator, anchor, index, **kwargs):
+def get_checkbox_elements_from_all_documents(locator:str,
+                                             anchor:str,
+                                             index: Union[int, str],
+                                             **kwargs: Any
+                                             ) -> tuple[WebElement, WebElement]:
     """Function for finding checkbox elements.
     Parameters
     ----------
@@ -116,7 +123,11 @@ def get_checkbox_elements_from_all_documents(locator, anchor, index, **kwargs):
     raise QWebElementNotFoundError('No matching element found')
 
 
-def get_checkbox_by_css_selector(locator, anchor, index, **kwargs):
+def get_checkbox_by_css_selector(locator: str,
+                                 anchor: str,
+                                 index: int,
+                                 **kwargs: Any
+                                 ) -> tuple[Optional[WebElement], Optional[WebElement]]:
     """Get checkbox using css selectors."""
     checkbox_elements = []
     partial_matches = []

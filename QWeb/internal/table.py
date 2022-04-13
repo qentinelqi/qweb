@@ -15,6 +15,8 @@
 # limitations under the License.
 # ---------------------------
 
+from typing import Any
+
 import fnmatch
 import re
 from robot.api import logger
@@ -24,10 +26,9 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError
 from QWeb.internal import element, text, javascript, frame, util
 from QWeb.internal.config_defaults import CONFIG
 
-
 class Table:
 
-    ACTIVE_TABLE = None
+    ACTIVE_TABLE: Any = None
 
     def __init__(self, table, locator, anchor, parent=None, child=None, level=1, index=1):
         self.table = table

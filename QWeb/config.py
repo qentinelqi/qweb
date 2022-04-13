@@ -1,7 +1,9 @@
+from typing import Callable, Any
+from QWeb.types import FuncType
 from QWeb.internal import element, frame
 
 
-def set_wait_function(function):
+def set_wait_function(function: Callable[..., Any]) -> Callable[..., Any]:
     """Set custom wait function that is run at the beginning of keywords.
 
     Parameters
@@ -17,7 +19,7 @@ def set_wait_function(function):
     return previous
 
 
-def set_active_area_function(function):
+def set_active_area_function(function: Callable[..., Any]):
     """Set function that sets active area where elements are searched.
 
     Parameters

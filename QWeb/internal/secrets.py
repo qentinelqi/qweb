@@ -34,6 +34,8 @@
 
      Note the function name vs. name used in the add_filter.
 """
+from __future__ import annotations
+from typing import Any
 from robot.output.logger import LOGGER
 from robot.libraries.BuiltIn import BuiltIn
 
@@ -140,7 +142,7 @@ def add_filter(keyword_name, par_index, secret):
 
 # List of keyword names for which filtering of secret parameters is applied.
 # Format: "keyword name": index of secret parameter
-filtered_keywords = {}
+filtered_keywords: dict[str,Any] = {}
 log_level = "INFO"
 
 try:

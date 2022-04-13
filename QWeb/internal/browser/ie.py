@@ -1,15 +1,24 @@
+from __future__ import annotations
+from typing import Optional,Any, Union
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from selenium.webdriver.ie.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from QWeb.internal import browser
 
-NAMES = ["ie", "internet explorer"]
+NAMES: list[str] = ["ie", "internet explorer"]
 
 
-def open_browser(executable_path='IEDriverServer',
-                 capabilities=None,
-                 port=0, timeout=30, host=None, log_level=None, log_file=None,
-                 options=None, ie_options=None):
+def open_browser(executable_path: str='IEDriverServer',
+                 capabilities: Optional[dict[str,Any]]=None,
+                 port: int=0,
+                 timeout: Union[int, float]=30, 
+                 # technically host can be an int representation of IP-addr
+                 host: Optional[Union[str, int]]=None, 
+                 log_level: Optional[str]=None,
+                 log_file: Optional[str]=None,
+                 options: Optional[Options]=None,
+                 ie_options:Optional[Options]=None) -> WebDriver:
 
     capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
     options = Options()

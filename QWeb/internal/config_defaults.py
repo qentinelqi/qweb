@@ -33,12 +33,15 @@ Usage from code:
 from QWeb.internal.config_defaults import CONFIG
 val = CONFIG["ScreenshotType"]
 """
+from __future__ import annotations
+from typing import Any, Union
+
 from QWeb.internal.search_strategy import SearchStrategies
 from QWeb.internal import util
 from QWeb.internal.config import Config
 
 
-CONFIG_DEFAULTS = {
+CONFIG_DEFAULTS: dict[str, Any] = {
     "ScreenshotType": ("screenshot", None),
     "LineBreak": ("\ue004", util.set_line_break),
     "ClearKey": (None, util.set_clear_key),
@@ -93,7 +96,7 @@ CONFIG_DEFAULTS = {
     "HighlightColor": ("blue", util.highlight_validation)
 }
 
-CONFIG = Config(CONFIG_DEFAULTS)
-RETRIES_AMOUNT = 3
-SHORT_DELAY = 0.2
-LONG_DELAY = 1
+CONFIG: Config = Config(CONFIG_DEFAULTS)
+RETRIES_AMOUNT: int = 3
+SHORT_DELAY: Union[int, float] = 0.2
+LONG_DELAY: Union[int, float] = 1

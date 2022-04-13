@@ -14,18 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Any, Callable, Optional
 from pathlib import Path
 import re
 from robot.libraries.BuiltIn import BuiltIn
 
 
-def set_robot_args(*args, **kwargs):
+def set_robot_args(*args: Any, **kwargs: Any) -> list[Any]:
     new_args = []
     for a in list(args):
         if _contains_var(a):
-            a = BuiltIn().get_variable_value(a)
-        new_args.append(a)
+            b = BuiltIn().get_variable_value(a)
+        new_args.append(b)
     for key, val in kwargs.items():
         if _contains_var(key):
             key = BuiltIn().get_variable_value(key)
@@ -35,7 +36,7 @@ def set_robot_args(*args, **kwargs):
     return new_args
 
 
-def get_steps(name, caller_fn, **kwargs):
+def get_steps(name: str, caller_fn: str, **kwargs: Any) -> Optional[list[dict[str,Any]]]:
     file = Path(BuiltIn().get_variable_value('${SUITE SOURCE}'))
     test_case = BuiltIn().get_variable_value('${TEST_NAME}')
     with open(file, "r+") as fo:
@@ -49,9 +50,10 @@ def get_steps(name, caller_fn, **kwargs):
                     steps = _parse_steps(data, i + 1, **kwargs)
                     return steps
         idx += 1
+    return None
 
 
-def _parse_steps(data, iterator, **kwargs):
+def _parse_steps(data: list[str], iterator: int, **kwargs: Any) -> list[dict[str,Any]]:
     steps = []
     while not data[iterator].replace(' ', '').lower().strip().startswith('endblock'):
         varname = None
@@ -77,7 +79,10 @@ def _parse_steps(data, iterator, **kwargs):
     return steps
 
 
-def _parse_arguments(line, starting_point, **kwargs):  # pylint: disable=unused-argument
+def _parse_arguments(line: list[str],
+                     starting_point: int,
+                     **kwargs: Any
+                     ) -> tuple[list[str], dict[Any, Any]]:
     args = []
     for a in range(starting_point, len(line)):
         if line[a].strip() != '':
@@ -91,7 +96,7 @@ def _parse_arguments(line, starting_point, **kwargs):  # pylint: disable=unused-
     return args, kwargs
 
 
-def _contains_var(arg, from_start=True):
+def _contains_var(arg: str, from_start: bool=True) -> bool:
     var_types = ['${', '@{', '&{']
     if from_start:
         return any(arg.strip().startswith(v) for v in var_types)

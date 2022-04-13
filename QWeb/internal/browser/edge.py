@@ -1,4 +1,7 @@
 import platform
+from __future__ import annotations
+from typing import Optional, Any, Union
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Edge
 from selenium.webdriver.edge.options import Options
 from robot.api import logger
@@ -7,11 +10,13 @@ from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal import browser, user, util
 
 
-NAMES = ["edge", "msedge"]
+NAMES: list[str] = ["edge",  "msedge"]
 
 
-def open_browser(executable_path="msedgedriver", edge_args=None,
-                 desired_capabilities=None, **kwargs):
+def open_browser(executable_path: str="msedgedriver",
+                 edge_args: Optional[list[str]]=None,
+                 desired_capabilities: Optional[dict[str,Any]]=None,
+                 **kwargs: Any) -> WebDriver:
     """Open Edge browser instance and cache the driver.
 
     Parameters
@@ -73,7 +78,7 @@ def open_browser(executable_path="msedgedriver", edge_args=None,
         if isinstance(kwargs.get('prefs'), dict):
             prefs = kwargs.get('prefs')
         else:
-            prefs = util.prefs_to_dict(kwargs.get('prefs').strip())
+            prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
     driver = Edge(BuiltIn().get_variable_value('${EDGEDRIVER_PATH}') or executable_path,

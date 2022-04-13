@@ -15,6 +15,11 @@
 # limitations under the License.
 # ---------------------------
 
+from __future__ import annotations
+from typing import Union, Any, Optional
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
+
 from robot.api import logger
 
 from selenium.webdriver.support.ui import Select
@@ -24,7 +29,7 @@ from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
 
-def get_dropdown_element_by_locator(locator, anchor):
+def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
     """Find dropdown element.
 
     Parameters
@@ -75,7 +80,8 @@ def get_dropdown_element_by_locator(locator, anchor):
     return dropdown_element
 
 
-def get_dd_elements_from_all_documents(locator, anchor, index, **kwargs):
+def get_dd_elements_from_all_documents(locator: str, anchor: str, index: Union[int, str], **kwargs: Any
+                                      ) -> Select:
     if int(index) > 0:
         index = int(index) - 1
     css_selector = CONFIG["CssSelectors"]
@@ -89,7 +95,7 @@ def get_dd_elements_from_all_documents(locator, anchor, index, **kwargs):
         select = element.get_element_from_childnodes(
             locator, 'select', dom_traversing=False)[index]
     else:
-        select = get_dropdown_element_by_css_selector(locator, anchor, index, **kwargs)
+        select = get_dropdown_element_by_css_selector(locator, anchor, int(index), **kwargs)
     if not select:
         select = get_dropdown_element_by_locator(locator, anchor)
     if select:
@@ -99,7 +105,8 @@ def get_dd_elements_from_all_documents(locator, anchor, index, **kwargs):
     raise QWebElementNotFoundError('No matching elements found')
 
 
-def get_dropdown_element_by_css_selector(locator, anchor, index, **kwargs):
+def get_dropdown_element_by_css_selector(locator: str, anchor: str, index: int, **kwargs: Any
+                                        ) -> Optional[WebElement]:
     """Get Dropdown element using css selectors.
        Parameters
        ----------
@@ -147,6 +154,6 @@ def get_dropdown_element_by_css_selector(locator, anchor, index, **kwargs):
     return None
 
 
-def _get_all_dropdown_elements(**kwargs):
+def _get_all_dropdown_elements(**kwargs: Any) -> list[WebElement]:
     dropdown_elements = element.get_webelements('//select', **kwargs)
     return dropdown_elements

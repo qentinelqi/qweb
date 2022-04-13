@@ -14,8 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
 
-FATAL_MESSAGES = ["Failed to decode response",
+FATAL_MESSAGES: list[str] = ["Failed to decode response",
                   "chrome not reachable",
                   "window was already closed",
                   "Unable to get browser",

@@ -20,7 +20,7 @@ from ._version import get_versions  # pylint: disable-msg=E0611
 from robot import libdoc
 
 
-def cli():
+def cli() -> None:
     parser = argparse.ArgumentParser(
         prog='QWeb',
         usage='python %(prog)s [options] INPUT'

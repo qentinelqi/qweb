@@ -26,7 +26,7 @@ import re
 import subprocess
 
 
-def par2bool(s):
+def par2bool(s) -> bool:
     """
     Returns boolean (True, False) from given parameter.
     Accepts booleans, strings or integers.

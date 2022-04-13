@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from types import MappingProxyType
+from typing import Callable, Any, Union
 
 import time
 from inspect import signature
@@ -34,9 +36,10 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, \
 
 # pylint: disable=too-many-statements
 # pylint: disable=too-many-branches
-def timeout_decorator(fn):
+def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(fn)
-    def get_elements_from_dom_content(*args, **kwargs):  # pylint: disable=R1710
+    def get_elements_from_dom_content(*args: Any, **kwargs: Any # type: ignore[return]
+                                     ) -> Union[Callable[..., Any], int, bool, None]:  # pylint: disable=R1710
         try:
             args, kwargs, locator = _equal_sign_handler(args, kwargs, fn)
             msg = None
@@ -81,7 +84,7 @@ def timeout_decorator(fn):
                     msg = e
                 except QWebValueError as ve:
                     logger.debug('Got QWebValueError: {}. Trying to retry..'.format(ve))
-                    err = QWebValueError
+                    err = QWebValueError # type: ignore[assignment]
                     msg = ve
                     time.sleep(SHORT_DELAY)
             if msg:
@@ -98,9 +101,9 @@ def timeout_decorator(fn):
     return get_elements_from_dom_content
 
 
-def timeout_decorator_for_actions(fn):
+def timeout_decorator_for_actions(fn: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(fn)
-    def perform(*args, **kwargs):
+    def perform(*args: Any, **kwargs: Any) -> Callable[..., Any]:
         params = signature(fn).parameters
         args, kwargs = _args_to_kwargs(params, args, kwargs)
         timeout = get_timeout(**kwargs)
@@ -135,18 +138,18 @@ def timeout_decorator_for_actions(fn):
                 if 'alert' in str(fn):
                     time.sleep(LONG_DELAY)
                     logger.info("Got webdriver exception..{}. Retrying..".format(wde))
-                    err = QWebDriverError
-                    msg = wde
+                    err = QWebDriverError # type: ignore[assignment]
+                    msg = wde # type: ignore[assignment]
                 else:
-                    raise QWebDriverError(wde)  # pylint: disable=W0707
+                    raise QWebDriverError(wde)  # pylint: disable=W0707 
         if msg:
-            raise err(msg)
+            raise err(msg) # type: ignore[misc]
         raise QWebTimeoutError('Timeout exceeded')
 
     return perform
 
 
-def get_timeout(**kwargs):
+def get_timeout(**kwargs: Any) -> Union[int, float]:
     timeout = timestr_to_secs(CONFIG["DefaultTimeout"])
     if 'timeout' in kwargs:
         if timestr_to_secs(kwargs['timeout']) != 0:
@@ -154,7 +157,10 @@ def get_timeout(**kwargs):
     return timeout
 
 
-def _args_to_kwargs(params, args, kwargs):
+def _args_to_kwargs(params: MappingProxyType[str, Any],
+                    args: tuple,
+                    kwargs: dict
+                    ) -> tuple[tuple, dict]:
     if 'timeout' not in kwargs:
         for i, p in enumerate(params.values()):
             if p.name not in kwargs:
@@ -162,11 +168,14 @@ def _args_to_kwargs(params, args, kwargs):
                     kwargs[p.name] = args[i]
                 else:
                     kwargs[p.name] = p.default
-        args = ''
-    return args, kwargs
+        args = tuple('')
+    return tuple(args), kwargs
 
 
-def _equal_sign_handler(args, kwargs, function_name):
+def _equal_sign_handler(args: Union[tuple,list],
+                        kwargs:dict,
+                        function_name: Union[str, Callable[...,Any]]
+                       ) -> tuple[tuple, dict, str]:
     if 'go_to' in str(function_name):
         if kwargs:
             new_args = []
@@ -197,4 +206,4 @@ def _equal_sign_handler(args, kwargs, function_name):
 
     if locator is None:
         raise QWebElementNotFoundError("Use \\= instead of = in xpaths")
-    return args, kwargs, locator
+    return tuple(args), kwargs, locator

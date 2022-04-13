@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 # These mime types were retrieved from
@@ -81,15 +84,15 @@ MIME_TYPES = (
     "video/x-msvideo")
 
 
-_current_browser = None
-_open_browsers = []
+_current_browser: Optional[WebDriver] = None
+_open_browsers: list[WebDriver] = []
 
 
-def get_current_browser():
+def get_current_browser() -> WebDriver:
     return _current_browser
 
 
-def set_current_browser(index):
+def set_current_browser(index: str) -> None:
     # pylint: disable=global-statement
     global _current_browser
 
@@ -111,11 +114,11 @@ def set_current_browser(index):
             'Given argument "{}" is not a digit or NEW'.format(index))
 
 
-def get_open_browsers():
+def get_open_browsers() -> list[WebDriver]:
     return _open_browsers
 
 
-def cache_browser(driver):
+def cache_browser(driver: WebDriver) -> None:
     # pylint: disable=global-statement
     global _current_browser
     # pylint: disable=global-statement, global-variable-not-assigned
@@ -124,7 +127,7 @@ def cache_browser(driver):
     _open_browsers.append(driver)
 
 
-def remove_from_browser_cache(driver):
+def remove_from_browser_cache(driver: WebDriver) -> None:
     ''' Removes specific entry from browser cache.
     Control is moved to previously opened browser'''
     # pylint: disable=global-statement
@@ -136,7 +139,7 @@ def remove_from_browser_cache(driver):
     _current_browser = _open_browsers[-1] if _open_browsers else None
 
 
-def clear_browser_cache():
+def clear_browser_cache() -> None:
     ''' Removes all entries from browser cache. Used before quitting'''
     # pylint: disable=global-statement
     global _current_browser

@@ -14,6 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional, Callable, Any, Union
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 
 import math
 from robot.api import logger
@@ -27,10 +31,10 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElemen
 from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG
 
-ACTIVE_AREA_FUNCTION = None
+ACTIVE_AREA_FUNCTION: Optional[Callable[..., Any]] = None
 
 
-def is_enabled(element):
+def is_enabled(element: WebElement) -> bool:
     """Is the element interactable?
 
     Uses the disabled attribute to determine if form element is enabled or
@@ -48,7 +52,7 @@ def is_enabled(element):
     return not bool(disabled)
 
 
-def is_readonly(element):
+def is_readonly(element: WebElement) -> bool:
     """Is the element interactable?
 
     Uses the readonly attribute to determine if form element is enabled or
@@ -66,7 +70,7 @@ def is_readonly(element):
         'return arguments[0].hasAttribute("readonly")', element))
 
 
-def is_visible(element):
+def is_visible(element: WebElement) -> bool:
     """Is the element interactable?
 
     Uses the display attribute to determine if form element is visible or
@@ -84,7 +88,8 @@ def is_visible(element):
     return bool(visibility.lower() != 'none')
 
 
-def get_closest_element(locator_element, candidate_elements):
+def get_closest_element(locator_element: WebElement, candidate_elements: list[WebElement]
+                       ) -> WebElement:
     """Get the closest element in a list of elements to a wanted element.
 
     Parameters
@@ -125,7 +130,7 @@ def get_closest_element(locator_element, candidate_elements):
     return closest_element
 
 
-def get_unique_element_by_xpath(xpath, **kwargs):
+def get_unique_element_by_xpath(xpath: str, **kwargs: Any) -> WebElement:
     """Get element if it is needed to be unique.
 
     One use case is that when xpath is written in the test script with
@@ -152,7 +157,7 @@ def get_unique_element_by_xpath(xpath, **kwargs):
 
 
 @frame.all_frames
-def get_webelements(xpath, **kwargs):
+def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
     """Get visible web elements that correspond to given XPath.
 
     To check that element is visible it is checked that it has width. This
@@ -181,7 +186,7 @@ def get_webelements(xpath, **kwargs):
 
 
 @frame.all_frames
-def get_webelement_by_css(css, **kwargs):
+def get_webelement_by_css(css: str, **kwargs: Any) -> list[WebElement]:
     """Get visible web element that correspond to given css selector.
 
     To check that element is visible it is checked that it has width. This
@@ -219,7 +224,7 @@ def get_webelement_by_css(css, **kwargs):
 
 
 @frame.all_frames
-def get_webelements_in_active_area(xpath, **kwargs):
+def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[WebElement]]:
     """Find element under another element.
 
     If ${ACTIVE_AREA_FUNC} returns an element then the xpath is searched from
@@ -270,7 +275,8 @@ def get_webelements_in_active_area(xpath, **kwargs):
     return webelements
 
 
-def get_visible_elements_from_elements(web_elements, **kwargs):
+def get_visible_elements_from_elements(web_elements: list[WebElement], **kwargs: Any
+                                      ) -> list[WebElement]:
     visible_elements = []
     hiding_elements = []
     vis_check = util.par2bool(kwargs.get('visibility', CONFIG['Visibility']))
@@ -310,11 +316,11 @@ def get_visible_elements_from_elements(web_elements, **kwargs):
     return visible_elements + hiding_elements
 
 
-def get_all_inputs_from_shadow_dom():
+def get_all_inputs_from_shadow_dom() -> WebElement:
     return javascript.get_all_input_elements_from_shadow_dom()
 
 
-def draw_borders(elements):
+def draw_borders(elements: list[WebElement]) -> None:
     mode = CONFIG['SearchMode']
     color = CONFIG['HighlightColor']
     if not isinstance(elements, list):
@@ -329,7 +335,7 @@ def draw_borders(elements):
             javascript.highlight_element(e, False, True, color=color)
 
 
-def _calculate_closest_distance(element1, element2):
+def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> float:
     """Calculate closest distance between elements in pixel units.
 
     Gets corners' locations for both elements and use them to calculate the
@@ -384,7 +390,7 @@ def _calculate_closest_distance(element1, element2):
     return closest_distance
 
 
-def _calculate_closest_ortho_distance(element1, element2):
+def _calculate_closest_ortho_distance(element1: WebElement, element2: WebElement) -> float:
     """Returns shortest ortho  distance between locator and candidate element centers
 
     Parameters
@@ -403,7 +409,7 @@ def _calculate_closest_ortho_distance(element1, element2):
     return min(distance_h, distance_v)
 
 
-def _get_center_location(element):
+def _get_center_location(element: WebElement) -> tuple[float, float]:
     """ Calculate rectangle's center locations
 
        Each element on a web page is in a rectangle. Uses the WebElement's
@@ -425,7 +431,7 @@ def _get_center_location(element):
     return center
 
 
-def _get_corners_locations(element):
+def _get_corners_locations(element: WebElement) -> tuple[float, float]:
     """Calculate rectangle's corners' locations
 
     Each element on a web page is in a rectangle. Uses the WebElement's
@@ -455,12 +461,12 @@ def _get_corners_locations(element):
     return corners_locations
 
 
-def _manhattan_distance(x0, y0, x1, y1):
+def _manhattan_distance(x0: float, y0: float, x1: float, y1: float) -> float:
     """Get manhattan distance between points (x0, y0) and (x1, y1)."""
     return abs(x0 - x1) + abs(y0 - y1)
 
 
-def _overlap(element1, element2):
+def _overlap(element1: WebElement, element2: WebElement) -> bool:
     """Detects if two rectangles overlap
     """
     corners_locations1 = _get_corners_locations(element1)
@@ -480,13 +486,14 @@ def _overlap(element1, element2):
         and _range_overlap(r1_bottom, r1_top, r2_bottom, r2_top)
 
 
-def _range_overlap(a_min, a_max, b_min, b_max):
+def _range_overlap(a_min: float, a_max: float, b_min: float, b_max: float) -> float:
     """Neither range is completely greater than the other
     """
     return (a_min <= b_max) and (b_min <= a_max)
 
 
-def _get_closest_ortho_element(locator_element, element_list):
+def _get_closest_ortho_element(locator_element: WebElement, element_list: list[WebElement]
+                              ) -> WebElement:
     """Return closest element by orthogonal distance
 
     Compares all elements from a list against locator element based on their horizontal
@@ -520,7 +527,7 @@ def _get_closest_ortho_element(locator_element, element_list):
     return closest_element
 
 
-def operator_verify(value, expected, operator):
+def operator_verify(value: str, expected: str, operator:str) -> None:
     """verify value based on given operator / condition"""
     EQUALS = ["equal", "equals", "=="]
     NOT_EQUAL = ["not equal", "!="]
@@ -592,8 +599,10 @@ def _list_info(candidate_element):
     return candidate_element
 
 
+#TODO what type are full, partial
 @frame.all_frames
-def get_elements_by_attributes(css, locator=None, **kwargs):
+def get_elements_by_attributes(css: str, locator: Optional[str]=None, **kwargs
+                              ) -> Union[list[WebElement], tuple]: 
     any_element = util.par2bool(kwargs.get('any_element', None))
     partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
     if 'tag' in kwargs:

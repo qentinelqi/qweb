@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Union
 import os
 from pathlib import Path
 import re
@@ -29,7 +30,7 @@ from QWeb.internal.exceptions import QWebFileNotFoundError
 start_epoch = None
 
 
-def get_downloads_dir():
+def get_downloads_dir() -> str:
     """Get downloads directory.
 
     Assuming downloads directory is in the home directory of the current user.
@@ -42,10 +43,10 @@ def get_downloads_dir():
     home_dir = platform.get_home_dir()
     download_dir = Path(home_dir) / 'Downloads'
     logger.info('Downloads directory is {}'.format(download_dir))
-    return download_dir
+    return str(download_dir)
 
 
-def get_modified_files(directory, epoch):
+def get_modified_files(directory: str, epoch: float) -> list[str]:
     """Get modified files in directory that were modified after given epoch.
 
     Parameters
@@ -77,7 +78,7 @@ def get_modified_files(directory, epoch):
     return modified_files
 
 
-def remove_win_temp(modified_files):
+def remove_win_temp(modified_files: list[str]) -> list[str]:
     """Remove Windows temporary files from modified files list
     """
     exp = '.{8}-.{4}-.{4}-.{4}-.{12}\\.tmp'
@@ -88,7 +89,7 @@ def remove_win_temp(modified_files):
     return modified_files
 
 
-def is_tmp_file(filepath):
+def is_tmp_file(filepath: str) -> bool:
     """Is downloaded file a temporary file.
 
     When a file is being downloaded at least some browsers download it to a
@@ -115,7 +116,7 @@ def is_tmp_file(filepath):
     return filepath.endswith(partial_download_suffix)
 
 
-def get_path(filename):
+def get_path(filename: str) -> Path:
     if Path(filename).exists():
         return Path(filename)
     files = Path(BuiltIn().get_variable_value(

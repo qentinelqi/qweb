@@ -1,3 +1,5 @@
+from __future__ import annotations
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from QWeb.internal import browser, exceptions
@@ -5,7 +7,7 @@ from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 import os
 
-NAMES = {
+NAMES: dict[str,tuple[str,str]] = {
     # Default  versions for different browsers.
     'chrome': ('Chrome', 'latest'),
     'ie': ('IE', '11'),
@@ -16,14 +18,14 @@ NAMES = {
     'safari': ('Safari', '13.0')
 }
 
-OS = {
+OS: dict[str,str] = {
     # Default versions for Windows and OSX.
     'osx': 'Catalina',
     'windows': '10'
 }
 
 
-def open_browser(bs_browser, project_name, run_id):
+def open_browser(bs_browser: str, project_name: str, run_id: str) -> WebDriver:
     bs_key = BuiltIn().get_variable_value('${APIKEY}') or os.environ.get('bskey')
     bs_user = BuiltIn().get_variable_value('${USERNAME}') or os.environ.get('bsuser')
     bs_os = BuiltIn().get_variable_value('${BSOS}') or 'windows'
