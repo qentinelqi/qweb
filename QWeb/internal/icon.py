@@ -276,7 +276,7 @@ class QIcon:
 
             if CONFIG.get_value("RetinaDisplay"):
                 ratio = ratio * 2
-            elif ratio < 1.1:
+            elif 0.99 < ratio < 1.1:
                 ratio = 1.0
 
             # print("*DEBUG* _extract_points Starts:")
