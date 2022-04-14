@@ -5,6 +5,16 @@ from duty import duty
 python_exe = sys.executable
 
 @duty
+def typing(ctx, path="QWeb"):
+    """
+    Check code typing
+    Arguments:
+        ctx: The context instance (passed automatically)
+        path: path of folder/file to check
+    """
+    ctx.run(f"{python_exe} -m mypy {path}", title="Checking code typing", capture=False)
+
+@duty
 def lint(ctx, path="QWeb"):
     """
     Check code quality
