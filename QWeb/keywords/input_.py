@@ -18,6 +18,7 @@
 
 Input elements are those in which one can input text in.
 """
+from __future__ import annotations
 from typing import Union
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement

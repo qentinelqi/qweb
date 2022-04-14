@@ -22,8 +22,8 @@ Text elements are considered to be elements that have visible text. Input
 elements are not considered text elements even though they might have visible
 text.
 """
+from __future__ import annotations
 from typing import Union, Optional
-
 from pynput.keyboard import Controller
 import pyperclip
 from QWeb.internal.actions import scroll as _scroll, \

@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
 from types import MappingProxyType
 from typing import Callable, Any, Union
 

@@ -20,6 +20,7 @@ List elements are used to show many kinds of data. Lists have cells in
 contain rows and columns. Cells can contain all kinds of elements. Cells
 are usually referenced by coordinates or unique neighboring values.
 """
+from __future__ import annotations
 from typing import Union, Optional
 
 from robot.api.deco import keyword
