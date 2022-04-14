@@ -758,7 +758,7 @@ def press_key(locator: str,
     try:
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=1, **kwargs)
-        key = str(input_handler.check_key(key))
+        key = input_handler.check_key(key) # type: ignore[assignment]
 
         # COMMAND key workaround on safari
         # supports normal text field CMD operations only
