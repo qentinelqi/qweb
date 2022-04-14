@@ -313,7 +313,7 @@ def remove_pdf() -> None:
     ACTIVE_FILE.remove()
 
 
-def _file_exists(file_path: Optional[str] = None) -> bool:
+def _file_exists(file_path: Optional[File] = None) -> bool:
     if not file_path:
         if isinstance(ACTIVE_FILE, File) is False:
             raise QWebInstanceDoesNotExistError(

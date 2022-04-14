@@ -1256,7 +1256,7 @@ def write_text(text: str) -> None:
 
 
 @decorators.timeout_decorator
-def verify_texts(texts_to_verify: Union[str, list[str]],
+def verify_texts(texts_to_verify: Union[list[str], str],
                  timeout: Union[int, float, str] = 0) -> None:
     r"""*DEPRECATED!!* Use keyword `VerifyAll` instead."""
     logger.warn(r"""*DEPRECATED!!* Use keyword `VerifyAll` instead.""")
@@ -1284,7 +1284,7 @@ def verify_texts(texts_to_verify: Union[str, list[str]],
 
 @keyword(tags=("File", "Text", "Verification"))
 @decorators.timeout_decorator
-def verify_any(texts_to_verify: Union[str, list[str]],
+def verify_any(texts_to_verify: Union[list[str], str],
                timeout: Union[int, float, str] = 0) -> str:
     r"""Verify any of the given texts.
 
@@ -1352,7 +1352,7 @@ def verify_any(texts_to_verify: Union[str, list[str]],
 
 @keyword(tags=("File", "Text", "Verification"))
 @decorators.timeout_decorator
-def verify_all(texts_to_verify: Union[str, list[str]],
+def verify_all(texts_to_verify: Union[list[str], str],
                timeout: Union[int, float, str] = 0) -> None:
     r"""Verify page contains given texts.
 

@@ -16,8 +16,6 @@
 # ---------------------------
 from __future__ import annotations
 from typing import Optional, Callable, Any, Union
-
-
 import os
 import time
 from functools import wraps
@@ -299,7 +297,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
     return wrapped
 
 
-def is_valid(web_element: WebElement) -> bool:
+def is_valid(web_element: Union[WebElement, tuple]) -> bool:
     if web_element and not isinstance(web_element, tuple):
         return True
     if isinstance(web_element, tuple) and any(web_element):

@@ -157,7 +157,7 @@ def type_secret(locator: str,
 
 @keyword(tags=("Input", "Interaction"))
 @decorators.timeout_decorator
-def type_text(locator: str,
+def type_text(locator: Union[WebElement, str],
               input_text: str,
               anchor: str = "1",
               timeout: Union[int, float, str] = 0,
@@ -284,7 +284,7 @@ def type_text(locator: str,
 
 @keyword(tags=("File", "Input", "Interaction"))
 @decorators.timeout_decorator
-def type_texts(input_texts: dict[str, str],
+def type_texts(input_texts: Union[dict[str, str], str],
                timeout: Union[int, float, str] = '0') -> None:
     r"""Type text to multiple fields.
 
@@ -315,9 +315,9 @@ def type_texts(input_texts: dict[str, str],
         file = download.get_path(input_texts)
         with open(file, 'rb') as txt_file:
             params = [line.rstrip() for line in txt_file]
-            for x in params:
-                x = x.decode('utf-8').split(',')
-                locator, text = x[0].strip(), x[1].strip()
+            for x_bytes in params:
+                x_str_list = x_bytes.decode('utf-8').split(',')
+                locator, text = x_str_list[0].strip(), x_str_list[1].strip()
                 logger.info('Typing "{}", locator "{}"'.format(text, locator))
                 type_text(locator, text, timeout=timeout)
     else:
@@ -398,7 +398,7 @@ def verify_input_value(locator: Union[WebElement, str],
 
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
-def verify_input_values(input_values: dict[str, str],
+def verify_input_values(input_values: Union[dict[str, str], str],
                         timeout: Union[int, float, str] = '0') -> None:
     r"""Verify input fields have given values.
 
@@ -430,9 +430,9 @@ def verify_input_values(input_values: dict[str, str],
         file = download.get_path(input_values)
         with open(file, 'rb') as txt_file:
             params = [line.rstrip() for line in txt_file]
-            for x in params:
-                x = x.decode('utf-8').split(',')
-                locator, value = x[0].strip(), x[1].strip()
+            for x_bytes in params:
+                x_str_list = x_bytes.decode('utf-8').split(',')
+                locator, value = x_str_list[0].strip(), x_str_list[1].strip()
                 logger.info('Locator: {}, Expected value: {}'.format(
                     locator, value),
                             also_console=True)

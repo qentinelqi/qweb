@@ -28,7 +28,7 @@ import re
 import subprocess
 
 
-def par2bool(s: Union[bool, str, int]) -> bool:
+def par2bool(s: Union[bool, int, str]) -> bool:
     """
     Returns boolean (True, False) from given parameter.
     Accepts booleans, strings or integers.
@@ -251,7 +251,7 @@ def _handle_old_style_prefs(prefs: str) -> dict:
     return d
 
 
-def validate_run_before(value: str) -> Optional[str]:
+def validate_run_before(value: Union[list[str], str]) -> Optional[Union[list[str], str]]:
     if isinstance(value, list):
         if value[0].lower().startswith("verify"):
             return value

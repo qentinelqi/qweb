@@ -182,7 +182,7 @@ class List:
         return web_elements
 
     @staticmethod
-    def get_texts(web_elements: list[WebElement]) -> list[str]:
+    def get_texts(web_elements: Union[WebElement, list[WebElement]]) -> list[str]:
         texts = []
         if isinstance(web_elements, list):
             for elem in web_elements:
