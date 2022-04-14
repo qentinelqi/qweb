@@ -18,6 +18,7 @@
 
 Input elements are those in which one can input text in.
 """
+from calendar import WEDNESDAY
 from typing import Union
 
 from robot.api import logger
@@ -328,7 +329,7 @@ def type_texts(input_texts: dict[str, str],
 
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
-def verify_input_value(locator: str,
+def verify_input_value(locator: Union[WebElement, str],
                        expected_value: str,
                        anchor: str = "1",
                        timeout: Union[int, str] = 0,

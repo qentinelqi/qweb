@@ -77,7 +77,7 @@ class Table:
         else:
             table_element = cls.get_table_element(
                 cls, locator, anchor)  # type: ignore[arg-type]
-        if parent is None and child is None:
+        if not parent and not child:
             if CONFIG['SearchMode']:
                 element.draw_borders(table_element)
             return Table(table_element, locator, anchor, parent, child, level,
