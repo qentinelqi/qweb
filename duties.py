@@ -12,7 +12,7 @@ def typing(ctx, path="QWeb"):
         ctx: The context instance (passed automatically)
         path: path of folder/file to check
     """
-    ctx.run(f"{python_exe} -m mypy {path}", title="Checking code typing", capture=False)
+    ctx.run(f"{python_exe} -m mypy --show-error-codes {path}", title="Checking code typing", capture=False)
 
 @duty
 def lint(ctx, path="QWeb"):

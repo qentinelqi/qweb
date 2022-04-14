@@ -7,6 +7,8 @@ Suite Teardown      CloseBrowser
 Library             Dialogs
 Test Timeout        1min
 
+Force Tags          PROBLEM_IN_MACOS
+
 *** Variables ***
 ${BROWSER}                  chrome
 ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}icons

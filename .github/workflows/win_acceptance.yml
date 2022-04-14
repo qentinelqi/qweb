@@ -42,6 +42,9 @@ jobs:
     - name: Display Robot FW version
       run: |
         python -m pip show robotframework
+    - name: Typecheck with mypy
+      run: |
+        mypy --show-error-codes QWeb
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
