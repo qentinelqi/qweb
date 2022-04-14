@@ -288,8 +288,8 @@ def get_element_using_anchor(elements: list[WebElement],
             logger.debug(
                 'Multiple anchors enabled, trying to find first exact match')
             try:
-                anchor_elements = _get_exact_text_element(
-                    anchor, **kwargs)  # type: ignore[assignment]
+                anchor_elements = _get_exact_text_element(  # type: ignore[assignment]
+                    anchor, **kwargs)
             except NoSuchFrameException:
                 logger.debug('Got no such frame from get exact text')
             if len(anchor_elements) > 0:
@@ -297,8 +297,8 @@ def get_element_using_anchor(elements: list[WebElement],
                 anchor_element = anchor_elements[0]
             else:
                 # No exact matches found, trying to find partial
-                anchor_elements = get_text_elements(
-                    anchor, **kwargs)  # type: ignore[assignment]
+                anchor_elements = get_text_elements(  # type: ignore[assignment]
+                    anchor, **kwargs)
                 if len(anchor_elements) > 0:
                     logger.debug(
                         'No exact match found, using first partial match')

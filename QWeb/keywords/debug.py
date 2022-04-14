@@ -49,8 +49,8 @@ def debug_on(mode: str = 'draw') -> None:
     global cur_mode  # pylint: disable=global-statement
     global cur_timeout  # pylint: disable=global-statement
     cur_mode = CONFIG.get_value('SearchMode')
-    cur_timeout = CONFIG.get_value(
-        'DefaultTimeout')  # type: ignore[assignment]
+    cur_timeout = CONFIG.get_value(  # type: ignore[assignment]
+        'DefaultTimeout')
     CONFIG.set_value('SearchMode', mode)
     CONFIG.set_value('DefaultTimeout', 2)
     CONFIG.set_value('Debug_Run', True)
