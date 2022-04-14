@@ -27,7 +27,7 @@ def save_file(
         locator: str,
         filename: str = None,
         anchor: str = "1",
-        timeout: Union[str, int] = 0,  # pylint: disable=unused-argument
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
         path: str = None,
         **kwargs) -> None:
     r"""Save file using http-request.

@@ -33,7 +33,7 @@ def acceptance_tests(ctx, browser="chrome"):
         ctx: The context instance (passed automatically)
         browser: browser name [chrome (default), gc, firefox, ff]
     """
-    ctx.run(f"{python_exe} -m robot -v BROWSER:{browser} --exitonfailure -L trace -e jailed -e PROBLEM_IN_WINDOWS -e FLASK "
+    ctx.run(f"{python_exe} -m robot -v BROWSER:{browser} --exitonfailure -e jailed -e PROBLEM_IN_WINDOWS -e FLASK "
             "-e WITH_DEBUGFILE -e PROBLEM_IN_FIREFOX -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY test/Acceptance",
             title="Acceptance tests", capture=False)
 

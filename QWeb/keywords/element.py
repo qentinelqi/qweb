@@ -28,7 +28,7 @@ from QWeb.internal import element, decorators, actions, text, input_,\
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
 def click_element(xpath: Union[WebElement, str],
-                  timeout: Union[int, str] = 0,
+                  timeout: Union[int, float, str] = 0,
                   js: bool = False,
                   index: int = 1,
                   **kwargs) -> None:
@@ -103,7 +103,7 @@ def click_element(xpath: Union[WebElement, str],
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
 def right_click(xpath: str,
-                timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                 index: int = 1,
                 **kwargs) -> None:
     r"""Right clicks the element.
@@ -150,7 +150,7 @@ def right_click(xpath: str,
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
 def hover_element(xpath: Union[WebElement, str],
-                  timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                  timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                   index: int = 1,
                   **kwargs) -> None:
     r"""Hover the element specified by the xpath selector.
@@ -202,7 +202,7 @@ def hover_element(xpath: Union[WebElement, str],
 @keyword(tags=["Getters"])
 @decorators.timeout_decorator
 def get_element_count(locator: str,
-                      timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                      timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                       **kwargs) -> int:
     r"""Get count of appearances for certain web element.
 
@@ -245,7 +245,7 @@ def get_element_count(locator: str,
 
 @keyword(tags=["Verification"])
 def is_element(xpath: str,
-               timeout: Union[int, str] = '0.1s',
+               timeout: Union[int, float, str] = '0.1s',
                index: int = 1,  # pylint: disable=unused-argument
                **kwargs) -> bool:
     r"""Return True if element is visible.
@@ -292,7 +292,7 @@ def is_element(xpath: str,
 
 @keyword(tags=["Verification"])
 @decorators.timeout_decorator
-def verify_element(xpath: str, timeout: Union[int, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_element(xpath: str, timeout: Union[int, float, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Verify that element can be found on the page and it is visible.
 
     Examples
@@ -350,7 +350,7 @@ def verify_element(xpath: str, timeout: Union[int, str] = 0, **kwargs) -> None: 
 @keyword(tags=["Verification"])
 @decorators.timeout_decorator
 def verify_no_element(xpath: str,
-                      timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                      timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                       **kwargs) -> None:
     r"""Wait element can not be found on the page.
 
@@ -411,7 +411,7 @@ def verify_no_element(xpath: str,
 def get_webelement(locator: str,
                    anchor: str = '1',
                    element_type: Optional[str] = None,
-                   timeout: Union[int, str] = 0,
+                   timeout: Union[int, float, str] = 0,
                    **kwargs) -> Union[WebElement, list[WebElement]]:
     r"""Get Webelement using any Qword -stylish locator.
 
@@ -515,7 +515,7 @@ def get_attribute(locator: str,
                   attribute: str,
                   anchor: str = '1',
                   element_type: Optional[str] = None,
-                  timeout: Union[int, str] = 0,
+                  timeout: Union[int, float, str] = 0,
                   **kwargs) -> str:
     r"""Get attribute value of an element.
 
@@ -611,7 +611,7 @@ def verify_attribute(locator: str,
                      value: str,
                      anchor: str = '1',
                      element_type: Optional[str] = None,
-                     timeout: Union[int, str] = 0,
+                     timeout: Union[int, float, str] = 0,
                      **kwargs) -> None:
     r"""Verify attribute value of an element.
 

@@ -37,7 +37,7 @@ ACTIVE_LIST: List = None  # type: ignore[assignment]
 @decorators.timeout_decorator
 def use_list(locator: str,
              anchor: str = "1",
-             timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+             timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
              parent: str = None,
              child: str = None,
              **kwargs) -> None:
@@ -104,7 +104,7 @@ def verify_length(expected_length: Union[int, str]) -> None:
 def verify_list(
         text: str,
         index: Optional[Union[int, str]] = None,
-        timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
+        timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verify list contains given text.
 
     Examples
@@ -132,7 +132,7 @@ def verify_list(
 @keyword(tags=("Lists", "Interaction"))
 @decorators.timeout_decorator
 def click_list(index: Union[int, str],
-               timeout: Union[int, str] = 0,
+               timeout: Union[int, float, str] = 0,
                js: bool = True,
                **kwargs) -> None:
     r"""Click list element with in given index.

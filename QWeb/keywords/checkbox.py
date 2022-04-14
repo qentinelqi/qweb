@@ -32,7 +32,7 @@ from QWeb.internal.exceptions import QWebValueError
 def click_checkbox(locator: str,
                    value: str,
                    anchor: str = "1",
-                   timeout: Union[int, str] = 0,
+                   timeout: Union[int, float, str] = 0,
                    index: int = 1,
                    **kwargs) -> None:
     r"""Check or uncheck a checkbox.
@@ -114,7 +114,7 @@ def verify_checkbox_status(
         locator: str,
         status: str,
         anchor: str = "1",
-        timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
         index=1,
         **kwargs) -> None:
     r"""Verify checkbox is enabled or disabled.
@@ -192,7 +192,7 @@ def verify_checkbox_status(
 def verify_checkbox_value(locator: str,
                           value: str,
                           anchor: str = "1",
-                          timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                          timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                           index: int = 1,
                           **kwargs) -> None:
     r"""Verify checkbox is on (checked) or off (unchecked).
@@ -267,7 +267,7 @@ def verify_checkbox_value(locator: str,
 @decorators.timeout_decorator
 def verify_checkbox(locator: str,
                     anchor: str = '1',
-                    timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                     index: int = 1,
                     **kwargs) -> None:
     r"""Verify that checkbox element exist.

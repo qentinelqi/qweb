@@ -100,7 +100,7 @@ def set_search_strategy(strategy_type: str, xpath: str) -> str:
     return previous
 
 
-def default_timeout(timeout: Union[int, str]) -> Union[int, str]:
+def default_timeout(timeout: Union[int, float, str]) -> Union[int, str]:
     """*DEPRECATED!!* Use keyword `SetConfig  DefaultTimeout` instead.
 
     Set default timeout for QWeb keywords.
@@ -118,7 +118,7 @@ def default_timeout(timeout: Union[int, str]) -> Union[int, str]:
     return config.set_config("DefaultTimeout", timeout)
 
 
-def xhr_timeout(timeout: Union[int, str]) -> Union[int, str]:
+def xhr_timeout(timeout: Union[int, float, str]) -> Union[int, str]:
     """*DEPRECATED!!* Use keyword `SetConfig  XHRTimeout` instead.
 
     Set default timeout for XHR (How log we wait page to be loaded).

@@ -36,7 +36,7 @@ ACTIVE_TABLE: Table = None  # type: ignore[assignment]
 def use_table(
         locator: str,
         anchor: str = "1",
-        timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
         parent: bool = False,
         child: bool = False,
         level: int = 1,
@@ -93,7 +93,7 @@ def use_table(
 def verify_table(coordinates: str,
                  expected: str,
                  anchor: str = "1",
-                 timeout: Union[int, str] = 0) -> None:
+                 timeout: Union[int, float, str] = 0) -> None:
     r"""Verify text in table coordinates.
 
     Reads cell value from coordinates in active table and verifies it
@@ -143,7 +143,7 @@ def verify_table(coordinates: str,
 @decorators.timeout_decorator
 def get_cell_text(coordinates: str,
                   anchor: str = "1",
-                  timeout: Union[int, str] = 0,
+                  timeout: Union[int, float, str] = 0,
                   **kwargs) -> Union[str, int, float]:
     r"""Get cell text to variable.
 
@@ -203,7 +203,7 @@ def get_cell_text(coordinates: str,
 @decorators.timeout_decorator
 def click_cell(coordinates: str,
                anchor: str = "1",
-               timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+               timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                index: int = 1,
                **kwargs) -> None:
     r"""Click table cell.
@@ -257,7 +257,7 @@ def click_cell(coordinates: str,
 @decorators.timeout_decorator
 def get_table_row(locator: str,
                   anchor: str = "1",
-                  timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                  timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                   **kwargs) -> None:
     r"""Get row (index) from current table.
 

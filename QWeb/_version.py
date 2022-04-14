@@ -11,7 +11,6 @@
 # pylint: disable=attribute-defined-outside-init, redefined-outer-name
 from __future__ import print_function, annotations
 from typing import Any, Callable, Optional, Mapping
-
 import errno
 import os
 import re

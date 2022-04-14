@@ -1,11 +1,12 @@
 from __future__ import annotations
+import os
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from QWeb.internal import browser, exceptions
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
-import os
+from QWeb.internal import browser, exceptions
+
 
 NAMES: dict[str, tuple[str, str]] = {
     # Default  versions for different browsers.

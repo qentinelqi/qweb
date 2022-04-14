@@ -27,7 +27,7 @@ from QWeb.internal.config_defaults import CONFIG
 
 @keyword(tags=("Browser", "Interaction"))
 @decorators.timeout_decorator
-def go_to(url: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
+def go_to(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch current page to given url.
 
     Examples
@@ -194,7 +194,7 @@ def close_window() -> None:
 
 @keyword(tags=("Browser", "Interaction", "Window"))
 @decorators.timeout_decorator
-def switch_window(index: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
+def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch to another tab.
 
     Examples
@@ -345,7 +345,7 @@ def get_url() -> str:
 
 @keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
-def verify_url(url: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
+def verify_url(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verifies that current page url/location matches expected url.
 
 
@@ -413,7 +413,7 @@ def get_title() -> str:
 
 @keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
-def verify_title(title: str, timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
+def verify_title(title: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verifies that current page's title matches expected title.
 
 

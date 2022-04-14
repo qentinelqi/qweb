@@ -1,9 +1,10 @@
 from __future__ import annotations
+import subprocess
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
-from QWeb.internal import browser
 from robot.api import logger
-import subprocess
+from QWeb.internal import browser
+
 
 NAMES: list[str] = ["android", "androidphone", "androidmobile"]
 

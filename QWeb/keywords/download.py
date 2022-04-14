@@ -28,7 +28,7 @@ from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 
 
 @keyword(tags=("Browser", "Verification"))
-def verify_file_download(timeout: Union[int, str] = 0) -> str:
+def verify_file_download(timeout: Union[int, float, str] = 0) -> str:
     r"""Verify file has been downloaded and return file path.
 
     Examples

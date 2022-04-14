@@ -13,7 +13,7 @@ def open_browser(
         executable_path: str = 'IEDriverServer',
         capabilities: Optional[dict[str, Any]] = None,
         port: int = 0,
-        timeout: Union[int, float] = 30,
+        timeout: Union[int, float, str] = 30,
         # technically host can be an int representation of IP-addr
         host: Optional[Union[str, int]] = None,
         log_level: Optional[str] = None,

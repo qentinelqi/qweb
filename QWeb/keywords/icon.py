@@ -33,7 +33,7 @@ def click_icon(
         image: str,
         template_res_w: Optional[int] = None,
         browser_res_w: Optional[int] = None,
-        timeout: Union[int, str] = 0) -> None:  # pylint: disable=unused-argument
+        timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Click the icon on the screen.
 
     In case you want to click icons you always have to have reference images.
@@ -140,7 +140,7 @@ def verify_icon(
     image: str,
     template_res_w: Optional[int] = None,
     browser_res_w: Optional[int] = None,
-    timeout: Union[int, str] = 0  # pylint: disable=unused-argument
+    timeout: Union[int, float, str] = 0  # pylint: disable=unused-argument
 ) -> bool:
     r"""Verify page contains icon.
 
@@ -205,7 +205,7 @@ def verify_icon(
 def capture_icon(locator: str,
                  folder: str = 'screenshots',
                  filename: str = 'screenshot_{}.png',
-                 timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                 timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                  **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 

@@ -27,7 +27,7 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebUnexpectedCon
 @keyword(tags=("Config", "Error handling"))
 def run_block(block: str,
               *args,
-              timeout: Union[int, str] = 0,
+              timeout: Union[int, float, str] = 0,
               **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Run Action word as decorated block.
 
@@ -141,7 +141,7 @@ def appstate(block: str, *args) -> None:
 
 @decorators.timeout_decorator
 def _execute_block(steps: list[dict[str, Any]],
-                   timeout: Union[int, str] = 0,
+                   timeout: Union[int, float, str] = 0,
                    **kwargs):  # pylint: disable=unused-argument
     logger.trace('Timeout for block: {}'.format(timeout))
     logger.trace(steps)

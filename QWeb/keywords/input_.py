@@ -18,9 +18,9 @@
 
 Input elements are those in which one can input text in.
 """
-from calendar import WEDNESDAY
 from typing import Union
-
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
@@ -28,8 +28,6 @@ from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.remote.webelement import WebElement
 
 
 @keyword(tags=("Config", "Input"))
@@ -78,7 +76,7 @@ secrets.add_filter("Type Secret3", 1, "hint")
 def type_secret3(locator: str,
                  input_text: str,
                  anchor: str = "1",
-                 timeout: Union[int, str] = 0,
+                 timeout: Union[int, float, str] = 0,
                  index: int = 1,
                  **kwargs) -> None:
     """Type sensitive information such as personal data.
@@ -122,7 +120,7 @@ secrets.add_filter("Type Secret", 1, None)
 def type_secret(locator: str,
                 input_text: str,
                 anchor: str = "1",
-                timeout: Union[int, str] = 0,
+                timeout: Union[int, float, str] = 0,
                 index: int = 1,
                 **kwargs) -> None:
     r"""Type secret information such as password.
@@ -162,7 +160,7 @@ def type_secret(locator: str,
 def type_text(locator: str,
               input_text: str,
               anchor: str = "1",
-              timeout: Union[int, str] = 0,
+              timeout: Union[int, float, str] = 0,
               index: int = 1,
               **kwargs) -> None:
     r"""Type given text to a text field.
@@ -287,7 +285,7 @@ def type_text(locator: str,
 @keyword(tags=("File", "Input", "Interaction"))
 @decorators.timeout_decorator
 def type_texts(input_texts: dict[str, str],
-               timeout: Union[int, str] = '0') -> None:
+               timeout: Union[int, float, str] = '0') -> None:
     r"""Type text to multiple fields.
 
     Accepts a .txt file or Robot FW dictionary as a parameter. If using a text file, the locator
@@ -332,7 +330,7 @@ def type_texts(input_texts: dict[str, str],
 def verify_input_value(locator: Union[WebElement, str],
                        expected_value: str,
                        anchor: str = "1",
-                       timeout: Union[int, str] = 0,
+                       timeout: Union[int, float, str] = 0,
                        index: int = 1,
                        **kwargs) -> None:
     r"""Verify input field has given value.
@@ -401,7 +399,7 @@ def verify_input_value(locator: Union[WebElement, str],
 @keyword(tags=("Input", "Verification"))
 @decorators.timeout_decorator
 def verify_input_values(input_values: dict[str, str],
-                        timeout: Union[int, str] = '0') -> None:
+                        timeout: Union[int, float, str] = '0') -> None:
     r"""Verify input fields have given values.
 
     Accepts a .txt file or Robot FW dictionary as a parameter. If using a text file, the locator
@@ -449,7 +447,7 @@ def verify_input_values(input_values: dict[str, str],
 def verify_input_status(locator: str,
                         status: str,
                         anchor: str = "1",
-                        timeout: Union[int, str] = 0,
+                        timeout: Union[int, float, str] = 0,
                         index: int = 1,
                         **kwargs) -> None:
     r"""Verify input field is enabled or disabled.
@@ -534,7 +532,7 @@ def verify_input_status(locator: str,
 @decorators.timeout_decorator
 def verify_input_element(locator: str,
                          anchor: str = "1",
-                         timeout: Union[int, str] = 0,
+                         timeout: Union[int, float, str] = 0,
                          index: int = 1,
                          **kwargs) -> None:
     r"""Verify that input element exist.
@@ -596,7 +594,7 @@ def verify_input_element(locator: str,
 @decorators.timeout_decorator
 def get_input_value(locator: str,
                     anchor: str = "1",
-                    timeout: Union[int, str] = 0,
+                    timeout: Union[int, float, str] = 0,
                     index: int = 1,
                     **kwargs) -> Union[int, float, str]:
     r"""Get input value from input field.
@@ -666,7 +664,7 @@ def get_input_value(locator: str,
 def upload_file(locator: str,
                 filename: str,
                 anchor: str = "1",
-                timeout: Union[int, str] = 0,
+                timeout: Union[int, float, str] = 0,
                 index: int = 1,
                 **kwargs) -> None:
     r"""Upload file.
@@ -733,7 +731,7 @@ def upload_file(locator: str,
 def press_key(locator: str,
               key: str,
               anchor: str = "1",
-              timeout: Union[int, str] = 0,
+              timeout: Union[int, float, str] = 0,
               **kwargs) -> None:
     r"""Simulate user pressing keyboard key on element identified by "locator".
 

@@ -43,7 +43,7 @@ import os
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
 def verify_text(text: str,
-                timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                 anchor: str = "1",
                 **kwargs) -> None:
     r"""Verify page contains given text.
@@ -126,7 +126,7 @@ def verify_text(text: str,
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def verify_no_text(text: str, timeout: Union[int, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
+def verify_no_text(text: str, timeout: Union[int, float, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Verify that page does not contain given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -193,7 +193,7 @@ def verify_no_text(text: str, timeout: Union[int, str] = 0, **kwargs) -> None:  
 @decorators.timeout_decorator
 def verify_text_count(text: str,
                       expected_count: Union[int, str],
-                      timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                      timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                       **kwargs) -> None:
     r"""Verify page contains given text given times.
 
@@ -267,7 +267,7 @@ def verify_text_count(text: str,
 
 @keyword(tags=("Text", "Getters"))
 @decorators.timeout_decorator
-def get_text_count(text: str, timeout: Union[int, str] = 0, **kwargs) -> int:  # pylint: disable=unused-argument
+def get_text_count(text: str, timeout: Union[int, float, str] = 0, **kwargs) -> int:  # pylint: disable=unused-argument
     r"""Get count of appearances for given text.
 
     Keyword waits until timeout has passed. If timeout is not specified, it
@@ -314,7 +314,7 @@ def get_text_count(text: str, timeout: Union[int, str] = 0, **kwargs) -> int:  #
 @decorators.timeout_decorator
 def click_text(text: str,
                anchor: str = "1",
-               timeout: Union[int, str] = 0,
+               timeout: Union[int, float, str] = 0,
                parent: Optional[str] = None,
                child: Optional[str] = None,
                js: bool = False,
@@ -437,7 +437,7 @@ def click_text(text: str,
 def scan_click(text: str,
                text_to_appear: str,
                anchor: str = "1",
-               timeout: Union[int, str] = 0,
+               timeout: Union[int, float, str] = 0,
                interval: Optional[str] = None,
                parent: Optional[str] = None,  # pylint: disable=unused-argument
                child: Optional[str] = None,  # pylint: disable=unused-argument
@@ -508,7 +508,7 @@ def scan_click(text: str,
 def skim_click(text: str,
                text_to_disappear: str = '',
                anchor: str = "1",
-               timeout: Union[int, str] = 0,
+               timeout: Union[int, float, str] = 0,
                interval: Optional[str] = None,
                parent: Optional[str] = None,
                child: Optional[str] = None,
@@ -580,7 +580,7 @@ def skim_click(text: str,
 @decorators.timeout_decorator
 def hover_text(text: str,
                anchor: str = "1",
-               timeout: Union[int, str] = "0",
+               timeout: Union[int, float, str] = "0",
                **kwargs) -> None:
     r"""Hover over text.
 
@@ -623,7 +623,7 @@ def hover_text(text: str,
 @decorators.timeout_decorator
 def hover_item(locator: str,
                anchor: str = "1",
-               timeout: Union[int, str] = "0",
+               timeout: Union[int, float, str] = "0",
                **kwargs) -> None:
     r"""Hover over item.
 
@@ -667,7 +667,7 @@ def hover_item(locator: str,
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def is_text(text: str, timeout: Union[int, str] = "0.1s", **kwargs) -> bool:
+def is_text(text: str, timeout: Union[int, float, str] = "0.1s", **kwargs) -> bool:
     r"""Return True/False if text is found on the screen.
 
     Used to get text presence to variable. This keyword returns after text is found.
@@ -710,7 +710,7 @@ def is_text(text: str, timeout: Union[int, str] = "0.1s", **kwargs) -> bool:
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def is_no_text(text: str, timeout: Union[int, str] = "2s", **kwargs) -> bool:
+def is_no_text(text: str, timeout: Union[int, float, str] = "2s", **kwargs) -> bool:
     r"""Return True/False if text is found on the screen.
 
     Used to get text presence info to variable. This keyword returns if text is not visible or
@@ -756,7 +756,7 @@ def is_no_text(text: str, timeout: Union[int, str] = "2s", **kwargs) -> bool:
 @decorators.timeout_decorator
 def verify_element_text(locator: str,
                         text_to_find: str,
-                        timeout: Union[int, str] = 0,
+                        timeout: Union[int, float, str] = 0,
                         anchor: str = "1",
                         **kwargs) -> None:
     r"""Verify that element contains specified text.
@@ -801,7 +801,7 @@ def verify_element_text(locator: str,
 @keyword(tags=("Text", "Getters"))
 @decorators.timeout_decorator
 def get_text(locator: str,
-             timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+             timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
              anchor: str = "1",
              **kwargs) -> Union[str, int, float]:
     r"""Get text from element specified by xpath.
@@ -877,7 +877,7 @@ def get_text(locator: str,
 @decorators.timeout_decorator
 def click_item(text: str,
                anchor: str = "1",
-               timeout: Union[int, str] = 0,
+               timeout: Union[int, float, str] = 0,
                js: bool = False,
                **kwargs) -> None:
     r"""Click item (usually icon or picture) on webpage.
@@ -960,7 +960,7 @@ def click_item(text: str,
 @decorators.timeout_decorator
 def verify_item(text: str,
                 anchor: str = "1",
-                timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                 **kwargs) -> None:
     r"""Verify Item (usually icon or picture) exist.
 
@@ -1031,7 +1031,7 @@ def verify_item(text: str,
 @decorators.timeout_decorator
 def verify_no_item(text: str,
                    anchor: str = "1",
-                   timeout: Union[int, str] = 0,  # pylint: disable=unused-argument
+                   timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
                    **kwargs) -> None:
     r"""Verify Item (usually icon or picture) is not exist.
 

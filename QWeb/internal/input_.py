@@ -85,7 +85,7 @@ def _get_all_input_elements() -> list[WebElement]:
 def get_input_elements_from_all_documents(
         locator: str,
         anchor: str,
-        timeout: Union[int, str],  # pylint: disable=unused-argument
+        timeout: Union[int, float, str],  # pylint: disable=unused-argument
         index: Union[int, str] = 1,
         enable_check: bool = False,
         **kwargs) -> WebElement:
