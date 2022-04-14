@@ -29,25 +29,14 @@ def cli() -> None:
         '%(prog)s --list Get (lists all keywords startin with "Get")\n'
         '%(prog)s --show TypeText (displays documentation for keyword "TypeText")',
         description='Note: This module is meant to be used as a robot famework library.'
-                    'Command line interface only provides access to keyword documentation.'
-    )
-    parser.add_argument(
-        '-V',
-        '--version',
-        action='version',
-        version='%(prog)s {version}'.format(version=__version__))
-    parser.add_argument('-A',
-                        '--all',
-                        action='store_true',
-                        help='lists ALL keywords')
-    parser.add_argument('-L',
-                        '--list',
-                        action='store',
-                        help='lists keywords based on input string')
-    parser.add_argument('-S',
-                        '--show',
-                        action='store',
-                        help='show docs for keyword(s)')
+        'Command line interface only provides access to keyword documentation.')
+    parser.add_argument('-V',
+                        '--version',
+                        action='version',
+                        version='%(prog)s {version}'.format(version=__version__))
+    parser.add_argument('-A', '--all', action='store_true', help='lists ALL keywords')
+    parser.add_argument('-L', '--list', action='store', help='lists keywords based on input string')
+    parser.add_argument('-S', '--show', action='store', help='show docs for keyword(s)')
     if len(sys.argv) == 1:
         parser.print_help()
     args = parser.parse_args()

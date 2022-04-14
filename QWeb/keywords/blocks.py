@@ -25,10 +25,7 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebUnexpectedCon
 
 
 @keyword(tags=("Config", "Error handling"))
-def run_block(block: str,
-              *args,
-              timeout: Union[int, float, str] = 0,
-              **kwargs) -> None:  # pylint: disable=unused-argument
+def run_block(block: str, *args, timeout: Union[int, float, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Run Action word as decorated block.
 
     Block (usually set of keywords) is handled as one
@@ -135,21 +132,17 @@ def appstate(block: str, *args) -> None:
     status, res = BuiltIn().run_keyword_and_ignore_error(block, *args)
     if status == 'FAIL':
         raise QWebUnexpectedConditionError(
-            'Unable to set correct pre-condition for test due error: {}'.
-            format(res))
+            'Unable to set correct pre-condition for test due error: {}'.format(res))
 
 
 @decorators.timeout_decorator
-def _execute_block(steps: list[dict[str, Any]],
-                   timeout: Union[int, float, str] = 0,
-                   **kwargs):  # pylint: disable=unused-argument
+def _execute_block(steps: list[dict[str, Any]], timeout: Union[int, float, str] = 0, **kwargs):  # pylint: disable=unused-argument
     logger.trace('Timeout for block: {}'.format(timeout))
     logger.trace(steps)
     for step in steps:
         fn = step.get('paceword')
         var_name = step.get('variable', None)
-        args = blocks.set_robot_args(*step.get('args', []),
-                                     **step.get('kwargs', {}))
+        args = blocks.set_robot_args(*step.get('args', []), **step.get('kwargs', {}))
         status, res = BuiltIn().run_keyword_and_ignore_error(fn, *args)
         logger.trace('status: {}, res: {}'.format(status, res))
         if status == 'FAIL':

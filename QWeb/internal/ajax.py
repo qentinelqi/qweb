@@ -29,17 +29,13 @@ from robot.api import logger
 
 
 def http_request_with_browser_cookies(url: str,
-                                      headers: Optional[dict[str, Any]] = None
-                                      ) -> Response:
+                                      headers: Optional[dict[str, Any]] = None) -> Response:
     """ Copy cookies from current browser session
         and use them with request session
     """
     driver = browser.get_current_browser()
     if not headers:
-        headers = {
-            'User-Agent':
-            '{}'.format(js.execute_javascript('return navigator.userAgent'))
-        }
+        headers = {'User-Agent': '{}'.format(js.execute_javascript('return navigator.userAgent'))}
     cookies = driver.get_cookies()
     s = requests.Session()
     for cookie in cookies:
@@ -76,8 +72,7 @@ def get_url_for_http_request(locator: str, anchor: str, **kwargs: Any) -> str:
     url = js.execute_javascript(script, elem)
     if url:
         return url
-    raise QWebValueError(
-        'Unable to find valid url for locator {}'.format(locator))
+    raise QWebValueError('Unable to find valid url for locator {}'.format(locator))
 
 
 def save_response_as_file(response: Response,

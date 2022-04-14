@@ -23,11 +23,9 @@ from functools import wraps
 import QWeb.config as custom_config
 
 try:
-    from QWeb.keywords import (alert, browser, window, frame, element, text,
-                               checkbox, input_, javascript, screenshot,
-                               download, table, search_strategy, dropdown,
-                               cookies, config, icon, dragdrop, lists, file,
-                               debug, ajax, blocks)
+    from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox, input_,
+                               javascript, screenshot, download, table, search_strategy, dropdown,
+                               cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks)
 
     from QWeb.internal import util
     from QWeb.internal.config_defaults import CONFIG
@@ -50,10 +48,9 @@ class QWeb:
     def __init__(self, run_on_failure_keyword: str = "Log Screenshot") -> None:
         """Adds all the keywords to the instance."""
         self._run_on_failure_keyword = run_on_failure_keyword
-        for module in (alert, browser, window, frame, element, text, checkbox,
-                       input_, javascript, screenshot, custom_config, download,
-                       search_strategy, table, dropdown, cookies, config, icon,
-                       dragdrop, lists, file, debug, ajax, blocks):
+        for module in (alert, browser, window, frame, element, text, checkbox, input_, javascript,
+                       screenshot, custom_config, download, search_strategy, table, dropdown,
+                       cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks):
             for name in dir(module):
                 if not name.startswith("_"):
                     attr = getattr(module, name)
@@ -62,8 +59,7 @@ class QWeb:
                         attr = self._xpath_decorator(attr)
                         setattr(self, name, attr)
 
-    def _run_on_failure_decorator(
-            self, keyword_method: Callable[..., Any]) -> Callable[..., None]:
+    def _run_on_failure_decorator(self, keyword_method: Callable[..., Any]) -> Callable[..., None]:
         """Decorator method for keywords.
 
         If keyword fails then this method executes self.run_on_failure_keyword.
@@ -71,19 +67,15 @@ class QWeb:
 
         @wraps(keyword_method)  # Preserves docstring of the original method.
         def inner(*args: Any, **kwargs: Any) -> None:  # pylint: disable=R1710
-            kwargs = {k.lower(): v
-                      for k, v in kwargs.items()}  # Kwargs keys to lowercase
+            kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
             if 'type_secret' not in str(keyword_method):
                 logger.debug('args: {}, kwargs: {}'.format(args, kwargs))
             try:
-                time.sleep(
-                    _timestr_to_secs(kwargs.get('delay', CONFIG['Delay'])))
+                time.sleep(_timestr_to_secs(kwargs.get('delay', CONFIG['Delay'])))
                 run_before = CONFIG['RunBefore']
                 valid_pw = ['click', 'get_text', 'drop_down']
-                if run_before and any(pw in str(keyword_method)
-                                      for pw in valid_pw):
-                    logger.info(
-                        'executing run before kw {}'.format(run_before))
+                if run_before and any(pw in str(keyword_method) for pw in valid_pw):
+                    logger.info('executing run before kw {}'.format(run_before))
                     # robot fw or python syntax
                     if isinstance(run_before, list):
                         BuiltIn().run_keyword(run_before[0], *run_before[1:])
@@ -99,14 +91,12 @@ class QWeb:
                 if not self._is_run_on_failure_keyword(keyword_method):
                     if not util.par2bool(kwargs.get('skip_screenshot', False)):
                         BuiltIn().run_keyword(self._run_on_failure_keyword)
-                devmode = util.par2bool(BuiltIn().get_variable_value(
-                    '${DEV_MODE}', False))
+                devmode = util.par2bool(BuiltIn().get_variable_value('${DEV_MODE}', False))
                 if devmode and not config.get_config('Debug_Run'):
-                    Dialogs.pause_execution(
-                        'Keyword {} {} {} failed. \n'
-                        'Got {}'.format(
-                            str(keyword_method).split(' ')[1].upper(),
-                            str(args), str(kwargs), e))
+                    Dialogs.pause_execution('Keyword {} {} {} failed. \n'
+                                            'Got {}'.format(
+                                                str(keyword_method).split(' ')[1].upper(),
+                                                str(args), str(kwargs), e))
                     debug.debug_on()
                 else:
                     raise
@@ -114,9 +104,7 @@ class QWeb:
         return inner
 
     @staticmethod
-    def _xpath_decorator(
-        keyword_method: Callable[...,
-                                 Any]) -> Callable[..., Callable[..., Any]]:
+    def _xpath_decorator(keyword_method: Callable[..., Any]) -> Callable[..., Callable[..., Any]]:
         """Decorator method for selector-attribute. If selector attribute
         is given, method uses it's value and text to form simple xpath
         locator.
@@ -129,8 +117,7 @@ class QWeb:
             args_list = list(args)
             if 'selector' in kwargs:
                 attr_value = str(args_list[0])
-                args_list[0] = '//*[@{}="{}"]'.format(kwargs['selector'],
-                                                      attr_value)
+                args_list[0] = '//*[@{}="{}"]'.format(kwargs['selector'], attr_value)
                 del kwargs['selector']
                 args = tuple(args_list)
             return keyword_method(*args, **kwargs)
@@ -140,8 +127,7 @@ class QWeb:
     def _is_run_on_failure_keyword(self, method: Callable[..., Any]) -> bool:
         """Helper function to find out if method name is the
          one registered as kw to run on failure"""
-        return self._run_on_failure_keyword.replace(
-            " ", "_").lower() == method.__name__
+        return self._run_on_failure_keyword.replace(" ", "_").lower() == method.__name__
 
 
 # pylint: disable=wrong-import-position

@@ -170,8 +170,7 @@ def get_by_attributes(elements: list[WebElement], locator: str,
             return matches;
         }
         return(web_elements(arguments[0], arguments[1], arguments[2]));"""
-    return execute_javascript(js, elements, locator.replace("\'", "\\'"),
-                              partial_match)
+    return execute_javascript(js, elements, locator.replace("\'", "\\'"), partial_match)
 
 
 def get_all_elements(css: str) -> list[WebElement]:
@@ -185,8 +184,7 @@ def get_all_elements(css: str) -> list[WebElement]:
     -------
     list of web elements.
     """
-    return execute_javascript(
-        "return document.querySelectorAll('{}')".format(css))
+    return execute_javascript("return document.querySelectorAll('{}')".format(css))
 
 
 def get_childnodes(locator_element: WebElement,
@@ -326,8 +324,7 @@ def get_by_label(locator_text: str, css: str, level: int,
         }
         return(web_elements(arguments[0], arguments[1], arguments[2], arguments[3]));
         """
-    return execute_javascript(js, locator_text.replace("\'", "\\'"), css,
-                              level, partial_match)
+    return execute_javascript(js, locator_text.replace("\'", "\\'"), css, level, partial_match)
 
 
 def get_parent_list(locator_element: str, css: str) -> list[WebElement]:
@@ -455,8 +452,7 @@ def get_recursive_walk() -> str:
     }"""
 
 
-def get_text_elements_from_shadow_dom(locator: str,
-                                      partial: bool) -> list[WebElement]:
+def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_text_from_shadow_dom(text, partial){
         var results = [];

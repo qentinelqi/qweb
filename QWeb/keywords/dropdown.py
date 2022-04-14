@@ -116,10 +116,7 @@ def drop_down(locator: str,
     \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
     select = _get_dd_elements(locator, anchor, index=index, **kwargs)
-    if actions.select_option(select,
-                             option,
-                             timeout=timeout,
-                             unselect=unselect):
+    if actions.select_option(select, option, timeout=timeout, unselect=unselect):
         return
 
 

@@ -139,8 +139,7 @@ def close_others() -> None:
 
     number_of_handles = len(window.get_window_handles())
     if number_of_handles != 1:
-        raise Exception(
-            'Expected 1 window open, found {0}'.format(number_of_handles))
+        raise Exception('Expected 1 window open, found {0}'.format(number_of_handles))
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
@@ -169,8 +168,7 @@ def close_window() -> None:
         browser.remove_from_browser_cache(driver)  # remove from browser cache
         driver.close()
     else:
-        logger.info(
-            "Multiple tabs open, can change window context to another one")
+        logger.info("Multiple tabs open, can change window context to another one")
         current_window = window.get_current_window_handle()
         current_index = window_handles.index(current_window)
         logger.info("Current index {}".format(current_index))
@@ -180,16 +178,14 @@ def close_window() -> None:
         # "refresh" window handles
         window_handles = window.get_window_handles()
         current_length = len(window_handles)
-        logger.info(
-            "After closing, {} tabs remain open".format(current_length))
+        logger.info("After closing, {} tabs remain open".format(current_length))
         # if current index is more than new length, move to last handle
         if current_index > (len(window_handles) - 1):
             window.switch_to_window(window_handles[(current_index - 1)])
         # move to next window (as browsers do)
         else:
             window.switch_to_window(window_handles[current_index])
-        logger.info("Changed context to tab with url {}".format(
-            window.get_url()))
+        logger.info("Changed context to tab with url {}".format(window.get_url()))
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
@@ -236,17 +232,15 @@ def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # p
             window.switch_to_window(correct_window_handle)
             return
         logger.debug('Tried to select tab with index {} but there'
-                     ' are only {} tabs open'.format(index,
-                                                     len(window_handles)))
+                     ' are only {} tabs open'.format(index, len(window_handles)))
     elif index == "NEW":
         window.switch_to_window(window_handles[-1])
         return
     else:
-        raise QWebValueError(
-            'Given argument "{}" is not a digit or NEW'.format(index))
+        raise QWebValueError('Given argument "{}" is not a digit or NEW'.format(index))
     raise QWebDriverError(
-        'Tried to select tab with index {} but there are only {} tabs open'.
-        format(index, len(window_handles)))
+        'Tried to select tab with index {} but there are only {} tabs open'.format(
+            index, len(window_handles)))
 
 
 def set_window_size(width: int, height: int) -> None:
@@ -312,8 +306,7 @@ def maximize_window() -> None:
         driver.maximize_window()
 
     size = driver.get_window_size()
-    logger.debug("Window size set to {}x{}".format(size["width"],
-                                                   size["height"]))
+    logger.debug("Window size set to {}x{}".format(size["width"], size["height"]))
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -380,8 +373,7 @@ def verify_url(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint
     current = driver.current_url
 
     if current.lower() != url.lower():
-        raise QWebValueError(
-            f"Current url '{current}'' does not match expected url '{url}'")
+        raise QWebValueError(f"Current url '{current}'' does not match expected url '{url}'")
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -448,8 +440,7 @@ def verify_title(title: str, timeout: Union[int, float, str] = 0) -> None:  # py
     actual = driver.title
 
     if actual != title:
-        raise QWebValueError(
-            f"Page title '{actual}'' does not match expected '{title}'")
+        raise QWebValueError(f"Page title '{actual}'' does not match expected '{title}'")
 
 
 @keyword(tags=("Browser", "Interaction"))

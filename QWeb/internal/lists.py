@@ -74,21 +74,22 @@ class List:
         """
         # TODO  How to type cls argument properly?
         web_list, web_element_list = cls.create_list(
-            cls, locator, anchor, parent=parent, child=child,  # type: ignore[arg-type]
+            cls,  # type: ignore[arg-type]
+            locator,
+            anchor,
+            parent=parent,
+            child=child,
             **kwargs)
-        return List(web_list, web_element_list, locator, anchor, parent, child,
-                    **kwargs)
+        return List(web_list, web_element_list, locator, anchor, parent, child, **kwargs)
 
-    def create_list(self, locator: str, anchor: str,
-                    **kwargs) -> tuple[list[str], WebElement]:
+    def create_list(self, locator: str, anchor: str, **kwargs) -> tuple[list[str], WebElement]:
         if locator.startswith('//') or locator.startswith('xpath='):
             if locator.startswith('xpath='):
                 locator = locator.split("=", 1)[1]
             web_elements = self.get_elements_by_locator_xpath_and_tag_name(
                 locator, anchor, **kwargs)
         else:
-            web_elements = self.get_elements_by_locator_text_and_tag_name(
-                locator, anchor, **kwargs)
+            web_elements = self.get_elements_by_locator_text_and_tag_name(locator, anchor, **kwargs)
             logger.debug('webelems: {}'.format(web_elements))
         if web_elements:
             if CONFIG['SearchMode']:
@@ -98,11 +99,10 @@ class List:
         raise QWebElementNotFoundError('Suitable elements not found')
 
     @staticmethod
-    def get_elements_by_locator_text_and_tag_name(
-            locator: str,
-            anchor: str,
-            index: int = 1,
-            **kwargs) -> Union[WebElement, list[WebElement]]:
+    def get_elements_by_locator_text_and_tag_name(locator: str,
+                                                  anchor: str,
+                                                  index: int = 1,
+                                                  **kwargs) -> Union[WebElement, list[WebElement]]:
         index = int(index) - 1
         if 'tag' in kwargs:
             tag_name = kwargs.get('tag')
@@ -119,8 +119,9 @@ class List:
             locator_element = element.get_parent_list_element(web_element, tag)
         elif 'child' in kwargs and kwargs['child']:
             tag = kwargs['child']
-            locator_element = element.get_element_from_childnodes(
-                web_element, tag, dom_traversing=False)[index]
+            locator_element = element.get_element_from_childnodes(web_element,
+                                                                  tag,
+                                                                  dom_traversing=False)[index]
             if tag_name not in ["ul", "ol", "dl", "UL", "OL", "DL"]:
                 return locator_element
         else:
@@ -128,19 +129,17 @@ class List:
 
         if tag_name not in ["ul", "ol", "dl", "UL", "OL", "DL"]:
             web_elements = javascript.execute_javascript(
-                'return arguments[0].querySelectorAll("{}")'.format(tag_name),
-                locator_element)
+                'return arguments[0].querySelectorAll("{}")'.format(tag_name), locator_element)
         else:
             web_elements = javascript.execute_javascript(
-                'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'
-                .format(tag_name), locator_element)
+                'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'.format(tag_name),
+                locator_element)
         return web_elements
 
     @staticmethod
-    def get_elements_by_locator_xpath_and_tag_name(
-            locator: str,
-            index: Union[int, str] = 1,
-            **kwargs) -> list[WebElement]:
+    def get_elements_by_locator_xpath_and_tag_name(locator: str,
+                                                   index: Union[int, str] = 1,
+                                                   **kwargs) -> list[WebElement]:
         index = int(index) - 1
         if 'tag' in kwargs:
             tag_name = kwargs.get('tag')
@@ -153,29 +152,27 @@ class List:
         if 'parent' in kwargs and kwargs['parent']:
             web_element = element.get_unique_element_by_xpath(locator)
             css = kwargs.get('parent')
-            web_element = element.get_parent_list_element(
-                web_element, str(css))
+            web_element = element.get_parent_list_element(web_element, str(css))
             if tag_name not in ["ul", "ol", "dl", "UL", "OL", "DL"]:
                 web_elements = javascript.execute_javascript(
-                    'return arguments[0].querySelectorAll("{}")'.format(
-                        tag_name), web_element)
+                    'return arguments[0].querySelectorAll("{}")'.format(tag_name), web_element)
             else:
                 web_elements = javascript.execute_javascript(
-                    'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'
-                    .format(tag_name), web_element)
+                    'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'.format(
+                        tag_name), web_element)
         elif 'child' in kwargs and kwargs['child']:
             web_element = element.get_unique_element_by_xpath(locator)
             css = kwargs.get('child')
-            web_elements = element.get_element_from_childnodes(
-                web_element, str(css), dom_traversing=False)[index]
+            web_elements = element.get_element_from_childnodes(web_element,
+                                                               str(css),
+                                                               dom_traversing=False)[index]
             if tag_name not in ["ul", "ol", "dl", "UL", "OL", "DL"]:
                 web_elements = javascript.execute_javascript(
-                    'return arguments[0].querySelectorAll("{}")'.format(
-                        tag_name), web_element)
+                    'return arguments[0].querySelectorAll("{}")'.format(tag_name), web_element)
             else:
                 web_elements = javascript.execute_javascript(
-                    'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'
-                    .format(tag_name), web_element)
+                    'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'.format(
+                        tag_name), web_element)
         else:
             web_elements = element.get_webelements_in_active_area(locator)
 
@@ -196,13 +193,11 @@ class List:
             if expected_match in self.web_list:
                 return True
         else:
-            if expected_match in str(self.web_list[int(index)]).replace(
-                    '\n', '').strip():
+            if expected_match in str(self.web_list[int(index)]).replace('\n', '').strip():
                 return True
         return False
 
     def update_list(self) -> List:
-        active_list = self.from_list_instance(self.locator, self.anchor,
-                                              self.parent, self.child,
+        active_list = self.from_list_instance(self.locator, self.anchor, self.parent, self.child,
                                               **self.kwargs)
         return active_list

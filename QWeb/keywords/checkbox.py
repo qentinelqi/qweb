@@ -97,15 +97,9 @@ def click_checkbox(locator: str,
         locator, anchor=anchor, index=index, **kwargs)
     if checkbox_element:
         if value.lower() == "on":
-            actions.checkbox_set(checkbox_element,
-                                 locator_element,
-                                 value=True,
-                                 timeout=timeout)
+            actions.checkbox_set(checkbox_element, locator_element, value=True, timeout=timeout)
         else:
-            actions.checkbox_set(checkbox_element,
-                                 locator_element,
-                                 value=False,
-                                 timeout=timeout)
+            actions.checkbox_set(checkbox_element, locator_element, value=False, timeout=timeout)
 
 
 @keyword(tags=("Checkbox", "Verification"))
@@ -174,8 +168,10 @@ def verify_checkbox_status(
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxValue\`
     """
-    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs)
+    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(locator,
+                                                                            anchor=anchor,
+                                                                            index=index,
+                                                                            **kwargs)
     status = status.lower()
     if status.lower() == "enabled":
         if not QWeb.internal.element.is_enabled(checkbox_element):
@@ -189,12 +185,13 @@ def verify_checkbox_status(
 
 @keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
-def verify_checkbox_value(locator: str,
-                          value: str,
-                          anchor: str = "1",
-                          timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-                          index: int = 1,
-                          **kwargs) -> None:
+def verify_checkbox_value(
+        locator: str,
+        value: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        index: int = 1,
+        **kwargs) -> None:
     r"""Verify checkbox is on (checked) or off (unchecked).
 
     Examples
@@ -250,8 +247,10 @@ def verify_checkbox_value(locator: str,
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`
     """
-    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs)
+    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(locator,
+                                                                            anchor=anchor,
+                                                                            index=index,
+                                                                            **kwargs)
     value = value.lower()
     if value.lower() == "on":
         if not checkbox.is_checked(checkbox_element):
@@ -265,11 +264,12 @@ def verify_checkbox_value(locator: str,
 
 @keyword(tags=("Checkbox", "Verification"))
 @decorators.timeout_decorator
-def verify_checkbox(locator: str,
-                    anchor: str = '1',
-                    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-                    index: int = 1,
-                    **kwargs) -> None:
+def verify_checkbox(
+        locator: str,
+        anchor: str = '1',
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        index: int = 1,
+        **kwargs) -> None:
     r"""Verify that checkbox element exist.
 
     Examples
@@ -316,7 +316,9 @@ def verify_checkbox(locator: str,
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckboxStatus\`, \`VerifyCheckboxValue\`
     """
-    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs)
+    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(locator,
+                                                                            anchor=anchor,
+                                                                            index=index,
+                                                                            **kwargs)
     if checkbox_element:
         return

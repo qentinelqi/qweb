@@ -129,19 +129,15 @@ class SearchStrategies:
         # Position placeholders are in a set. They must start from zero
         # so that we have {0}'s, {1}'s etc.
         if index_placeholders:
-            continuous = SearchStrategies._continuous_set(
-                index_placeholders, placeholder_num)
+            continuous = SearchStrategies._continuous_set(index_placeholders, placeholder_num)
 
         if placeholder_num != (empty_placeholders + len(index_placeholders)):
-            raise ValueError(
-                "xpath has invalid number of placeholders, got {}, {}".format(
-                    empty_placeholders, len(index_placeholders)))
+            raise ValueError("xpath has invalid number of placeholders, got {}, {}".format(
+                empty_placeholders, len(index_placeholders)))
 
         if empty_placeholders == placeholder_num or \
            len(index_placeholders) == placeholder_num and continuous:
             pass
         else:
-            raise ValueError(
-                "xpath should contain {} placeholders, got {}, {}, {}".format(
-                    placeholder_num, empty_placeholders,
-                    len(index_placeholders), continuous))
+            raise ValueError("xpath should contain {} placeholders, got {}, {}, {}".format(
+                placeholder_num, empty_placeholders, len(index_placeholders), continuous))

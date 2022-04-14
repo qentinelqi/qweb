@@ -51,10 +51,9 @@ def open_browser(profile_dir: Optional[str] = None,
     """
     options = Options()
     if headless:
-        logger.warn(
-            'Deprecated.\n'
-            'Headless mode can be activated just like any other firefox option:\n'
-            '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"')
+        logger.warn('Deprecated.\n'
+                    'Headless mode can be activated just like any other firefox option:\n'
+                    '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"')
         options.add_argument('-headless')
         CONFIG.set_value("Headless", True)
     # if profile_dir:
@@ -63,16 +62,13 @@ def open_browser(profile_dir: Optional[str] = None,
     #                 '"OpenBrowser   https://site.com   ${BROWSER}  -profile /path/to/profile"')
     #     # options.add_argument('-profile {}'.format(profile_dir))
 
-    options.set_preference("browser.helperApps.neverAsk.saveToDisk",
-                           browser.MIME_TYPES)
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk", browser.MIME_TYPES)
     options.set_preference("extensions.update.enabled", False)
     options.set_preference("app.update.enabled", False)
     options.set_preference("app.update.auto", False)
     options.set_preference("dom.webnotifications.enabled", False)
-    options.set_preference("privacy.socialtracking.block_cookies.enabled",
-                           False)
-    kwargs = {k.lower(): v
-              for k, v in kwargs.items()}  # Kwargs keys to lowercase
+    options.set_preference("privacy.socialtracking.block_cookies.enabled", False)
+    kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
     if 'prefs' in kwargs:
         if isinstance(kwargs.get('prefs'), dict):
             prefs = kwargs.get('prefs')
@@ -80,8 +76,7 @@ def open_browser(profile_dir: Optional[str] = None,
             prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
         for item in prefs.items():  # type: ignore[union-attr]
             key, value = item[0], item[1]
-            logger.info('Using prefs: {} = {}'.format(key, value),
-                        also_console=True)
+            logger.info('Using prefs: {} = {}'.format(key, value), also_console=True)
             if not isinstance(value, int) and value.isdigit():
                 value = int(value)
             options.set_preference(key, value)

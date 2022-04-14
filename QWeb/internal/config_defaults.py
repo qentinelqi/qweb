@@ -45,28 +45,23 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "ClearKey": (None, util.set_clear_key),
     "CssSelectors": (True, util.par2bool),
     "LogScreenshot": (True, util.par2bool),
-    "SearchDirection":
-    ("closest", SearchStrategies.search_direction_validation),
+    "SearchDirection": ("closest", SearchStrategies.search_direction_validation),
     "CheckInputValue": (False, util.par2bool),
     "DefaultTimeout": ("10s", SearchStrategies.default_timeout_validation),
     "XHRTimeout": ("30", SearchStrategies.xhr_timeout_validation),
     "DefaultDocument": (True, util.par2bool),
     "InputHandler": ("selenium", util.set_input_handler),
     "CaseInsensitive": (False, util.par2bool),
-    "AllInputElements": (SearchStrategies.ALL_INPUT_ELEMENTS,
-                         SearchStrategies.all_input_elements_validation),
+    "AllInputElements":
+    (SearchStrategies.ALL_INPUT_ELEMENTS, SearchStrategies.all_input_elements_validation),
     "MatchingInputElement":
-    (SearchStrategies.MATCHING_INPUT_ELEMENT,
-     SearchStrategies.matching_input_element_validation),
-    "ActiveAreaXpath": (SearchStrategies.ACTIVE_AREA_XPATH,
-                        SearchStrategies.active_area_xpath_validation),
-    "TextMatch":
-    (SearchStrategies.TEXT_MATCH, SearchStrategies.text_match_validation),
-    "ContainingTextMatch":
-    (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
-     SearchStrategies.containing_text_match_validation),
-    "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH,
-                     SearchStrategies.clear_xpath),
+    (SearchStrategies.MATCHING_INPUT_ELEMENT, SearchStrategies.matching_input_element_validation),
+    "ActiveAreaXpath":
+    (SearchStrategies.ACTIVE_AREA_XPATH, SearchStrategies.active_area_xpath_validation),
+    "TextMatch": (SearchStrategies.TEXT_MATCH, SearchStrategies.text_match_validation),
+    "ContainingTextMatch": (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
+                            SearchStrategies.containing_text_match_validation),
+    "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH, SearchStrategies.clear_xpath),
     "VerifyAppAccuracy": (0.9999, None),
     "OffsetCheck": (True, util.par2bool),
     "Visibility": (True, util.par2bool),

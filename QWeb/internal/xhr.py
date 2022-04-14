@@ -52,15 +52,13 @@ def setup_xhr_monitor() -> bool:
 
 
 def get_ready_state() -> bool:
-    ready_state = javascript.execute_javascript(
-        'return document.readyState === "complete"')
+    ready_state = javascript.execute_javascript('return document.readyState === "complete"')
     logger.debug('Readystate = {}'.format(ready_state))
     return ready_state
 
 
 def get_jquery_ready() -> bool:
-    jqueries_ready = javascript.execute_javascript(
-        'return window.jQuery.active === 0;')
+    jqueries_ready = javascript.execute_javascript('return window.jQuery.active === 0;')
     return jqueries_ready
 
 

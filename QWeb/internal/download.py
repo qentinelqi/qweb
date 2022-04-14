@@ -73,8 +73,7 @@ def get_modified_files(directory: str, epoch: float) -> list[str]:
             if modification_epoch > epoch:
                 modified_files.append(filepath)
     epoch_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(epoch))
-    logger.debug('Files that were altered after {} were {}'.format(
-        epoch_str, modified_files))
+    logger.debug('Files that were altered after {} were {}'.format(epoch_str, modified_files))
     return modified_files
 
 
@@ -119,10 +118,9 @@ def is_tmp_file(filepath: str) -> bool:
 def get_path(filename: str) -> Path:
     if Path(filename).exists():
         return Path(filename)
-    files = Path(BuiltIn().get_variable_value(
-        '${SUITE SOURCE}')).parent.parent / 'files' / filename
-    images = Path(BuiltIn().get_variable_value(
-        '${SUITE SOURCE}')).parent.parent / 'images' / filename
+    files = Path(BuiltIn().get_variable_value('${SUITE SOURCE}')).parent.parent / 'files' / filename
+    images = Path(
+        BuiltIn().get_variable_value('${SUITE SOURCE}')).parent.parent / 'images' / filename
     downloads = Path(get_downloads_dir()) / filename
     paths = [downloads, files, images]
     for path in paths:
@@ -135,5 +133,4 @@ def get_path(filename: str) -> Path:
         return Path(full_path)
     except TypeError as e:
         raise QWebFileNotFoundError(
-            'File not found from default folders. Set variable for base image path'
-        ) from e
+            'File not found from default folders. Set variable for base image path') from e

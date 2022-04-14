@@ -36,12 +36,13 @@ ACTIVE_LIST: List = None  # type: ignore[assignment]
 
 @keyword(tags=("Config", "Lists"))
 @decorators.timeout_decorator
-def use_list(locator: str,
-             anchor: str = "1",
-             timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-             parent: str = None,
-             child: str = None,
-             **kwargs) -> None:
+def use_list(
+        locator: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        parent: str = None,
+        child: str = None,
+        **kwargs) -> None:
     r"""Define list for all other list keywords.
 
     Sets active table for other keywords.
@@ -80,11 +81,7 @@ def use_list(locator: str,
     \`ClickList\`, \`GetList\`, \`VerifyList\`
     """
     global ACTIVE_LIST  # pylint:disable=global-statement
-    ACTIVE_LIST = List.from_list_instance(locator,
-                                          anchor,
-                                          parent=parent,
-                                          child=child,
-                                          **kwargs)
+    ACTIVE_LIST = List.from_list_instance(locator, anchor, parent=parent, child=child, **kwargs)
 
 
 @keyword(tags=("Lists", "Verification"))
@@ -102,10 +99,9 @@ def verify_length(expected_length: Union[int, str]) -> None:
 
 @keyword(tags=("Lists", "Verification"))
 @decorators.timeout_decorator
-def verify_list(
-        text: str,
-        index: Optional[Union[int, str]] = None,
-        timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
+def verify_list(text: str,
+                index: Optional[Union[int, str]] = None,
+                timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verify list contains given text.
 
     Examples
@@ -153,12 +149,9 @@ def click_list(index: Union[int, str],
         active = ACTIVE_LIST.update_list()
         if index:
             index = _check_index(index)
-            web_element = element.get_element_to_click_from_list(
-                active.web_element_list, index, **kwargs)
-            if _execute_click_and_verify_condition(web_element,
-                                                   timeout=timeout,
-                                                   js=js,
-                                                   **kwargs):
+            web_element = element.get_element_to_click_from_list(active.web_element_list, index,
+                                                                 **kwargs)
+            if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
                 return
 
 
@@ -231,8 +224,7 @@ def get_list(index: Optional[Union[int, str]] = None,
 
 def _list_exists() -> bool:
     if isinstance(ACTIVE_LIST, List) is False:
-        raise QWebInstanceDoesNotExistError(
-            'List has not been defined with UseList keyword')
+        raise QWebInstanceDoesNotExistError('List has not been defined with UseList keyword')
     return True
 
 

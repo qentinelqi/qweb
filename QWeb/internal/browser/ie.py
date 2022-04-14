@@ -30,8 +30,8 @@ def open_browser(
     options.enable_persistent_hover = True
     options.ensure_clean_session = True
     options.javascript_enabled = True
-    driver = webdriver.Ie(executable_path, capabilities, port, timeout, host,
-                          log_level, log_file, options, ie_options)
+    driver = webdriver.Ie(executable_path, capabilities, port, timeout, host, log_level, log_file,
+                          options, ie_options)
 
     browser.cache_browser(driver)
     return driver

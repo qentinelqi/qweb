@@ -52,10 +52,7 @@ def return_browser() -> WebDriver:
 
 
 @keyword(tags=("Browser", "Interaction"))
-def open_browser(url: str,
-                 browser_alias: str,
-                 options: Optional[str] = None,
-                 **kwargs):
+def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **kwargs):
     r"""Open new browser to given url.
 
     Uses the Selenium2Library open_browser method if the browser is not Chrome.
@@ -146,8 +143,7 @@ def open_browser(url: str,
         logger.info('Could not find QWeb version number.')
     number_of_open_sessions = _sessions_open()
     if number_of_open_sessions > 0:
-        logger.warn('You have {} browser sessions already open'.format(
-            number_of_open_sessions))
+        logger.warn('You have {} browser sessions already open'.format(number_of_open_sessions))
     option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
     bs_project_name = BuiltIn().get_variable_value('${PROJECTNAME}') or ""
@@ -164,14 +160,11 @@ def open_browser(url: str,
     if provider in ('bs', 'browserstack'):
         bs_device = BuiltIn().get_variable_value('${DEVICE}')
         if not bs_device and b_lower in bs_desktop.NAMES:
-            driver = bs_desktop.open_browser(b_lower, bs_project_name,
-                                             bs_run_id)
+            driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id)
         elif bs_device:
-            driver = bs_mobile.open_browser(bs_device, bs_project_name,
-                                            bs_run_id)
+            driver = bs_mobile.open_browser(bs_device, bs_project_name, bs_run_id)
         else:
-            raise exceptions.QWebException(
-                'Unknown browserstack browser {}'.format(browser_alias))
+            raise exceptions.QWebException('Unknown browserstack browser {}'.format(browser_alias))
     else:
         driver = _browser_checker(b_lower, option_list, **kwargs)
     util.initial_logging(driver.capabilities)
@@ -179,8 +172,7 @@ def open_browser(url: str,
     # If user wants to re-use Chrome browser then he/she has to give
     # variable BROWSER_REUSE=True. In that case no URL loaded needed as
     # user wants to continue with the existing browser session
-    is_browser_reused = util.par2bool(
-        BuiltIn().get_variable_value('${BROWSER_REUSE}')) or False
+    is_browser_reused = util.par2bool(BuiltIn().get_variable_value('${BROWSER_REUSE}')) or False
     if not (is_browser_reused and b_lower == 'chrome'):
         driver.get(url)
     xhr.setup_xhr_monitor()
@@ -217,26 +209,22 @@ def _sessions_open() -> int:
     return len(sessions)
 
 
-def _close_remote_browser_session(driver: WebDriver,
-                                  close_only: bool = False) -> bool:
+def _close_remote_browser_session(driver: WebDriver, close_only: bool = False) -> bool:
     driver_type = str(type(driver))
     if 'remote.webdriver' in driver_type:
         session_id = driver.session_id
-        remote_session_id = BuiltIn().get_variable_value(
-            '${BROWSER_REMOTE_SESSION_ID}')
+        remote_session_id = BuiltIn().get_variable_value('${BROWSER_REMOTE_SESSION_ID}')
         if remote_session_id:
-            logger.debug(
-                'Closing remote session id: {}, target session: {}'.format(
-                    remote_session_id, session_id))
+            logger.debug('Closing remote session id: {}, target session: {}'.format(
+                remote_session_id, session_id))
             driver.session_id = remote_session_id
             driver.close()
             if not close_only:
                 driver.quit()
             driver.session_id = session_id
 
-            logger.warn(
-                'Browser re-use might leave oprhant chromedriver processes running. '
-                'Please check manually and close.')
+            logger.warn('Browser re-use might leave oprhant chromedriver processes running. '
+                        'Please check manually and close.')
             return True
 
     return False
@@ -336,9 +324,7 @@ def close_all_browsers() -> None:
 
 
 @keyword(tags=("Browser", "Verification"))
-def verify_links(url: str = 'current',
-                 log_all: bool = False,
-                 header_only: bool = True) -> None:
+def verify_links(url: str = 'current', log_all: bool = False, header_only: bool = True) -> None:
     r"""Verify that all links on a given website return good HTTP status codes.
 
     Examples
@@ -399,8 +385,7 @@ def verify_links(url: str = 'current',
     }
     checked = []
     broken = []
-    logger.info('\nVerifying links on {}'.format(driver.current_url),
-                also_console=True)
+    logger.info('\nVerifying links on {}'.format(driver.current_url), also_console=True)
     for elem in elements:
         url = elem.get_attribute("href")
         if util.url_validator(url) and url not in checked:
@@ -411,8 +396,7 @@ def verify_links(url: str = 'current',
                     r = requests.get(url, headers=headers)
                     status = r.status_code
             except requests.exceptions.ConnectionError as e:
-                logger.error("{} can't be reached. Error message: {}".format(
-                    url, e))
+                logger.error("{} can't be reached. Error message: {}".format(url, e))
                 broken.append(url)
                 continue
             if 399 < status < 600:
@@ -421,23 +405,19 @@ def verify_links(url: str = 'current',
                 broken.append(url)
             elif status == 999:
                 logger.info('Status of {} = {} (Linkedin specific error code. '
-                            'Everything is probably fine.)'.format(
-                                url, status),
+                            'Everything is probably fine.)'.format(url, status),
                             also_console=True)
             elif log_all:
-                logger.info('Status of {} = {}'.format(url, status),
-                            also_console=True)
+                logger.info('Status of {} = {}'.format(url, status), also_console=True)
             checked.append(url)
     errors = len(broken)
     if len(checked) == 0:
         logger.warn('No links found.')
     if errors > 0:
-        raise exceptions.QWebException('Found {} broken link(s): {}'.format(
-            errors, broken))
+        raise exceptions.QWebException('Found {} broken link(s): {}'.format(errors, broken))
 
 
-def _browser_checker(browser_x: str, options: list[str], *args,
-                     **kwargs) -> WebDriver:
+def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> WebDriver:
     """Determine the correct local browser in open_browser."""
 
     def use_chrome():

@@ -57,8 +57,7 @@ def open_browser(executable_path: str = "msedgedriver",
     # set from argument file, then OpenBrowser will use those
     # parameters instead of opening new chrome session.
     # New Remote Web Driver is created in headless mode.
-    edge_path = kwargs.get(
-        'edge_path', None) or BuiltIn().get_variable_value('${EDGE_PATH}')
+    edge_path = kwargs.get('edge_path', None) or BuiltIn().get_variable_value('${EDGE_PATH}')
     if edge_path:
         options.binary_location = edge_path  # pylint: disable=no-member
 
@@ -81,9 +80,10 @@ def open_browser(executable_path: str = "msedgedriver",
             prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
-    driver = Edge(BuiltIn().get_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
-                  or executable_path,
-                  options=options,
-                  capabilities=desired_capabilities)
+    driver = Edge(
+        BuiltIn().get_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
+        or executable_path,
+        options=options,
+        capabilities=desired_capabilities)
     browser.cache_browser(driver)
     return driver

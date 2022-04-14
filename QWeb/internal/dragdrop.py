@@ -39,8 +39,7 @@ def get_draggable_element(text: str, index: Union[int, str],
         web_element = element.get_unique_element_by_xpath(text)
         if web_element:
             return web_element
-        raise QWebElementNotFoundError(
-            'Draggable element not found by locator {}'.format(text))
+        raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
     try:
         index = int(index) - 1
     except ValueError as e:
@@ -56,19 +55,16 @@ def get_draggable_element(text: str, index: Union[int, str],
         if matches:
             return matches[index]
         if text == 'index':
-            logger.warn(
-                'Text is not matching to any draggable element. Found {} '
-                'draggable elements. Using index..'.format(len(web_elements)))
+            logger.warn('Text is not matching to any draggable element. Found {} '
+                        'draggable elements. Using index..'.format(len(web_elements)))
             return web_elements[index]
         web_elements = get_text_using_anchor(text, anchor)
         if web_elements:
             return web_elements
-    raise QWebElementNotFoundError(
-        'Draggable element not found by locator {}'.format(text))
+    raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
 
 
-def _find_matches(web_elements: list[WebElement],
-                  text: str) -> Optional[list[WebElement]]:
+def _find_matches(web_elements: list[WebElement], text: str) -> Optional[list[WebElement]]:
     matches = []
     for elem in web_elements:
         if elem.text and text in elem.text:

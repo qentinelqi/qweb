@@ -85,9 +85,7 @@ def is_alert(timeout: Union[int, float, str] = "0.1s") -> bool:
 
 
 @keyword(tags=("Alert", "Interaction", "Input"))
-def type_alert(text: str,
-               action: str = "Accept",
-               timeout: Union[int, float, str] = 0):
+def type_alert(text: str, action: str = "Accept", timeout: Union[int, float, str] = 0):
     r"""Type and close popup alert.
 
     Examples

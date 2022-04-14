@@ -44,14 +44,11 @@ class File:
                     all_text += page.strip()
                 if all_text != '':
                     return File(all_text, filepath)
-                raise QWebValueMismatchError(
-                    'Text not found. Seems that the pdf is empty.')
+                raise QWebValueMismatchError('Text not found. Seems that the pdf is empty.')
         except TypeError as e:
-            raise QWebFileNotFoundError(
-                f'File not found. Got {e} instead.') from e
+            raise QWebFileNotFoundError(f'File not found. Got {e} instead.') from e
         except PSEOF as e:
-            raise QWebFileNotFoundError(
-                f'File found, but it\'s not valid pdf-file: {e}') from e
+            raise QWebFileNotFoundError(f'File found, but it\'s not valid pdf-file: {e}') from e
 
     @staticmethod
     def create_text_file_instance(filename: str) -> File:
@@ -62,11 +59,9 @@ class File:
                 data = filebytes.decode("utf-8")
                 if data != '':
                     return File(data, filepath)
-                raise QWebValueMismatchError(
-                    'Text not found. Seems that the file is empty.')
+                raise QWebValueMismatchError('Text not found. Seems that the file is empty.')
         except TypeError as e:
-            raise QWebFileNotFoundError(
-                'File not found. Got {} instead.'.format(e)) from e
+            raise QWebFileNotFoundError('File not found. Got {} instead.'.format(e)) from e
 
     def get(self, **kwargs) -> Any:
         if kwargs:
@@ -74,12 +69,10 @@ class File:
         return self.content
 
     def verify(self, text: str, normalize: bool = False) -> bool:
-        txt_content = self._normalize_text(
-            self.content) if normalize else self.content
+        txt_content = self._normalize_text(self.content) if normalize else self.content
         if text in txt_content:
             return True
-        raise QWebValueMismatchError(
-            'File did not contain the text "{}"'.format(text))
+        raise QWebValueMismatchError('File did not contain the text "{}"'.format(text))
 
     def remove(self) -> None:
         os.remove(self.file)
@@ -90,8 +83,7 @@ class File:
             if util.par2bool(condition) is False:
                 index += len(text)
             return index
-        raise QWebValueMismatchError(
-            'File did not contain the text "{}"'.format(text))
+        raise QWebValueMismatchError('File did not contain the text "{}"'.format(text))
 
     @staticmethod
     def _normalize_text(text: str) -> str:

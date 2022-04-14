@@ -24,8 +24,7 @@ from QWeb.internal import javascript
 
 def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
     visible_frames = []
-    frames = javascript.execute_javascript(
-        'return document.querySelectorAll("iframe, frame")')
+    frames = javascript.execute_javascript('return document.querySelectorAll("iframe, frame")')
     if not frames:
         frames = []
     frames += driver.find_elements_by_xpath("//iframe|//frame")

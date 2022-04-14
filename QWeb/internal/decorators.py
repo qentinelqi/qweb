@@ -41,9 +41,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
 
     @wraps(fn)
     def get_elements_from_dom_content(  # type: ignore[return] # pylint: disable=R1710
-        *args: Any,
-        **kwargs: Any
-    ) -> Union[Callable[..., Any], int, bool, None]:
+            *args: Any, **kwargs: Any) -> Union[Callable[..., Any], int, bool, None]:
         try:
             args, kwargs, locator = _equal_sign_handler(args, kwargs, fn)
             msg = None
@@ -64,38 +62,29 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
             while time.time() < timeout + start:
                 try:
                     kwargs['timeout'] = float(timeout + start - time.time())
-                    config.set_config('FrameTimeout',
-                                      float(timeout + start - time.time()))
+                    config.set_config('FrameTimeout', float(timeout + start - time.time()))
                     return fn(*args, **kwargs)
                 except (QWebUnexpectedConditionError, QWebTimeoutError) as e:
                     logger.warn('Got {}'.format(e))
-                except (InvalidSelectorException, NoSuchElementException,
-                        QWebElementNotFoundError,
-                        UnexpectedAlertPresentException,
-                        QWebStalingElementError,
-                        StaleElementReferenceException,
-                        QWebIconNotFoundError) as e:
+                except (InvalidSelectorException, NoSuchElementException, QWebElementNotFoundError,
+                        UnexpectedAlertPresentException, QWebStalingElementError,
+                        StaleElementReferenceException, QWebIconNotFoundError) as e:
                     time.sleep(SHORT_DELAY)
-                    logger.debug(
-                        'Got exception: {}. Trying to retry..'.format(e))
+                    logger.debug('Got exception: {}. Trying to retry..'.format(e))
                 except InvalidSessionIdException as e:
                     CONFIG.set_value("OSScreenshots", True)
-                    raise QWebBrowserError(
-                        "Browser session lost. Did browser crash?") from e
+                    raise QWebBrowserError("Browser session lost. Did browser crash?") from e
                 except (WebDriverException, QWebDriverError) as e:
                     if any(s in str(e) for s in FATAL_MESSAGES):
                         CONFIG.set_value("OSScreenshots", True)
                         raise QWebBrowserError(e)  # pylint: disable=W0707
-                    logger.info(
-                        'From timeout decorator: Webdriver exception. Retrying..'
-                    )
+                    logger.info('From timeout decorator: Webdriver exception. Retrying..')
                     logger.info(e)
                     time.sleep(SHORT_DELAY)
                     err = QWebDriverError
                     msg = e
                 except QWebValueError as ve:
-                    logger.debug(
-                        'Got QWebValueError: {}. Trying to retry..'.format(ve))
+                    logger.debug('Got QWebValueError: {}. Trying to retry..'.format(ve))
                     err = QWebValueError  # type: ignore[assignment]
                     msg = ve
                     time.sleep(SHORT_DELAY)
@@ -105,17 +94,15 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                 return 0
             if 'is_text' in str(fn) or 'is_no_text' in str(fn):
                 return False
-            raise QWebElementNotFoundError(
-                'Unable to find element for locator {} in {} sec'.format(
-                    locator, timeout))
+            raise QWebElementNotFoundError('Unable to find element for locator {} in {} sec'.format(
+                locator, timeout))
         except QWebSearchingMode:
             pass
 
     return get_elements_from_dom_content
 
 
-def timeout_decorator_for_actions(
-        fn: Callable[..., Any]) -> Callable[..., Any]:
+def timeout_decorator_for_actions(fn: Callable[..., Any]) -> Callable[..., Any]:
 
     @wraps(fn)
     def perform(*args: Any, **kwargs: Any) -> Callable[..., Any]:
@@ -131,8 +118,7 @@ def timeout_decorator_for_actions(
             try:
                 return fn(*args, **kwargs)
             except QWebValueMismatchError as mismatch:
-                if 'text_appearance' not in str(
-                        fn) and 'get_or_compare_text' not in str(fn):
+                if 'text_appearance' not in str(fn) and 'get_or_compare_text' not in str(fn):
                     err = QWebValueError
                     msg = mismatch
                 logger.trace('Value mismatch: {}'.format(mismatch))
@@ -144,8 +130,7 @@ def timeout_decorator_for_actions(
                 if performed:
                     break
                 raise ve
-            except (QWebStalingElementError,
-                    StaleElementReferenceException) as S:
+            except (QWebStalingElementError, StaleElementReferenceException) as S:
                 if 'execute_click' in str(fn) or 'text_appearance' in str(fn):
                     logger.info('Got staling element err from retry click.'
                                 'Action is probably triggered.')
@@ -154,8 +139,7 @@ def timeout_decorator_for_actions(
             except (WebDriverException, QWebDriverError) as wde:
                 if 'alert' in str(fn):
                     time.sleep(LONG_DELAY)
-                    logger.info(
-                        "Got webdriver exception..{}. Retrying..".format(wde))
+                    logger.info("Got webdriver exception..{}. Retrying..".format(wde))
                     err = QWebDriverError  # type: ignore[assignment]
                     msg = wde  # type: ignore[assignment]
                 else:
@@ -188,10 +172,8 @@ def _args_to_kwargs(params: MappingProxyType[str, Any], args: tuple,
     return tuple(args), kwargs
 
 
-def _equal_sign_handler(
-        args: Union[tuple, list], kwargs: dict,
-        function_name: Union[str, Callable[...,
-                                           Any]]) -> tuple[tuple, dict, str]:
+def _equal_sign_handler(args: Union[tuple, list], kwargs: dict,
+                        function_name: Union[str, Callable[..., Any]]) -> tuple[tuple, dict, str]:
     if 'go_to' in str(function_name):
         if kwargs:
             new_args = []
@@ -206,9 +188,8 @@ def _equal_sign_handler(
         for key, value in kwargs.items():
             # if present any of these is always the first argument
             # locator can be the 2nd arg but it is handled later on
-            if key in ('locator', 'xpath', 'steps', 'image', 'input_texts',
-                       'input_values', 'text', 'coordinates',
-                       'texts_to_verify', 'url', 'title'):
+            if key in ('locator', 'xpath', 'steps', 'image', 'input_texts', 'input_values', 'text',
+                       'coordinates', 'texts_to_verify', 'url', 'title'):
                 locator = value
                 break
         else:

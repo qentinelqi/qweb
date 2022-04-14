@@ -985,9 +985,8 @@ def _set_case_insensitivity(val: str) -> None:
     check = util.par2bool(val)
 
     if check:
-        CONFIG.set_value(
-            "ContainingTextMatch",
-            SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
+        CONFIG.set_value("ContainingTextMatch",
+                         SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
     else:
         CONFIG.set_value("ContainingTextMatch",
                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)

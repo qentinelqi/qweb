@@ -25,8 +25,9 @@ def set_robot_args(*args: Any, **kwargs: Any) -> list[Any]:
     new_args = []
     for a in list(args):
         if _contains_var(a):
-            b = BuiltIn().get_variable_value(a)
-        new_args.append(b)
+            new_args.append(BuiltIn().get_variable_value(a))
+        else:
+            new_args.append(a)
     for key, val in kwargs.items():
         if _contains_var(key):
             key = BuiltIn().get_variable_value(key)
@@ -36,8 +37,7 @@ def set_robot_args(*args: Any, **kwargs: Any) -> list[Any]:
     return new_args
 
 
-def get_steps(name: str, caller_fn: str,
-              **kwargs: Any) -> Optional[list[dict[str, Any]]]:
+def get_steps(name: str, caller_fn: str, **kwargs: Any) -> Optional[list[dict[str, Any]]]:
     file = Path(BuiltIn().get_variable_value('${SUITE SOURCE}'))
     test_case = BuiltIn().get_variable_value('${TEST_NAME}')
     with open(file, "r+") as fo:
@@ -47,19 +47,16 @@ def get_steps(name: str, caller_fn: str,
         if data[idx].strip() == test_case:
             data = data[idx:len(data)]
             for i, line in enumerate(data):
-                if caller_fn in line.replace(
-                        ' ', '').strip().lower() and name in line.strip():
+                if caller_fn in line.replace(' ', '').strip().lower() and name in line.strip():
                     steps = _parse_steps(data, i + 1, **kwargs)
                     return steps
         idx += 1
     return None
 
 
-def _parse_steps(data: list[str], iterator: int,
-                 **kwargs: Any) -> list[dict[str, Any]]:
+def _parse_steps(data: list[str], iterator: int, **kwargs: Any) -> list[dict[str, Any]]:
     steps = []
-    while not data[iterator].replace(
-            ' ', '').lower().strip().startswith('endblock'):
+    while not data[iterator].replace(' ', '').lower().strip().startswith('endblock'):
         varname = None
         line = re.split(r'\s{2,}', data[iterator].strip())
         if line[0].startswith('#'):
@@ -72,12 +69,7 @@ def _parse_steps(data: list[str], iterator: int,
         else:
             pw = line[0].strip()
             args, kwargs = _parse_arguments(line, starting_point=1, **kwargs)
-        step = {
-            "variable": varname,
-            "paceword": pw,
-            "args": args,
-            "kwargs": kwargs
-        }
+        step = {"variable": varname, "paceword": pw, "args": args, "kwargs": kwargs}
         steps.append(step)
         iterator += 1
     return steps

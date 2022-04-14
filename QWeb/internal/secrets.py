@@ -130,8 +130,7 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
             LOGGER._other_loggers[0].log_message = debugfile_log
 
 
-def add_filter(keyword_name: str, par_index: int,
-               secret: Optional[str]) -> None:
+def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None:
     """Add keyword to secrets filtering.
 
     Keyword name is according to Robot FW name, i.e. text presentation

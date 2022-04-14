@@ -18,8 +18,7 @@ def open_browser(port: int = 0,
 
     desired_capabilities = DesiredCapabilities.SAFARI
 
-    driver = webdriver.Safari(port, executable_path, reuse_service,
-                              desired_capabilities, quiet)
+    driver = webdriver.Safari(port, executable_path, reuse_service, desired_capabilities, quiet)
     driver.maximize_window()
     browser.cache_browser(driver)
     open_windows.append(driver.current_window_handle)

@@ -84,8 +84,7 @@ def use_table(
     \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`VerifyTable\`
     """
     global ACTIVE_TABLE  # pylint:disable=global-statement
-    ACTIVE_TABLE = Table.from_table_instance(locator, anchor, parent, child,
-                                             level, index)
+    ACTIVE_TABLE = Table.from_table_instance(locator, anchor, parent, child, level, index)
 
 
 @keyword(tags=("Tables", "Verification"))
@@ -133,8 +132,7 @@ def verify_table(coordinates: str,
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
-        raise QWebInstanceDoesNotExistError(
-            'Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
     table_cell = table.ACTIVE_TABLE.get_table_cell(coordinates, anchor)
     actions.get_element_text(table_cell, expected=expected, timeout=timeout)
 
@@ -189,8 +187,7 @@ def get_cell_text(coordinates: str,
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
-        raise QWebInstanceDoesNotExistError(
-            'Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
     table_cell = table.get_table_cell(coordinates, anchor)
     try:
         text = actions.get_element_text(table_cell, timeout=timeout)
@@ -201,11 +198,12 @@ def get_cell_text(coordinates: str,
 
 @keyword(tags=("Tables", "Interaction"))
 @decorators.timeout_decorator
-def click_cell(coordinates: str,
-               anchor: str = "1",
-               timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-               index: int = 1,
-               **kwargs) -> None:
+def click_cell(
+        coordinates: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        index: int = 1,
+        **kwargs) -> None:
     r"""Click table cell.
 
     Locates cell by coordinates or text from active table and clicks it
@@ -247,18 +245,18 @@ def click_cell(coordinates: str,
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
-        raise QWebInstanceDoesNotExistError(
-            'Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
     table_cell = table.get_clickable_cell(coordinates, anchor, index, **kwargs)
     actions.execute_click_and_verify_condition(table_cell, **kwargs)
 
 
 @keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
-def get_table_row(locator: str,
-                  anchor: str = "1",
-                  timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-                  **kwargs) -> None:
+def get_table_row(
+        locator: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        **kwargs) -> None:
     r"""Get row (index) from current table.
 
     Get table row by some visible text or value.
@@ -294,6 +292,5 @@ def get_table_row(locator: str,
     """
     table = Table.ACTIVE_TABLE.update_table()
     if isinstance(ACTIVE_TABLE, Table) is False:
-        raise QWebInstanceDoesNotExistError(
-            'Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
     return table.get_row(locator, anchor, row_index=True, **kwargs)

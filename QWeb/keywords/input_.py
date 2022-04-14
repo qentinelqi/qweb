@@ -105,12 +105,7 @@ def type_secret3(locator: str,
         logger.info('SECRET: {}'.format(input_text[:3]) + (length - 3) * '*')
     else:
         logger.info('SECRET: {}'.format(input_text[:1]) + (length - 1) * '*')
-    type_text(locator,
-              input_text,
-              anchor,
-              timeout=timeout,
-              index=index,
-              **kwargs)
+    type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
 
 # Filter out input_text parameter in type_secret
@@ -148,12 +143,7 @@ def type_secret(locator: str,
     ----------------
     \`TypeText\`
     """
-    type_text(locator,
-              input_text,
-              anchor,
-              timeout=timeout,
-              index=index,
-              **kwargs)
+    type_text(locator, input_text, anchor, timeout=timeout, index=index, **kwargs)
 
 
 @keyword(tags=("Input", "Interaction"))
@@ -278,8 +268,11 @@ def type_text(locator: Union[WebElement, str],
     if isinstance(locator, WebElement):
         input_element = locator
     else:
-        input_element = input_.get_input_elements_from_all_documents(
-            locator, anchor, timeout=timeout, index=index, **kwargs)
+        input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                     anchor,
+                                                                     timeout=timeout,
+                                                                     index=index,
+                                                                     **kwargs)
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 
@@ -309,8 +302,7 @@ def type_texts(input_texts: Union[dict[str, str], str],
     """
     if isinstance(input_texts, dict):
         for locator in input_texts:
-            logger.info('Typing "{}", locator "{}"'.format(
-                locator, input_texts[locator]))
+            logger.info('Typing "{}", locator "{}"'.format(locator, input_texts[locator]))
             type_text(locator, input_texts[locator])
     elif input_texts.endswith('.txt') or input_texts.endswith('.csv'):
         file = download.get_path(input_texts)
@@ -322,8 +314,7 @@ def type_texts(input_texts: Union[dict[str, str], str],
                 logger.info('Typing "{}", locator "{}"'.format(text, locator))
                 type_text(locator, text, timeout=timeout)
     else:
-        raise QWebValueError(
-            'Unknown input value. Text file or dictionary required.')
+        raise QWebValueError('Unknown input value. Text file or dictionary required.')
 
 
 @keyword(tags=("Input", "Verification"))
@@ -390,11 +381,12 @@ def verify_input_value(locator: Union[WebElement, str],
     if isinstance(locator, WebElement):
         input_element = locator
     else:
-        input_element = input_.get_input_elements_from_all_documents(
-            locator, anchor, timeout=timeout, index=index, **kwargs)
-    actions.compare_input_values(input_element,
-                                 expected_value,
-                                 timeout=timeout)
+        input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                     anchor,
+                                                                     timeout=timeout,
+                                                                     index=index,
+                                                                     **kwargs)
+    actions.compare_input_values(input_element, expected_value, timeout=timeout)
 
 
 @keyword(tags=("Input", "Verification"))
@@ -423,8 +415,7 @@ def verify_input_values(input_values: Union[dict[str, str], str],
     """
     if isinstance(input_values, dict):
         for locator in input_values:
-            logger.info('Locator: {}, Expected value: {}'.format(
-                locator, input_values[locator]),
+            logger.info('Locator: {}, Expected value: {}'.format(locator, input_values[locator]),
                         also_console=True)
             verify_input_value(locator, input_values[locator])
     elif input_values.endswith('.txt') or input_values.endswith('.csv'):
@@ -434,13 +425,11 @@ def verify_input_values(input_values: Union[dict[str, str], str],
             for x_bytes in params:
                 x_str_list = x_bytes.decode('utf-8').split(',')
                 locator, value = x_str_list[0].strip(), x_str_list[1].strip()
-                logger.info('Locator: {}, Expected value: {}'.format(
-                    locator, value),
+                logger.info('Locator: {}, Expected value: {}'.format(locator, value),
                             also_console=True)
                 verify_input_value(locator, value, timeout=timeout)
     else:
-        raise QWebValueError(
-            'Unknown input value. Text file or dictionary required.')
+        raise QWebValueError('Unknown input value. Text file or dictionary required.')
 
 
 @keyword(tags=("Input", "Verification"))
@@ -508,16 +497,14 @@ def verify_input_status(locator: str,
     ----------------
     \`GetInputValue\`, \`VerifyInputElement\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
-    input_element = input_.get_input_elements_from_all_documents(
-        locator,
-        anchor,
-        timeout=timeout,
-        index=index,
-        enable_check=True,
-        **kwargs)
+    input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                 anchor,
+                                                                 timeout=timeout,
+                                                                 index=index,
+                                                                 enable_check=True,
+                                                                 **kwargs)
     if status.lower() == "enabled":
-        if not element.is_enabled(input_element) or element.is_readonly(
-                input_element):
+        if not element.is_enabled(input_element) or element.is_readonly(input_element):
             raise QWebValueError('The input field was disabled')
     elif status.lower() == "disabled":
         if element.is_enabled(input_element):
@@ -585,8 +572,11 @@ def verify_input_element(locator: str,
     ----------------
     \`GetInputValue\`, \`VerifyInputStatus\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
-    input_element = input_.get_input_elements_from_all_documents(
-        locator, anchor, timeout=timeout, index=index, **kwargs)
+    input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                 anchor,
+                                                                 timeout=timeout,
+                                                                 index=index,
+                                                                 **kwargs)
     if input_element:
         return
 
@@ -654,8 +644,11 @@ def get_input_value(locator: str,
     ----------------
     \`VerifyInputElement\`, \`VerifyInputStatus\`, \`VerifyInputValue\`, \`VerifyInputValues\`
     """
-    input_element = input_.get_input_elements_from_all_documents(
-        locator, anchor, timeout=timeout, index=index, **kwargs)
+    input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                 anchor,
+                                                                 timeout=timeout,
+                                                                 index=index,
+                                                                 **kwargs)
     val = actions.input_value(input_element, timeout=timeout, **kwargs)
     return util.get_substring(val, **kwargs)
 
@@ -718,13 +711,15 @@ def upload_file(locator: str,
     kwargs['upload'] = util.par2bool(kwargs.get('upload', True))
     filepath = download.get_path(filename)
     if filepath:
-        input_element = input_.get_input_elements_from_all_documents(
-            locator, anchor, timeout=timeout, index=index, **kwargs)
+        input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                     anchor,
+                                                                     timeout=timeout,
+                                                                     index=index,
+                                                                     **kwargs)
         input_element.send_keys(str(filepath.resolve()))
         return
     raise QWebFileNotFoundError(
-        'Unable to find file {}. Tried from project/files and users/downloads'.
-        format(filename))
+        'Unable to find file {}. Tried from project/files and users/downloads'.format(filename))
 
 
 @keyword(tags=("Input", "Interaction"))
@@ -756,16 +751,18 @@ def press_key(locator: str,
     driver = browser.return_browser()
     action = ActionChains(driver)
     try:
-        input_element = input_.get_input_elements_from_all_documents(
-            locator, anchor, timeout=timeout, index=1, **kwargs)
-        key = input_handler.check_key(key) # type: ignore[assignment]
+        input_element = input_.get_input_elements_from_all_documents(locator,
+                                                                     anchor,
+                                                                     timeout=timeout,
+                                                                     index=1,
+                                                                     **kwargs)
+        key = input_handler.check_key(key)  # type: ignore[assignment]
 
         # COMMAND key workaround on safari
         # supports normal text field CMD operations only
         # (i.e. CMD+C, CMD+A, CMD+V etc.)
         if len(key) == 2 and key[0] == '\ue03d' and util.is_safari():
-            javascript.execute_javascript("arguments[0].focus();",
-                                          input_element)
+            javascript.execute_javascript("arguments[0].focus();", input_element)
             action.key_down(key[0]) \
                   .send_keys(key[1]) \
                   .key_up(key[0]).perform()

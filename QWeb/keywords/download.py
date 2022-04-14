@@ -65,13 +65,11 @@ def verify_file_download(timeout: Union[int, float, str] = 0) -> str:
     start = time.time()
     previous_message = None
     while time.time() < start + timeout_int:
-        modified_files = download.get_modified_files(download_dir,
-                                                     download.start_epoch)
+        modified_files = download.get_modified_files(download_dir, download.start_epoch)
         modified_files = download.remove_win_temp(modified_files)
         if len(modified_files) == 1:
             if not download.is_tmp_file(modified_files[0]):
-                logger.info('Found downloaded file {}'.format(
-                    modified_files[0]))
+                logger.info('Found downloaded file {}'.format(modified_files[0]))
                 return modified_files[0]
         elif not modified_files:
             message = 'Could not find any modified files'
@@ -83,12 +81,10 @@ def verify_file_download(timeout: Union[int, float, str] = 0) -> str:
             if previous_message != message:
                 logger.info(message)
                 previous_message = message
-            if all(not download.is_tmp_file(modified_file)
-                   for modified_file in modified_files):
+            if all(not download.is_tmp_file(modified_file) for modified_file in modified_files):
                 raise ValueError('Found more than one file that was modified')
         time.sleep(SHORT_DELAY)
-    raise ValueError(
-        'Could not find any modified files after {}s'.format(timeout_int))
+    raise ValueError('Could not find any modified files after {}s'.format(timeout_int))
 
 
 @keyword(tags=("Browser", "Verification"))

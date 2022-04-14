@@ -254,11 +254,9 @@ def case_insensitive(state: Union[str, bool]) -> Union[str, bool]:
     """
     case_state = config.set_config("CaseInsensitive", state)
     if case_state:
-        config.set_config(
-            "ContainingTextMatch",
-            SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
+        config.set_config("ContainingTextMatch",
+                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
     else:
-        config.set_config(
-            "ContainingTextMatch",
-            SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)
+        config.set_config("ContainingTextMatch",
+                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)
     return case_state
