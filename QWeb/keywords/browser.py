@@ -201,7 +201,7 @@ def switch_browser(index: Union[int, str]) -> None:
     ----------------
      \`OpenBrowser\,  \`CloseBrowser\,  \`SwitchWindow\, \`GetWebElement\`
     """
-    browser.set_current_browser(str(index))
+    browser.set_current_browser(index)
 
 
 def _sessions_open() -> int:

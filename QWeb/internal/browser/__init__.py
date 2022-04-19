@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
+from typing import Union
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
@@ -89,11 +90,11 @@ def get_current_browser() -> WebDriver:
     return _current_browser
 
 
-def set_current_browser(index: str) -> None:
+def set_current_browser(index: Union[int, str]) -> None:
     # pylint: disable=global-statement
     global _current_browser
 
-    if index.isdigit():
+    if str(index).isdigit():
         if int(index) == 0:
             raise QWebValueError('SwitchBrowser index starts at 1.')
 
@@ -104,7 +105,7 @@ def set_current_browser(index: str) -> None:
         else:
             raise QWebDriverError(f'Tried to select browser with index {index} but there are \
                                   {len(_open_browsers)} browsers open')
-    elif index == "NEW":
+    elif str(index) == "NEW":
         _current_browser = _open_browsers[-1]
     else:
         raise QWebValueError('Given argument "{}" is not a digit or NEW'.format(index))
