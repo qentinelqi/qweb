@@ -17,6 +17,7 @@ Settings
     [Tags]                  PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE
     GoTo                    chrome://settings/content/protectedContent
     LogScreenshot
+
 Click icons
     [Tags]                  ICON
     [Teardown]              Abc
