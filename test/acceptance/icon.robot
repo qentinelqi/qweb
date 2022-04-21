@@ -19,7 +19,7 @@ Settings
     LogScreenshot
 
 Click icons
-    [Tags]                  ICON
+    [Tags]                  ICON    PROBLEM_IN_MACOS
     [Teardown]              Abc
     ${is_retina}=           GetConfig    RetinaDisplay
     Log                     Retina display detected: ${is_retina}
