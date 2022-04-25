@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2022-04-25
+### Fixed
+- Enhanced Safari support: Multiple fixes to Safari regarding handling frames and windows
+  
+### Added
+- Added robot framework 5.0 support
+- LogScreenshot: Support for full page screenshots
+- Added support for different operators (equal/not equal/greater than/less than/contains) to VerifyAttribute
+- Added Safari specific solution for COMMAND key
+  
+### Changed
+- GetWebelement, GetAttribute and VerifyAttribute now accept css selectors with element_type=css
+- Updated Pillow dependency to latest version
+- Added Safari to GitHub pipeline
+- Added documentation for PartialMatch configuration
+
 
 ## [2.0.0] - 2022-03-24
 ### Changed
