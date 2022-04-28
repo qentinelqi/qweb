@@ -167,14 +167,6 @@ def _args_to_kwargs(params, args, kwargs):
 
 
 def _equal_sign_handler(args, kwargs, function_name):
-    if 'go_to' in str(function_name):
-        if kwargs:
-            new_args = []
-            for k, v in kwargs.items():
-                new_args.append(k)
-                new_args.append(v)
-            args = tuple(["=".join(map(str, new_args))])
-            kwargs.clear()
     try:
         locator = args[0]
     except IndexError:
