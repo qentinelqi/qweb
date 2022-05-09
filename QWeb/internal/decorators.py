@@ -65,7 +65,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                     config.set_config('FrameTimeout', float(timeout + start - time.time()))
                     return fn(*args, **kwargs)
                 except (QWebUnexpectedConditionError, QWebTimeoutError) as e:
-                    logger.warn('Got {}'.format(e))
+                    logger.debug('Got {}'.format(e))
                 except (InvalidSelectorException, NoSuchElementException, QWebElementNotFoundError,
                         UnexpectedAlertPresentException, QWebStalingElementError,
                         StaleElementReferenceException, QWebIconNotFoundError) as e:
