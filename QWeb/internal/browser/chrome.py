@@ -1,5 +1,7 @@
+from __future__ import annotations
 import os
-
+from typing import Optional, Any
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Chrome, Remote
 from selenium.webdriver.chrome.options import Options
 from robot.api import logger
@@ -7,10 +9,10 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from QWeb.internal import browser, user, util
 from QWeb.internal.config_defaults import CONFIG
 
-NAMES = ["chrome", "gc"]
+NAMES: list[str] = ["chrome", "gc"]
 
 
-def check_browser_reuse(**kwargs):
+def check_browser_reuse(**kwargs: Any) -> tuple[bool, Optional[str], Optional[str]]:
     try:
         browser_reuse = util.par2bool(BuiltIn().get_variable_value('${BROWSER_REUSE}')) or False
         session_id = kwargs.get('session_id', None) or \
@@ -24,7 +26,9 @@ def check_browser_reuse(**kwargs):
     return False, None, None
 
 
-def write_browser_session_argsfile(session_id, executor_url, fname='browser_session.arg'):
+def write_browser_session_argsfile(session_id: str,
+                                   executor_url: str,
+                                   fname: str = 'browser_session.arg') -> str:
     robot_output = BuiltIn().get_variable_value('${OUTPUT DIR}')
     args_fn = os.path.join(robot_output or os.getcwd(), fname)
     with open(args_fn, 'w') as args_file:
@@ -35,8 +39,10 @@ def write_browser_session_argsfile(session_id, executor_url, fname='browser_sess
     return args_fn
 
 
-def open_browser(executable_path="chromedriver", chrome_args=None,
-                 desired_capabilities=None, **kwargs):
+def open_browser(executable_path: str = "chromedriver",
+                 chrome_args: Optional[list[str]] = None,
+                 desired_capabilities: Optional[dict[str, Any]] = None,
+                 **kwargs: Any) -> WebDriver:
     """Open Chrome browser instance and cache the driver.
 
     Parameters
@@ -98,18 +104,18 @@ def open_browser(executable_path="chromedriver", chrome_args=None,
             if isinstance(kwargs.get('prefs'), dict):
                 prefs = kwargs.get('prefs')
             else:
-                prefs = util.prefs_to_dict(kwargs.get('prefs').strip())
+                prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
             options.add_experimental_option('prefs', prefs)
 
         driver = Chrome(BuiltIn().get_variable_value('${CHROMEDRIVER_PATH}') or executable_path,
-                        options=options, desired_capabilities=desired_capabilities)
+                        options=options,
+                        desired_capabilities=desired_capabilities)
 
         browser_reuse_enabled = util.par2bool(
             BuiltIn().get_variable_value('${BROWSER_REUSE_ENABLED}')) or False
         if browser_reuse_enabled:
             # Write WebDriver session info to RF arguments file for re-use
-            write_browser_session_argsfile(driver.session_id,
-                                           driver.command_executor._url)  # pylint: disable=protected-access
+            write_browser_session_argsfile(driver.session_id, driver.command_executor._url)  # pylint: disable=protected-access
 
             # Clear possible existing global values
             BuiltIn().set_global_variable('${BROWSER_SESSION_ID}', None)

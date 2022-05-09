@@ -15,13 +15,14 @@
 # limitations under the License.
 # ---------------------------
 
+from typing import Optional
 from QWeb.internal import screenshot
 from QWeb.internal.config_defaults import CONFIG
 from robot.api import logger
 from robot.api.deco import keyword
 
 
-def verify_app(imagename):
+def verify_app(imagename: str) -> None:
     """Compare image to a known good one.
 
     :param imagename:
@@ -33,7 +34,7 @@ def verify_app(imagename):
 
 
 @keyword(tags=["Logging"])
-def log_screenshot(filename='screenshot_{}.png', fullpage=False):
+def log_screenshot(filename: str = 'screenshot_{}.png', fullpage: bool = False) -> Optional[str]:
     r"""Log screenshot to Robot Framework log.
 
     Examples
@@ -61,7 +62,7 @@ def log_screenshot(filename='screenshot_{}.png', fullpage=False):
     ----------------
     \`LogPage\`
     """
-    filepath = None
+    filepath: Optional[str] = None
     if CONFIG["LogScreenshot"]:
         screenshot_type = CONFIG["ScreenshotType"]
         if screenshot_type == 'screenshot':
@@ -74,8 +75,7 @@ def log_screenshot(filename='screenshot_{}.png', fullpage=False):
             screenshot.log_screenshot_file(filepath)
             screenshot.log_html()
         else:
-            raise ValueError('Unknown screenshot type: {}'
-                             .format(screenshot_type))
+            raise ValueError('Unknown screenshot type: {}'.format(screenshot_type))
     else:
         logger.info('Screenshots have been disabled with the SetConfig keyword.')
 

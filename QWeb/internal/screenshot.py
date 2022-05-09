@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Union, Optional
+from numpy import ndarray
 
 import base64
 import json
@@ -21,6 +24,7 @@ import os
 from uuid import uuid4
 
 import cv2
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, \
                                        WebDriverException, InvalidSessionIdException
 from QWeb.internal.browser import firefox, chrome, edge
@@ -33,12 +37,13 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.utils import get_link_path
 from pyautogui import screenshot as pyscreenshot
 from tempfile import gettempdir
+
 SCREEN_SHOT_DIR_NAME = 'screenshots'
 VERIFYAPP_DIR_NAME = 'verifyapp'
 VALID_FILENAME_CHARS = '-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 
-def _create_screenshot_folder(foldername):
+def _create_screenshot_folder(foldername: str) -> str:
     try:
         robot_output = BuiltIn().get_variable_value('${OUTPUT DIR}')
         screen_shot_dir = os.path.join(robot_output, foldername)
@@ -54,7 +59,7 @@ def _create_screenshot_folder(foldername):
     return screen_shot_dir
 
 
-def _remove_invalid_chars(text_to_check):
+def _remove_invalid_chars(text_to_check: str) -> str:
     """
     Removes invalid characters from filename
     :param text_to_check:
@@ -63,7 +68,7 @@ def _remove_invalid_chars(text_to_check):
     return "".join(c for c in text_to_check if c in VALID_FILENAME_CHARS)
 
 
-def compare_screenshots(filename, accuracy):
+def compare_screenshots(filename: str, accuracy: Union[str, float]) -> bool:
     # pylint: disable=no-member
     """Compare screenshot against reference, take reference if missing.
 
@@ -121,7 +126,7 @@ def compare_screenshots(filename, accuracy):
     return status
 
 
-def _draw_contours(diff, ref_image_c):
+def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     # pylint: disable=no-member
     """Draw contours on ref_image_c based on diff
 
@@ -130,10 +135,8 @@ def _draw_contours(diff, ref_image_c):
     :return:
     """
     diff = (diff * 255).astype("uint8")
-    thresh = cv2.threshold(diff, 220, 255,
-                           cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-                                cv2.CHAIN_APPROX_SIMPLE)
+    thresh = cv2.threshold(diff, 220, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # api differs on opencv3 and opencv4
     index = 1 if cv2.__version__.startswith("3") else 0
@@ -144,10 +147,10 @@ def _draw_contours(diff, ref_image_c):
     return ref_image_c
 
 
-def save_screenshot(filename='screenshot_{}.png',
-                    folder=SCREEN_SHOT_DIR_NAME,
-                    pyautog=False,
-                    fullpage=False):
+def save_screenshot(filename: str = 'screenshot_{}.png',
+                    folder: str = SCREEN_SHOT_DIR_NAME,
+                    pyautog: bool = False,
+                    fullpage: bool = False) -> str:
     """Save screenshot of web page to a file.
 
     If robot framework is running then screenshots are saved to
@@ -189,7 +192,7 @@ def save_screenshot(filename='screenshot_{}.png',
         filename = filename.format(uuid4())
 
     elif filename == 'screenshot_{}.png':
-        name_with_underscores = test_name.replace(" ", "_")
+        name_with_underscores = str(test_name).replace(" ", "_")
         valid_name = _remove_invalid_chars(name_with_underscores)
         filename = "screenshot-" + valid_name + "-{}".format(uuid4()) + '.png'
 
@@ -214,18 +217,17 @@ def save_screenshot(filename='screenshot_{}.png',
             else:
                 saved = full_page_screenshot(driver, filepath, browser_name)
 
-        except (UnexpectedAlertPresentException, WebDriverException,
-                QWebDriverError, InvalidSessionIdException):
+        except (UnexpectedAlertPresentException, WebDriverException, QWebDriverError,
+                InvalidSessionIdException):
             saved = pyscreenshot(filepath)
         if not saved:
-            raise ValueError(
-                'Saving screenshot to {} did not succeed'.format(filepath))
+            raise ValueError('Saving screenshot to {} did not succeed'.format(filepath))
 
     logger.info('Saved screenshot to {}'.format(filepath))
     return filepath
 
 
-def log_screenshot_file(filepath):
+def log_screenshot_file(filepath: str) -> None:
     """Log screenshot file to robot framework log.
 
     Uses robot.utils.get_link_path to determine the relative path to the robot
@@ -241,15 +243,13 @@ def log_screenshot_file(filepath):
         if not config.get_config("OSScreenshots"):
             logger.info('Current url is: {}'.format(get_url()))
         link = get_link_path(filepath, robot_output)
-        logger.info(
-            '<a href="{0}"><img src="{0}" width="800px"></a>'.format(link),
-            html=True)
+        logger.info('<a href="{0}"><img src="{0}" width="800px"></a>'.format(link), html=True)
 
     except RobotNotRunningError:
         return
 
 
-def log_html():
+def log_html() -> None:
     source_html_counter = 1
     url = get_url()
     logger.info('Current url: {}'.format(url))
@@ -265,14 +265,13 @@ def log_html():
     element = document.getElementById("source_link_{0}");
     element.setAttribute("href", "{2}");
     document.getElementById("source_{0}").setAttribute("src", "{1}");
-    </script>'''
-                .format(source_html_counter, 'screenshots/' + filename,
+    </script>'''.format(source_html_counter, 'screenshots/' + filename,
                         filepath.replace("\\", "\\\\")),
                 html=True)
     source_html_counter += 1
 
 
-def get_url():
+def get_url() -> Optional[str]:
     driver = browser.get_current_browser()
     if driver:
         return driver.current_url
@@ -280,12 +279,12 @@ def get_url():
     return None
 
 
-def get_source():
+def get_source() -> str:
     driver = browser.get_current_browser()
     return driver.page_source
 
 
-def chromium_full_screenshot(driver, filepath):
+def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
 
     def send(cmd, params):
         resource = f"/session/{driver.session_id}/chromium/send_command_and_get_result"
@@ -297,10 +296,7 @@ def chromium_full_screenshot(driver, filepath):
         return response.get('value')
 
     def evaluate(script):
-        response = send('Runtime.evaluate', {
-            'returnByValue': True,
-            'expression': script
-        })
+        response = send('Runtime.evaluate', {'returnByValue': True, 'expression': script})
         return response['result']['value']
 
     metrics = evaluate("({"
@@ -313,10 +309,7 @@ def chromium_full_screenshot(driver, filepath):
                        "mobile: typeof window.orientation !== 'undefined'"
                        "})")
     send('Emulation.setDeviceMetricsOverride', metrics)
-    screenshot = send('Page.captureScreenshot', {
-        'format': 'png',
-        'fromSurface': True
-    })
+    screenshot = send('Page.captureScreenshot', {'format': 'png', 'fromSurface': True})
     send('Emulation.clearDeviceMetricsOverride', {})
 
     image = base64.b64decode(screenshot['data'])
@@ -326,7 +319,7 @@ def chromium_full_screenshot(driver, filepath):
     return filepath
 
 
-def full_page_screenshot(driver, filepath, browser_name):
+def full_page_screenshot(driver: WebDriver, filepath: str, browser_name: str) -> str:
     if browser_name in firefox.NAMES:
         saved = driver.get_full_page_screenshot_as_file(filepath)
     elif browser_name in chrome.NAMES or browser_name in edge.NAMES:

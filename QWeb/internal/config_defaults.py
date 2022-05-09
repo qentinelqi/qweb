@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """
 Default values for configuration items.
 parameter name - (parameter value, adapter function)
@@ -33,12 +32,14 @@ Usage from code:
 from QWeb.internal.config_defaults import CONFIG
 val = CONFIG["ScreenshotType"]
 """
+from __future__ import annotations
+from typing import Any, Union
+
 from QWeb.internal.search_strategy import SearchStrategies
 from QWeb.internal import util
 from QWeb.internal.config import Config
 
-
-CONFIG_DEFAULTS = {
+CONFIG_DEFAULTS: dict[str, Any] = {
     "ScreenshotType": ("screenshot", None),
     "LineBreak": ("\ue004", util.set_line_break),
     "ClearKey": (None, util.set_clear_key),
@@ -51,18 +52,16 @@ CONFIG_DEFAULTS = {
     "DefaultDocument": (True, util.par2bool),
     "InputHandler": ("selenium", util.set_input_handler),
     "CaseInsensitive": (False, util.par2bool),
-    "AllInputElements": (SearchStrategies.ALL_INPUT_ELEMENTS,
-                         SearchStrategies.all_input_elements_validation),
-    "MatchingInputElement": (SearchStrategies.MATCHING_INPUT_ELEMENT,
-                             SearchStrategies.matching_input_element_validation),
-    "ActiveAreaXpath": (SearchStrategies.ACTIVE_AREA_XPATH,
-                        SearchStrategies.active_area_xpath_validation),
-    "TextMatch": (SearchStrategies.TEXT_MATCH,
-                  SearchStrategies.text_match_validation),
+    "AllInputElements":
+    (SearchStrategies.ALL_INPUT_ELEMENTS, SearchStrategies.all_input_elements_validation),
+    "MatchingInputElement":
+    (SearchStrategies.MATCHING_INPUT_ELEMENT, SearchStrategies.matching_input_element_validation),
+    "ActiveAreaXpath":
+    (SearchStrategies.ACTIVE_AREA_XPATH, SearchStrategies.active_area_xpath_validation),
+    "TextMatch": (SearchStrategies.TEXT_MATCH, SearchStrategies.text_match_validation),
     "ContainingTextMatch": (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
                             SearchStrategies.containing_text_match_validation),
-    "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH,
-                     SearchStrategies.clear_xpath),
+    "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH, SearchStrategies.clear_xpath),
     "VerifyAppAccuracy": (0.9999, None),
     "OffsetCheck": (True, util.par2bool),
     "Visibility": (True, util.par2bool),
@@ -93,7 +92,7 @@ CONFIG_DEFAULTS = {
     "HighlightColor": ("blue", util.highlight_validation)
 }
 
-CONFIG = Config(CONFIG_DEFAULTS)
-RETRIES_AMOUNT = 3
-SHORT_DELAY = 0.2
-LONG_DELAY = 1
+CONFIG: Config = Config(CONFIG_DEFAULTS)
+RETRIES_AMOUNT: int = 3
+SHORT_DELAY: Union[int, float] = 0.2
+LONG_DELAY: Union[int, float] = 1

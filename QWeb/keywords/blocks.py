@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Any, Union
+
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -22,7 +25,7 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebUnexpectedCon
 
 
 @keyword(tags=("Config", "Error handling"))
-def run_block(block, *args, timeout=0, **kwargs):  # pylint: disable=unused-argument
+def run_block(block: str, *args, timeout: Union[int, float, str] = 0, **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Run Action word as decorated block.
 
     Block (usually set of keywords) is handled as one
@@ -89,7 +92,7 @@ def run_block(block, *args, timeout=0, **kwargs):  # pylint: disable=unused-argu
 
 
 @keyword(tags=("Config", "Error handling"))
-def appstate(block, *args):
+def appstate(block: str, *args) -> None:
     r"""Appstate is a pre-condition of a test case.
 
     It sets Application(s) under test to correct, known state.
@@ -133,13 +136,13 @@ def appstate(block, *args):
 
 
 @decorators.timeout_decorator
-def _execute_block(steps, timeout=0, **kwargs):  # pylint: disable=unused-argument
+def _execute_block(steps: list[dict[str, Any]], timeout: Union[int, float, str] = 0, **kwargs):  # pylint: disable=unused-argument
     logger.trace('Timeout for block: {}'.format(timeout))
     logger.trace(steps)
     for step in steps:
         fn = step.get('paceword')
         var_name = step.get('variable', None)
-        args = blocks.set_robot_args(*step.get('args'), **step.get('kwargs'))
+        args = blocks.set_robot_args(*step.get('args', []), **step.get('kwargs', {}))
         status, res = BuiltIn().run_keyword_and_ignore_error(fn, *args)
         logger.trace('status: {}, res: {}'.format(status, res))
         if status == 'FAIL':

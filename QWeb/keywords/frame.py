@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
-
 """Keywords for webpage and frame elements.
 
 Frame is considered to be an element in a webapage which can contain another
@@ -31,7 +29,7 @@ from QWeb.internal import browser, element, frame, javascript
 
 
 @keyword(tags=["Config"])
-def use_frame(locator):
+def use_frame(locator: str) -> None:
     """Make following keywords to use frame on a page.
 
     Examples
@@ -65,7 +63,7 @@ def use_frame(locator):
 
 
 @keyword(tags=["Config"])
-def use_page():
+def use_page() -> None:
     """Make following keywords to use the page and not a frame on a page.
 
     Examples
@@ -81,7 +79,7 @@ def use_page():
 
 
 @keyword(tags=("Browser", "Interaction"))
-def refresh_page():
+def refresh_page() -> None:
     r"""Refresh the current window.
 
     Examples
@@ -100,7 +98,7 @@ def refresh_page():
 
 
 @keyword(tags=("Browser", "Interaction"))
-def back():
+def back() -> None:
     r"""Navigates back in the current window.
 
     Examples
@@ -121,7 +119,7 @@ def back():
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def forward():
+def forward() -> None:
     r"""Navigates forward in the current window.
 
     Examples
@@ -142,7 +140,7 @@ def forward():
 
 
 @keyword(tags=["Logging"])
-def log_page():
+def log_page() -> None:
     r"""Save and log current html.
 
     The html content is saved as html file in the same folder where log is.
@@ -171,8 +169,7 @@ def log_page():
     raw_html = frame.get_raw_html()
     output_dir = frame.get_output_dir()
     html_source_count = frame.get_html_source_count()
-    filepath = frame.save_source(raw_html, output_dir,
-                                 html_source_count)
+    filepath = frame.save_source(raw_html, output_dir, html_source_count)
     frame.link_source_to_log(html_source_count, filepath)
     html_source_count += 1
     frame.set_html_source_count(html_source_count)

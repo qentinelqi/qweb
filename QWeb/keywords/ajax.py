@@ -14,14 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Union
+
 from QWeb.internal import decorators, ajax, util
 from robot.api.deco import keyword
 
 
 @keyword(tags=["Logging"])
 @decorators.timeout_decorator
-def save_file(locator, filename=None, anchor=1,
-              timeout=0, path=None, **kwargs):  # pylint: disable=unused-argument
+def save_file(
+        locator: str,
+        filename: str = None,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        path: str = None,
+        **kwargs) -> None:
     r"""Save file using http-request.
 
     Needs url of the downloadable content which usually is in element's href attribute.
@@ -93,7 +101,12 @@ def save_file(locator, filename=None, anchor=1,
         url = ajax.get_url_for_http_request(locator, anchor, **kwargs)
     response = ajax.http_request_with_browser_cookies(url)
     if not filename:
-        filename = util.get_substring(response.headers.get(
-            'Content-Disposition', 'filename=unnamed.{}'.format(response.headers.get(
-                'Content-Type').split('/')[1].split(';')[0])), between='filename=???')
-    ajax.save_response_as_file(response, filename, path)
+        filename = str(
+            util.get_substring(
+                response.headers.get(
+                    'Content-Disposition',
+                    'filename=unnamed.{}'.format(
+                        response.headers.get(  # type: ignore[union-attr]
+                            'Content-Type').split('/')[1].split(';')[0])),
+                between='filename=???'))
+    ajax.save_response_as_file(response, str(filename), path)

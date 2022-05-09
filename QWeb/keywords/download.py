@@ -15,6 +15,8 @@
 # limitations under the License.
 # ---------------------------
 
+from __future__ import annotations
+from typing import Union
 import time
 
 from robot.api import logger
@@ -26,7 +28,7 @@ from QWeb.internal.config_defaults import CONFIG, SHORT_DELAY
 
 
 @keyword(tags=("Browser", "Verification"))
-def verify_file_download(timeout=0):
+def verify_file_download(timeout: Union[int, float, str] = 0) -> str:
     r"""Verify file has been downloaded and return file path.
 
     Examples
@@ -63,13 +65,11 @@ def verify_file_download(timeout=0):
     start = time.time()
     previous_message = None
     while time.time() < start + timeout_int:
-        modified_files = download.get_modified_files(
-            download_dir, download.start_epoch)
+        modified_files = download.get_modified_files(download_dir, download.start_epoch)
         modified_files = download.remove_win_temp(modified_files)
         if len(modified_files) == 1:
             if not download.is_tmp_file(modified_files[0]):
-                logger.info('Found downloaded file {}'
-                            .format(modified_files[0]))
+                logger.info('Found downloaded file {}'.format(modified_files[0]))
                 return modified_files[0]
         elif not modified_files:
             message = 'Could not find any modified files'
@@ -81,15 +81,14 @@ def verify_file_download(timeout=0):
             if previous_message != message:
                 logger.info(message)
                 previous_message = message
-            if all(not download.is_tmp_file(modified_file)
-                   for modified_file in modified_files):
+            if all(not download.is_tmp_file(modified_file) for modified_file in modified_files):
                 raise ValueError('Found more than one file that was modified')
         time.sleep(SHORT_DELAY)
     raise ValueError('Could not find any modified files after {}s'.format(timeout_int))
 
 
 @keyword(tags=("Browser", "Verification"))
-def expect_file_download():
+def expect_file_download() -> None:
     r"""Turns on polling for time after which file download should happen.
 
     Run this keyword everytime before \`VerifyFileDownload\` and the action that
@@ -108,7 +107,6 @@ def expect_file_download():
     \`SaveFile\`, \`UploadFile\`, \`VerifyFileDownload\`
     """
     now = time.time()
-    logger.info('The time has been set to {}'
-                .format(time.strftime('%Y-%m-%d %H:%M:%S',
-                                      time.localtime(now))))
+    logger.info('The time has been set to {}'.format(
+        time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now))))
     download.start_epoch = now

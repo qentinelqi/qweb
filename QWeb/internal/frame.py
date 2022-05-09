@@ -14,13 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Optional, Callable, Any, Union
 import os
 import time
 from functools import wraps
 from robot.api import logger
 from robot.utils import timestr_to_secs
 from robot.libraries.BuiltIn import BuiltIn
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchWindowException, \
                                        StaleElementReferenceException, \
                                        WebDriverException, InvalidSessionIdException
@@ -32,7 +35,7 @@ from QWeb.internal import xhr, browser, util
 from QWeb.internal.config_defaults import CONFIG
 
 
-def wait_page_loaded():
+def wait_page_loaded() -> None:
     """Wait for webpage to be loaded.
 
     Examples
@@ -68,16 +71,16 @@ def wait_page_loaded():
         return
     try:
         xhr.wait_xhr(timestr_to_secs(timeout))
-    except(WebDriverException, QWebDriverError) as e:
+    except (WebDriverException, QWebDriverError) as e:
         logger.info('Unable to check AJAX requests due error: {}'.format(e))
 
 
-def get_raw_html():
+def get_raw_html() -> str:
     driver = browser.get_current_browser()
     return driver.page_source
 
 
-def save_source(raw_html, folder, count):
+def save_source(raw_html: str, folder: str, count: int) -> str:
     """Save the html source to a file.
 
     Parameters
@@ -106,7 +109,7 @@ def save_source(raw_html, folder, count):
     return filepath
 
 
-def link_source_to_log(count, filepath):
+def link_source_to_log(count: int, filepath: str) -> None:
     """Link the source html file to an iframe in Robot Framework log.
 
     Using tbody tag to hack rf log. This way the content can be on larger
@@ -139,32 +142,36 @@ var url = window.location.href;
 document.getElementById("sourceLink{0}").setAttribute("href", "{2}")
 document.getElementById("source{0}").setAttribute("src", "{1}")
 </script>
-</tbody>'''.format(count, filename, filepath.replace("\\", "\\\\")), html=True)
+</tbody>'''.format(count, filename, filepath.replace("\\", "\\\\")),
+                html=True)
 
 
-def get_output_dir():
-    return BuiltIn().get_variable_value("${OUTPUT_DIR}")
+def get_output_dir() -> str:
+    return str(BuiltIn().get_variable_value("${OUTPUT_DIR}"))
 
 
-def get_html_source_count():
-    return BuiltIn().get_variable_value("${html_source_count}", 0)
+def get_html_source_count() -> int:
+    return int(BuiltIn().get_variable_value("${html_source_count}", 0))
 
 
-def set_html_source_count(value):
+def set_html_source_count(value: Union[int, str]):
     BuiltIn().set_global_variable("${html_source_count}", value)
 
 
 # pylint: disable=R0915
-def all_frames(fn):
+def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that takes any func as a parameter.
 
     search_from_frames is recursive function which goes through
     all found frames until we find our element if that's not in
     main html's dom tree.
     """
+
     @wraps(fn)
-    def wrapped(*args, **kwargs):
-        def search_from_frames(driver=None, current_frame=None):
+    def wrapped(*args, **kwargs) -> Callable[..., Any]:
+
+        def search_from_frames(driver: Optional[WebDriver] = None,
+                               current_frame: Optional[WebElement] = None) -> Callable[..., Any]:
             keep_frame = kwargs.get('stay_in_current_frame', CONFIG['StayInCurrentFrame'])
             if keep_frame:
                 return fn(*args, **kwargs)
@@ -210,7 +217,9 @@ def all_frames(fn):
             raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
 
         # pylint: disable=W0102
-        def search_from_frames_safari(driver=None, current_frame=None, parent_tree=[]):
+        def search_from_frames_safari(driver: Optional[WebDriver] = None,
+                                      current_frame: Optional[WebElement] = None,
+                                      parent_tree: list[WebElement] = []):
             keep_frame = kwargs.get('stay_in_current_frame', CONFIG['StayInCurrentFrame'])
             if keep_frame:
                 return fn(*args, **kwargs)
@@ -265,11 +274,12 @@ def all_frames(fn):
             raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
 
         return search_from_frames_safari() if util.is_safari() else search_from_frames()
+
     logger.debug('wrapped = {}'.format(wrapped))
     return wrapped
 
 
-def is_valid(web_element):
+def is_valid(web_element: Union[WebElement, tuple]) -> bool:
     if web_element and not isinstance(web_element, tuple):
         return True
     if isinstance(web_element, tuple) and any(web_element):

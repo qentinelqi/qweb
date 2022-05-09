@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """ Robot framework secrets handling.
 
     In Robot FW logs following things may expose secrets:
@@ -34,11 +33,15 @@
 
      Note the function name vs. name used in the add_filter.
 """
+from __future__ import annotations
+from typing import Any, Optional
+from robot.model.keyword import Keyword
+
 from robot.output.logger import LOGGER
 from robot.libraries.BuiltIn import BuiltIn
 
 
-def _replace_keyword_args(keyword, args):
+def _replace_keyword_args(keyword: Keyword, args: tuple) -> None:
     """Replace keyword args with the provided args
 
     This function was added to support also RFW 4.0/5.0 RFW changes.
@@ -58,7 +61,7 @@ def _replace_keyword_args(keyword, args):
         setattr(keyword.data, 'args', args)
 
 
-def _hide_keyword_arg_values(keyword):
+def _hide_keyword_arg_values(keyword: Keyword) -> list[str]:
     par_index, secret = filtered_keywords[keyword.kwname]
     censored_args = list(keyword.args)
     if secret == 'hint':
@@ -69,7 +72,7 @@ def _hide_keyword_arg_values(keyword):
     return censored_args
 
 
-def _filtered_start_keyword(keyword):
+def _filtered_start_keyword(keyword: Keyword) -> None:
     """Modify Robot FW internal function "start_keyword".
 
     This function removes secret data from "start keyword"
@@ -98,7 +101,7 @@ def _filtered_start_keyword(keyword):
             LOGGER._other_loggers[0].log_message = lambda x: None
 
 
-def _filtered_end_keyword(keyword):
+def _filtered_end_keyword(keyword: Keyword) -> None:
     """Modify Robot FW internal function "end_keyword".
 
     This function removes secret data from "end keyword"
@@ -127,7 +130,7 @@ def _filtered_end_keyword(keyword):
             LOGGER._other_loggers[0].log_message = debugfile_log
 
 
-def add_filter(keyword_name, par_index, secret):
+def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None:
     """Add keyword to secrets filtering.
 
     Keyword name is according to Robot FW name, i.e. text presentation
@@ -140,14 +143,13 @@ def add_filter(keyword_name, par_index, secret):
 
 # List of keyword names for which filtering of secret parameters is applied.
 # Format: "keyword name": index of secret parameter
-filtered_keywords = {}
+filtered_keywords: dict[str, Any] = {}
 log_level = "INFO"
 
 try:
-    debugfile_log = LOGGER._other_loggers[0].log_message    # pylint: disable=protected-access
+    debugfile_log = LOGGER._other_loggers[0].log_message  # pylint: disable=protected-access
 except IndexError:
     debugfile_log = False
-
 
 # Monkey patch Robot FW methods
 LOGGER.start_keyword = _filtered_start_keyword

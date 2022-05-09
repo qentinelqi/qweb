@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from typing import Union, Optional
 
 import pyautogui
 from QWeb.internal import icon, decorators, screenshot, util, text, element
@@ -28,8 +29,10 @@ import os
 
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
-def click_icon(image, template_res_w=None, browser_res_w=None,
-               timeout=0):  # pylint: disable=unused-argument
+def click_icon(image: str,
+               template_res_w: Optional[int] = None,
+               browser_res_w: Optional[int] = None,
+               timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Click the icon on the screen.
 
     In case you want to click icons you always have to have reference images.
@@ -65,18 +68,22 @@ def click_icon(image, template_res_w=None, browser_res_w=None,
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=True)
+    x, y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=True)
     if x == -1:
         raise QWebElementNotFoundError("Couldn't find the icon from the screen")
     if CONFIG.get_value("RetinaDisplay"):
-        x = x * 0.5
-        y = y * 0.5
+        x = int(x * 0.5)
+        y = int(y * 0.5)
     pyautogui.moveTo(x, y)
     pyautogui.click(x, y)
 
 
 @keyword(tags=("Icon", "Verification"))
-def is_icon(image, template_res_w=None, browser_res_w=None):
+def is_icon(
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+) -> bool:
     r"""Check is the icon on the screen.
 
     In case you want to use this keyword you always have to have reference images.
@@ -111,7 +118,7 @@ def is_icon(image, template_res_w=None, browser_res_w=None):
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=False)
+    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False)
 
     if x == -1:
         return False
@@ -120,8 +127,12 @@ def is_icon(image, template_res_w=None, browser_res_w=None):
 
 @keyword(tags=("Icon", "Verification"))
 @decorators.timeout_decorator
-def verify_icon(image, template_res_w=None, browser_res_w=None,
-                timeout=0):  # pylint: disable=unused-argument
+def verify_icon(
+        image: str,
+        template_res_w: Optional[int] = None,
+        browser_res_w: Optional[int] = None,
+        timeout: Union[int, float, str] = 0  # pylint: disable=unused-argument
+) -> bool:
     r"""Verify page contains icon.
 
     In case you want to use this keyword you always have to have reference images.
@@ -171,7 +182,7 @@ def verify_icon(image, template_res_w=None, browser_res_w=None,
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
 
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(image_path, template_res_w, browser_res_w, pyautog=False)
+    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False)
     if x == -1:
         raise QWebIconNotFoundError("Couldn't find the icon from the screen")
     return True
@@ -179,8 +190,12 @@ def verify_icon(image, template_res_w=None, browser_res_w=None,
 
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
-def capture_icon(locator, folder='screenshots', filename='screenshot_{}.png',
-                 timeout=0, **kwargs):  # pylint: disable=unused-argument
+def capture_icon(
+        locator: str,
+        folder: str = 'screenshots',
+        filename: str = 'screenshot_{}.png',
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        **kwargs) -> None:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 
     Examples

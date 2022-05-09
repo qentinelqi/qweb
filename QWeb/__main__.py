@@ -20,7 +20,7 @@ from ._version import get_versions  # pylint: disable-msg=E0611
 from robot import libdoc
 
 
-def cli():
+def cli() -> None:
     parser = argparse.ArgumentParser(
         prog='QWeb',
         usage='python %(prog)s [options] INPUT'
@@ -30,7 +30,9 @@ def cli():
         '%(prog)s --show TypeText (displays documentation for keyword "TypeText")',
         description='Note: This module is meant to be used as a robot famework library.'
         'Command line interface only provides access to keyword documentation.')
-    parser.add_argument('-V', '--version', action='version',
+    parser.add_argument('-V',
+                        '--version',
+                        action='version',
                         version='%(prog)s {version}'.format(version=__version__))
     parser.add_argument('-A', '--all', action='store_true', help='lists ALL keywords')
     parser.add_argument('-L', '--list', action='store', help='lists keywords based on input string')

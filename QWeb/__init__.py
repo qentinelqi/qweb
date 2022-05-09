@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from typing import Callable, Any
 import traceback
 import types
 import time
@@ -23,10 +23,9 @@ from functools import wraps
 import QWeb.config as custom_config
 
 try:
-    from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox,
-                               input_, javascript, screenshot, download, table,
-                               search_strategy, dropdown, cookies, config, icon,
-                               dragdrop, lists, file, debug, ajax, blocks)
+    from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox, input_,
+                               javascript, screenshot, download, table, search_strategy, dropdown,
+                               cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks)
 
     from QWeb.internal import util
     from QWeb.internal.config_defaults import CONFIG
@@ -46,12 +45,12 @@ class QWeb:
 
     ROBOT_LIBRARY_SCOPE = 'Global'
 
-    def __init__(self, run_on_failure_keyword="Log Screenshot"):
+    def __init__(self, run_on_failure_keyword: str = "Log Screenshot") -> None:
         """Adds all the keywords to the instance."""
         self._run_on_failure_keyword = run_on_failure_keyword
-        for module in (alert, browser, window, frame, element, text, checkbox, input_,
-                       javascript, screenshot, custom_config, download, search_strategy, table,
-                       dropdown, cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks):
+        for module in (alert, browser, window, frame, element, text, checkbox, input_, javascript,
+                       screenshot, custom_config, download, search_strategy, table, dropdown,
+                       cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks):
             for name in dir(module):
                 if not name.startswith("_"):
                     attr = getattr(module, name)
@@ -60,13 +59,14 @@ class QWeb:
                         attr = self._xpath_decorator(attr)
                         setattr(self, name, attr)
 
-    def _run_on_failure_decorator(self, keyword_method):
+    def _run_on_failure_decorator(self, keyword_method: Callable[..., Any]) -> Callable[..., None]:
         """Decorator method for keywords.
 
         If keyword fails then this method executes self.run_on_failure_keyword.
         """
+
         @wraps(keyword_method)  # Preserves docstring of the original method.
-        def inner(*args, **kwargs):  # pylint: disable=R1710
+        def inner(*args: Any, **kwargs: Any) -> None:  # pylint: disable=R1710
             kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
             if 'type_secret' not in str(keyword_method):
                 logger.debug('args: {}, kwargs: {}'.format(args, kwargs))
@@ -93,23 +93,25 @@ class QWeb:
                         BuiltIn().run_keyword(self._run_on_failure_keyword)
                 devmode = util.par2bool(BuiltIn().get_variable_value('${DEV_MODE}', False))
                 if devmode and not config.get_config('Debug_Run'):
-                    Dialogs.pause_execution(
-                        'Keyword {} {} {} failed. \n'
-                        'Got {}'.format(str(keyword_method).split(' ')[1].upper(),
-                                        str(args), str(kwargs), e))
+                    Dialogs.pause_execution('Keyword {} {} {} failed. \n'
+                                            'Got {}'.format(
+                                                str(keyword_method).split(' ')[1].upper(),
+                                                str(args), str(kwargs), e))
                     debug.debug_on()
                 else:
                     raise
+
         return inner
 
     @staticmethod
-    def _xpath_decorator(keyword_method):
+    def _xpath_decorator(keyword_method: Callable[..., Any]) -> Callable[..., Callable[..., Any]]:
         """Decorator method for selector-attribute. If selector attribute
         is given, method uses it's value and text to form simple xpath
         locator.
         """
+
         @wraps(keyword_method)  # Preserves docstring of the original method.
-        def create_xpath(*args, **kwargs):
+        def create_xpath(*args: Any, **kwargs: Any) -> Callable[..., Any]:
             """Handle xpath before passing it to keyword.
             """
             args_list = list(args)
@@ -117,18 +119,19 @@ class QWeb:
                 attr_value = str(args_list[0])
                 args_list[0] = '//*[@{}="{}"]'.format(kwargs['selector'], attr_value)
                 del kwargs['selector']
-                args = args_list
+                args = tuple(args_list)
             return keyword_method(*args, **kwargs)
+
         return create_xpath
 
-    def _is_run_on_failure_keyword(self, method):
+    def _is_run_on_failure_keyword(self, method: Callable[..., Any]) -> bool:
         """Helper function to find out if method name is the
          one registered as kw to run on failure"""
-        return self._run_on_failure_keyword.replace(
-            " ", "_").lower() == method.__name__
+        return self._run_on_failure_keyword.replace(" ", "_").lower() == method.__name__
 
 
 # pylint: disable=wrong-import-position
 from ._version import get_versions  # noqa: E402
+
 __version__ = get_versions()['version']
 del get_versions

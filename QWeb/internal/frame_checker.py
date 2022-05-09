@@ -14,15 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
 from QWeb.internal import javascript
 
 
-def check_frames(driver, **kwargs):
+def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
     visible_frames = []
-    frames = javascript.execute_javascript(
-        'return document.querySelectorAll("iframe, frame")')
+    frames = javascript.execute_javascript('return document.querySelectorAll("iframe, frame")')
     if not frames:
         frames = []
     frames += driver.find_elements_by_xpath("//iframe|//frame")

@@ -21,7 +21,7 @@ from QWeb.internal.exceptions import QWebDriverError
 from QWeb.internal import javascript
 
 
-def setup_xhr_monitor():
+def setup_xhr_monitor() -> bool:
     """Inject jQuery if needed and check if page is ready.
 
     Setup_xhr_monitor injects jQuery to page if there isn't one
@@ -51,20 +51,18 @@ def setup_xhr_monitor():
         raise QWebDriverError(e)  # pylint: disable=W0707
 
 
-def get_ready_state():
-    ready_state = javascript.execute_javascript(
-                'return document.readyState === "complete"')
+def get_ready_state() -> bool:
+    ready_state = javascript.execute_javascript('return document.readyState === "complete"')
     logger.debug('Readystate = {}'.format(ready_state))
     return ready_state
 
 
-def get_jquery_ready():
-    jqueries_ready = javascript.execute_javascript(
-        'return window.jQuery.active === 0;')
+def get_jquery_ready() -> bool:
+    jqueries_ready = javascript.execute_javascript('return window.jQuery.active === 0;')
     return jqueries_ready
 
 
-def wait_xhr(timeout=0):
+def wait_xhr(timeout: float = 0.0) -> None:
     """Uses jQuery.active to check if page is ready
 
     if jQuery is not available, calls setup_xhr_monitor

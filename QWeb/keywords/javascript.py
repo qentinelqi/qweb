@@ -15,6 +15,8 @@
 # limitations under the License.
 # ---------------------------
 
+from typing import Optional
+
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -23,7 +25,7 @@ from QWeb.internal.exceptions import QWebValueError
 
 
 @keyword(tags=("Javascript", "Interaction"))
-def execute_javascript(script, variable_name=None):
+def execute_javascript(script: str, variable_name: Optional[str] = None) -> None:
     """Execute javascript and save the result to suite variable.
 
     Examples

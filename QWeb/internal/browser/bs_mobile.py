@@ -1,12 +1,13 @@
+import os
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from QWeb.internal import browser, exceptions
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
-import os
+from QWeb.internal import browser, exceptions
 
 
-def open_browser(bs_device, project_name, run_id):
+def open_browser(bs_device: str, project_name: str, run_id: str) -> WebDriver:
     desired_cap = {
         'build': project_name,
         'project': project_name,

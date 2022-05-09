@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for dropdown elements.
 
 Dropdown elements are considered to be any <select> tagged element.
 """
+from __future__ import annotations
+from typing import Union
+
 from robot.api.deco import keyword
 from QWeb.internal import decorators, actions
 from QWeb.internal.dropdown import get_dd_elements_from_all_documents as _get_dd_elements
@@ -26,7 +28,13 @@ from QWeb.internal.dropdown import get_dd_elements_from_all_documents as _get_dd
 
 @keyword(tags=("Dropdown", "Interaction"))
 @decorators.timeout_decorator
-def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, **kwargs):
+def drop_down(locator: str,
+              option: str,
+              anchor: str = '1',
+              timeout: Union[int, float, str] = 0,
+              index: int = 1,
+              unselect: bool = False,
+              **kwargs) -> None:
     r"""Select an option from dropdown menu/list.
 
     Examples
@@ -114,7 +122,12 @@ def drop_down(locator, option, anchor='1', timeout=0, index=1, unselect=False, *
 
 @keyword(tags=("Dropdown", "Verification"))
 @decorators.timeout_decorator
-def verify_selected_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
+def verify_selected_option(locator: str,
+                           expected_option: str,
+                           anchor: str = '1',
+                           timeout: Union[int, float, str] = 0,
+                           index: int = 1,
+                           **kwargs) -> None:
     r"""Verify that an option is selected from dropdown menu/list.
     Note: with multiselection dropdown verify each option individually.
 
@@ -158,15 +171,18 @@ def verify_selected_option(locator, expected_option, anchor='1', timeout=0, inde
     ----------------
     \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`, \`VerifyOption\`, \`VerifyNoOption\`
     """
-    select = _get_dd_elements(
-        locator, anchor=anchor, index=index, **kwargs)
+    select = _get_dd_elements(locator, anchor=anchor, index=index, **kwargs)
     if actions.get_selected_value(select, expected_option, timeout=timeout):
         return
 
 
 @keyword(tags=("Dropdown", "Getters"))
 @decorators.timeout_decorator
-def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
+def get_selected(locator: str,
+                 anchor: str = '1',
+                 timeout: Union[int, float, str] = 0,
+                 index: int = 1,
+                 **kwargs) -> None:
     r"""Get selected option to variable from dropdown menu/list.
 
     Examples
@@ -213,14 +229,18 @@ def get_selected(locator, anchor='1', timeout=0, index=1, **kwargs):
     \`DropDown\`, \`GetDropDownValues\`, \`VerifyOption\`,
     \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
-    select = _get_dd_elements(
-        locator, anchor=anchor, index=index, **kwargs)
+    select = _get_dd_elements(locator, anchor=anchor, index=index, **kwargs)
     return actions.get_selected_value(select, timeout=timeout)
 
 
 @keyword(tags=("Dropdown", "Verification"))
 @decorators.timeout_decorator
-def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kwargs):
+def verify_option(locator: str,
+                  expected_option: str,
+                  anchor: str = '1',
+                  timeout: Union[int, float, str] = 0,
+                  index: int = 1,
+                  **kwargs) -> None:
     r"""Verify that option exist in dropdown menu/list.
 
     Examples
@@ -262,15 +282,18 @@ def verify_option(locator, expected_option, anchor='1', timeout=0, index=1, **kw
     \`DropDown\`, \`GetDropDownValues\`, \`GetSelected\`,
     \`VerifyNoOption\`, \`VerifySelectedOption\`
     """
-    select = _get_dd_elements(
-        locator, anchor=anchor, index=index, **kwargs)
+    select = _get_dd_elements(locator, anchor=anchor, index=index, **kwargs)
     if actions.get_select_options(select, expected_option, timeout=timeout):
         return
 
 
 @keyword(tags=("Dropdown", "Getters"))
 @decorators.timeout_decorator
-def get_drop_down_values(locator, anchor='1', timeout=0, index=1, **kwargs):
+def get_drop_down_values(locator: str,
+                         anchor: str = '1',
+                         timeout: Union[int, float, str] = 0,
+                         index: int = 1,
+                         **kwargs) -> None:
     r"""Return all options from a dropdown menu/list.
 
     Examples
@@ -313,7 +336,12 @@ def get_drop_down_values(locator, anchor='1', timeout=0, index=1, **kwargs):
 
 @keyword(tags=("Dropdown", "Verification"))
 @decorators.timeout_decorator
-def verify_no_option(locator, option, anchor='1', timeout=0, index=1, **kwargs):
+def verify_no_option(locator: str,
+                     option: str,
+                     anchor: str = '1',
+                     timeout: Union[int, float, str] = 0,
+                     index: int = 1,
+                     **kwargs) -> None:
     r"""Verify that a given option is not in a dropdown menu/list.
 
     Examples

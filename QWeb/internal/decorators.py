@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from types import MappingProxyType
+from typing import Callable, Any, Union
 
 import time
 from inspect import signature
@@ -34,9 +37,11 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, \
 
 # pylint: disable=too-many-statements
 # pylint: disable=too-many-branches
-def timeout_decorator(fn):
+def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
+
     @wraps(fn)
-    def get_elements_from_dom_content(*args, **kwargs):  # pylint: disable=R1710
+    def get_elements_from_dom_content(  # type: ignore[return] # pylint: disable=R1710
+            *args: Any, **kwargs: Any) -> Union[Callable[..., Any], int, bool, None]:
         try:
             args, kwargs, locator = _equal_sign_handler(args, kwargs, fn)
             msg = None
@@ -61,10 +66,9 @@ def timeout_decorator(fn):
                     return fn(*args, **kwargs)
                 except (QWebUnexpectedConditionError, QWebTimeoutError) as e:
                     logger.warn('Got {}'.format(e))
-                except (InvalidSelectorException, NoSuchElementException,
-                        QWebElementNotFoundError, UnexpectedAlertPresentException,
-                        QWebStalingElementError, StaleElementReferenceException,
-                        QWebIconNotFoundError) as e:
+                except (InvalidSelectorException, NoSuchElementException, QWebElementNotFoundError,
+                        UnexpectedAlertPresentException, QWebStalingElementError,
+                        StaleElementReferenceException, QWebIconNotFoundError) as e:
                     time.sleep(SHORT_DELAY)
                     logger.debug('Got exception: {}. Trying to retry..'.format(e))
                 except InvalidSessionIdException as e:
@@ -81,7 +85,7 @@ def timeout_decorator(fn):
                     msg = e
                 except QWebValueError as ve:
                     logger.debug('Got QWebValueError: {}. Trying to retry..'.format(ve))
-                    err = QWebValueError
+                    err = QWebValueError  # type: ignore[assignment]
                     msg = ve
                     time.sleep(SHORT_DELAY)
             if msg:
@@ -90,17 +94,18 @@ def timeout_decorator(fn):
                 return 0
             if 'is_text' in str(fn) or 'is_no_text' in str(fn):
                 return False
-            raise QWebElementNotFoundError(
-                'Unable to find element for locator {} in {} sec'.format(locator, timeout))
+            raise QWebElementNotFoundError('Unable to find element for locator {} in {} sec'.format(
+                locator, timeout))
         except QWebSearchingMode:
             pass
 
     return get_elements_from_dom_content
 
 
-def timeout_decorator_for_actions(fn):
+def timeout_decorator_for_actions(fn: Callable[..., Any]) -> Callable[..., Any]:
+
     @wraps(fn)
-    def perform(*args, **kwargs):
+    def perform(*args: Any, **kwargs: Any) -> Callable[..., Any]:
         params = signature(fn).parameters
         args, kwargs = _args_to_kwargs(params, args, kwargs)
         timeout = get_timeout(**kwargs)
@@ -129,24 +134,24 @@ def timeout_decorator_for_actions(fn):
                 if 'execute_click' in str(fn) or 'text_appearance' in str(fn):
                     logger.info('Got staling element err from retry click.'
                                 'Action is probably triggered.')
-                    raise QWebUnexpectedConditionError(S)   # pylint: disable=W0707
+                    raise QWebUnexpectedConditionError(S)  # pylint: disable=W0707
                 raise QWebStalingElementError('Staling element')  # pylint: disable=W0707
             except (WebDriverException, QWebDriverError) as wde:
                 if 'alert' in str(fn):
                     time.sleep(LONG_DELAY)
                     logger.info("Got webdriver exception..{}. Retrying..".format(wde))
-                    err = QWebDriverError
-                    msg = wde
+                    err = QWebDriverError  # type: ignore[assignment]
+                    msg = wde  # type: ignore[assignment]
                 else:
                     raise QWebDriverError(wde)  # pylint: disable=W0707
         if msg:
-            raise err(msg)
+            raise err(msg)  # type: ignore[misc]
         raise QWebTimeoutError('Timeout exceeded')
 
     return perform
 
 
-def get_timeout(**kwargs):
+def get_timeout(**kwargs: Any) -> Union[int, float]:
     timeout = timestr_to_secs(CONFIG["DefaultTimeout"])
     if 'timeout' in kwargs:
         if timestr_to_secs(kwargs['timeout']) != 0:
@@ -154,7 +159,8 @@ def get_timeout(**kwargs):
     return timeout
 
 
-def _args_to_kwargs(params, args, kwargs):
+def _args_to_kwargs(params: MappingProxyType[str, Any], args: tuple,
+                    kwargs: dict) -> tuple[tuple, dict]:
     if 'timeout' not in kwargs:
         for i, p in enumerate(params.values()):
             if p.name not in kwargs:
@@ -162,21 +168,20 @@ def _args_to_kwargs(params, args, kwargs):
                     kwargs[p.name] = args[i]
                 else:
                     kwargs[p.name] = p.default
-        args = ''
-    return args, kwargs
+        args = tuple('')
+    return tuple(args), kwargs
 
 
-def _equal_sign_handler(args, kwargs, function_name):
+def _equal_sign_handler(args: Union[tuple, list], kwargs: dict,
+                        function_name: Union[str, Callable[..., Any]]) -> tuple[tuple, dict, str]:
     try:
         locator = args[0]
     except IndexError:
         for key, value in kwargs.items():
             # if present any of these is always the first argument
             # locator can be the 2nd arg but it is handled later on
-            if key in ('locator', 'xpath', 'steps',
-                       'image', 'input_texts', 'input_values',
-                       'text', 'coordinates', 'texts_to_verify',
-                       'url', 'title'):
+            if key in ('locator', 'xpath', 'steps', 'image', 'input_texts', 'input_values', 'text',
+                       'coordinates', 'texts_to_verify', 'url', 'title'):
                 locator = value
                 break
         else:
@@ -188,5 +193,6 @@ def _equal_sign_handler(args, kwargs, function_name):
             locator = kwargs.get('text_to_find', None)
 
     if locator is None:
+        logger.console(f"args: {args}, \nkwargs: {kwargs}")
         raise QWebElementNotFoundError("Use \\= instead of = in xpaths")
-    return args, kwargs, locator
+    return tuple(args), kwargs, locator

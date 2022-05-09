@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional, Union
+from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
 from QWeb.internal.exceptions import QWebElementNotFoundError, \
@@ -23,7 +26,7 @@ from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
 
-def get_input_element_by_locator(locator, anchor, **kwargs):
+def get_input_element_by_locator(locator: str, anchor: str, **kwargs) -> WebElement:
     """Find input element.
 
     Parameters
@@ -63,19 +66,23 @@ def get_input_element_by_locator(locator, anchor, **kwargs):
         elif len(input_elements) == 1:
             input_element = input_elements[0]  # pylint: disable=unsubscriptable-object
         else:  # Found many
-            input_element = text.get_element_using_anchor(
-                input_elements, anchor, **kwargs)
+            input_element = text.get_element_using_anchor(input_elements, anchor, **kwargs)
     return input_element
 
 
-def _get_all_input_elements():
-    input_elements = element.get_webelements_in_active_area(
-        CONFIG["AllInputElements"], stay_in_current_frame=True)
+def _get_all_input_elements() -> list[WebElement]:
+    input_elements = element.get_webelements_in_active_area(CONFIG["AllInputElements"],
+                                                            stay_in_current_frame=True)
     return input_elements
 
 
 def get_input_elements_from_all_documents(
-        locator, anchor, timeout, index=1, enable_check=False, **kwargs):  # pylint: disable=unused-argument
+        locator: str,
+        anchor: str,
+        timeout: Union[int, float, str],  # pylint: disable=unused-argument
+        index: Union[int, str] = 1,
+        enable_check: bool = False,
+        **kwargs) -> WebElement:
     """Function for finding input elements.
     Parameters
     ----------
@@ -112,18 +119,19 @@ def get_input_elements_from_all_documents(
         if table is None:
             raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
         locator_element = table.get_table_cell(locator, anchor)
-        input_element = element.get_element_from_childnodes(
-            locator_element, kwargs['css'], dom_traversing=False)
-        if input_element:
-            return input_element[index]
+        input_elements = element.get_element_from_childnodes(locator_element,
+                                                             kwargs['css'],
+                                                             dom_traversing=False)
+        if input_elements:
+            return input_elements[int(index)]
         raise QWebElementNotFoundError('No matching table input found')
     css_selector = CONFIG["CssSelectors"]
     if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
         input_element = get_input_element_by_locator(locator, anchor, **kwargs)
     else:
         logger.debug('Uses CSS-selectors to locate element')
-        input_element = get_input_element_by_css_selector(
-            locator, anchor, index, enable_check, **kwargs)
+        input_element = get_input_element_by_css_selector(locator, anchor, int(index), enable_check,
+                                                          **kwargs)
         if not input_element:
             input_element = get_input_element_by_locator(locator, anchor, **kwargs)
     if input_element:
@@ -133,7 +141,11 @@ def get_input_elements_from_all_documents(
     raise QWebElementNotFoundError('No matching input elements found')
 
 
-def get_input_element_by_css_selector(locator, anchor, index=0, enable_check=False, **kwargs):
+def get_input_element_by_css_selector(locator: str,
+                                      anchor: str,
+                                      index: int = 0,
+                                      enable_check: bool = False,
+                                      **kwargs) -> Optional[WebElement]:
     """Get input element using css selectors.
        Parameters
        ----------
@@ -156,7 +168,7 @@ def get_input_element_by_css_selector(locator, anchor, index=0, enable_check=Fal
        -------
        WebElement
        """
-    partial_matches = []
+    partial_matches: WebElement = []
     upload = kwargs.get('upload')
     if upload:
         try:
@@ -168,11 +180,9 @@ def get_input_element_by_css_selector(locator, anchor, index=0, enable_check=Fal
         except ValueError:
             logger.debug('locator was text')
     if 'qweb_old' not in kwargs:
-        full_matches, partial_matches = element.get_elements_by_css(
-            locator, **kwargs)
+        full_matches, partial_matches = element.get_elements_by_css(locator, **kwargs)
         if full_matches:
-            input_element = element.get_visible_elements_from_elements(
-                full_matches, **kwargs)
+            input_element = element.get_visible_elements_from_elements(full_matches, **kwargs)
             if input_element and str(anchor) == '1':
                 input_element = input_element[index]
                 return input_element
@@ -181,14 +191,14 @@ def get_input_element_by_css_selector(locator, anchor, index=0, enable_check=Fal
                 return input_element
     try:
         locator_element = text.get_text_using_anchor(locator, anchor, **kwargs)
-        input_elements = list(dict.fromkeys(element.get_element_from_childnodes(
-            locator_element, **kwargs) + partial_matches))
+        input_elements = list(
+            dict.fromkeys(
+                element.get_element_from_childnodes(locator_element, **kwargs) + partial_matches))
     except QWebElementNotFoundError:
         logger.trace('Element not found by visible text. Trying with partial match')
         input_elements = partial_matches
     if input_elements:
-        visibles = element.get_visible_elements_from_elements(
-            input_elements, **kwargs)
+        visibles = element.get_visible_elements_from_elements(input_elements, **kwargs)
         if visibles:
             if element.is_enabled(visibles[index]) or enable_check is True:
                 return visibles[index]

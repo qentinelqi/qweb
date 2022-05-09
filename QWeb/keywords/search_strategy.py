@@ -14,18 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for search strategies.
 
 Search strategies define how elements are searched. With these settings
 the search strategies can be tuned according to use case.
 """
 
+from typing import Union
 from QWeb.internal.search_strategy import SearchStrategies
 from QWeb.keywords import config
 
 
-def search_direction(direction):
+def search_direction(direction: str) -> str:
     """*DEPRECATED!!* Use keyword `SetConfig  SearchDirection` instead.
 
     Set search direction for element search.
@@ -39,10 +39,10 @@ def search_direction(direction):
         SearchDirection    right
         SearchDirection    closest
     """
-    return config.set_config("SearchDirection", direction)
+    return str(config.set_config("SearchDirection", direction))
 
 
-def set_search_strategy(strategy_type, xpath):
+def set_search_strategy(strategy_type: str, xpath: str) -> str:
     """*DEPRECATED!!* Use keyword `SetConfig` instead.
 
     Set search strategy for element search.
@@ -100,7 +100,7 @@ def set_search_strategy(strategy_type, xpath):
     return previous
 
 
-def default_timeout(timeout):
+def default_timeout(timeout: Union[int, float, str]) -> Union[int, str]:
     """*DEPRECATED!!* Use keyword `SetConfig  DefaultTimeout` instead.
 
     Set default timeout for QWeb keywords.
@@ -118,7 +118,7 @@ def default_timeout(timeout):
     return config.set_config("DefaultTimeout", timeout)
 
 
-def xhr_timeout(timeout):
+def xhr_timeout(timeout: Union[int, float, str]) -> Union[int, str]:
     """*DEPRECATED!!* Use keyword `SetConfig  XHRTimeout` instead.
 
     Set default timeout for XHR (How log we wait page to be loaded).
@@ -135,7 +135,7 @@ def xhr_timeout(timeout):
     return config.set_config("XHRTimeout", timeout)
 
 
-def screenshot_type(capture_method):
+def screenshot_type(capture_method: str) -> str:
     """*DEPRECATED!!* Use keyword `SetConfig  ScreenshotType` instead.
 
     Define how screenshot is taken. Default is normal screenshot.
@@ -150,10 +150,10 @@ def screenshot_type(capture_method):
         ScreenshotType        screenshot
         ScreenshotType        all
     """
-    return config.set_config("ScreenshotType", capture_method)
+    return str(config.set_config("ScreenshotType", capture_method))
 
 
-def css_selectors(state):
+def css_selectors(state: str) -> str:
     """*DEPRECATED!!* Use keyword `SetConfig  CssSelectors` instead.
 
     Use CSS selectors for finding elements.
@@ -179,10 +179,10 @@ def css_selectors(state):
         TypeText           MyLocator   Robot
         CssSelectors       off
     """
-    return config.set_config("CssSelectors", state)
+    return str(config.set_config("CssSelectors", state))
 
 
-def check_input_value(state):
+def check_input_value(state: Union[str, bool]) -> Union[str, bool]:
     r"""*DEPRECATED!!* Use keyword `SetConfig  CheckInputValue` instead.
 
     Check that real value matches to preferred value after TypeText.
@@ -205,10 +205,10 @@ def check_input_value(state):
     \`GetInputValue\`, \`VerifyInputElement\`, \`VerifyInputStatus\`,
     \`VerifyInputValue\`, \`VerifyInputValues\`
     """
-    return config.set_config("CheckInputValue", state)
+    return bool(config.set_config("CheckInputValue", state))
 
 
-def default_document(state):
+def default_document(state: Union[str, bool]) -> Union[str, bool]:
     """*DEPRECATED!!* Use keyword `SetConfig  DefaultDocument` instead.
 
     Switches to default frame automatically.
@@ -235,7 +235,7 @@ def default_document(state):
     return config.set_config("DefaultDocument", state)
 
 
-def case_insensitive(state):
+def case_insensitive(state: Union[str, bool]) -> Union[str, bool]:
     """*DEPRECATED!!* Use keyword `SetConfig  CaseInsensitive` instead.
 
     Set containing_text_match according to selected case sensitivity.

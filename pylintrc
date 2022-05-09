@@ -6,19 +6,19 @@ ignore=.git,libs,vendor,versioneer.py, _version.py, remake_pyconly_wheel.py
 
 [MESSAGES CONTROL]
 
-disable=
-    fixme, # comment containing FIXME, XXX, or TODO
-    invalid-name,
-    locally-disabled, # disable= used
-    missing-docstring,
-    too-few-public-methods,
-    too-many-arguments,
-    too-many-instance-attributes,
-    too-many-locals,
-    wrong-import-order,
-    C0328,
-    W1514,
-    consider-using-f-string
+disable=fixme, # comment containing FIXME, XXX, or TODO
+        invalid-name,
+        locally-disabled, # disable= used
+        missing-docstring,
+        too-few-public-methods,
+        too-many-arguments,
+        too-many-instance-attributes,
+        too-many-locals,
+        wrong-import-order,
+        line-break-before-binary-operator,
+        C0328,
+        W1514,
+        consider-using-f-string
 
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may

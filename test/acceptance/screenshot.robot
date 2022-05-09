@@ -39,7 +39,8 @@ Screenshot Is Taken On Exception
     Should Be True    ${result}    Screenshot amount did not grow by one
 
 Full page screenshot
-    [Tags]
+    [Tags]    RESOLUTION_DEPENDENCY
+    SetConfig       WindowSize   1600x900
     ${driver}=                          Return Browser
     VerifyText                          HoverDropdown
     VerifyText                          Current scroll

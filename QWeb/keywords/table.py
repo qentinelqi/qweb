@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
 """Keywords for table elements.
 
 Table elements are used to show many kinds of data. Tables have cells in
 contain rows and columns. Cells can contain all kinds of elements. Cells
 are usually refenced by coordinates or unique neighbouring values.
 """
+from typing import Union
 
 from robot.api.deco import keyword
 from QWeb.internal import decorators, actions, util
@@ -28,14 +28,19 @@ from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, \
     QWebTimeoutError
 from QWeb.internal.table import Table
 
-
-ACTIVE_TABLE = None
+ACTIVE_TABLE: Table = None  # type: ignore[assignment]
 
 
 @keyword(tags=["Tables"])
 @decorators.timeout_decorator
-def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=unused-argument
-              child=None, level=1, index=1):
+def use_table(
+        locator: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        parent: bool = False,
+        child: bool = False,
+        level: int = 1,
+        index: int = 1) -> None:
     r"""Define table for all other table keywords.
 
     Sets active table for other keywords.
@@ -79,13 +84,15 @@ def use_table(locator, anchor="1", timeout=0, parent=None,  # pylint: disable=un
     \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`VerifyTable\`
     """
     global ACTIVE_TABLE  # pylint:disable=global-statement
-    ACTIVE_TABLE = Table.from_table_instance(locator, anchor, parent, child,
-                                             level, index)
+    ACTIVE_TABLE = Table.from_table_instance(locator, anchor, parent, child, level, index)
 
 
 @keyword(tags=("Tables", "Verification"))
 @decorators.timeout_decorator
-def verify_table(coordinates, expected, anchor="1", timeout=0):
+def verify_table(coordinates: str,
+                 expected: str,
+                 anchor: str = "1",
+                 timeout: Union[int, float, str] = 0) -> None:
     r"""Verify text in table coordinates.
 
     Reads cell value from coordinates in active table and verifies it
@@ -132,7 +139,10 @@ def verify_table(coordinates, expected, anchor="1", timeout=0):
 
 @keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
-def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
+def get_cell_text(coordinates: str,
+                  anchor: str = "1",
+                  timeout: Union[int, float, str] = 0,
+                  **kwargs) -> Union[str, int, float]:
     r"""Get cell text to variable.
 
     Locates cell by coordinates from active table and return value
@@ -188,7 +198,12 @@ def get_cell_text(coordinates, anchor="1", timeout=0, **kwargs):
 
 @keyword(tags=("Tables", "Interaction"))
 @decorators.timeout_decorator
-def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint: disable=unused-argument
+def click_cell(
+        coordinates: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        index: int = 1,
+        **kwargs) -> None:
     r"""Click table cell.
 
     Locates cell by coordinates or text from active table and clicks it
@@ -237,7 +252,11 @@ def click_cell(coordinates, anchor="1", timeout=0, index=1, **kwargs):  # pylint
 
 @keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
-def get_table_row(locator, anchor="1", timeout=0, **kwargs):  # pylint: disable=unused-argument
+def get_table_row(
+        locator: str,
+        anchor: str = "1",
+        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+        **kwargs) -> None:
     r"""Get row (index) from current table.
 
     Get table row by some visible text or value.

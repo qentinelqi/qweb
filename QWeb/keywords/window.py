@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from typing import Union, Optional
+
 from robot.api import logger
 from robot.api.deco import keyword
 from selenium.common.exceptions import NoSuchWindowException
@@ -25,7 +27,7 @@ from QWeb.internal.config_defaults import CONFIG
 
 @keyword(tags=("Browser", "Interaction"))
 @decorators.timeout_decorator
-def go_to(url, timeout=0):  # pylint: disable=unused-argument
+def go_to(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch current page to given url.
 
     Examples
@@ -57,7 +59,7 @@ def go_to(url, timeout=0):  # pylint: disable=unused-argument
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def open_window():
+def open_window() -> None:
     r"""Open new tab.
 
     Uses javascript to do this so javascript has to be enabled.
@@ -98,7 +100,7 @@ def open_window():
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def close_others():
+def close_others() -> None:
     r"""Close all windows except the first window.
 
     If you have a test that may open new windows, this keyword closes them
@@ -137,12 +139,11 @@ def close_others():
 
     number_of_handles = len(window.get_window_handles())
     if number_of_handles != 1:
-        raise Exception(
-            'Expected 1 window open, found {0}'.format(number_of_handles))
+        raise Exception('Expected 1 window open, found {0}'.format(number_of_handles))
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def close_window():
+def close_window() -> None:
     r"""Close current tab and switch context to another window handle.
 
     If you need to change to specific tab, use switch window keyword.
@@ -167,8 +168,7 @@ def close_window():
         browser.remove_from_browser_cache(driver)  # remove from browser cache
         driver.close()
     else:
-        logger.info(
-            "Multiple tabs open, can change window context to another one")
+        logger.info("Multiple tabs open, can change window context to another one")
         current_window = window.get_current_window_handle()
         current_index = window_handles.index(current_window)
         logger.info("Current index {}".format(current_index))
@@ -178,21 +178,19 @@ def close_window():
         # "refresh" window handles
         window_handles = window.get_window_handles()
         current_length = len(window_handles)
-        logger.info(
-            "After closing, {} tabs remain open".format(current_length))
+        logger.info("After closing, {} tabs remain open".format(current_length))
         # if current index is more than new length, move to last handle
         if current_index > (len(window_handles) - 1):
             window.switch_to_window(window_handles[(current_index - 1)])
         # move to next window (as browsers do)
         else:
             window.switch_to_window(window_handles[current_index])
-        logger.info("Changed context to tab with url {}".format(
-            window.get_url()))
+        logger.info("Changed context to tab with url {}".format(window.get_url()))
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
 @decorators.timeout_decorator
-def switch_window(index, timeout=0):  # pylint: disable=unused-argument
+def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch to another tab.
 
     Examples
@@ -239,14 +237,13 @@ def switch_window(index, timeout=0):  # pylint: disable=unused-argument
         window.switch_to_window(window_handles[-1])
         return
     else:
-        raise QWebValueError(
-            'Given argument "{}" is not a digit or NEW'.format(index))
+        raise QWebValueError('Given argument "{}" is not a digit or NEW'.format(index))
     raise QWebDriverError(
-        'Tried to select tab with index {} but there are only {} tabs open'
-        .format(index, len(window_handles)))
+        'Tried to select tab with index {} but there are only {} tabs open'.format(
+            index, len(window_handles)))
 
 
-def set_window_size(width, height):
+def set_window_size(width: int, height: int) -> None:
     """*DEPRECATED!!* Use keyword `SetConfig` instead.
 
     Set current window size.
@@ -272,7 +269,7 @@ def set_window_size(width, height):
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def maximize_window():
+def maximize_window() -> None:
     r"""Maximizes current browser window.
 
     Note: This keyword will not fail if maximizing is prevented for some reason.
@@ -313,7 +310,7 @@ def maximize_window():
 
 
 @keyword(tags=("Browser", "Getters"))
-def get_url():
+def get_url() -> str:
     r"""Gets current url/location.
 
 
@@ -341,7 +338,7 @@ def get_url():
 
 @keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
-def verify_url(url, timeout=0):  # pylint: disable=unused-argument
+def verify_url(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verifies that current page url/location matches expected url.
 
 
@@ -380,7 +377,7 @@ def verify_url(url, timeout=0):  # pylint: disable=unused-argument
 
 
 @keyword(tags=("Browser", "Getters"))
-def get_title():
+def get_title() -> str:
     r"""Gets the title of current page/window.
 
 
@@ -408,7 +405,7 @@ def get_title():
 
 @keyword(tags=("Browser", "Verification"))
 @decorators.timeout_decorator
-def verify_title(title, timeout=0):  # pylint: disable=unused-argument
+def verify_title(title: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Verifies that current page's title matches expected title.
 
 
@@ -447,7 +444,7 @@ def verify_title(title, timeout=0):  # pylint: disable=unused-argument
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_down(times='1', start=None):
+def swipe_down(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes down on the screen.
 
     Examples
@@ -479,7 +476,7 @@ def swipe_down(times='1', start=None):
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_up(times='1', start=None):
+def swipe_up(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes up on the screen.
 
     Examples
@@ -511,7 +508,7 @@ def swipe_up(times='1', start=None):
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_left(times='1', start=None):
+def swipe_left(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes left on the screen.
 
     Examples
@@ -543,7 +540,7 @@ def swipe_left(times='1', start=None):
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_right(times='1', start=None):
+def swipe_right(times: str = '1', start: Optional[str] = None) -> None:
     r"""Swipes right on the screen.
 
     Examples

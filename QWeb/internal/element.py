@@ -14,9 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from __future__ import annotations
+from typing import Optional, Callable, Any, Union
 
 import math
 from robot.api import logger
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, \
     StaleElementReferenceException, JavascriptException, InvalidSelectorException,\
@@ -27,10 +30,10 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElemen
 from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG
 
-ACTIVE_AREA_FUNCTION = None
+ACTIVE_AREA_FUNCTION: Optional[Callable[..., Any]] = None
 
 
-def is_enabled(element):
+def is_enabled(element: WebElement) -> bool:
     """Is the element interactable?
 
     Uses the disabled attribute to determine if form element is enabled or
@@ -48,7 +51,7 @@ def is_enabled(element):
     return not bool(disabled)
 
 
-def is_readonly(element):
+def is_readonly(element: WebElement) -> bool:
     """Is the element interactable?
 
     Uses the readonly attribute to determine if form element is enabled or
@@ -62,11 +65,11 @@ def is_readonly(element):
     -------
     bool
     """
-    return util.par2bool(javascript.execute_javascript(
-        'return arguments[0].hasAttribute("readonly")', element))
+    return util.par2bool(
+        javascript.execute_javascript('return arguments[0].hasAttribute("readonly")', element))
 
 
-def is_visible(element):
+def is_visible(element: WebElement) -> bool:
     """Is the element interactable?
 
     Uses the display attribute to determine if form element is visible or
@@ -84,7 +87,8 @@ def is_visible(element):
     return bool(visibility.lower() != 'none')
 
 
-def get_closest_element(locator_element, candidate_elements):
+def get_closest_element(locator_element: WebElement,
+                        candidate_elements: list[WebElement]) -> WebElement:
     """Get the closest element in a list of elements to a wanted element.
 
     Parameters
@@ -99,15 +103,14 @@ def get_closest_element(locator_element, candidate_elements):
     if not candidate_elements:
         raise QWebElementNotFoundError('No elements visible')
     closest_element_list = []
-    closest_distance = 1000000  # Just some large number
+    closest_distance = 1000000.0  # Just some large number
     for candidate_element in candidate_elements:
         element_info = _list_info(candidate_element)
         logger.debug("Measuring distance for: {}".format(element_info))
         if _overlap(locator_element, candidate_element):
             logger.debug('Elements overlap, returning this: {}'.format(element_info))
             return candidate_element
-        distance = _calculate_closest_distance(locator_element,
-                                               candidate_element)
+        distance = _calculate_closest_distance(locator_element, candidate_element)
         logger.debug("Candidate {}: distance: {}".format(candidate_element, distance))
 
         if abs(distance - closest_distance) < 2:
@@ -117,15 +120,14 @@ def get_closest_element(locator_element, candidate_elements):
             closest_distance = distance
             closest_element_list = [candidate_element]
 
-    closest_element = _get_closest_ortho_element(locator_element,
-                                                 closest_element_list)
+    closest_element = _get_closest_ortho_element(locator_element, closest_element_list)
 
     logger.debug("Closest distance found is {}".format(closest_distance))
     logger.debug("Closest element is: {}".format(_list_info(closest_element)))
     return closest_element
 
 
-def get_unique_element_by_xpath(xpath, **kwargs):
+def get_unique_element_by_xpath(xpath: str, **kwargs: Any) -> WebElement:
     """Get element if it is needed to be unique.
 
     One use case is that when xpath is written in the test script with
@@ -145,14 +147,13 @@ def get_unique_element_by_xpath(xpath, **kwargs):
             draw_borders(elements[0])
         return elements[0]
     elif not elements:
-        raise QWebElementNotFoundError(
-            'XPath {} did not find any elements'.format(xpath))
-    raise QWebValueError('XPath {} matched {} elements. Needs to be unique'
-                         .format(xpath, len(elements)))
+        raise QWebElementNotFoundError('XPath {} did not find any elements'.format(xpath))
+    raise QWebValueError('XPath {} matched {} elements. Needs to be unique'.format(
+        xpath, len(elements)))
 
 
 @frame.all_frames
-def get_webelements(xpath, **kwargs):
+def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
     """Get visible web elements that correspond to given XPath.
 
     To check that element is visible it is checked that it has width. This
@@ -174,14 +175,13 @@ def get_webelements(xpath, **kwargs):
         xpath = xpath.split("=", 1)[1]
     driver = browser.get_current_browser()
     web_elements = driver.find_elements(By.XPATH, xpath)
-    logger.trace("XPath {} matched {} WebElements"
-                 .format(xpath, len(web_elements)))
+    logger.trace("XPath {} matched {} WebElements".format(xpath, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
     return web_elements
 
 
 @frame.all_frames
-def get_webelement_by_css(css, **kwargs):
+def get_webelement_by_css(css: str, **kwargs: Any) -> Union[WebElement, list[WebElement]]:
     """Get visible web element that correspond to given css selector.
 
     To check that element is visible it is checked that it has width. This
@@ -202,8 +202,7 @@ def get_webelement_by_css(css, **kwargs):
     index = kwargs.get('index', 1)
     driver = browser.get_current_browser()
     web_elements = driver.find_elements(By.CSS_SELECTOR, css)
-    logger.debug("CSS selector {} matched {} WebElements"
-                 .format(css, len(web_elements)))
+    logger.debug("CSS selector {} matched {} WebElements".format(css, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
 
     index = int(index) - 1
@@ -212,14 +211,13 @@ def get_webelement_by_css(css, **kwargs):
             return web_elements[index]
         except IndexError as ie:
             raise QWebValueError(
-                f'Used index {index} was greater than amount of found elements.'
-            ) from ie
+                f'Used index {index} was greater than amount of found elements.') from ie
 
     return web_elements
 
 
 @frame.all_frames
-def get_webelements_in_active_area(xpath, **kwargs):
+def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[WebElement]]:
     """Find element under another element.
 
     If ${ACTIVE_AREA_FUNC} returns an element then the xpath is searched from
@@ -259,8 +257,7 @@ def get_webelements_in_active_area(xpath, **kwargs):
     try:
         webelements = active_area.find_elements(By.XPATH, xpath)
 
-        logger.trace('XPath {} matched {} webelements'
-                     .format(xpath, len(webelements)))
+        logger.trace('XPath {} matched {} webelements'.format(xpath, len(webelements)))
         webelements = get_visible_elements_from_elements(webelements, **kwargs)
     except StaleElementReferenceException as se:
         raise QWebStalingElementError('Got StaleElementException') from se
@@ -270,7 +267,8 @@ def get_webelements_in_active_area(xpath, **kwargs):
     return webelements
 
 
-def get_visible_elements_from_elements(web_elements, **kwargs):
+def get_visible_elements_from_elements(web_elements: list[WebElement],
+                                       **kwargs: Any) -> list[WebElement]:
     visible_elements = []
     hiding_elements = []
     vis_check = util.par2bool(kwargs.get('visibility', CONFIG['Visibility']))
@@ -303,18 +301,18 @@ def get_visible_elements_from_elements(web_elements, **kwargs):
                 hiding_elements.append(el.get('elem'))
         elif css_visibility:
             hiding_elements.append(el.get('elem'))
-    logger.debug('found {} visible elements and {} hiding ones'
-                 .format(len(visible_elements), len(hiding_elements)))
+    logger.debug('found {} visible elements and {} hiding ones'.format(
+        len(visible_elements), len(hiding_elements)))
     if viewport_check:
         return visible_elements
     return visible_elements + hiding_elements
 
 
-def get_all_inputs_from_shadow_dom():
+def get_all_inputs_from_shadow_dom() -> WebElement:
     return javascript.get_all_input_elements_from_shadow_dom()
 
 
-def draw_borders(elements):
+def draw_borders(elements: Union[WebElement, list[WebElement]]) -> None:
     mode = CONFIG['SearchMode']
     color = CONFIG['HighlightColor']
     if not isinstance(elements, list):
@@ -329,7 +327,7 @@ def draw_borders(elements):
             javascript.highlight_element(e, False, True, color=color)
 
 
-def _calculate_closest_distance(element1, element2):
+def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> float:
     """Calculate closest distance between elements in pixel units.
 
     Gets corners' locations for both elements and use them to calculate the
@@ -349,42 +347,41 @@ def _calculate_closest_distance(element1, element2):
     search_direction = CONFIG["SearchDirection"]
     corners_locations1 = _get_corners_locations(element1)
     corners_locations2 = _get_corners_locations(element2)
-    closest_distance = 1000000  # Some large number
+    closest_distance = 1000000.0  # Some large number
     for corner1 in corners_locations1:
         for corner2 in corners_locations2:
-            distance = _manhattan_distance(corner1['x'], corner1['y'],
-                                           corner2['x'], corner2['y'])
+            distance = _manhattan_distance(corner1['x'], corner1['y'], corner2['x'], corner2['y'])
             if search_direction != 'closest':
                 # y coordinate goes up downwards on page
                 # small y is above
-                angle = math.degrees(math.atan2(corner2['y'] - corner1['y'],
-                                                corner2['x'] - corner1['x']))
+                angle = math.degrees(
+                    math.atan2(corner2['y'] - corner1['y'], corner2['x'] - corner1['x']))
             if search_direction == 'down':
                 if not 5 < angle < 175:
-                    logger.debug('Search direction is {} and element is not in arc'.
-                                 format(search_direction))
-                    distance = 1000000
+                    logger.debug(
+                        'Search direction is {} and element is not in arc'.format(search_direction))
+                    distance = 1000000.0
             elif search_direction == 'up':
                 if not -175 < angle < -5:
-                    logger.debug('Search direction is {} and element is not in arc'.
-                                 format(search_direction))
-                    distance = 1000000
+                    logger.debug(
+                        'Search direction is {} and element is not in arc'.format(search_direction))
+                    distance = 1000000.0
             elif search_direction == 'left':
                 if not abs(angle) > 95:
-                    logger.debug('Search direction is {} and element is not in arc'.
-                                 format(search_direction))
-                    distance = 1000000
+                    logger.debug(
+                        'Search direction is {} and element is not in arc'.format(search_direction))
+                    distance = 1000000.0
             elif search_direction == 'right':
                 if not -85 < angle < 85:
-                    logger.debug('Search direction is {} and element is not in arc'.
-                                 format(search_direction))
-                    distance = 1000000
+                    logger.debug(
+                        'Search direction is {} and element is not in arc'.format(search_direction))
+                    distance = 1000000.0
             if closest_distance > distance > 0:
                 closest_distance = distance
     return closest_distance
 
 
-def _calculate_closest_ortho_distance(element1, element2):
+def _calculate_closest_ortho_distance(element1: WebElement, element2: WebElement) -> float:
     """Returns shortest ortho  distance between locator and candidate element centers
 
     Parameters
@@ -403,7 +400,7 @@ def _calculate_closest_ortho_distance(element1, element2):
     return min(distance_h, distance_v)
 
 
-def _get_center_location(element):
+def _get_center_location(element: WebElement) -> dict[str, float]:
     """ Calculate rectangle's center locations
 
        Each element on a web page is in a rectangle. Uses the WebElement's
@@ -420,12 +417,13 @@ def _get_center_location(element):
     """
     location = element.location
     size = element.size
-    center = {'x': location['x'] + (size['width'] / 2),
-              'y': location['y'] + (size['height'] / 2)}
+    center = {'x': location['x'] + (size['width'] / 2), 'y': location['y'] + (size['height'] / 2)}
     return center
 
 
-def _get_corners_locations(element):
+def _get_corners_locations(
+    element: WebElement
+) -> tuple[dict[str, float], dict[str, float], dict[str, float], dict[str, float]]:
     """Calculate rectangle's corners' locations
 
     Each element on a web page is in a rectangle. Uses the WebElement's
@@ -444,23 +442,19 @@ def _get_corners_locations(element):
     location = element.location
     size = element.size
     top_left_corner = {'x': location['x'], 'y': location['y']}
-    top_right_corner = {'x': location['x'] + size['width'],
-                        'y': location['y']}
-    bottom_left_corner = {'x': location['x'],
-                          'y': location['y'] + size['height']}
-    bottom_right_corner = {'x': top_right_corner['x'],
-                           'y': bottom_left_corner['y']}
-    corners_locations = (top_left_corner, top_right_corner,
-                         bottom_left_corner, bottom_right_corner)
+    top_right_corner = {'x': location['x'] + size['width'], 'y': location['y']}
+    bottom_left_corner = {'x': location['x'], 'y': location['y'] + size['height']}
+    bottom_right_corner = {'x': top_right_corner['x'], 'y': bottom_left_corner['y']}
+    corners_locations = (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)
     return corners_locations
 
 
-def _manhattan_distance(x0, y0, x1, y1):
+def _manhattan_distance(x0: float, y0: float, x1: float, y1: float) -> float:
     """Get manhattan distance between points (x0, y0) and (x1, y1)."""
     return abs(x0 - x1) + abs(y0 - y1)
 
 
-def _overlap(element1, element2):
+def _overlap(element1: WebElement, element2: WebElement) -> float:
     """Detects if two rectangles overlap
     """
     corners_locations1 = _get_corners_locations(element1)
@@ -480,13 +474,14 @@ def _overlap(element1, element2):
         and _range_overlap(r1_bottom, r1_top, r2_bottom, r2_top)
 
 
-def _range_overlap(a_min, a_max, b_min, b_max):
+def _range_overlap(a_min: float, a_max: float, b_min: float, b_max: float) -> float:
     """Neither range is completely greater than the other
     """
     return (a_min <= b_max) and (b_min <= a_max)
 
 
-def _get_closest_ortho_element(locator_element, element_list):
+def _get_closest_ortho_element(locator_element: WebElement,
+                               element_list: list[WebElement]) -> WebElement:
     """Return closest element by orthogonal distance
 
     Compares all elements from a list against locator element based on their horizontal
@@ -508,11 +503,10 @@ def _get_closest_ortho_element(locator_element, element_list):
     elif list_len == 0:
         raise IndexError
 
-    closest_distance = 1000000
+    closest_distance = 1000000.0
     for candidate_element in element_list:
         distance = _calculate_closest_ortho_distance(locator_element, candidate_element)
-        logger.debug("Candidate {}: horizontal distance: {}".format(candidate_element,
-                                                                    distance))
+        logger.debug("Candidate {}: horizontal distance: {}".format(candidate_element, distance))
         if distance < closest_distance:
             closest_distance = distance
             closest_element = candidate_element
@@ -520,7 +514,7 @@ def _get_closest_ortho_element(locator_element, element_list):
     return closest_element
 
 
-def operator_verify(value, expected, operator):
+def operator_verify(value: str, expected: str, operator: str) -> None:
     """verify value based on given operator / condition"""
     EQUALS = ["equal", "equals", "=="]
     NOT_EQUAL = ["not equal", "!="]
@@ -547,40 +541,34 @@ def operator_verify(value, expected, operator):
 
     if operator in EQUALS and value != expected:
         raise QWebValueError(
-            f"Expected attribute value differs from real value: {expected}/{value}"
-        )
+            f"Expected attribute value differs from real value: {expected}/{value}")
     if operator in NOT_EQUAL and value == expected:
-        raise QWebValueError(
-            f"Expected attribute value matches real value: {expected}/{value}"
-        )
+        raise QWebValueError(f"Expected attribute value matches real value: {expected}/{value}")
     if operator == "contains" and expected not in value:
         raise QWebValueError(f'Attribute value "{value}" does not contain: "{expected}"')
     if operator == "not contains" and expected in value:
         raise QWebValueError(f'Attribute value "{value}" contains: "{expected}"')
 
     # numeric comparison operator used but either value not numeric
-    if [x for x in [GREATER_THAN, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL]
-       if operator in x]:
+    if [
+            x for x in [GREATER_THAN, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL]
+            if operator in x
+    ]:
         if not (value.isdigit() and expected.isdigit()):
             raise QWebValueError(f'Attribute value "{value}" is not numeric!')
 
     if operator in GREATER_THAN and int(value) <= int(expected):
         raise QWebValueError(
-            f'Attribute value: "{value}" is not greater than expected: "{expected}"'
-        )
+            f'Attribute value: "{value}" is not greater than expected: "{expected}"')
 
     if operator in LESS_THAN and int(value) >= int(expected):
-        raise QWebValueError(
-            f'Attribute value: "{value}" is greater than expected: "{expected}"'
-        )
+        raise QWebValueError(f'Attribute value: "{value}" is greater than expected: "{expected}"')
     if operator in GREATER_THAN_OR_EQUAL and int(value) < int(expected):
         raise QWebValueError(
-            f'Attribute value: "{value}" is not greater or equal than expected: "{expected}"'
-        )
+            f'Attribute value: "{value}" is not greater or equal than expected: "{expected}"')
     if operator in LESS_THAN_OR_EQUAL and int(value) > int(expected):
         raise QWebValueError(
-            f'Attribute value: "{value}" is not less or equal than expected: "{expected}"'
-        )
+            f'Attribute value: "{value}" is not less or equal than expected: "{expected}"')
 
 
 def _list_info(candidate_element):
@@ -593,25 +581,31 @@ def _list_info(candidate_element):
 
 
 @frame.all_frames
-def get_elements_by_attributes(css, locator=None, **kwargs):
+def get_elements_by_attributes(
+        css: str,
+        locator: Optional[str] = None,
+        **kwargs) -> Union[list[WebElement], tuple[list[WebElement], list[WebElement]]]:
     any_element = util.par2bool(kwargs.get('any_element', None))
     partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
     if 'tag' in kwargs:
-        css = kwargs.get('tag')
+        css = str(kwargs.get('tag'))
     try:
         elements = javascript.get_all_elements(css)
         if any_element:
             return elements
-        matches = javascript.get_by_attributes(elements, locator.replace("\'", "\\'"), partial)
-        logger.debug('attrfunc found full matches: {}, partial matches: {}'
-                     .format(matches.get('full'), matches.get('partial')))
-        full, partial = matches.get('full'), matches.get('partial')
+        matches = javascript.get_by_attributes(
+            elements,
+            locator.replace("\'", "\\'"),  # type: ignore[union-attr]
+            partial)
+        logger.debug('attrfunc found full matches: {}, partial matches: {}'.format(
+            matches.get('full'), matches.get('partial')))
+        full_matches, partial_matches = matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException, AttributeError) as e:
         logger.debug('Got exception from get elements by attributes: {}'.format(e))
-        full, partial = [], []
+        full_matches, partial_matches = [], []
     if 'element_kw' not in kwargs:
-        return full, partial
-    web_elements = full + partial
+        return full_matches, partial_matches
+    web_elements = full_matches + partial_matches
     if web_elements:
         if CONFIG['SearchMode']:
             draw_borders(web_elements)
@@ -620,21 +614,25 @@ def get_elements_by_attributes(css, locator=None, **kwargs):
 
 
 @frame.all_frames
-def get_element_by_label_for(locator, css, **kwargs):  # pylint: disable=unused-argument
+def get_element_by_label_for(
+        locator: str, css: str, **kwargs) -> tuple[list[WebElement], list[WebElement]]:  # pylint: disable=unused-argument
     partial = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
     limit = util.par2bool(kwargs.get('limit_traverse', CONFIG['LimitTraverse']))
     level = 3 if limit is True else 6
     try:
         matches = javascript.get_by_label(locator.replace("\'", "\\'"), css, level, partial)
-        logger.debug('labelfunc found full matches: {}, partial matches: {}'
-                     .format(matches.get('full'), matches.get('partial')))
-        return matches.get('full'), matches.get('partial')
+        logger.debug('labelfunc found full matches: {}, partial matches: {}'.format(
+            matches.get('full'), matches.get('partial')))
+        return matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException) as e:
         logger.warn('Exception from label func: {}'.format(e))
         return [], []
 
 
-def get_element_from_childnodes(locator_element, css, dom_traversing=True, **kwargs):
+def get_element_from_childnodes(locator_element: WebElement,
+                                css: str,
+                                dom_traversing: bool = True,
+                                **kwargs) -> list[WebElement]:
     limit = util.par2bool(kwargs.get('limit_traverse', CONFIG['LimitTraverse']))
     level = 3 if limit is True else 6
     try:
@@ -648,13 +646,14 @@ def get_element_from_childnodes(locator_element, css, dom_traversing=True, **kwa
     raise QWebElementNotFoundError('Child with tag {} not found.'.format(css))
 
 
-def get_elements_by_css(locator, css, **kwargs):
+def get_elements_by_css(locator: str, css: str,
+                        **kwargs) -> tuple[list[WebElement], list[WebElement]]:
     try:
         f0, p0 = get_elements_by_attributes(css, locator, **kwargs)
     except NoSuchFrameException:
         logger.debug('got no such frame exception from get elem bu attrs')
         f0, p0 = [], []
-    if(len(f0 + p0)) > 0:
+    if (len(f0 + p0)) > 0:
         kwargs['stay_in_current_frame'] = True
     try:
         f1, p1 = get_element_by_label_for(locator, css, **kwargs)
@@ -666,15 +665,15 @@ def get_elements_by_css(locator, css, **kwargs):
     return full_matches, partial_matches
 
 
-def get_parent_element(web_element, tag):
-    web_element = javascript.execute_javascript(
-        'return arguments[0].closest(\'{}\')'.format(tag), web_element)
+def get_parent_element(web_element: WebElement, tag: str) -> WebElement:
+    web_element = javascript.execute_javascript('return arguments[0].closest(\'{}\')'.format(tag),
+                                                web_element)
     if web_element:
         return web_element
     raise QWebElementNotFoundError('Parent with tag {} not found.'.format(tag))
 
 
-def get_parent_list_element(locator_element, css):
+def get_parent_list_element(locator_element: WebElement, css: str) -> WebElement:
     try:
         web_element = javascript.get_parent_list(locator_element, css)
     except (WebDriverException, JavascriptException) as e:
@@ -685,7 +684,8 @@ def get_parent_list_element(locator_element, css):
     raise QWebElementNotFoundError('Parent with tag {} not found.'.format(css))
 
 
-def get_element_to_click_from_list(active_list, index, **kwargs):
+def get_element_to_click_from_list(active_list: list[WebElement], index: int,
+                                   **kwargs) -> WebElement:
     if 'tag' in kwargs:
         element = javascript.execute_javascript(
             'return arguments[0].querySelector("{}")'.format(kwargs['tag']), active_list[index])

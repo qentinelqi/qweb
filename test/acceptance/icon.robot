@@ -65,7 +65,7 @@ IsIcon False
     Should Not Be True      ${result}
 
 WriteText
-    [Tags]                  jailed	PROBLEM_IN_FIREFOX      RESOLUTION_DEPENDENCY
+    [Tags]                  jailed	PROBLEM_IN_FIREFOX      RESOLUTION_DEPENDENCY    PROBLEM_IN_MACOS
     CloseAllBrowsers
     OpenBrowser             file://${CURDIR}/../resources/input.html    chrome
     ClickIcon               leftright

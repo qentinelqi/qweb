@@ -14,19 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-
+from __future__ import annotations
+from typing import Any
 from QWeb.internal import browser
 from selenium.common.exceptions import NoSuchWindowException
 
 
-def delete_all_cookies():
+def delete_all_cookies() -> None:
     driver = browser.get_current_browser()
     if driver is None:
         raise NoSuchWindowException("Can't delete cookies, no open browser")
     driver.delete_all_cookies()
 
 
-def get_cookies():
+def get_cookies() -> set[dict[str, Any]]:
     driver = browser.get_current_browser()
     if driver is None:
         raise NoSuchWindowException("Can't list cookies, no open browser")
