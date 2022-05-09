@@ -174,14 +174,6 @@ def _args_to_kwargs(params: MappingProxyType[str, Any], args: tuple,
 
 def _equal_sign_handler(args: Union[tuple, list], kwargs: dict,
                         function_name: Union[str, Callable[..., Any]]) -> tuple[tuple, dict, str]:
-    if 'go_to' in str(function_name):
-        if kwargs:
-            new_args = []
-            for k, v in kwargs.items():
-                new_args.append(k)
-                new_args.append(v)
-            args = tuple(["=".join(map(str, new_args))])
-            kwargs.clear()
     try:
         locator = args[0]
     except IndexError:
