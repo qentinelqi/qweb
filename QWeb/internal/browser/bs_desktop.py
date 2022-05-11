@@ -46,6 +46,7 @@ def open_browser(bs_browser: str, project_name: str, run_id: str) -> WebDriver:
     try:
         executor_url = 'https://{}:{}@hub-cloud.browserstack.com/wd/hub'.format(bs_user, bs_key)
         driver = webdriver.Remote(command_executor=executor_url, desired_capabilities=desired_caps)
+        logger.info(f'BrowserStack session ID: {driver.session_id}', also_console=True)
     except WebDriverException as e:
         logger.error(e)
         raise exceptions.QWebException('Incorrect Browserstack capabilities.')
