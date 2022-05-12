@@ -57,6 +57,7 @@ Use index anchor
     VerifyCheckboxValue     Blue                    on              2
 
 Checkbox using css 1
+    SetConfig               CssSelectors            on
     VerifyCheckboxStatus    I have a bike           enabled
     VerifyCheckboxStatus    I should be disabled    disabled
     ClickCheckbox           I have a bike           on
@@ -69,8 +70,10 @@ Checkbox using css 1
     VerifyCheckboxValue     I have a car            on
     ClickCheckbox           I have a car            off
     VerifyCheckboxValue     I have a car            off
+    SetConfig               CssSelectors            off
 
 Checkbox using css 2
+    SetConfig               CssSelectors            on
     ClickCheckbox           Red                     on
     ClickCheckbox           Sample text             on
     VerifyCheckboxValue     Sample text             on
@@ -80,6 +83,7 @@ Checkbox using css 2
     ClickCheckbox           Blue                    off
     VerifyCheckboxValue     Red                     on
     VerifyCheckboxValue     Blue                    off
+    SetConfig               CssSelectors            off
 
 Delayed Checkbox
     ClickText               Show checkbox
