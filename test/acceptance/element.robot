@@ -1,8 +1,7 @@
 *** Settings ***
 Documentation                   Tests from element keywords
 Library                         QWeb
-Library    DatabaseLibrary
-Library    OperatingSystem
+Library                         OperatingSystem
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/text.html                 ${BROWSER}           --headless
 Suite Teardown                  CloseBrowser
 Test Timeout                    1min
