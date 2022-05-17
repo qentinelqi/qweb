@@ -15,7 +15,7 @@ on:
 
 jobs:
   linux_acceptance:
-    uses: ./.github/workflows/tests-reusable.yml
+    uses: ./.github/workflows/tests_reusable.yml
     with:
       # arrays for matrices must be given as string for json parsing
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
