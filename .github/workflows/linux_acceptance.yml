@@ -15,6 +15,7 @@ on:
 
 jobs:
   linux_acceptance:
+    name: Linux
     uses: ./.github/workflows/tests_reusable.yml
     with:
       # arrays for matrices must be given as string for json parsing
