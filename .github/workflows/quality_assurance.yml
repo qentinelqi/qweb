@@ -1,0 +1,118 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Quality Assurance
+
+on: 
+  push:
+    branches: [ master, main ]
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ master, main ]
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      StaticAnalysis:
+        description: Run Static Analysis
+        type: boolean
+        required: false
+        default: false
+      Linux:
+        description: Run Linux tests
+        type: boolean
+        required: false
+        default: false
+      Windows:
+        description: Run Windows tests
+        type: boolean
+        required: false
+        default: false
+      MacOS:
+        description: Run MacOS tests
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  StaticAnalysis:
+    name: Static Analysis
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      # This job must pass for the test jobs to run 
+      # --> check the execution flag on each step
+      # Is there a better way to skip execution and mark job as passed?
+      if: ${{ github.event.inputs.StaticAnalysis == 'true' || github.event.inputs.StaticAnalysis == null }}
+      uses: actions/checkout@v2
+    - name: Set up Python
+      if: ${{ github.event.inputs.StaticAnalysis == 'true' || github.event.inputs.StaticAnalysis == null }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      if: ${{ github.event.inputs.StaticAnalysis == 'true' || github.event.inputs.StaticAnalysis == null }}
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements_test.txt
+
+    - name: Typecheck with mypy
+      if: ${{ github.event.inputs.StaticAnalysis == 'true' || github.event.inputs.StaticAnalysis == null }}
+      run: |
+        mypy --show-error-codes QWeb
+
+    - name: Lint with flake8
+      if: ${{ github.event.inputs.StaticAnalysis == 'true' || github.event.inputs.StaticAnalysis == null }}
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Lint with pylint
+      if: ${{ github.event.inputs.StaticAnalysis == 'true' || github.event.inputs.StaticAnalysis == null }}
+      run: |
+        pylint QWeb
+
+  Linux:
+    if: ${{ github.event.inputs.Linux == 'true' || github.event.inputs.Linux == null }}
+    needs: StaticAnalysis
+    uses: ./.github/workflows/tests_reusable.yml
+    with:
+      # arrays for matrices must be given as string for json parsing
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
+      os: '["ubuntu-latest"]'
+      browser: '["chrome", "firefox"]'
+      python-version: '["3.7", "3.8", "3.9"]'
+      rfw-322-python: "3.7"
+
+  Windows:
+    if: ${{ github.event.inputs.Windows == 'true' || github.event.inputs.Windows == null}}
+    needs: StaticAnalysis
+    uses: ./.github/workflows/tests_reusable.yml
+    with:
+      # arrays for matrices must be given as string for json parsing
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
+      os: '["windows-latest"]'
+      browser: '["chrome", "edge", "firefox"]'
+      python-version: '["3.9", "3.10"]'
+      rfw-322-python: "3.9"
+      additional-rfw-parameters: "-e FLASK"
+
+  MacOS:
+    if: ${{ github.event.inputs.MacOS == 'true' || github.event.inputs.MacOS == null }}
+    needs: StaticAnalysis
+    uses: ./.github/workflows/tests_reusable.yml
+    with:
+      # arrays for matrices must be given as string for json parsing
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
+      os: '["macos-latest"]'
+      browser: '["chrome", "edge", "safari"]'
+      python-version: '["3.8", "3.9"]'
+      rfw-322-python: "3.8"
+      additional-rfw-parameters: "-e RESOLUTION_DEPENDENCY -e FLASK"
