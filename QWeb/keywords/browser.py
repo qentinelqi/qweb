@@ -160,9 +160,9 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     if provider in ('bs', 'browserstack'):
         bs_device = BuiltIn().get_variable_value('${DEVICE}')
         if not bs_device and b_lower in bs_desktop.NAMES:
-            driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id)
+            driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id, **kwargs)
         elif bs_device:
-            driver = bs_mobile.open_browser(bs_device, bs_project_name, bs_run_id)
+            driver = bs_mobile.open_browser(bs_device, bs_project_name, bs_run_id, **kwargs)
         else:
             raise exceptions.QWebException('Unknown browserstack browser {}'.format(browser_alias))
     else:
