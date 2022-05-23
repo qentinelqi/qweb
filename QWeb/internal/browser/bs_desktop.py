@@ -3,6 +3,7 @@ import os
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from typing import Any
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 from QWeb.internal import browser, exceptions
@@ -25,12 +26,12 @@ OS: dict[str, str] = {
 }
 
 
-def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: str) -> WebDriver:
+def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any) -> WebDriver:
     bs_key = BuiltIn().get_variable_value('${APIKEY}') or os.environ.get('bskey')
     bs_user = BuiltIn().get_variable_value('${USERNAME}') or os.environ.get('bsuser')
     bs_os = BuiltIn().get_variable_value('${BSOS}') or 'windows'
 
-    desired_caps = {
+    desired_caps:dict = {
         'bstack:options': {
             "buildName": project_name,
             "projectName": project_name,

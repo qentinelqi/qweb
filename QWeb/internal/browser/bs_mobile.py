@@ -2,12 +2,13 @@ import os
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from typing import Any
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 from QWeb.internal import browser, exceptions
 
 
-def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: str) -> WebDriver:
+def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) -> WebDriver:
 
     desired_cap = {
         'bstack:options': {
