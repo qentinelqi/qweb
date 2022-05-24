@@ -3,7 +3,7 @@ Documentation                   Tests from element keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/text.html                 ${BROWSER}           --headless
 Suite Teardown                  CloseBrowser
-Test Timeout                    20 seconds
+Test Timeout                    30 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
@@ -73,7 +73,6 @@ IsElementFound 4
     Should Be Equal             ${found}                    ${TRUE}
 
 IsElementFoundDelay
-    [Timeout]    30 seconds
     VerifyNoElement             //*[@id\="hide"]
     ClickText                   Show hidden
     ${found}=                   IsElement                   //*[@id\="hide"]            20s
@@ -166,7 +165,6 @@ VerifyAttributeNotEquals
 
 VerifyAttributeGreater
     [Tags]                      VerifyAttribute
-    [Timeout]                   30 seconds
     Go To                       file://${CURDIR}/../resources/text.html
     # greater, should pass
     VerifyAttribute             Button3    data-id                          7                   element_type=Text    operator=greater than
@@ -187,7 +185,6 @@ VerifyAttributeGreaterOrEqual
 
 VerifyAttributeLessThan
     [Tags]                      VerifyAttribute
-    [Timeout]                   20 seconds
     Go To                       file://${CURDIR}/../resources/text.html
     # lower, should pass
     VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=less than
@@ -236,7 +233,6 @@ VerifyAttributeIncorrectOperator
 
 VerifyAttributeCheckbox
     [Tags]                      VerifyAttribute
-    [Timeout]                   30 seconds
     Go To                       file://${CURDIR}/../resources/checkbox.html
     ClickText                   Blue
     VerifyAttribute             //*[@id\="ch_1_1"]          checked                     true
@@ -245,7 +241,6 @@ VerifyAttributeCheckbox
 
 VerifyAttributeNOK
     [Tags]                      VerifyAttribute
-    [Timeout]                   30 seconds
     Go To                       file://${CURDIR}/../resources/text.html
     Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button[@name\="somethingthatdoesnotexist"]    id    something    timeout=2
     Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      //button             value                Button2              element_type=Text    timeout=2

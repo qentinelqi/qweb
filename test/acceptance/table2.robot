@@ -3,7 +3,7 @@ Documentation     More tests for table keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/table2.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      20 seconds
+Test Timeout      30 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -178,7 +178,6 @@ Anchors and indexes
     VerifyCheckBoxValue     r-1c6                   On                      index=2
 
 Using Cells, starts from last one
-    [Timeout]               30 seconds
     UseTable                Some Text
     ClickCheckbox           r-1c-1                  On
     ClickCheckbox           r-1c-1                  Off                     index=2
@@ -234,7 +233,6 @@ Use child table
 
 Get first empty row
     [tags]                  empty
-    [Timeout]               30 seconds
     UseTable                Stars
     TypeText                r?EMPTY/c?First         Qentsu
     TypeText                r?EMPTY/c?Last          Robot

@@ -3,7 +3,7 @@ Documentation                   Tests for frame keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}    --headless
 Suite Teardown                  CloseBrowser
-Test Timeout                    20 seconds
+Test Timeout                    30 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
@@ -52,7 +52,6 @@ Automatic frame search text elements
 
 Automatic frame search input elements
     [tags]                      inputs
-    [Timeout]                   20 seconds
     TypeText                    First input                 Robot
     TypeText                    Second input                QENROB
     TypeText                    Cell 1 input                20022019
@@ -68,7 +67,6 @@ Automatic frame search input elements
 
 Automatic frame search table elements
     [Tags]                      Frame
-    [Timeout]                   30 seconds
     UseTable                    Sample
     TypeText                    r4c1                        Qentiro
     TypeText                    r4c2                        Robot

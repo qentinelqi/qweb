@@ -105,7 +105,7 @@ jobs:
     - name: Merge rerun test results
       if: steps.initial-acceptance-tests.outcome == 'failure'
       run: |
-        python -m rebot --merge output_${{ matrix.browser }}/output.xml output_${{ matrix.browser }}/rerun.xml
+        python -m robot.rebot --merge output_${{ matrix.browser }}/output.xml output_${{ matrix.browser }}/rerun.xml
         mv log.html output_${{ matrix.browser }}/log.html
         mv report.html output_${{ matrix.browser }}/report.html
     

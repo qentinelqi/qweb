@@ -4,7 +4,7 @@ Library                         QWeb
 Library                         Collections
 Test Setup                      OpenBrowser                 about:blank                 ${BROWSER}                  --headless
 Test Teardown                   CloseBrowser
-Test Timeout                    20 seconds
+Test Timeout                    30 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome

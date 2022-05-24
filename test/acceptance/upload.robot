@@ -3,7 +3,7 @@ Documentation     Tests for UploadFile keyword
 Library           QWeb
 Suite Setup       SuiteStart
 Suite Teardown    CloseBrowser
-Test Timeout      20 seconds
+Test Timeout      30 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

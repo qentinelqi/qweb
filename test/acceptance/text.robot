@@ -3,7 +3,7 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/text.html  ${BROWSER}   --HEADLESS
 Suite Teardown    CloseBrowser
-Test Timeout      20 seconds
+Test Timeout      30 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
@@ -102,7 +102,6 @@ VerifyTextCountFail
 
 VerifyTextCountDelay
     [Tags]                  VerifyTextCount
-    [Timeout]               30 seconds
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyTextCount         Counttextyjku    3
     ClickText               Counttextyjku    anchorcount
@@ -239,7 +238,6 @@ IsText Xpath False
 
 IsText Timeout
     [Tags]                  IsText
-    [Timeout]               30 seconds
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyNoText            Delayed hidden text
     ClickText               Show hidden
@@ -318,7 +316,6 @@ ClickText Overlapping
     Run Keyword and Expect Error   ${message}    ClickText     Button6    1    0.1s
 
 Click Button and verify hidden text
-    [Timeout]               30 seconds
     RefreshPage
     VerifyNoText            Delayed hidden text
     ClickText               Show hidden
@@ -412,19 +409,16 @@ SkimClick slowly disabling button
 
 SkimClickCorrectErr
     [tags]                  
-    [Timeout]               30 seconds
     ${message}=    Set Variable    QWebValueError: Page contained the text "Click me" after timeout*
     Run Keyword and Expect Error   ${message}   SkimClick   HoverDropdown   Click me    timeout=2
 
 ScanClickCorrectErr2
     [tags]                  err
-    [Timeout]               30 seconds
     RefreshPage
     ${message}=    Set Variable    QWebElementNotFoundError: Unable to find element for locator skim/scan clicked!*
     Run Keyword and Expect Error   ${message}   ScanClick   HoverDropdown   skim/scan clicked!   timeout=2
 
 ScanClick with disabling button
-    [Timeout]               30 seconds
     RefreshPage
     ScanClick               SkimClick disable button    skim/scan clicked!   interval=1
 
@@ -447,7 +441,6 @@ Click while xpath
 
 Click Until
     [tags]                   whileuntil
-    [Timeout]                30 seconds
     RefreshPage
     ClickUntil               Clicks: 2      Click me     interval 1s  timeout=15s
 

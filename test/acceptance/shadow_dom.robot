@@ -3,7 +3,7 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser              file://${CURDIR}/../resources/shadow_dom.html  ${BROWSER}
 Suite Teardown    Shadow Teardown
-Test Timeout      20 seconds
+Test Timeout      30 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
@@ -66,7 +66,6 @@ VerifyAll & VerifyAny with shadow DOM
 
 Input keywords with shadow DOM
     [Setup]                SetConfig              ShadowDOM                     False
-    [Timeout]              30 seconds
     GoTo                   file://${CURDIR}/../resources/shadow_dom.html
     # verify inputs using normal dom only
     TypeText               username                      John Doe               # in normal/light dom

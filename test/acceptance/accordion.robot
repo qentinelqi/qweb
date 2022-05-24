@@ -4,7 +4,7 @@ Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}    --headless
 Test Setup          GoTo    file://${CURDIR}/../resources/accordions_and_modals.html
 Suite Teardown      CloseBrowser
-Test Timeout        20 seconds
+Test Timeout        30 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

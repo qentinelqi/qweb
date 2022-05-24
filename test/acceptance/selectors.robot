@@ -3,7 +3,7 @@ Documentation     Tests for selector attribute
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/frame.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      20 seconds
+Test Timeout      30 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
