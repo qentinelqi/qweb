@@ -3,7 +3,7 @@ Documentation     Tests for frame keywords
 Library           QWeb
 Suite Setup       OpenBrowser    file://${CURDIR}/../resources/frame.html    ${BROWSER}   -headless
 Suite Teardown    CloseBrowser
-Test Timeout      10 seconds
+Test Timeout      20 seconds
 
 *** Variables ***
 ${BROWSER}    firefox
@@ -40,7 +40,7 @@ Automatic frame search input elements
 
 Automatic frame search table elements
     [Tags]                  jailed
-    [Timeout]               20 seconds
+    [Timeout]               30 seconds
     UseTable                Sample
     TypeText                r4c1                    Qentiro
     TypeText                r4c2                    Robot
@@ -56,7 +56,7 @@ Automatic frame search table elements
 
 Automatic frame search checkbox elements
     [Tags]                  jailed
-    [Timeout]               20 seconds
+    [Timeout]               30 seconds
     SetConfig               CSSSelectors            off
     VerifyCheckboxStatus    I have a bike           enabled
     VerifyCheckboxStatus    I should be disabled    disabled

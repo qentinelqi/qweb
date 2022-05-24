@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for Config keywords
 Library           QWeb
-Test Timeout      10 seconds
+Test Timeout      20 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

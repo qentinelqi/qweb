@@ -6,7 +6,7 @@ Suite Setup  Run Keyword If    '${BROWSER}'=='chrome'
 ...  ELSE  OpenBrowser  file://${CURDIR}/../resources/self_repairing_example.html  ${BROWSER}
 ...  --headless
 Suite Teardown  CloseBrowser
-Test Timeout        10 seconds
+Test Timeout        20 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -18,7 +18,7 @@ TypeText To Selfrepairing Input Works
     VerifyInputValue    xpath\=//input[@id\="fname"]   FOOOO
 
 TypeText checkinput value one time check True
-    [Timeout]      20 seconds
+    [Timeout]      30 seconds
     SetConfig      LineBreak       \ue000
     ${message}=    Set Variable    QWebValueError: Expected value*
     Run Keyword And Expect Error    ${message}

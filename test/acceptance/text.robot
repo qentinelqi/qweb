@@ -3,7 +3,7 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/text.html  ${BROWSER}   --HEADLESS
 Suite Teardown    CloseBrowser
-Test Timeout      10 seconds
+Test Timeout      20 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
@@ -102,7 +102,7 @@ VerifyTextCountFail
 
 VerifyTextCountDelay
     [Tags]                  VerifyTextCount
-    [Timeout]               20 seconds
+    [Timeout]               30 seconds
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyTextCount         Counttextyjku    3
     ClickText               Counttextyjku    anchorcount
@@ -239,7 +239,7 @@ IsText Xpath False
 
 IsText Timeout
     [Tags]                  IsText
-    [Timeout]               20 seconds
+    [Timeout]               30 seconds
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyNoText            Delayed hidden text
     ClickText               Show hidden
@@ -318,7 +318,7 @@ ClickText Overlapping
     Run Keyword and Expect Error   ${message}    ClickText     Button6    1    0.1s
 
 Click Button and verify hidden text
-    [Timeout]               20 seconds
+    [Timeout]               30 seconds
     RefreshPage
     VerifyNoText            Delayed hidden text
     ClickText               Show hidden

@@ -3,7 +3,7 @@ Documentation     More tests for table keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/table2.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      10 seconds
+Test Timeout      20 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

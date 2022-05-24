@@ -4,7 +4,7 @@ Library          QWeb
 Library          Collections
 Suite Setup      OpenBrowser  file://${CURDIR}/../resources/lists.html  ${BROWSER}  --headless
 Suite Teardown   CloseBrowser
-Test Timeout     10 seconds
+Test Timeout     20 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -43,7 +43,7 @@ GetList substring
     ShouldBeEqual           ${text}         entine
 
 UseList and get errors
-    [Timeout]               20 seconds
+    [Timeout]               30 seconds
     UseList                 Robot testing
     ${err}                          Set Variable    QWebValueMismatchError: Expected length*
     Run Keyword and Expect Error   ${err}    VerifyLength       6

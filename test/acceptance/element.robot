@@ -3,7 +3,7 @@ Documentation                   Tests from element keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/text.html                 ${BROWSER}           --headless
 Suite Teardown                  CloseBrowser
-Test Timeout                    10 seconds
+Test Timeout                    20 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
@@ -166,7 +166,7 @@ VerifyAttributeNotEquals
 
 VerifyAttributeGreater
     [Tags]                      VerifyAttribute
-    [Timeout]                   20 seconds
+    [Timeout]                   30 seconds
     Go To                       file://${CURDIR}/../resources/text.html
     # greater, should pass
     VerifyAttribute             Button3    data-id                          7                   element_type=Text    operator=greater than

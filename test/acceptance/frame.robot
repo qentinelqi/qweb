@@ -3,7 +3,7 @@ Documentation                   Tests for frame keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}    --headless
 Suite Teardown                  CloseBrowser
-Test Timeout                    10 seconds
+Test Timeout                    20 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome

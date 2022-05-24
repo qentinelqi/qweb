@@ -3,7 +3,7 @@ Documentation                   Tests for Dropdown keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/dropdown.html            ${BROWSER}
 Suite Teardown                  CloseBrowser
-Test Timeout                    10 seconds
+Test Timeout                    20 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome

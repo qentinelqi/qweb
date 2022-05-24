@@ -41,7 +41,7 @@ Swipe with starting points and verify images
 
 ScrollTo
     [Tags]            ScrollTo  RESOLUTION_DEPENDENCY
-    [Timeout]         10 seconds
+    [Timeout]         20 seconds
     SetConfig         WindowSize   1600x900
     GoTo              file://${CURDIR}/../resources/text.html
     ScrollTo          Current scroll

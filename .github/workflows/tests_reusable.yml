@@ -96,14 +96,14 @@ jobs:
         python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
         
     - name: Rerun failed acceptance tests
-      if: ${ steps.initial-acceptance-tests.outcome == 'failure' }
+      if: steps.initial-acceptance-tests.outcome == 'failure'
       continue-on-error: true
       timeout-minutes: 45
       run: |
         python -m robot --rerunfailed output_${{ matrix.browser }}/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
         
     - name: Merge rerun test results
-      if: ${ steps.initial-acceptance-tests.outcome == 'failure' }
+      if: steps.initial-acceptance-tests.outcome == 'failure'
       run: |
         python -m rebot --merge output_${{ matrix.browser }}/output.xml output_${{ matrix.browser }}/rerun.xml
         mv log.html output_${{ matrix.browser }}/log.html
