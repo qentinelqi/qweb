@@ -4,7 +4,7 @@ Library                   QWeb
 Library                   Process
 Suite Setup               Get Python executable
 Suite Teardown            Terminate All Processes
-Test Timeout              20 seconds
+Test Timeout              60 seconds
 
 *** Variables ***
 
