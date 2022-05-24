@@ -93,25 +93,29 @@ jobs:
       continue-on-error: true
       timeout-minutes: 45
       run: |
-        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
-        
+        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
     - name: Rerun failed acceptance tests
       if: steps.initial-acceptance-tests.outcome == 'failure'
       continue-on-error: true
       timeout-minutes: 45
       run: |
-        python -m robot --rerunfailed output_${{ matrix.browser }}/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --rerunfailed first/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d rerun -b debug.txt --consolecolors ansi test/acceptance
         
     - name: Merge rerun test results
       if: steps.initial-acceptance-tests.outcome == 'failure'
       run: |
-        python -m robot.rebot --merge output_${{ matrix.browser }}/output.xml output_${{ matrix.browser }}/rerun.xml
-        mv log.html output_${{ matrix.browser }}/log.html
-        mv report.html output_${{ matrix.browser }}/report.html
+        
+        python -m robot.rebot --merge result/output.xml rerun/rerun.xml
+        
+        mv rerun/rerun.xml result/rerun.xml
+        
+        del result/*.html
+        mv log.html result/log.html
+        mv report.html result/report.html
     
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v1
       with:
         name: test-report-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
-        path: ./output_${{ matrix.browser }}
+        path: ./result
