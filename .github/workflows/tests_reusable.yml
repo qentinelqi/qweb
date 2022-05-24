@@ -109,10 +109,14 @@ jobs:
         
     - name: Merge rerun test results
       if: steps.initial-acceptance-tests.outcome == 'failure'
+      continue-on-error: true
       run: |
-        python -m robot.rebot --merge result/output.xml rerun/rerun.xml
-        
         mv rerun/rerun.xml result/rerun.xml
+        python -m robot.rebot --merge result/output.xml result/rerun.xml
+        
+    - name: Move merged test results
+      if: steps.initial-acceptance-tests.outcome == 'failure'
+      run: |
         rm result/*.html
         mv log.html result/log.html
         mv report.html result/report.html
