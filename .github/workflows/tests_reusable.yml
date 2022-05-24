@@ -91,13 +91,13 @@ jobs:
     - name: Acceptance tests
       id: initial-acceptance-tests
       continue-on-error: true
-      timeout-minutes: 45
+      timeout-minutes: 30
       run: |
         python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
     - name: Rerun failed acceptance tests
       if: steps.initial-acceptance-tests.outcome == 'failure'
       continue-on-error: true
-      timeout-minutes: 45
+      timeout-minutes: 30
       run: |
         python -m robot --rerunfailed result/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d rerun -b debug.txt --consolecolors ansi test/acceptance
         
