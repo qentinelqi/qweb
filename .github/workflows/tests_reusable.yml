@@ -1,0 +1,98 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Tests Reusable
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'Stringified JSON object listing target os'
+        required: true
+        type: string
+      browser:
+        description: 'Stringified JSON object listing target browsers'
+        required: true
+        type: string
+      python-version:
+        description: 'Stringified JSON object listing target Python versions'
+        required: true
+        type: string
+      rfw-322-python:
+        description: Python version which will be used with RFW 3.2.2
+        required: true
+        type: string
+      additional-rfw-parameters:
+        description: Execution parameters which will be added to RFW execution
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  Tests:
+    name: ${{ matrix.python-version }} / ${{ matrix.browser }}
+    
+    strategy:
+      matrix:
+        os: ${{fromJson(inputs.os)}}
+        browser: ${{fromJson(inputs.browser)}}
+        python-version: ${{fromJson(inputs.python-version)}}
+        
+    runs-on: ${{ matrix.os }}
+    env:
+      # Used in Linux tests for windowing
+      DISPLAY: :88
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Setup Linux windowing
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get install matchbox scrot
+        Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
+        matchbox-window-manager -use_titlebar no &
+        pip install python-xlib
+
+    - name: Install RFW 3.2.2
+      if: matrix.python-version == inputs.rfw-322-python
+      run: |
+        python -m pip install robotframework==3.2.2
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements_test.txt
+
+    - name: Display Python version
+      run: |
+        python -c "import sys; print(sys.version)"
+
+    - name: Display Robot FW version
+      run: |
+        python -m pip show robotframework
+
+    - name: Display screen resolution
+      run: |
+        python -c "import pyautogui; print(pyautogui.size())"
+
+    - name: Unit tests
+      run: |
+        pytest -v --junit-xml=unittests.xml --cov=QWeb
+
+    - name: Acceptance tests
+      run: |
+        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+    
+    - name: Archive Robot Framework Tests Report
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v1
+      with:
+        name: test-report-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        path: ./output_${{ matrix.browser }}
