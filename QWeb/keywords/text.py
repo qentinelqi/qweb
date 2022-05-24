@@ -845,6 +845,8 @@ def get_text(
     else:
         web_element = element.get_unique_element_by_xpath(locator, **kwargs)
     text = web_element.text
+    if CONFIG['SearchMode']:
+        element.draw_borders(web_element)
     return util.get_substring(text, **kwargs)
 
 
