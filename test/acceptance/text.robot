@@ -617,6 +617,7 @@ VerifyAny From List All Found
 
 VerifyAny From List With All But One Found
     [tags]	PROBLEM_IN_FIREFOX      verify_any
+    [Timeout]    60 seconds
     ${iddqd}=               Create List      exercitation   qui officia     This Should Not Be Found
     VerifyAny            ${iddqd}  
 
