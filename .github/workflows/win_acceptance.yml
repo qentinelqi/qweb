@@ -21,4 +21,5 @@ jobs:
       browser: '["chrome", "edge", "firefox"]'
       python-version: '["3.9", "3.10"]'
       rfw-322-python: "3.9"
-      additional-rfw-parameters: "-e FLASK"
+      rfw-exclude-tags: "-e FLASK"
+      

@@ -22,8 +22,13 @@ on:
         description: Python version which will be used with RFW 3.2.2
         required: true
         type: string
+      rfw-exclude-tags:
+        description: Tag exclusions which will be added to RFW execution. For example  "-e FLASK"
+        required: false
+        default: ""
+        type: string
       additional-rfw-parameters:
-        description: Execution parameters which will be added to RFW execution
+        description: Execution parameters which will be added to RFW execution. For example "-v customvar:somevalue"
         required: false
         default: ""
         type: string
@@ -93,7 +98,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 30
       run: |
-        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} ${{ inputs.rfw-exclude-tags }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
     - name: Rerun failed acceptance tests
       if: steps.initial-acceptance-tests.outcome == 'failure'
       continue-on-error: true
