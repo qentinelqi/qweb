@@ -3,7 +3,7 @@ Documentation     Tests for opening browsers
 Library           OperatingSystem
 Library           QWeb
 Test Setup        Open Browser And Wait A Bit
-Test Timeout      30 seconds
+Test Timeout      60 seconds
 Suite Teardown    Close All Browsers
 
 *** Variables ***
@@ -25,7 +25,6 @@ Close All Browsers 2
     [Teardown]      CloseAllBrowsers
 
 No browser open message
-    [Timeout]    60 seconds
     ${previous}=    SetConfig               LogScreenshot    False
     CloseAllBrowsers
     Run Keyword and Expect Error    QWebDriverError: No browser open*    GoTo    https://www.qentinel.com
@@ -74,7 +73,6 @@ Open Browser with Options and Environment Chromeargs
 
 Open Browser with experimental args
     [tags]          exp             PROBLEM_IN_SAFARI
-    [Timeout]    60 seconds
     Close All Browsers
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="download.prompt_for_download": "False", "plugins.always_open_pdf_externally": "True"

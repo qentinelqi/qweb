@@ -606,6 +606,7 @@ VerifyAny From File Content With All But One Found
 
 VerifyAny From File Content With None Found
     [tags]	PROBLEM_IN_FIREFOX      verify_any
+    [Timeout]    60 seconds
     Run Keyword and Expect Error   QWebValueError: Could not find any of the texts*    VerifyAny    test7.txt  
      
 VerifyAny From List All Found
