@@ -113,7 +113,7 @@ jobs:
         python -m robot.rebot --merge result/output.xml rerun/rerun.xml
         
         mv rerun/rerun.xml result/rerun.xml
-        del result/*.html
+        rm result/*.html
         mv log.html result/log.html
         mv report.html result/report.html
     
