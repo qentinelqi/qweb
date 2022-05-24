@@ -92,6 +92,11 @@ jobs:
       timeout-minutes: 45
       run: |
         python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        
+    - name: Rerun failed acceptance tests
+      if: ${{ failure() }}
+      timeout-minutes: 45
+      run: |
         python -m robot --rerunfailed output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
         python -m rebot --merge output.xml rerun.xml
     
