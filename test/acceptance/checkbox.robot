@@ -4,7 +4,7 @@ Library           QWeb
 Library           Dialogs
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/checkbox.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      10 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

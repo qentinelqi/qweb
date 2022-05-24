@@ -3,10 +3,11 @@ Documentation     Tests for UploadFile keyword
 Library           QWeb
 Suite Setup       SuiteStart
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      10 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
+${value}      ${EMPTY}
 
 *** Test Cases ***
 Upload files with index

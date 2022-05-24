@@ -3,10 +3,12 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/text.html  ${BROWSER}   --HEADLESS
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      10 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
+${y_start}         ${EMPTY}
+${y_end}           ${EMPTY}
 
 *** Test Cases ***
 VerifyText needs to be exact match
@@ -100,6 +102,7 @@ VerifyTextCountFail
 
 VerifyTextCountDelay
     [Tags]                  VerifyTextCount
+    [Timeout]               20 seconds
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyTextCount         Counttextyjku    3
     ClickText               Counttextyjku    anchorcount
@@ -236,6 +239,7 @@ IsText Xpath False
 
 IsText Timeout
     [Tags]                  IsText
+    [Timeout]               20 seconds
     Go To                   file://${CURDIR}/../resources/text.html
     VerifyNoText            Delayed hidden text
     ClickText               Show hidden
@@ -314,6 +318,7 @@ ClickText Overlapping
     Run Keyword and Expect Error   ${message}    ClickText     Button6    1    0.1s
 
 Click Button and verify hidden text
+    [Timeout]               20 seconds
     RefreshPage
     VerifyNoText            Delayed hidden text
     ClickText               Show hidden
@@ -406,17 +411,20 @@ SkimClick slowly disabling button
     VerifyText              skim/scan clicked!
 
 SkimClickCorrectErr
-    [tags]                  err
+    [tags]                  
+    [Timeout]               30 seconds
     ${message}=    Set Variable    QWebValueError: Page contained the text "Click me" after timeout*
     Run Keyword and Expect Error   ${message}   SkimClick   HoverDropdown   Click me    timeout=2
 
-ScanClickCorrectErr
+ScanClickCorrectErr2
     [tags]                  err
+    [Timeout]               30 seconds
     RefreshPage
     ${message}=    Set Variable    QWebElementNotFoundError: Unable to find element for locator skim/scan clicked!*
     Run Keyword and Expect Error   ${message}   ScanClick   HoverDropdown   skim/scan clicked!   timeout=2
 
 ScanClick with disabling button
+    [Timeout]               30 seconds
     RefreshPage
     ScanClick               SkimClick disable button    skim/scan clicked!   interval=1
 
@@ -439,11 +447,13 @@ Click while xpath
 
 Click Until
     [tags]                   whileuntil
+    [Timeout]                30 seconds
     RefreshPage
     ClickUntil               Clicks: 2      Click me     interval 1s  timeout=15s
 
 Click Until xpath
     [tags]                  whileuntil
+    [Timeout]               60 seconds
     RefreshPage
     ClickUntil               Clicks: 3      //*[text()\="Click me"]   interval=2  timeout=8s
     ClickUntil               xpath\=//*[text()\="7"]      Click me      interval=1
@@ -455,6 +465,7 @@ Click Until wrong pre condition
 
 ClickUntil wait element to appear
     [tags]                  whileuntil
+    [Timeout]               60 seconds
     RefreshPage
     ClickUntil              hidden-treasure     Show hidden     element=True
     ${message}=    Set Variable    QWebValueError: Element to appear is already*
@@ -462,17 +473,20 @@ ClickUntil wait element to appear
 
 ClickWhile wait element to disappear
     [tags]                  whileuntil
+    [Timeout]               60 seconds
     ClickWhile              hidden-treasure    Hide Text     element=True
     ${message}=    Set Variable    QWebValueError: Element to disappear is not visible*
     Run Keyword and Expect Error   ${message}   ClickWhile   hidden-treasure    Hide Text   element=True
 
 ClickItemWhile
+    [Timeout]               60 seconds
     RefreshPage
     ClickItemWhile          Clicks: 0          screen
     ${message}=             Set Variable       QWebValueError: Text to disappear is not visible*
     Run Keyword and Expect Error   ${message}  ClickItemWhile          Clicks: 0          screen
 
 ClickItemUntil
+    [Timeout]               60 seconds
     ClickItemUntil          Clicks: 4          screen      interval=2
     ${message}=             Set Variable       QWebValueError: Text to appear*
     Run Keyword and Expect Error   ${message}  ClickItemUntil   Clicks: 4    screen  timeout=2

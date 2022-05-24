@@ -4,7 +4,7 @@ Library             QWeb
 Library             OperatingSystem
 Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${BROWSER}  #--headless
 Suite Teardown      CloseBrowser
-Test Timeout        1min
+Test Timeout        20 seconds
 
 *** Variables ***
 ${SCREENSHOT_NAME}    test_screen_shot.png
@@ -13,11 +13,13 @@ ${BROWSER}    chrome
 *** Keywords ***
 Remove Test Screenshot
     [Arguments]     ${file_name}
+    [Timeout]       10 seconds
     Remove File     ${OUTPUT_DIR}${/}screenshots${/}${file_name}
 
 *** Test Cases ***
 LogPage does not give errors
     [Tags]         LogPage
+    [Timeout]      10 seconds
     LogPage
 
 Screenshot Functionality Works

@@ -4,7 +4,7 @@ Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}    --headless
 Test Setup          GoTo    file://${CURDIR}/../resources/items.html
 Suite Teardown      CloseBrowser
-Test Timeout        1min
+Test Timeout        10 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

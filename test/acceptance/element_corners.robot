@@ -3,7 +3,7 @@ Documentation     Tests for corner
 Library           QWeb
 Suite Setup       OpenBrowser    file://${CURDIR}/../resources/corners.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      10 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

@@ -4,7 +4,7 @@ Library                         QWeb
 Library                         Collections
 Test Setup                      OpenBrowser                 about:blank                 ${BROWSER}                  --headless
 Test Teardown                   CloseBrowser
-Test Timeout                    1min
+Test Timeout                    20 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
@@ -66,6 +66,7 @@ Switch window, check context
 
 Switch window, special parameter NEW
     [Tags]                      Window    SwitchWindow
+    [Timeout]                   60 seconds
     ${driver}=                  Open New Tab Link Page
     Length Should Be            ${driver.window_handles}    2
     VerifyNoText                Liirum laarum               3                           # should not find new window text yet as focus is on parent page
@@ -86,6 +87,7 @@ Switch window, special parameter NEW
 
 Switch window, alphanumeric parameters
     [Tags]                      Window    SwitchWindow
+    [Timeout]                   60 seconds
     ${driver}=                  Open New Tab Link Page
     Length Should Be            ${driver.window_handles}    2
     VerifyNoText                Liirum laarum               3                           # should not find new window text yet as focus is on parent page
@@ -126,6 +128,7 @@ Switch window, no other window
 
 Switch Window, delay
     [Tags]                      Window    SwitchWindow
+    [Timeout]                   60 seconds
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
     Execute Javascript          setTimeout('window.open()', 3000);
@@ -176,11 +179,13 @@ Title and url
 
 Set Window Size
     [Documentation]             Only setting the size, not verifying anything.
+    [Timeout]                   60 seconds
     SetConfig                   WindowSize                  1000X800
 
 Maximize Window
     [Documentation]             Tests for MaximizeWindow keyword
     [Tags]                      Window    MaximizeWindow
+    [Timeout]                   60 seconds
     GoTo                        http://howbigismybrowser.com/
     Sleep                       2                           # wait for browser
     SetConfig                   WindowSize                  550X550

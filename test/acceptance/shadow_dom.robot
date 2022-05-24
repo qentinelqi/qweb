@@ -3,7 +3,7 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser              file://${CURDIR}/../resources/shadow_dom.html  ${BROWSER}
 Suite Teardown    Shadow Teardown
-Test Timeout      1min
+Test Timeout      20 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
@@ -11,6 +11,7 @@ ${BROWSER}         chrome
 *** Test Cases ***
 Basic inteactions with Shadow DOM
     [Setup]                SetConfig              ShadowDOM                     False
+    [Timeout]              60 seconds
  
     ${error}=               Run Keyword and Expect Error       *
     ...                    VerifyText      Local Target in Shadow DOM     partial_match=False  timeout=2
@@ -65,6 +66,7 @@ VerifyAll & VerifyAny with shadow DOM
 
 Input keywords with shadow DOM
     [Setup]                SetConfig              ShadowDOM                     False
+    [Timeout]              30 seconds
     GoTo                   file://${CURDIR}/../resources/shadow_dom.html
     # verify inputs using normal dom only
     TypeText               username                      John Doe               # in normal/light dom
@@ -101,6 +103,7 @@ Text Counts with shadow DOM
 External site with shadow DOM
     [tags]                  shadow_dom
     [Setup]                 SetConfig              ShadowDOM                     False
+    [Timeout]               60 seconds
     GoTo                    https://developer.servicenow.com/dev.do
     # dismiss cookie dialog
     ${cookie_dialog}=       IsText      Required Only    timeout=5

@@ -3,7 +3,7 @@ Documentation     Full matches should always be first if text-attr is not used
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/frame.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      10 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -23,6 +23,7 @@ InputElements
     VerifyInputValue        field3          FooBar
 
 CheckboxElements
+    [Timeout]               30 seconds
     ClickCheckbox           I have a                on
     VerifyCheckboxValue     I have a bike           on
     ClickCheckbox           Sample text             on

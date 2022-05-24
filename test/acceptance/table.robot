@@ -3,7 +3,7 @@ Documentation    Tests for table keywords
 Library          QWeb
 Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table.html  ${BROWSER}  --headless      
 Suite Teardown   CloseBrowser
-Test Timeout     1min
+Test Timeout     10 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -27,6 +27,7 @@ Verify Value Negative Cases
     Run Keyword And Expect Error       QWebValueError*   VerifyTable   r2c1       Foo  timeout=1
 
 Type text to table and verify values
+    [Timeout]               30 seconds
     UseTable                Sample
     TypeText                r4c1                    Qentiro
     TypeText                r4c2                    Robot
@@ -40,7 +41,7 @@ Type text to table and verify values
     ...   VerifyInputValue              r4c4        2019-02-23          timeout=1
 
 Get Cell Value to variable
-    [Tags]
+    [Timeout]               30 seconds 
     UseTable                Sample
     ${TEST}                 GetCellText             r2c3
     ShouldBeEqual           ${TEST}                 ${EMPTY}
