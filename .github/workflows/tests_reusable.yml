@@ -105,7 +105,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 30
       run: |
-        python -m robot --rerunfailed result/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -v BROWSER:${{ matrix.browser }} -d rerun -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --rerunfailed result/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -v BROWSER:${{ matrix.browser }} -d rerun --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
         
     - name: Merge rerun test results
       if: steps.initial-acceptance-tests.outcome == 'failure'
