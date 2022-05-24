@@ -623,6 +623,7 @@ VerifyAny From List With All But One Found
 
 VerifyAny From List With None Found
     [tags]	PROBLEM_IN_FIREFOX      verify_any
+    [Timeout]    60 seconds
     ${iddqd}=               Create List      exercixxxtation   qxxui officiaxxx     This Should Not Be Found
     Run Keyword and Expect Error   *   VerifyAny      ${iddqd}   
 
