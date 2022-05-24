@@ -3,7 +3,7 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/text.html  ${BROWSER}   --HEADLESS
 Suite Teardown    CloseBrowser
-Test Timeout      30 seconds
+Test Timeout      60 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
@@ -446,7 +446,6 @@ Click Until
 
 Click Until xpath
     [tags]                  whileuntil
-    [Timeout]               60 seconds
     RefreshPage
     ClickUntil               Clicks: 3      //*[text()\="Click me"]   interval=2  timeout=8s
     ClickUntil               xpath\=//*[text()\="7"]      Click me      interval=1
@@ -458,7 +457,6 @@ Click Until wrong pre condition
 
 ClickUntil wait element to appear
     [tags]                  whileuntil
-    [Timeout]               60 seconds
     RefreshPage
     ClickUntil              hidden-treasure     Show hidden     element=True
     ${message}=    Set Variable    QWebValueError: Element to appear is already*
@@ -466,20 +464,17 @@ ClickUntil wait element to appear
 
 ClickWhile wait element to disappear
     [tags]                  whileuntil
-    [Timeout]               60 seconds
     ClickWhile              hidden-treasure    Hide Text     element=True
     ${message}=    Set Variable    QWebValueError: Element to disappear is not visible*
     Run Keyword and Expect Error   ${message}   ClickWhile   hidden-treasure    Hide Text   element=True
 
 ClickItemWhile
-    [Timeout]               60 seconds
     RefreshPage
     ClickItemWhile          Clicks: 0          screen
     ${message}=             Set Variable       QWebValueError: Text to disappear is not visible*
     Run Keyword and Expect Error   ${message}  ClickItemWhile          Clicks: 0          screen
 
 ClickItemUntil
-    [Timeout]               60 seconds
     ClickItemUntil          Clicks: 4          screen      interval=2
     ${message}=             Set Variable       QWebValueError: Text to appear*
     Run Keyword and Expect Error   ${message}  ClickItemUntil   Clicks: 4    screen  timeout=2
@@ -606,7 +601,6 @@ VerifyAny From File Content With All But One Found
 
 VerifyAny From File Content With None Found
     [tags]	PROBLEM_IN_FIREFOX      verify_any
-    [Timeout]    60 seconds
     Run Keyword and Expect Error   QWebValueError: Could not find any of the texts*    VerifyAny    test7.txt  
      
 VerifyAny From List All Found
@@ -617,13 +611,11 @@ VerifyAny From List All Found
 
 VerifyAny From List With All But One Found
     [tags]	PROBLEM_IN_FIREFOX      verify_any
-    [Timeout]    60 seconds
     ${iddqd}=               Create List      exercitation   qui officia     This Should Not Be Found
     VerifyAny            ${iddqd}  
 
 VerifyAny From List With None Found
     [tags]	PROBLEM_IN_FIREFOX      verify_any
-    [Timeout]    60 seconds
     ${iddqd}=               Create List      exercixxxtation   qxxui officiaxxx     This Should Not Be Found
     Run Keyword and Expect Error   *   VerifyAny      ${iddqd}   
 

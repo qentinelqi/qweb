@@ -3,7 +3,7 @@ Documentation     More tests for table keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/table2.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      30 seconds
+Test Timeout      60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -123,7 +123,6 @@ Use general kws with Table Get row by text or start counting from last cell
     ClickCell               r-1c6
 
 Anchors and indexes
-    [Timeout]               60 seconds
     HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Text Node
     #Using index anchor(2)

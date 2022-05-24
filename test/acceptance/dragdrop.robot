@@ -4,7 +4,7 @@ Library           QWeb
 Suite Setup       OpenBrowser    file://${CURDIR}/../resources/drag.html    ${BROWSER}
 Suite Teardown    CloseBrowser
 Test Setup        SetConfig       WindowSize    1920x1080
-Test Timeout      30 seconds
+Test Timeout      60 seconds
 Test Teardown     Refresh Page
 
 *** Variables ***

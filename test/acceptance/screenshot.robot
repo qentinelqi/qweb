@@ -4,7 +4,7 @@ Library             QWeb
 Library             OperatingSystem
 Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${BROWSER}  #--headless
 Suite Teardown      CloseBrowser
-Test Timeout        30 seconds
+Test Timeout        60 seconds
 
 *** Variables ***
 ${SCREENSHOT_NAME}    test_screen_shot.png

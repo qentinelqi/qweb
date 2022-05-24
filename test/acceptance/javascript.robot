@@ -3,7 +3,7 @@ Documentation     Tests for Javascript keyword
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/javascript.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      30 seconds
+Test Timeout      60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

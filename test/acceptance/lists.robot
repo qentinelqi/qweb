@@ -4,7 +4,7 @@ Library          QWeb
 Library          Collections
 Suite Setup      OpenBrowser  file://${CURDIR}/../resources/lists.html  ${BROWSER}  --headless
 Suite Teardown   CloseBrowser
-Test Timeout     30 seconds
+Test Timeout     60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -89,7 +89,6 @@ Uselist xpath and parent
     VerifyList              Box 2           2
 
 Uselist with child and expect error
-    [Timeout]               60 seconds
     ${err}                          Set Variable    QWebElementNotFoundError: Unable*
     Run Keyword And Expect Error   ${err}    UseList    innerBox1    selector=class    child=.boxes
     Run Keyword And Expect Error   ${err}    UseList    Robot Testing    child=ol

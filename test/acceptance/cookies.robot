@@ -8,7 +8,7 @@ Suite Setup       OpenBrowser    about:blank    ${BROWSER}
 Suite Teardown    CloseBrowser
 Test Setup        Start Flask Server
 Test Teardown     Terminate All Processes
-Test Timeout      30 seconds
+Test Timeout      60 seconds
 Force Tags        FLASK
 
 
