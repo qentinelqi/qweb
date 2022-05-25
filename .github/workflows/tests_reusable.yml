@@ -111,7 +111,6 @@ jobs:
     # -> result merging needs a separate step
     - name: Merge rerun test results  
       if: steps.initial-acceptance-tests.outcome == 'failure'
-      continue-on-error: true
       run: |
         python -m robot.rebot --merge -d result result/output.xml result/rerun.xml
     
