@@ -105,7 +105,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 30
       run: |
-        python -m robot --rerunfailedsuites result/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -v BROWSER:${{ matrix.browser }} -d rerun --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --rerunfailedsuites result/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
 
     # robot returns amount of failed tests, github considers it as a failure and stops step execution
     # -> result merging needs a separate step
@@ -113,17 +113,7 @@ jobs:
       if: steps.initial-acceptance-tests.outcome == 'failure'
       continue-on-error: true
       run: |
-        mv rerun/rerun.xml result/rerun.xml
-        python -m robot.rebot --merge result/output.xml result/rerun.xml
-
-    # robot.rebot returns amount of failed tests, github considers it as a failure and stops step execution
-    # -> result moving needs a separate step
-    - name: Move merged test results
-      if: steps.initial-acceptance-tests.outcome == 'failure'
-      run: |
-        rm result/*.html
-        mv log.html result/log.html
-        mv report.html result/report.html
+        python -m robot.rebot --merge -d result result/output.xml result/rerun.xml
     
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
