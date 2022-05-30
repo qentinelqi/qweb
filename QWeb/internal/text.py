@@ -45,12 +45,15 @@ def get_element_by_locator_text(locator: str,
     try:
         web_element = get_text_using_anchor(locator, anchor, **kwargs)
     except (TimeoutException) as e:
-        logger.console("Found the TimeoutException origin")
+        logger.console("Found the TimeoutException origin 0")
         raise e
     except (QWebElementNotFoundError, InvalidSelectorException, JavascriptException,
             WebDriverException) as exception:
         try:
             web_element = element.get_unique_element_by_xpath(locator)
+        except (TimeoutException) as e:
+            logger.console("Found the TimeoutException origin 1")
+            raise e
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
@@ -60,12 +63,20 @@ def get_element_by_locator_text(locator: str,
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
-            web_element = element.get_parent_element(web_element, tag_name)
+            try:
+                web_element = element.get_parent_element(web_element, tag_name)
+            except (TimeoutException) as e:
+                logger.console("Found the TimeoutException origin 2")
+                raise e
         elif 'child' in kwargs and kwargs['child']:
             tag_name = kwargs['child']
-            web_element = element.get_element_from_childnodes(web_element,
+            try:
+                web_element = element.get_element_from_childnodes(web_element,
                                                               tag_name,
                                                               dom_traversing=False)[int(index)]
+            except (TimeoutException) as e:
+                logger.console("Found the TimeoutException origin 3")
+                raise e
         if CONFIG['SearchMode']:
             element.draw_borders(web_element)
         return web_element
