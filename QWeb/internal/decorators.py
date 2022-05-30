@@ -81,7 +81,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                     logger.info('From timeout decorator: Webdriver exception. Retrying..')
                     logger.info(e)
                     if isinstance(e, WebDriverException):
-                        logger.info(f'Derived WebDriverException class name:\n{e.__class__.__name__}')
+                        logger.info(f'Derived WebDriverException class: {e.__class__.__name__}')
                     time.sleep(SHORT_DELAY)
                     err = QWebDriverError
                     msg = e
