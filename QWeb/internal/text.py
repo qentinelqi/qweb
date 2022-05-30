@@ -208,6 +208,8 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
     web_elements = get_all_text_elements(text, **kwargs)
     modal_xpath = CONFIG['IsModalXpath']
 
+    logger.console(f"modal_xpath: {modal_xpath}")
+
     driver = browser.get_current_browser()
     if modal_xpath != "//body":
         # filter elements by modal (dialog etc)

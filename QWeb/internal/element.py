@@ -30,6 +30,8 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElemen
 from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG
 
+from time import sleep # for testing only!
+
 ACTIVE_AREA_FUNCTION: Optional[Callable[..., Any]] = None
 
 
@@ -274,17 +276,16 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
             webelements = active_area.find_elements(By.XPATH, xpath)
         except (TimeoutException) as e:
             
-            logger.console("Found the TimeoutException origin 1.1.3.1")
+            logger.console("Found the TimeoutException origin 1.1.3")
             logger.console(f'active_area_xpath: {active_area_xpath}')
             logger.console(f'xpath: {xpath}')
             logger.console("Raising TimeoutException")
-            raise e
+            
+            sleep(1)
+            webelements = active_area.find_elements(By.XPATH, xpath)
 
         logger.trace('XPath {} matched {} webelements'.format(xpath, len(webelements)))
         webelements = get_visible_elements_from_elements(webelements, **kwargs)
-    except (TimeoutException) as e:
-            logger.console("Found the TimeoutException origin 1.1.3")
-            raise e
     except StaleElementReferenceException as se:
         raise QWebStalingElementError('Got StaleElementException') from se
     except (JavascriptException, InvalidSelectorException) as e:
@@ -305,9 +306,6 @@ def get_visible_elements_from_elements(web_elements: list[WebElement],
     try:
         elem_objects = javascript.get_visibility(web_elements)
         logger.debug('Checking visibility from all found elements: {}'.format(len(elem_objects)))
-    except (TimeoutException) as e:
-            logger.console("Found the TimeoutException origin 1.1.3.2")
-            raise e
     except (JavascriptException, StaleElementReferenceException, TypeError) as e:
         raise QWebStalingElementError("Exception from visibility check: {}".format(e)) from e
     for el in elem_objects:
