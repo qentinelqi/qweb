@@ -20,7 +20,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
-    WebDriverException, NoSuchFrameException, NoSuchElementException
+    WebDriverException, NoSuchFrameException, NoSuchElementException, TimeoutException
 from robot.api import logger
 from QWeb.internal import element, javascript, frame, util, browser
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebTimeoutError, QWebValueError,\
@@ -47,10 +47,10 @@ def get_element_by_locator_text(locator: str,
             WebDriverException):
         try:
             web_element = element.get_unique_element_by_xpath(locator)
-        except QWebTimeoutError as e:
-            logger.console("QWebTimeoutError!")
-            raise e
-        except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
+        except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException, TimeoutException) as e:
+            if isinstance(e, TimeoutException):
+                logger.console("Got TimeoutException!")
+
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
@@ -195,8 +195,6 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
     """
     web_elements = get_all_text_elements(text, **kwargs)
     modal_xpath = CONFIG['IsModalXpath']
-
-    logger.console(f"modal_xpath: {modal_xpath}")
 
     driver = browser.get_current_browser()
     if modal_xpath != "//body":

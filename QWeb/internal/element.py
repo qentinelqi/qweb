@@ -263,9 +263,6 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
         webelements = get_visible_elements_from_elements(webelements, **kwargs)
     except StaleElementReferenceException as se:
         raise QWebStalingElementError('Got StaleElementException') from se
-    except TimeoutException as te:
-        logger.console('Got TimeoutException')
-        raise QWebTimeoutError from te
     except (JavascriptException, InvalidSelectorException) as e:
         logger.debug('Got {}, returning None'.format(e))
         webelements = None
