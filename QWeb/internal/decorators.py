@@ -193,6 +193,6 @@ def _equal_sign_handler(args: Union[tuple, list], kwargs: dict,
             locator = kwargs.get('text_to_find', None)
 
     if locator is None:
-        logger.console(f"args: {args}, \nkwargs: {kwargs}")
+        logger.debug(f"args: {args}, \nkwargs: {kwargs}")
         raise QWebElementNotFoundError("Use \\= instead of = in xpaths")
     return tuple(args), kwargs, locator

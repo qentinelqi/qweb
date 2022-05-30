@@ -769,5 +769,5 @@ def press_key(locator: str,
         else:
             input_element.send_keys(key)
     except AttributeError as e:
-        logger.console(e)
+        logger.debug(e)
         raise QWebValueError('Could not find key "{}"'.format(key)) from e

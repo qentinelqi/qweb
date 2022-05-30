@@ -20,11 +20,10 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
-    WebDriverException, NoSuchFrameException, NoSuchElementException, \
-    TimeoutException
+    WebDriverException, NoSuchFrameException, NoSuchElementException
 from robot.api import logger
 from QWeb.internal import element, javascript, frame, util, browser
-from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError,\
+from QWeb.internal.exceptions import QWebElementNotFoundError, QWebTimeoutError, QWebValueError,\
     QWebInstanceDoesNotExistError, QWebStalingElementError
 from QWeb.internal.config_defaults import CONFIG
 
@@ -44,22 +43,13 @@ def get_element_by_locator_text(locator: str,
     index = int(index) - 1
     try:
         web_element = get_text_using_anchor(locator, anchor, **kwargs)
-    except (TimeoutException) as e:
-        logger.console("Found the TimeoutException origin 0")
-        raise e
     except (QWebElementNotFoundError, InvalidSelectorException, JavascriptException,
-            WebDriverException) as exception:
-        logger.console(exception)
+            WebDriverException):
         try:
             web_element = element.get_unique_element_by_xpath(locator)
-        except (TimeoutException) as e:
-            logger.console("Found the TimeoutException origin 1")
-            raise e
+        except QWebTimeoutError as e:
+            logger.console("QWebTimeoutError!")
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
-            logger.console(f"Now it's the correct exception: {e}")
-            logger.console(f"e.msg: {e.msg}")
-            logger.console(f"e.stacktrace: {e.stacktrace}")
-
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
@@ -68,20 +58,12 @@ def get_element_by_locator_text(locator: str,
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
-            try:
-                web_element = element.get_parent_element(web_element, tag_name)
-            except (TimeoutException) as e:
-                logger.console("Found the TimeoutException origin 2")
-                raise e
+            web_element = element.get_parent_element(web_element, tag_name)
         elif 'child' in kwargs and kwargs['child']:
             tag_name = kwargs['child']
-            try:
-                web_element = element.get_element_from_childnodes(web_element,
+            web_element = element.get_element_from_childnodes(web_element,
                                                               tag_name,
                                                               dom_traversing=False)[int(index)]
-            except (TimeoutException) as e:
-                logger.console("Found the TimeoutException origin 3")
-                raise e
         if CONFIG['SearchMode']:
             element.draw_borders(web_element)
         return web_element
@@ -218,7 +200,6 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
     driver = browser.get_current_browser()
     if modal_xpath != "//body":
         # filter elements by modal (dialog etc)
-        logger.console(f"matching elements before filtering: {len(web_elements)}")
         logger.debug("IsModalXpath filtering on, filtering...")
         modal_exists = driver.find_elements(By.XPATH, modal_xpath)
         if modal_exists:
