@@ -20,7 +20,8 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
-    WebDriverException, NoSuchFrameException, NoSuchElementException
+    WebDriverException, NoSuchFrameException, NoSuchElementException, \
+    TimeoutException
 from robot.api import logger
 from QWeb.internal import element, javascript, frame, util, browser
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError,\
@@ -43,8 +44,11 @@ def get_element_by_locator_text(locator: str,
     index = int(index) - 1
     try:
         web_element = get_text_using_anchor(locator, anchor, **kwargs)
+    except (TimeoutException) as e:
+        logger.console("Found the TimeoutException origin")
+        raise e
     except (QWebElementNotFoundError, InvalidSelectorException, JavascriptException,
-            WebDriverException):
+            WebDriverException) as exception:
         try:
             web_element = element.get_unique_element_by_xpath(locator)
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
@@ -52,6 +56,7 @@ def get_element_by_locator_text(locator: str,
             if no_raise:
                 return None
             raise QWebElementNotFoundError(e)  # pylint: disable=W0707
+
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
