@@ -277,12 +277,11 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
         except (TimeoutException) as e:
             
             logger.console("Found the TimeoutException origin 1.1.3")
+            logger.console(f"TE.msg: {e.msg}")
+            logger.console(f"TE.stacktrace: {e.stacktrace}")
             logger.console(f'active_area_xpath: {active_area_xpath}')
             logger.console(f'xpath: {xpath}')
             logger.console("Raising TimeoutException")
-            
-            sleep(1)
-            webelements = active_area.find_elements(By.XPATH, xpath)
 
         logger.trace('XPath {} matched {} webelements'.format(xpath, len(webelements)))
         webelements = get_visible_elements_from_elements(webelements, **kwargs)

@@ -54,8 +54,6 @@ def get_element_by_locator_text(locator: str,
             web_element = element.get_unique_element_by_xpath(locator)
         except (TimeoutException) as e:
             logger.console("Found the TimeoutException origin 1")
-            logger.console(f"TE.msg: {e.msg}")
-            logger.console(f"TE.stacktrace: {e.stacktrace}")
             raise e
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
             logger.console(f"Now it's the correct exception: {e}")
