@@ -247,7 +247,7 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
         if active_area:
             xpath = xpath.replace('//', './/', 1)
         else:
-            try;
+            try:
                 driver = browser.get_current_browser()
                 active_area = driver.find_element(By.XPATH, active_area_xpath)
             except (TimeoutException) as e:
