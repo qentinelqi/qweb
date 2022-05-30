@@ -23,7 +23,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, \
     StaleElementReferenceException, JavascriptException, InvalidSelectorException,\
-    WebDriverException, NoSuchFrameException
+    WebDriverException, NoSuchFrameException, TimeoutException
 from QWeb.internal import frame
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElementError,\
     QWebValueError, QWebSearchingMode
@@ -140,11 +140,19 @@ def get_unique_element_by_xpath(xpath: str, **kwargs: Any) -> WebElement:
     """
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
-    elements = get_webelements_in_active_area(xpath, **kwargs)
+    try:
+        elements = get_webelements_in_active_area(xpath, **kwargs)
+    except (TimeoutException) as e:
+            logger.console("Found the TimeoutException origin 1.1")
+            raise e
     # pylint: disable=no-else-return
     if elements and len(elements) == 1:
         if CONFIG['SearchMode']:
-            draw_borders(elements[0])
+            try:
+                draw_borders(elements[0])
+            except (TimeoutException) as e:
+                logger.console("Found the TimeoutException origin 1.2")
+                raise e
         return elements[0]
     elif not elements:
         raise QWebElementNotFoundError('XPath {} did not find any elements'.format(xpath))
@@ -239,8 +247,12 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
         if active_area:
             xpath = xpath.replace('//', './/', 1)
         else:
-            driver = browser.get_current_browser()
-            active_area = driver.find_element(By.XPATH, active_area_xpath)
+            try;
+                driver = browser.get_current_browser()
+                active_area = driver.find_element(By.XPATH, active_area_xpath)
+            except (TimeoutException) as e:
+                logger.console("Found the TimeoutException origin 1.1.1")
+                raise e
     else:
         driver = browser.get_current_browser()
         try:
@@ -249,6 +261,9 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
                 logger.debug('Got None for active area. Is page still loading '
                              'or is it missing body tag?')
                 return None
+        except (TimeoutException) as e:
+            logger.console("Found the TimeoutException origin 1.1.2")
+            raise e
         # //body not found, is page still loading? Return None to continue looping
         except NoSuchElementException:
             logger.debug("Cannot locate //body element. Is page still loading?")
@@ -318,13 +333,17 @@ def draw_borders(elements: Union[WebElement, list[WebElement]]) -> None:
     if not isinstance(elements, list):
         elements = [elements]
     for e in elements:
-        if mode.lower() == 'debug':
-            javascript.highlight_element(e, False, color=color)
-            raise QWebSearchingMode('Element highlighted')
-        if mode.lower() == 'draw':
-            javascript.highlight_element(e, True, color=color)
-        elif mode.lower() == 'flash':
-            javascript.highlight_element(e, False, True, color=color)
+        try:
+            if mode.lower() == 'debug':
+                javascript.highlight_element(e, False, color=color)
+                raise QWebSearchingMode('Element highlighted')
+            if mode.lower() == 'draw':
+                javascript.highlight_element(e, True, color=color)
+            elif mode.lower() == 'flash':
+                javascript.highlight_element(e, False, True, color=color)
+        except (TimeoutException) as e:
+            logger.console("Found the TimeoutException origin 1.2.1")
+            raise e
 
 
 def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> float:
