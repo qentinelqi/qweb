@@ -146,7 +146,6 @@ def timeout_decorator_for_actions(fn: Callable[..., Any]) -> Callable[..., Any]:
                 else:
                     logger.info(f'Raising from timeout_decorator_actions.')
                     logger.info(f'Original exception class name: {wde.__class__.__name__}')
-                    logger.info(f'Stacktrace:\n{wde.stacktrace}')
                     raise QWebDriverError(wde)  # pylint: disable=W0707
         if msg:
             raise err(msg)  # type: ignore[misc]
