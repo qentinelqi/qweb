@@ -49,6 +49,7 @@ def get_element_by_locator_text(locator: str,
         raise e
     except (QWebElementNotFoundError, InvalidSelectorException, JavascriptException,
             WebDriverException) as exception:
+        logger.console(exception)
         try:
             web_element = element.get_unique_element_by_xpath(locator)
         except (TimeoutException) as e:
