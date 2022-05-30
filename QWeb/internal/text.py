@@ -58,6 +58,10 @@ def get_element_by_locator_text(locator: str,
             logger.console(f"TE.stacktrace: {e.stacktrace}")
             raise e
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
+            logger.console(f"Now it's the correct exception: {e}")
+            logger.console(f"e.msg: {e.msg}")
+            logger.console(f"e.stacktrace: {e.stacktrace}")
+
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None

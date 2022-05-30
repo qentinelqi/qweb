@@ -35,6 +35,7 @@ Filtering based on modal
 
     # Filter by modal
     ${prev}=                 SetConfig                     IsModalXPath                  //div[@id="modal_element"]
+    Sleep  1   # TESTING
     ${found}=                IsText                        Accordion Element 1
     Should Not Be True       ${found}
 
