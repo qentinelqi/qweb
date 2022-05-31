@@ -206,13 +206,13 @@ def get_webelement_by_css(css: str, **kwargs: Any) -> Union[WebElement, list[Web
     try:
         web_elements = driver.find_elements(By.CSS_SELECTOR, css)
     except Exception as e:
-        logger.console(f'e6.1: {e}')
+        logger.console(f'e6.1: {e.__class__.__name__}, msg: {e}')
         raise e
     logger.debug("CSS selector {} matched {} WebElements".format(css, len(web_elements)))
     try:
         web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
     except Exception as e:
-        logger.console(f'e6.2: {e}')
+        logger.console(f'e6.2: {e.__class__.__name__}, msg: {e}')
         raise e
 
     index = int(index) - 1
