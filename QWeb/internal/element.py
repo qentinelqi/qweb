@@ -203,9 +203,17 @@ def get_webelement_by_css(css: str, **kwargs: Any) -> Union[WebElement, list[Web
     """
     index = kwargs.get('index', 1)
     driver = browser.get_current_browser()
-    web_elements = driver.find_elements(By.CSS_SELECTOR, css)
+    try:
+        web_elements = driver.find_elements(By.CSS_SELECTOR, css)
+    except Exception as e:
+        logger.console('e6.1: {e}')
+        raise e
     logger.debug("CSS selector {} matched {} WebElements".format(css, len(web_elements)))
-    web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
+    try:
+        web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
+    except Exception as e:
+        logger.console('e6.2: {e}')
+        raise e
 
     index = int(index) - 1
     if len(web_elements) >= 1:
