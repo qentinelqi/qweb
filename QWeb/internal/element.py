@@ -206,8 +206,8 @@ def get_webelement_by_css(css: str, **kwargs: Any) -> Union[WebElement, list[Web
     try:
         web_elements = driver.find_elements(By.CSS_SELECTOR, css)
     except Exception as e:
-        logger.console(f'Error from driver.find_elements(By.CSS_SELECTOR, css={css}')
-        logger.console(f'At get_webelement_by_css({css}) :\
+        logger.console(f'Error from driver.find_elements(By.CSS_SELECTOR, css="{css}")')
+        logger.console(f'At get_webelement_by_css("{css}") :\
                        \n\t{e.__class__.__name__}, msg: {e}')
         raise e
     logger.debug("CSS selector {} matched {} WebElements".format(css, len(web_elements)))
