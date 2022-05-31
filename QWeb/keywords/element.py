@@ -478,58 +478,26 @@ def get_webelement(locator: str,
     kwargs['timeout'] = timeout
     if element_type:
         if element_type.lower() == 'text':
-            try:
-                web_elements = text.get_element_by_locator_text(locator, anchor, **kwargs)
-            except Exception as e:
-                logger.console(f'e1 - {e}')
-                raise e
+            web_elements = text.get_element_by_locator_text(locator, anchor, **kwargs)
         if element_type.lower() == 'item':
-            try:
-                web_elements = text.get_item_using_anchor(locator, anchor, **kwargs)
-            except Exception as e:
-                logger.console(f'e2 - {e}')
-                raise e
+            web_elements = text.get_item_using_anchor(locator, anchor, **kwargs)
         if element_type.lower() == "dropdown":
-            try:
-                web_elements = dropdown.get_dd_elements_from_all_documents(locator, anchor, **kwargs)
-            except Exception as e:
-                logger.console(f'e3 - {e}')
-                raise e
+             web_elements = dropdown.get_dd_elements_from_all_documents(locator, anchor, **kwargs)
         if element_type.lower() == "input":
-            try:
-                web_elements = input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
-            except Exception as e:
-                logger.console(f'e4 - {e}')
-                raise e
+            web_elements = input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
         if element_type.lower() == "checkbox":
-            try:
-                web_elements = checkbox.get_checkbox_elements_from_all_documents(
+            web_elements = checkbox.get_checkbox_elements_from_all_documents(
                 locator, anchor, **kwargs)[0]
-            except Exception as e:
-                logger.console(f'e5 - {e}')
-                raise e
         if element_type.lower() == "css":
-            try:
-                web_elements = element.get_webelement_by_css(locator, **kwargs)
-            except Exception as e:
-                logger.console(f'e6 - {e}')
-                raise e
+            web_elements = element.get_webelement_by_css(locator, **kwargs)
         return web_elements
 
     kwargs['element_kw'] = True
     if 'tag' in kwargs:
-        try:
-            web_elements = element.get_visible_elements_from_elements(
+        web_elements = element.get_visible_elements_from_elements(
             element.get_elements_by_attributes(kwargs.get('tag'), locator, **kwargs))
-        except Exception as e:
-            logger.console(f'e7 - {e}')
-            raise e
     else:
-        try:
-            web_elements = element.get_webelements(locator)
-        except Exception as e:
-            logger.console(f'e8 - {e}')
-            raise e
+        web_elements = element.get_webelements(locator)
     if web_elements:
         return web_elements
     raise QWebElementNotFoundError('No matching element found')
