@@ -83,8 +83,8 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                     time.sleep(SHORT_DELAY)
                     err = QWebDriverError
                     msg = e
-                    logger.console(f'error: {e}')
-                    logger.console(f'function name: {fn.__name__}')
+                    logger.console(f'Error in timeout_decorator: {e}\
+                                   \n\tfrom function: {fn.__name__}')
                 except QWebValueError as ve:
                     logger.debug('Got QWebValueError: {}. Trying to retry..'.format(ve))
                     err = QWebValueError  # type: ignore[assignment]
