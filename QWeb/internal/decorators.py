@@ -80,6 +80,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                         raise QWebBrowserError(e)  # pylint: disable=W0707
                     logger.info('From timeout decorator: Webdriver exception. Retrying..')
                     logger.info(e)
+                    logger.info(fn.__name__)
                     time.sleep(SHORT_DELAY)
                     err = QWebDriverError
                     msg = e

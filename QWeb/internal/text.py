@@ -23,7 +23,7 @@ from selenium.common.exceptions import InvalidSelectorException, JavascriptExcep
     WebDriverException, NoSuchFrameException, NoSuchElementException, TimeoutException
 from robot.api import logger
 from QWeb.internal import element, javascript, frame, util, browser
-from QWeb.internal.exceptions import QWebElementNotFoundError, QWebTimeoutError, QWebValueError,\
+from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError,\
     QWebInstanceDoesNotExistError, QWebStalingElementError
 from QWeb.internal.config_defaults import CONFIG
 
