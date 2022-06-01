@@ -89,6 +89,7 @@ jobs:
     - name: Acceptance tests
       run: |
         python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d output_${{ matrix.browser }} --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v1
