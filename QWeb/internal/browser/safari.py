@@ -7,6 +7,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from QWeb.internal import browser
 
 from robot.api import logger
+from selenium.webdriver.common.timeouts import Timeouts
 
 NAMES: list[str] = ["safari", "sf"]
 open_windows: list[str] = []
@@ -22,8 +23,8 @@ def open_browser(port: int = 0,
 
     driver = webdriver.Safari(port, executable_path, reuse_service, desired_capabilities, quiet)
     
-    tos = driver.timeouts
-    logger.console(f"implicit: {tos.implicit_wait}, page: {tos.page_load}, script: {tos.script} ")
+    tos: Timeouts = driver.timeouts
+    logger.console(f"implicit: {tos.implicit_wait}, page: {tos.page_load}, script: {tos.script}")
 
     driver.maximize_window()
     browser.cache_browser(driver)
