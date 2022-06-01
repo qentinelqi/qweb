@@ -6,6 +6,8 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from QWeb.internal import browser
 
+from robot.api import logger
+
 NAMES: list[str] = ["safari", "sf"]
 open_windows: list[str] = []
 
@@ -19,7 +21,9 @@ def open_browser(port: int = 0,
     desired_capabilities = DesiredCapabilities.SAFARI
 
     driver = webdriver.Safari(port, executable_path, reuse_service, desired_capabilities, quiet)
+    
     logger.console(f"driver.timeouts: {driver.timeouts}")
+    
     driver.maximize_window()
     browser.cache_browser(driver)
     open_windows.append(driver.current_window_handle)
