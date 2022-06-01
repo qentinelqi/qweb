@@ -25,6 +25,7 @@ def open_browser(port: int = 0,
     
     tos: Timeouts = driver.timeouts
     logger.console(f"implicit: {tos.implicit_wait}, page: {tos.page_load}, script: {tos.script}")
+    driver.implicitly_wait(0.1)
 
     driver.maximize_window()
     browser.cache_browser(driver)
