@@ -23,7 +23,7 @@ def open_browser(port: int = 0,
     driver = webdriver.Safari(port, executable_path, reuse_service, desired_capabilities, quiet)
     
     tos = driver.timeouts
-    logger.console(f"implicit: {tos['implicit_wait']}, page: {tos['page_load']}, script: {tos['script']} ")
+    logger.console(f"implicit: {tos.implicit_wait}, page: {tos.page_load}, script: {tos.script} ")
 
     driver.maximize_window()
     browser.cache_browser(driver)
