@@ -18,7 +18,7 @@ jobs:
       # arrays for matrices must be given as string for json parsing
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
       os: '["macos-latest"]'
-      browser: '["safari", "chrome"]'  #'["chrome", "edge", "safari"]'
+      browser: '["chrome", "edge", "safari"]'
       python-version: '["3.8", "3.9"]'
       rfw-322-python: "3.8"
       additional-rfw-parameters: "-e RESOLUTION_DEPENDENCY -e FLASK"
