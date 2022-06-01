@@ -19,6 +19,8 @@ def open_browser(port: int = 0,
     desired_capabilities = DesiredCapabilities.SAFARI
 
     driver = webdriver.Safari(port, executable_path, reuse_service, desired_capabilities, quiet)
+    # If implicit_wait is not > 0 driver starts raising TimeoutExceptions
+    #    instead of proper exception types
     driver.implicitly_wait(0.1)
     driver.maximize_window()
     browser.cache_browser(driver)
