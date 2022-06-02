@@ -311,8 +311,8 @@ def get_item_using_anchor(text: str, anchor: str, **kwargs) -> Optional[WebEleme
         else:
             web_elements = elements
     if web_elements:
+        correct = _get_correct_element(web_elements, str(anchor), **kwargs)
         if CONFIG['SearchMode']:
-            correct = _get_correct_element(web_elements, str(anchor), **kwargs)
             element.draw_borders(correct)
         return correct
     no_raise = util.par2bool(kwargs.get('allow_non_existent', False))

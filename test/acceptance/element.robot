@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation                   Tests from element keywords
 Library                         QWeb
+Library                         OperatingSystem
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/text.html                 ${BROWSER}           --headless
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
@@ -135,8 +136,6 @@ GetAttributeOK
     # with index using css
     ${attribute}                GetAttribute                input   value        element_type=css    index=5
     should be equal             ${attribute}                Show hidden
-    
-
 
 GetAttributeNOK
     [Tags]                      GetAttribute
@@ -248,3 +247,22 @@ VerifyAttributeNOK
     Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button             value                Button2              element_type=css     timeout=2
     # multiple found css
     Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      button               value                Button2              element_type=css     timeout=2
+
+VerifyElementTextBorders
+    [Tags]                      VerifyElementText    DrawBorders
+    Go To                       file://${CURDIR}/../resources/text.html
+    
+    ${no_border_file}           SetVariable            ${CURDIR}/no_border.png
+    ${with_border_file}         SetVariable            ${CURDIR}/with_border.png
+    Log Screenshot              ${no_border_file}
+
+    ${no_border_image}          Get Binary File        ${no_border_file}
+    ${with_border_image}        Get Binary File        ${no_border_file}
+    Should Be Equal             ${no_border_image}     ${with_border_image}
+
+    Set Config                  SearchMode             Draw
+    Verify Element Text         sentence               more than one
+    Log Screenshot              ${with_border_file}
+    ${with_border_image}        Get Binary File        ${with_border_file}
+
+    Should Not Be Equal         ${no_border_image}     ${with_border_image}
