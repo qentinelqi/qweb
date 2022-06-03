@@ -1,5 +1,6 @@
 """Run dev tasks locally"""
 import sys
+from platform import system
 from duty import duty
 
 python_exe = sys.executable
@@ -36,16 +37,41 @@ def unit_tests(ctx):
     ctx.run([f"{python_exe}", "-m", "pytest", "-v", "--junit-xml", "unittests.xml","--cov", "QWeb"], title="Unit tests", capture=False)
 
 @duty
-def acceptance_tests(ctx, browser="chrome"):
+def acceptance_tests(ctx,
+                     browser="chrome",
+                     excludes="jailed, FLASK, RESOLUTION_DEPENDENCY, WITH_DEBUGFILE",
+                     other_options="--exitonfailure"):
     """
     Runs robot Acceptance tests
     Args:
         ctx: The context instance (passed automatically)
-        browser: browser name [chrome (default), gc, firefox, ff]
+        browser: Browser name (use fullname instead of shorthand), [chrome, firefox, edge, safari]
+                    Default: chrome
+        excludes: CSV-list of tags to exclude. PROBLEM_IN_[OS, BROWSER] tagged tests are always excluded
+                    Default: "jailed, FLASK, RESOLUTION_DEPENDENCY, WITH_DEBUGFILE"
+        other_options: Any combination of Robot Framework command line options.
+                          Example: "-v MYVAR:value -d custom/output/dir/ -t run_this_test -t also_run_this"
+                          Default: "--exitonfailure"
+                          
     """
-    ctx.run(f"{python_exe} -m robot -v BROWSER:{browser} --exitonfailure -e jailed -e PROBLEM_IN_WINDOWS -e FLASK "
-            "-e WITH_DEBUGFILE -e PROBLEM_IN_FIREFOX -e PROBLEM_IN_MACOS -e RESOLUTION_DEPENDENCY test/Acceptance",
-            title="Acceptance tests", capture=False)
+    def remove_extra_whitespaces(string: str) -> str:
+        return " ".join(string.split())
+
+    cmd_excludes = f'-e {excludes.replace(",", " -e ")}'
+
+    os = system().upper()
+    if os == "DARWIN":
+        os = "MACOS"
+
+    cmd_str = remove_extra_whitespaces(
+               f"{python_exe} -m robot "
+               f"-v BROWSER:{browser} "
+               f"-e PROBLEM_IN_{os} -e PROBLEM_IN_{browser} {cmd_excludes} "
+               f"{other_options} "
+               f"test/Acceptance"
+            )
+
+    ctx.run(cmd_str, title="Acceptance tests", capture=False)
 
 @duty
 def kw_docs(ctx):
