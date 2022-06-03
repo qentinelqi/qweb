@@ -50,7 +50,7 @@ def acceptance_tests(ctx,
         excludes: CSV-list of tags to exclude. PROBLEM_IN_[OS, BROWSER] tagged tests are always excluded
                     Default: "jailed, FLASK, RESOLUTION_DEPENDENCY, WITH_DEBUGFILE"
         other_options: Any combination of Robot Framework command line options.
-                          Example: "-v MYVAR:value -d custon/output/dir/ -t run_this_test -t also_run_this"
+                          Example: "-v MYVAR:value -d custom/output/dir/ -t run_this_test -t also_run_this"
                           Default: "--exitonfailure"
                           
     """
