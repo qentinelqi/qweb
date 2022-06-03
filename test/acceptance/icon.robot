@@ -13,7 +13,8 @@ ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}ic
 
 *** Test Cases ***
 Click icons
-    [Tags]                  ICON    PROBLEM_IN_MACOS
+    [Tags]                  ICON    PROBLEM_IN_MACOS    RESOLUTION_DEPENDENCY
+    Set Config              WindowSize   1920x1080
     ClickIcon               person                template_res_w=1920
     VerifyText              person is my tooltip value!
     ClickIcon               lock                  template_res_w=1920
@@ -34,7 +35,8 @@ Verify icons
 
 
 Click icons new screenshot
-    [Tags]                  ICON    PROBLEM_IN_MACOS
+    [Tags]                  ICON    PROBLEM_IN_MACOS    RESOLUTION_DEPENDENCY
+    Set Config              WindowSize   1920x1080
     ClickIcon               person                template_res_w=1920
     ClickIcon               power                 template_res_w=1920
     ClickText               Hide                  template_res_w=1920

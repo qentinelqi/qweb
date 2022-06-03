@@ -39,36 +39,45 @@ def unit_tests(ctx):
 @duty
 def acceptance_tests(ctx,
                      browser="chrome",
-                     excludes="jailed, FLASK, RESOLUTION_DEPENDENCY, WITH_DEBUGFILE",
-                     other_options="--exitonfailure"):
+                     exitonfailure="True"):
     """
     Runs robot Acceptance tests
     Args:
         ctx: The context instance (passed automatically)
         browser: Browser name (use fullname instead of shorthand), [chrome, firefox, edge, safari]
                     Default: chrome
-        excludes: CSV-list of tags to exclude. PROBLEM_IN_[OS, BROWSER] tagged tests are always excluded
-                    Default: "jailed, FLASK, RESOLUTION_DEPENDENCY, WITH_DEBUGFILE"
-        other_options: Any combination of Robot Framework command line options.
-                          Example: "-v MYVAR:value -d custom/output/dir/ -t run_this_test -t also_run_this"
-                          Default: "--exitonfailure"
+        exitonfailure: Stop tests upon first failing test. True/False
+                    Default: True
                           
     """
     def remove_extra_whitespaces(string: str) -> str:
         return " ".join(string.split())
 
-    cmd_excludes = f'-e {excludes.replace(",", " -e ")}'
+    cmd_exit_on_failure = ""
+    if exitonfailure.lower() == "true":
+        cmd_exit_on_failure = "--exitonfailure"
 
     os = system().upper()
     if os == "DARWIN":
         os = "MACOS"
+ 
+    excludes = [
+        f"PROBLEM_IN_{os}",
+        f"PROBLEM_IN_{browser.upper()}",
+        "FLASK",
+        "RESOLUTION_DEPENDENCY",
+        "jailed",
+        "WITH_DEBUGFILE"
+    ]
+    cmd_excludes = f'-e {" -e ".join(excludes)}'
+
 
     cmd_str = remove_extra_whitespaces(
-               f"{python_exe} -m robot "
-               f"-v BROWSER:{browser} "
-               f"-e PROBLEM_IN_{os} -e PROBLEM_IN_{browser} {cmd_excludes} "
-               f"{other_options} "
-               f"test/Acceptance"
+               f" {python_exe} -m robot"
+               f" {cmd_exit_on_failure}"
+               f" -v BROWSER:{browser}"
+               f" {cmd_excludes}"
+               f" test/Acceptance"
             )
 
     ctx.run(cmd_str, title="Acceptance tests", capture=False)
