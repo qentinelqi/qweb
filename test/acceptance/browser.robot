@@ -3,7 +3,7 @@ Documentation     Tests for opening browsers
 Library           OperatingSystem
 Library           QWeb
 Test Setup        Open Browser And Wait A Bit
-Test Timeout      1min
+Test Timeout      90 seconds
 Suite Teardown    Close All Browsers
 
 *** Variables ***

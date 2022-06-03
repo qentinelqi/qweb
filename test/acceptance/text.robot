@@ -3,10 +3,12 @@ Documentation     Tests for text keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/text.html  ${BROWSER}   --HEADLESS
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      60 seconds
 
 *** Variables ***
 ${BROWSER}         chrome
+${y_start}         ${EMPTY}
+${y_end}           ${EMPTY}
 
 *** Test Cases ***
 VerifyText needs to be exact match
@@ -406,11 +408,11 @@ SkimClick slowly disabling button
     VerifyText              skim/scan clicked!
 
 SkimClickCorrectErr
-    [tags]                  err
+    [tags]                  
     ${message}=    Set Variable    QWebValueError: Page contained the text "Click me" after timeout*
     Run Keyword and Expect Error   ${message}   SkimClick   HoverDropdown   Click me    timeout=2
 
-ScanClickCorrectErr
+ScanClickCorrectErr2
     [tags]                  err
     RefreshPage
     ${message}=    Set Variable    QWebElementNotFoundError: Unable to find element for locator skim/scan clicked!*

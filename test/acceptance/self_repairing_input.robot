@@ -6,7 +6,7 @@ Suite Setup  Run Keyword If    '${BROWSER}'=='chrome'
 ...  ELSE  OpenBrowser  file://${CURDIR}/../resources/self_repairing_example.html  ${BROWSER}
 ...  --headless
 Suite Teardown  CloseBrowser
-Test Timeout        1min
+Test Timeout        60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

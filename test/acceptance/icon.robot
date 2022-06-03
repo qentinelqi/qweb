@@ -5,7 +5,7 @@ Suite Setup         OpenBrowser    about:blank    ${BROWSER}
 Test Setup          GoTo    file://${CURDIR}/../resources/items.html
 Suite Teardown      CloseBrowser
 Library             Dialogs
-Test Timeout        1min
+Test Timeout        60 seconds
 
 *** Variables ***
 ${BROWSER}                  chrome

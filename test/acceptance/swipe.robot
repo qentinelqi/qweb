@@ -4,7 +4,7 @@ Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}
 Test Setup          GoTo    file://${CURDIR}/../resources/swipe.html
 Suite Teardown      CloseBrowser
-Test Timeout        1min
+Test Timeout        60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -41,6 +41,7 @@ Swipe with starting points and verify images
 
 ScrollTo
     [Tags]            ScrollTo  RESOLUTION_DEPENDENCY
+    [Timeout]         20 seconds
     SetConfig         WindowSize   1600x900
     GoTo              file://${CURDIR}/../resources/text.html
     ScrollTo          Current scroll

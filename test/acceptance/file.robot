@@ -3,7 +3,7 @@ Documentation       Test for pdf keywords. Browser needs to be open for Linux pi
 Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}  --headless
 Suite Teardown      CloseBrowser
-Test Timeout        1min
+Test Timeout        60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome

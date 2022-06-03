@@ -3,10 +3,11 @@ Documentation     More tests for table keywords
 Library           QWeb
 Suite Setup       OpenBrowser  file://${CURDIR}/../resources/table2.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
-Test Timeout      1min
+Test Timeout      60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
+${value}      ${EMPTY}
 
 *** Test Cases ***
 Use table kw:s with text locator
@@ -122,7 +123,6 @@ Use general kws with Table Get row by text or start counting from last cell
     ClickCell               r-1c6
 
 Anchors and indexes
-    [Tags]
     HoverText               Text Node              # make bottom elements visible - Safari
     UseTable                Text Node
     #Using index anchor(2)
@@ -177,7 +177,6 @@ Anchors and indexes
     VerifyCheckBoxValue     r-1c6                   On                      index=2
 
 Using Cells, starts from last one
-    [Tags]
     UseTable                Some Text
     ClickCheckbox           r-1c-1                  On
     ClickCheckbox           r-1c-1                  Off                     index=2

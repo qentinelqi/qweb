@@ -6,7 +6,7 @@ Library             QWeb
 Suite Setup         Download Suite Setup
 Suite Teardown      Download Suite Teardown
 Test Teardown       Remove Small and Large Files
-Test Timeout        1min
+Test Timeout        60 seconds
 Force Tags          FLASK
 
 *** Variables ***

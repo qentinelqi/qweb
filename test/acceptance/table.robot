@@ -3,7 +3,7 @@ Documentation    Tests for table keywords
 Library          QWeb
 Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table.html  ${BROWSER}  --headless      
 Suite Teardown   CloseBrowser
-Test Timeout     1min
+Test Timeout     60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -40,7 +40,6 @@ Type text to table and verify values
     ...   VerifyInputValue              r4c4        2019-02-23          timeout=1
 
 Get Cell Value to variable
-    [Tags]
     UseTable                Sample
     ${TEST}                 GetCellText             r2c3
     ShouldBeEqual           ${TEST}                 ${EMPTY}

@@ -3,10 +3,11 @@ Documentation                   Tests for frame keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}    --headless
 Suite Teardown                  CloseBrowser
-Test Timeout                    1min
+Test Timeout                    60 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
+${value}                        ${EMPTY}
 
 *** Test Cases ***
 Refresh Page
@@ -50,7 +51,7 @@ Automatic frame search text elements
     ScrollText                  Input fields with
 
 Automatic frame search input elements
-    [tags]                      inputs                      
+    [tags]                      inputs
     TypeText                    First input                 Robot
     TypeText                    Second input                QENROB
     TypeText                    Cell 1 input                20022019

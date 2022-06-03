@@ -4,7 +4,7 @@ Library          QWeb
 Library          Collections
 Suite Setup      OpenBrowser  file://${CURDIR}/../resources/lists.html  ${BROWSER}  --headless
 Suite Teardown   CloseBrowser
-Test Timeout     1min
+Test Timeout     60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
