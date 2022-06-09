@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2022-06-09
+### Fixed
+- Fixed regression (unexpected timeouts on default settings) caused by latest (v15.5) Safari & Safaridriver
+- Fixed error on ClickItem when SearchMode is set to "None"
+- Fixed highlighting found element on VerifyElementText
+
+### Changed
+- Added typing and type checking (mypy) to pipeline
+- Changed BrowserStack capabilities to conform with new format + accept additional capabilities
+- Improved local development tasks (duties) to support running acceptance tests on different platforms
+- Removed unnecessary logging from timeout decorator
+- Improved pipeline to re-run failed cases automatically
+
 ## [2.0.1] - 2022-04-25
 ### Fixed
 - Enhanced Safari support: Multiple fixes to Safari regarding handling frames and windows
