@@ -41,6 +41,7 @@ from tempfile import gettempdir
 SCREEN_SHOT_DIR_NAME = 'screenshots'
 VERIFYAPP_DIR_NAME = 'verifyapp'
 VALID_FILENAME_CHARS = '-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+MAX_LENGTH = 100  # filenames longer than 255 are not allowed by os
 
 
 def _create_screenshot_folder(foldername: str) -> str:
@@ -65,7 +66,8 @@ def _remove_invalid_chars(text_to_check: str) -> str:
     :param text_to_check:
     :return:
     """
-    return "".join(c for c in text_to_check if c in VALID_FILENAME_CHARS)
+    valid = "".join(c for c in text_to_check if c in VALID_FILENAME_CHARS)
+    return valid if len(valid) <= MAX_LENGTH else valid[:MAX_LENGTH - 1]
 
 
 def compare_screenshots(filename: str, accuracy: Union[str, float]) -> bool:
@@ -161,7 +163,8 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
     Parameters
     ----------
     filename : str (default 'screenshot_{}.png')
-        filename where the screenshot will be saved
+        filename where the screenshot will be saved. Note: Will fail if given filename
+        exceeds operating system's limit for a filename (usually 255 characters).
     folder : str (default SCREEN_SHOT_DIR_NAME)
         folder where screenshot will be saved
     pyautog : bool (default False)
@@ -221,7 +224,7 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
                 InvalidSessionIdException):
             saved = pyscreenshot(filepath)
         if not saved:
-            raise ValueError('Saving screenshot to {} did not succeed'.format(filepath))
+            raise ValueError(f'Saving screenshot to {filepath} did not succeed.')
 
     logger.info('Saved screenshot to {}'.format(filepath))
     return filepath
