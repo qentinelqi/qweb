@@ -50,7 +50,7 @@ setup(
                       "pynput>=1.7.6",
                       'requests>=2.27.0',
                       "robotframework>=3.2.2",
-                      "robotframework-debuglibrary==2.2.1",
+                      "robotframework-debuglibrary==2.3.0",
                       "selenium==4.1.0",
                       "Pillow==9.0.1",
                       "scipy>=1.7.3",
