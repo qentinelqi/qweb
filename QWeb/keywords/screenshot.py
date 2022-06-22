@@ -49,6 +49,9 @@ def log_screenshot(filename: str = 'screenshot_{}.png', fullpage: bool = False) 
     filename : str
         Filename where the screenshot is saved.
 
+        Note: if given filename exceeds operating system's limit for a filename length
+        (usually 255 characters), this keyword will fail.
+
     fullpage : str
         | Capture full page screenshot instead of visible area only (if browser/driver supports it).
         | Currently supported in Firefox and Chromium based browsers (Chrome/Edge).

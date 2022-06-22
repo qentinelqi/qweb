@@ -31,7 +31,7 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
     bs_user = BuiltIn().get_variable_value('${USERNAME}') or os.environ.get('bsuser')
     bs_os = BuiltIn().get_variable_value('${BSOS}') or 'windows'
 
-    desired_caps:dict = {
+    desired_caps: dict = {
         'bstack:options': {
             "buildName": project_name,
             "projectName": project_name,
