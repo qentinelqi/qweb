@@ -597,15 +597,18 @@ def get_elements_by_attributes(
             elements,
             locator.replace("\'", "\\'"),  # type: ignore[union-attr]
             partial)
+
         logger.debug('attrfunc found full matches: {}, partial matches: {}'.format(
             matches.get('full'), matches.get('partial')))
         full_matches, partial_matches = matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException, AttributeError) as e:
         logger.debug('Got exception from get elements by attributes: {}'.format(e))
         full_matches, partial_matches = [], []
+
     if 'element_kw' not in kwargs:
         return full_matches, partial_matches
     web_elements = full_matches + partial_matches
+
     if web_elements:
         if CONFIG['SearchMode']:
             draw_borders(web_elements)

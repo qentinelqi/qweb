@@ -41,6 +41,8 @@ Shadow DOM with attributes
     VerifyItem             myButton            # id
     VerifyItem             Click this          # tooltip
     VerifyItem             Another label       # aria-label
+    ${text}=               GetText             myButton    tag=button    # text
+    Should Be Equal As Strings                 Click me    ${text}
     VerifyItem             text                anchor=2    # numeric anchor
     SetConfig              HighlightColor      orange
     VerifyItem             text                anchor=Local Target in Shadow DOM  # textual anchor
