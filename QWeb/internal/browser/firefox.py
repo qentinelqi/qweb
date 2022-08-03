@@ -87,8 +87,11 @@ def open_browser(profile_dir: Optional[str] = None,
             option = option.strip()
             if option.startswith("-profile"):
                 profile_dir = _get_profile_dir(option)
-            else:
+            elif option.startswith("-"):
                 options.add_argument(option)
+            else:
+                logger.warn(f'Firefox arguments start with "-". Argument "{option}" has incorrect format and was ignored')
+
     driver = webdriver.Firefox(executable_path=executable_path,
                                proxy=proxy,
                                firefox_binary=binary,
