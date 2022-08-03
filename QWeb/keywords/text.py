@@ -836,7 +836,11 @@ def get_text(
         try:
             anchor_int = int(anchor) - 1
             kwargs['element_kw'] = True
-            web_element = element.get_elements_by_attributes(tag, locator, **kwargs)[anchor_int]
+            shadow_dom = CONFIG['ShadowDOM']
+            if shadow_dom:
+                web_element = internal_text.get_items_including_shadow_dom(locator, tag)[anchor_int]
+            else:
+                web_element = element.get_elements_by_attributes(tag, locator, **kwargs)[anchor_int]
         except ValueError as e:
             raise QWebValueError(
                 'Only index is allowed anchor when searching element by it\'s attribute') from e
