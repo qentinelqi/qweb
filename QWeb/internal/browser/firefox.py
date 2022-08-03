@@ -19,6 +19,7 @@ LOGGER: Logger = logging.getLogger(__name__)
 NAMES: list[str] = ["firefox", "ff"]
 
 
+# pylint: disable=too-many-branches
 def open_browser(profile_dir: Optional[str] = None,
                  capabilities: Optional[dict[str, Any]] = None,
                  proxy: Optional[str] = None,
@@ -90,7 +91,8 @@ def open_browser(profile_dir: Optional[str] = None,
             elif option.startswith("-"):
                 options.add_argument(option)
             else:
-                logger.warn(f'Firefox arguments start with "-". Argument "{option}" has incorrect format and was ignored')
+                logger.warn(f'Firefox arguments start with "-". '
+                            f'Argument "{option}" has incorrect format and was ignored')
 
     driver = webdriver.Firefox(executable_path=executable_path,
                                proxy=proxy,
