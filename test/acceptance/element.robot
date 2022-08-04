@@ -10,6 +10,13 @@ Test Timeout                    60 seconds
 ${BROWSER}                      chrome
 
 *** Test Cases ***
+Verify Element
+    VerifyElement               //*[@value\="Button2"]
+
+Verify Element with xpath named parameter
+    VerifyElement               xpath=//*[@value\="Button2"]
+    VerifyElement               xpath=//*[@value="Button2"]
+
 Hover Element
     HoverText                   Button4                     # make sure we're not hovering already
     VerifyNoText                Hover Link
