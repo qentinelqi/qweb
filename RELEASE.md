@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.3] - 2022-08-08
+### Added
+- Added shadow dom support for GetText with attribute value & tag
+- Added tests for VerifyElement keyword
+  
+### Changed
+- Changed handling of (command line) arguments for Firefox
+  - version 103 and above handle incorrect arguments differently than previous versions
+- Bumped DebugLibrary version for RF 5.x support
+- Changed generated screenshot file name handling
+  - Generated screenshot file names should not be longer than accepted by OS
+
 ## [2.0.2] - 2022-06-09
 ### Fixed
 - Fixed regression (unexpected timeouts on default settings) caused by latest (v15.5) Safari & Safaridriver
