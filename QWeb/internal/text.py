@@ -211,12 +211,12 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
 
 
 def _get_exact_text_element(text: str, **kwargs) -> Optional[list[WebElement]]:
-    xpath = (CONFIG["TextMatch"].format(text))
+    xpath = (CONFIG["TextMatch"].replace('"{0}"', util.escape_xpath_quotes(text)))
     return element.get_webelements_in_active_area(xpath, **kwargs)
 
 
 def _get_contains_text_element(text: str, **kwargs) -> list[WebElement]:
-    xpath = (CONFIG["ContainingTextMatch"].format(text))
+    xpath = (CONFIG["ContainingTextMatch"].replace('"{0}"', util.escape_xpath_quotes(text)))
     return element.get_webelements_in_active_area(xpath, **kwargs)
 
 

@@ -299,3 +299,14 @@ def get_callable(pw: str) -> Callable[..., Any]:
                 fn = lib.__getattribute__(paceword)
                 return fn
     raise QWebUnexpectedConditionError('Paceword {} not found'.format(pw))
+
+
+def escape_xpath_quotes(text):
+    """Return xpath text with proper quotes"""
+    # both single and double quotes in text
+    if '"' in text and "'" in text:
+        return 'concat(%s)' % ", '\"',".join('"%s"' % x for x in text.split('"'))
+    # only double
+    if '"' in text:
+        return f"'{text}'"
+    return f'"{text}"'
