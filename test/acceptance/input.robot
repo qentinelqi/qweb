@@ -418,3 +418,11 @@ TypeText multiple anchors enabled
     # Verify that text is in the first partial match
     VerifyInputValue        Address    My way or highway 66    1    timeout=2s
     [Teardown]              SetConfig    MultipleAnchors    False
+
+TextArea and line breks with check on
+    [Tags]        Textarea
+    HoverItem    textarea1   tag=textarea
+    # "normal" text without linebreaks
+    TypeText     textarea1   This is just a sample text    check=True
+    TypeText     textarea1   This is just a sample text\nJust another text       check=True
+    TypeText     textarea1   This is just a sample text${\n}Just another text    check=True
