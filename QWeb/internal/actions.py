@@ -87,7 +87,7 @@ def compare_input_values(
         if expected_value == real_value:  # Full match
             return True
         real_value = util.get_substring(real_value, **kwargs)
-        expected_value = util.get_substring(expected_value, **kwargs)
+        expected_value = str(util.get_substring(expected_value, **kwargs))
     except QWebValueError:
         real_value = ""
     logger.debug('Real value: {}, expected value {}'.format(real_value, expected_value))
