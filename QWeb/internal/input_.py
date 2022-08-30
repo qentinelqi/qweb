@@ -26,7 +26,7 @@ from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
 
-def get_input_element_by_locator(locator: str, anchor: str, **kwargs) -> WebElement:
+def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs) -> WebElement:
     """Find input element.
 
     Parameters
@@ -51,7 +51,7 @@ def get_input_element_by_locator(locator: str, anchor: str, **kwargs) -> WebElem
         input_xpath = CONFIG["MatchingInputElement"].format(locator)
         input_elements = element.get_webelements_in_active_area(input_xpath, **kwargs)
         if not input_elements:  # Find input element using locator
-            locator_element = text.get_text_using_anchor(locator, anchor, **kwargs)
+            locator_element = text.get_text_using_anchor(locator, str(anchor), **kwargs)
             input_elements = _get_all_input_elements()
 
             shadow_dom = CONFIG['ShadowDOM']

@@ -128,7 +128,7 @@ def get_closest_element(locator_element: WebElement,
 
 
 def get_unique_element_by_xpath(xpath: str,
-                                index: Optional[Union[str, int]] = 0,
+                                index: Union[str, int] = 0,
                                 **kwargs: Any) -> WebElement:
     """Get element if it is needed to be unique.
 
@@ -139,6 +139,8 @@ def get_unique_element_by_xpath(xpath: str,
     ----------
     xpath : str
         XPath string. If 'xpath=' -prefix is used, it will be omitted.
+    index : int (Optional)
+        Index of element to return if there are multiple.
     """
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
