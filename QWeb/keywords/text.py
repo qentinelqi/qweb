@@ -831,8 +831,8 @@ def get_text(
     ----------------
     \`Is Text\`, \`VerifyText\`
     """
-    tag = kwargs.get('tag', None)
     anchor_int = util.anchor_to_index(anchor)
+    tag = kwargs.get('tag', None)
     if tag:
         try:
             kwargs['element_kw'] = True
