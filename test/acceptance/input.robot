@@ -103,6 +103,11 @@ Verify Input Value by WebElement instance
     ${input}=               GetWebElement          xpath\=//*[@id\="jeuda"]
     VerifyInputValue        ${input}[0]            park
 
+Verify Input Value by WebElement instance and index
+    TypeText                xpath\=//*[@id\="field3"]                value for field3
+    ${input}=               GetWebElement          //input[@class\="labelfors"]   index=3
+    VerifyInputValue        ${input}               value for field3    # will not return a list
+
 Verify Input Status Enabled Actually Disabled when CSS used
     Run Keyword and Expect Error       QWebValueError: The input field was disabled   VerifyInputStatus
     ...   row3column3   Enabled     timeout=2

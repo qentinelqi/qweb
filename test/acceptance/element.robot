@@ -57,6 +57,12 @@ Click Element by xpath 4
     ClickElement                xpath=//*[@value="Button4"]
     VerifyText                  Button4 was clicked
 
+Click Element by xpath and index
+    Go To                       file://${CURDIR}/../resources/text.html
+    Verify No Text              Signup near Random text was clicked
+    ClickElement                //input[@value\="Signup"]    index=2
+    VerifyText                  Signup near Random text was clicked
+
 Click Element by WebElement instance
     [Tags]                      WebElement
     Go To                       file://${CURDIR}/../resources/text.html

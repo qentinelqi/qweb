@@ -21,7 +21,7 @@ from robot.api import logger
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import Select
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebInstanceDoesNotExistError
-from QWeb.internal import text, element, javascript
+from QWeb.internal import text, element, javascript, util
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
@@ -42,7 +42,8 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
         one that is closest to it.
     """
     if locator.startswith("xpath=") or locator.startswith("//"):
-        dropdown_element = element.get_unique_element_by_xpath(locator)
+        index = util.anchor_to_index(anchor)
+        dropdown_element = element.get_unique_element_by_xpath(locator, index=index)
     else:  # Search using text
         # First we look through all select elements' options, matching locator
         matches = []

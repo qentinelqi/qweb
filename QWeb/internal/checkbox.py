@@ -66,7 +66,8 @@ def get_checkbox_by_locator(locator: str, anchor: str) -> tuple[WebElement, None
     WebElement
     """
     if locator.startswith("xpath=") or locator.startswith("//"):
-        checkbox_element = element.get_unique_element_by_xpath(locator)
+        index = util.anchor_to_index(anchor)
+        checkbox_element = element.get_unique_element_by_xpath(locator, index=index)
         # TODO: Check that the element is actually a checkbox
     else:  # No prefix given
         text_element = text.get_text_using_anchor(locator, anchor)

@@ -46,7 +46,7 @@ def get_element_by_locator_text(locator: str,
     except (QWebElementNotFoundError, InvalidSelectorException, JavascriptException,
             WebDriverException):
         try:
-            web_element = element.get_unique_element_by_xpath(locator)
+            web_element = element.get_unique_element_by_xpath(locator, index=index)
         except (QWebElementNotFoundError, InvalidSelectorException, NoSuchFrameException) as e:
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:

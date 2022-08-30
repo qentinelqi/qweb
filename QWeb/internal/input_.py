@@ -46,7 +46,7 @@ def get_input_element_by_locator(locator: str, anchor: str, **kwargs) -> WebElem
             xpath = locator.split("=", 1)[1]
         else:
             xpath = locator
-        input_element = element.get_unique_element_by_xpath(xpath, **kwargs)
+        input_element = element.get_unique_element_by_xpath(xpath, index=anchor, **kwargs)
     else:  # Search using text
         input_xpath = CONFIG["MatchingInputElement"].format(locator)
         input_elements = element.get_webelements_in_active_area(input_xpath, **kwargs)
@@ -127,13 +127,13 @@ def get_input_elements_from_all_documents(
         raise QWebElementNotFoundError('No matching table input found')
     css_selector = CONFIG["CssSelectors"]
     if not css_selector or locator.startswith('xpath=') or locator.startswith('//'):
-        input_element = get_input_element_by_locator(locator, anchor, **kwargs)
+        input_element = get_input_element_by_locator(locator, index, **kwargs)
     else:
         logger.debug('Uses CSS-selectors to locate element')
         input_element = get_input_element_by_css_selector(locator, anchor, int(index), enable_check,
                                                           **kwargs)
         if not input_element:
-            input_element = get_input_element_by_locator(locator, anchor, **kwargs)
+            input_element = get_input_element_by_locator(locator, index, **kwargs)
     if input_element:
         if CONFIG['SearchMode']:
             element.draw_borders(input_element)

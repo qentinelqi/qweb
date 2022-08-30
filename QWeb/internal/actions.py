@@ -274,7 +274,7 @@ def select_option(
                 f'The list contained these values: {value_list}.')
         raise QWebValueMismatchError(  # pylint: disable=W0707
             f'Option "{option}" is not in the options list.\n'
-            'The list contained these options: {option_list}.\n')
+            f'The list contained these options: {option_list}.\n')
 
 
 @decorators.timeout_decorator_for_actions

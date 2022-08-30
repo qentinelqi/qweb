@@ -311,3 +311,11 @@ def escape_xpath_quotes(text):
     if '"' in text:
         return f"'{text}'"
     return f'"{text}"'
+
+
+def anchor_to_index(anchor):
+    try:
+        index = int(anchor) - 1
+    except ValueError:
+        index = 0
+    return index

@@ -127,7 +127,9 @@ def get_closest_element(locator_element: WebElement,
     return closest_element
 
 
-def get_unique_element_by_xpath(xpath: str, **kwargs: Any) -> WebElement:
+def get_unique_element_by_xpath(xpath: str,
+                                index: Optional[Union[str, int]] = 0,
+                                **kwargs: Any) -> WebElement:
     """Get element if it is needed to be unique.
 
     One use case is that when xpath is written in the test script with
@@ -140,16 +142,20 @@ def get_unique_element_by_xpath(xpath: str, **kwargs: Any) -> WebElement:
     """
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
+    try:
+        index = int(index)
+    except ValueError:
+        index = 0
     elements = get_webelements_in_active_area(xpath, **kwargs)
     # pylint: disable=no-else-return
-    if elements and len(elements) == 1:
+    if elements and len(elements) > index:
         if CONFIG['SearchMode']:
-            draw_borders(elements[0])
-        return elements[0]
+            draw_borders(elements[index])
+        return elements[index]
     elif not elements:
         raise QWebElementNotFoundError('XPath {} did not find any elements'.format(xpath))
-    raise QWebValueError('XPath {} matched {} elements. Needs to be unique'.format(
-        xpath, len(elements)))
+    raise QWebValueError(f'XPath {xpath} matched {len(elements)} elements.'
+                         f'Used index was {index+1}')
 
 
 @frame.all_frames
@@ -177,6 +183,7 @@ def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
     web_elements = driver.find_elements(By.XPATH, xpath)
     logger.trace("XPath {} matched {} WebElements".format(xpath, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
+
     return web_elements
 
 
@@ -695,3 +702,13 @@ def get_element_to_click_from_list(active_list: list[WebElement], index: int,
     else:
         element = active_list[index]
     return element
+
+
+def get_element_by_index(elements: list[WebElement], index: Union[str, int]) -> WebElement:
+    if str(index).isdigit():
+        try:
+            return elements[int(index) - 1]
+        except IndexError as ie:
+            raise QWebValueError(f'Only "{len(elements)}" elements found.'
+                                 f'Used index was "{index}"') from ie
+    raise ValueError(f'Index should be numeric. Used index was: "{index}"')
