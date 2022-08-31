@@ -83,7 +83,11 @@ def compare_input_values(
         timeout: int,  # pylint: disable=unused-argument
         **kwargs: Any) -> bool:
     try:
-        real_value = util.get_substring(input_value(input_element, timeout="0.5s", **kwargs))
+        real_value = input_value(input_element, timeout="0.5s", **kwargs)
+        if expected_value == real_value:  # Full match
+            return True
+        real_value = util.get_substring(real_value, **kwargs)
+        expected_value = str(util.get_substring(expected_value, **kwargs))
     except QWebValueError:
         real_value = ""
     logger.debug('Real value: {}, expected value {}'.format(real_value, expected_value))

@@ -151,6 +151,7 @@ def get_substring(text: str, **kwargs) -> Union[int, float, str]:
     logger.debug('substring start: {}'.format(start))
     logger.debug('substring end: {}'.format(end))
     text = str(text[start:end]).strip().replace('\n', "")
+    text = text.replace('\r', "")
     try:
         if 'int' in kwargs:
             num = float(text.replace(' ', '').replace(',', '.'))
