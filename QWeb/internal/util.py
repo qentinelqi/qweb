@@ -302,7 +302,7 @@ def get_callable(pw: str) -> Callable[..., Any]:
     raise QWebUnexpectedConditionError('Paceword {} not found'.format(pw))
 
 
-def escape_xpath_quotes(text):
+def escape_xpath_quotes(text: str) -> str:
     """Return xpath text with proper quotes"""
     # both single and double quotes in text
     if '"' in text and "'" in text:
@@ -311,3 +311,11 @@ def escape_xpath_quotes(text):
     if '"' in text:
         return f"'{text}'"
     return f'"{text}"'
+
+
+def anchor_to_index(anchor: str) -> int:
+    try:
+        index = int(anchor) - 1
+    except ValueError:
+        index = 0
+    return index

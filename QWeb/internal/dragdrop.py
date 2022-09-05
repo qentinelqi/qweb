@@ -35,15 +35,15 @@ def get_draggable_element(text: str, index: Union[int, str],
                       '[title^="{0}"][class*="draggableCell"]'.format(text)
     web_elements = []
     matches: Optional[list[WebElement]] = []
-    if text.startswith('xpath=') or text.startswith('//'):
-        web_element = element.get_unique_element_by_xpath(text)
-        if web_element:
-            return web_element
-        raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
     try:
         index = int(index) - 1
     except ValueError as e:
         raise QWebValueError('Index needs to be number') from e
+    if text.startswith('xpath=') or text.startswith('//'):
+        web_element = element.get_unique_element_by_xpath(text, index)
+        if web_element:
+            return web_element
+        raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
     web_elements = javascript.execute_javascript(
         'return document.querySelectorAll(\'{}\')'.format(attribute_match))
     if web_elements:

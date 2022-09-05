@@ -106,7 +106,7 @@ def drag_drop(locator: str,
     pyautogui.FAILSAFE = False
     draggable = dragdrop.get_draggable_element(locator, index, anchor)
     if target_locator.startswith('xpath=') or target_locator.startswith('//'):
-        target_elem = element.get_unique_element_by_xpath(target_locator)
+        target_elem = element.get_unique_element_by_xpath(target_locator, index=int(index - 1))
     else:
         target_elem = internal_text.get_text_using_anchor(target_locator, target_anchor)
     x, y = _get_coordinates(draggable)

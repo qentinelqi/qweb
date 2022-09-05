@@ -150,7 +150,7 @@ class List:
         else:
             tag_name = 'ul'
         if 'parent' in kwargs and kwargs['parent']:
-            web_element = element.get_unique_element_by_xpath(locator)
+            web_element = element.get_unique_element_by_xpath(locator, index=index)
             css = kwargs.get('parent')
             web_element = element.get_parent_list_element(web_element, str(css))
             if tag_name not in ["ul", "ol", "dl", "UL", "OL", "DL"]:

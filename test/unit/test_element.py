@@ -186,13 +186,19 @@ def test_get_unique_element_by_xpath_positives(patch_webelements):
     assert get_unique_element_by_xpath(xpath1) == 'test123'
     assert get_unique_element_by_xpath(xpath2) == 'test123'
 
+    patch_webelements.return_value = ['test123', 'test666']
+    assert get_unique_element_by_xpath(xpath1) == 'test123'
+    assert get_unique_element_by_xpath(xpath1, 0) == 'test123'
+    assert get_unique_element_by_xpath(xpath2, 1) == 'test666'
+    assert get_unique_element_by_xpath(xpath1, index="abc") == 'test123'
+
 
 @patch('QWeb.internal.element.get_webelements_in_active_area')
 def test_get_unique_element_by_xpath_negatives(patch_webelements):
     xpath = "xpath=//div[@bar='bar']"
     patch_webelements.return_value = ['test123', 'test666']
     with pytest.raises(QWebValueError):
-        get_unique_element_by_xpath(xpath)
+        get_unique_element_by_xpath(xpath, 3)
 
     patch_webelements.return_value = []
     with pytest.raises(QWebElementNotFoundError):

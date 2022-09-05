@@ -92,7 +92,7 @@ def click_element(xpath: Union[WebElement, str],
             web_element = element.get_elements_by_attributes(kwargs.get('tag'), xpath,
                                                              **kwargs)[index]
         else:
-            web_element = element.get_unique_element_by_xpath(xpath)
+            web_element = element.get_unique_element_by_xpath(xpath, index=index)
     if actions.execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
@@ -140,7 +140,7 @@ def right_click(
     if 'tag' in kwargs:
         web_element = element.get_elements_by_attributes(kwargs.get('tag'), xpath, **kwargs)[index]
     else:
-        web_element = element.get_unique_element_by_xpath(xpath)
+        web_element = element.get_unique_element_by_xpath(xpath, index=index)
     actions.right_click(web_element)
 
 
@@ -192,7 +192,7 @@ def hover_element(
             web_element = element.get_elements_by_attributes(kwargs.get('tag'), xpath,
                                                              **kwargs)[index]
         else:
-            web_element = element.get_unique_element_by_xpath(xpath)
+            web_element = element.get_unique_element_by_xpath(xpath, index=index)
 
     actions.hover_to(web_element, timeout=timeout)
 
@@ -415,7 +415,7 @@ def get_webelement(locator: str,
     Examples
     --------
     Using attributes or xpaths like with ClickElement etc. kw:s without specified
-    element_type. If element_type is not specified end result is a type of list:
+    element_type. Result is a type of list unless **index** or **element_type** is given:
 
     .. code-block:: robotframework
 
@@ -472,6 +472,7 @@ def get_webelement(locator: str,
     ----------------
     \`ClickElement\`, \`HoverElement\`, \`TypeText\`
     """
+    elem_index = kwargs.get('index', None)
     kwargs['index'] = kwargs.get('index', 1)
     kwargs['timeout'] = timeout
     if element_type:
@@ -495,7 +496,9 @@ def get_webelement(locator: str,
         web_elements = element.get_visible_elements_from_elements(
             element.get_elements_by_attributes(kwargs.get('tag'), locator, **kwargs))
     else:
-        web_elements = element.get_webelements(locator)
+        web_elements = element.get_webelements(locator, **kwargs)
+        if elem_index:
+            web_elements = element.get_element_by_index(web_elements, elem_index)
     if web_elements:
         return web_elements
     raise QWebElementNotFoundError('No matching element found')

@@ -831,10 +831,10 @@ def get_text(
     ----------------
     \`Is Text\`, \`VerifyText\`
     """
+    anchor_int = util.anchor_to_index(anchor)
     tag = kwargs.get('tag', None)
     if tag:
         try:
-            anchor_int = int(anchor) - 1
             kwargs['element_kw'] = True
             shadow_dom = CONFIG['ShadowDOM']
             if shadow_dom:
@@ -847,7 +847,7 @@ def get_text(
     elif '//' not in locator:
         web_element = internal_text.get_text_using_anchor(locator, anchor)
     else:
-        web_element = element.get_unique_element_by_xpath(locator, **kwargs)
+        web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
     text = web_element.text
     if CONFIG['SearchMode']:
         element.draw_borders(web_element)

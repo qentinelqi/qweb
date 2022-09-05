@@ -75,7 +75,7 @@ class Table:
         if CONFIG["CssSelectors"] and not util.xpath_validator(locator):
             table_element = cls.get_table_element_by_css(locator, anchor)
         else:
-            table_element = cls.get_table_element(cls, locator, anchor)  # type: ignore[arg-type]
+            table_element = cls.get_table_element(cls, locator, index)  # type: ignore[arg-type]
         if not parent and not child:
             if CONFIG['SearchMode']:
                 element.draw_borders(table_element)
@@ -112,7 +112,8 @@ class Table:
 
     def get_table_element(self, locator: str, anchor: str) -> WebElement:
         if util.xpath_validator(locator):
-            table_element = element.get_unique_element_by_xpath(locator)
+            index = util.anchor_to_index(anchor)
+            table_element = element.get_unique_element_by_xpath(locator, index=index)
         else:  # Search using text
             table_xpath = "//*[text()= '{0}']/ancestor::table".format(locator)
             table_elements = element.get_webelements_in_active_area(table_xpath)
