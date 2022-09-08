@@ -122,7 +122,9 @@ def get_path(filename: str) -> Path:
     images = Path(
         BuiltIn().get_variable_value('${SUITE SOURCE}')).parent.parent / 'images' / filename
     downloads = Path(get_downloads_dir()) / filename
-    paths = [downloads, files, images]
+    files_exec_dir = Path(BuiltIn().get_variable_value('${EXECDIR}')) / 'files' / filename
+    images_exec_dir = Path(BuiltIn().get_variable_value('${EXECDIR}')) / 'images' / filename
+    paths = [downloads, files, images, files_exec_dir, images_exec_dir]
     for path in paths:
         if path.exists():
             logger.debug(path)
