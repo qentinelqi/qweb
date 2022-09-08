@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.4] - 2022-09-15
+### Added
+- Added support for index argument when using xpath
+- Added support for single, double and mixed quotes
+  
+### Fixed
+- Fixed handling of line breaks when check=True ...in typetext
+
 ## [2.0.3] - 2022-08-08
 ### Added
 - Added shadow dom support for GetText with attribute value & tag
