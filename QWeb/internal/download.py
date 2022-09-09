@@ -122,10 +122,13 @@ def get_path(filename: str) -> Path:
     images = Path(
         BuiltIn().get_variable_value('${SUITE SOURCE}')).parent.parent / 'images' / filename
     downloads = Path(get_downloads_dir()) / filename
-    files_exec_dir = Path(BuiltIn().get_variable_value('${EXECDIR}')) / 'files' / filename
-    images_exec_dir = Path(BuiltIn().get_variable_value('${EXECDIR}')) / 'images' / filename
+    exec_dir = BuiltIn().get_variable_value('${EXECDIR}')
+    files_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'files')}/{filename}")
+    images_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'images')}/{filename}") 
     paths = [downloads, files, images, files_exec_dir, images_exec_dir]
+
     for path in paths:
+        logger.info(path, also_console=True)
         if path.exists():
             logger.debug(path)
             return path
@@ -136,3 +139,26 @@ def get_path(filename: str) -> Path:
     except TypeError as e:
         raise QWebFileNotFoundError(
             'File not found from default folders. Set variable for base image path') from e
+
+
+def get_exec_subdir(base_path: str, target_dir: str) -> Path:
+    """Finds a "special" subdirectory under execution dir.
+
+    Returns full path to special dir if found.
+    Returns base_path if special dir is not found.
+
+    Parameters
+    ----------
+    base_path : str
+    target_dir: str
+
+    Returns
+    -------
+    str
+    """
+    for root, dirs, files in os.walk(base_path):
+        for dir in dirs:
+            if dir.lower() == target_dir:
+                return os.path.join(root, dir)
+
+    return os.path.join(base_path, dir)
