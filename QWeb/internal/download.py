@@ -141,7 +141,7 @@ def get_path(filename: str) -> Path:
             'File not found from default folders. Set variable for base image path') from e
 
 
-def get_exec_subdir(base_path: str, target_dir: str) -> Path:
+def get_exec_subdir(base_path: str, target_dir: str) -> str:
     """Finds a "special" subdirectory under execution dir.
 
     Returns full path to special dir if found.
@@ -163,4 +163,4 @@ def get_exec_subdir(base_path: str, target_dir: str) -> Path:
             if d.lower() == target_dir:
                 return os.path.join(root, d)
 
-    return os.path.join(base_path, d)
+    return os.path.join(base_path, target_dir)
