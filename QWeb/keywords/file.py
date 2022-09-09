@@ -47,7 +47,7 @@ def use_pdf(filename: str) -> None:
     Parameters
     ----------
     filename : str
-        Default folders = users/downloads and project_dir/files.
+        Default folders = users/downloads, project_dir/files or ${EXECDIR}/**/files.
         Path is not needed if file is in default folder.
 
     Related keywords
@@ -74,7 +74,7 @@ def use_file(filename: str) -> None:
     Parameters
     ----------
     filename : str
-        Default folders = users/downloads and project_dir/files.
+        Default folders = users/downloads, project_dir/files or ${EXECDIR}/**/files.
         Path is not needed if file is in default folder.
 
     Related keywords
