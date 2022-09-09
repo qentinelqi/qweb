@@ -124,7 +124,7 @@ def get_path(filename: str) -> Path:
     downloads = Path(get_downloads_dir()) / filename
     exec_dir = BuiltIn().get_variable_value('${EXECDIR}')
     files_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'files')}/{filename}")
-    images_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'images')}/{filename}") 
+    images_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'images')}/{filename}")
     paths = [downloads, files, images, files_exec_dir, images_exec_dir]
 
     for path in paths:
@@ -156,9 +156,11 @@ def get_exec_subdir(base_path: str, target_dir: str) -> Path:
     -------
     str
     """
+    # pylint: disable=unused-variable
+    d = None
     for root, dirs, files in os.walk(base_path):
-        for dir in dirs:
-            if dir.lower() == target_dir:
-                return os.path.join(root, dir)
+        for d in dirs:
+            if d.lower() == target_dir:
+                return os.path.join(root, d)
 
-    return os.path.join(base_path, dir)
+    return os.path.join(base_path, d)
