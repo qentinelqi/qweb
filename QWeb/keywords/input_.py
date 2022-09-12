@@ -682,7 +682,7 @@ def upload_file(locator: str,
     locator : str
         Text or index that locates the upload element.
     filename : file to upload
-        Default folders = users/downloads and project_dir/files
+        Default folders = users/downloads, project_dir/files or ${EXECDIR}/**/files
     anchor : str
         Index number or text near the input field's locator element.
         If the page contains many places where the locator is then anchor is used
