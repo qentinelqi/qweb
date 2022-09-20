@@ -89,6 +89,14 @@ Input keywords with shadow DOM
     ${val}=                     GetInputValue               Input2
     Should Be Equal             ${val}                      Test123
 
+    # text area by text and by attribtue
+    TypeText                    Textarea                    Write to textarea
+    TypeText                    textarea123                 Modify text in textarea
+    TypeText                    textarea456                 Another textarea
+    VerifyInputValue            textarea123                 Modify text in textarea
+    VerifyInputValue            textarea456                 Another textarea
+
+
     # Verify Multiple, both shadow and normal dom
     ${inputs}=                  Create Dictionary           Input2=Test123              What's your name=${EMPTY}
     VerifyInputValues           ${inputs}
