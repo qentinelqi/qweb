@@ -377,7 +377,7 @@ ScanClick element is item
 
 ScanClick xpath
     RefreshPage
-    ScanClick                   //*[text()\="Click me"]     Clicks: 2                   interval=1                  timeout=4s
+    ScanClick                   //*[text()\="Click me"]     Clicks: 2                   interval=1                  timeout=10s
     ScanClick                   Click me                    xpath\=//*[text()\="4"]
 
 ScanClick wrong pre condition
