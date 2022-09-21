@@ -21,7 +21,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from QWeb.internal.exceptions import QWebElementNotFoundError, \
     QWebInstanceDoesNotExistError
-from QWeb.internal import element, text
+from QWeb.internal import element, text, frame, javascript
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
@@ -180,7 +180,8 @@ def get_input_element_by_css_selector(locator: str,
         except ValueError:
             logger.debug('locator was text')
     if 'qweb_old' not in kwargs:
-        full_matches, partial_matches = element.get_elements_by_css(locator, **kwargs)
+        full_matches, partial_matches = get_input_elements_by_css(locator, **kwargs)
+
         if full_matches:
             input_element = element.get_visible_elements_from_elements(full_matches, **kwargs)
             if input_element and str(anchor) == '1':
@@ -203,3 +204,29 @@ def get_input_element_by_css_selector(locator: str,
             if element.is_enabled(visibles[index]) or enable_check is True:
                 return visibles[index]
     return None
+
+
+@frame.all_frames
+def get_inputs_including_shadow_dom(locator: str, **kwargs) -> list[WebElement]:
+    web_elements = element.get_visible_elements_from_elements(
+        javascript.get_all_input_elements_from_shadow_dom(), **kwargs)
+
+    matches = javascript.get_by_attributes(web_elements, locator, False)
+    full, partial = matches.get('full', []), matches.get('partial', [])
+    shadow_elements = full + partial
+    if shadow_elements:
+        logger.debug(f'Found {len(shadow_elements)} inputs when extending search to shadow dom')
+    return shadow_elements
+
+
+def get_input_elements_by_css(locator: str, **kwargs):
+    full_matches, partial_matches = element.get_elements_by_css(locator, **kwargs)
+
+    shadow_dom = CONFIG['ShadowDOM']
+    if shadow_dom:
+        shadow_elements = get_inputs_including_shadow_dom(locator, **kwargs)
+        #  remove duplicates (normal search and including shadow search)
+        for el in shadow_elements:
+            if full_matches is not None and el not in list(full_matches):
+                full_matches.append(el)  # type: ignore[union-attr]
+    return full_matches, partial_matches

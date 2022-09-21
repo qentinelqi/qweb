@@ -483,7 +483,7 @@ def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
     function find_all_input_elements_from_shadow_dom(){
         var results = [];
         var elem = recursiveWalk(document.body, function(node) {
-            if (node.tagName == "INPUT") {
+            if (node.tagName == "INPUT" || node.tagName == "TEXTAREA") {
                     results.push(node);
             }
 
@@ -499,7 +499,7 @@ def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_item_elements_from_shadow_dom(tag){
         var results = [];
-        var supported_tags = tag === null ? ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT"] : [tag.toUpperCase()];
+        var supported_tags = tag === null ? ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT", "TEXTAREA"] : [tag.toUpperCase()];
         var elem = recursiveWalk(document.body, function(node) {
             if (supported_tags.includes(node.tagName)) {
                     results.push(node);

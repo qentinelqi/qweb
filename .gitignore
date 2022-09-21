@@ -39,3 +39,4 @@ venv/
 
 # Sonarqbe etc.
 .scannerwork
+.python-version
