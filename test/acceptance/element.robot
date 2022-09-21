@@ -267,15 +267,17 @@ VerifyElementTextBorders
     
     ${no_border_file}           SetVariable            ${CURDIR}/no_border.png
     ${with_border_file}         SetVariable            ${CURDIR}/with_border.png
-    Log Screenshot              ${no_border_file}
+    Remove Files                ${no_border_file}      ${with_border_file}
 
-    ${no_border_image}          Get Binary File        ${no_border_file}
-    ${with_border_image}        Get Binary File        ${no_border_file}
-    Should Be Equal             ${no_border_image}     ${with_border_image}
+    Log Screenshot              ${no_border_file}
+    Log Screenshot              # For debugging purposes
 
     Set Config                  SearchMode             Draw
     Verify Element Text         sentence               more than one
+    Sleep                       2                      # make sure there is enough time for border to be drawn
+    Log Screenshot              # For debugging purposes
     Log Screenshot              ${with_border_file}
+    ${no_border_image}          Get Binary File        ${no_border_file}
     ${with_border_image}        Get Binary File        ${with_border_file}
 
     Should Not Be Equal         ${no_border_image}     ${with_border_image}
