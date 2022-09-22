@@ -157,6 +157,9 @@ def get_by_attributes(elements: list[WebElement], locator: str,
             var part = [];
             for (var i = 0; i < elems.length; i++) {
                var attrs = elems[i].attributes;
+               if (attrs == null){
+                continue;
+               }
                for (var j = 0; j < attrs.length; j++) {
                     if (attrs[j].value.trim() == locator) {
                         full.push(elems[i]);
