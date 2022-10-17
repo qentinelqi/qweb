@@ -459,9 +459,10 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
     js = get_recursive_walk() + """
     function find_text_from_shadow_dom(text, partial){
         var results = [];
+        var unsupported_tags = ["script", "#document-fragment"]
         var elem = recursiveWalk(document.body, function(node) {
         //if (node.innerText == text) {
-        if (node.textContent.includes(text)) {
+        if (node.textContent.includes(text) && !unsupported_tags.includes(node.nodeName.toLowerCase())) {
             nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
             if (nodetext == text) {
                 results.push(node);
