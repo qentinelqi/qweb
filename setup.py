@@ -49,7 +49,7 @@ setup(
                       "pyautogui>=0.9.53",
                       "pynput>=1.7.6",
                       'requests>=2.27.0',
-                      "robotframework>=3.2.2",
+                      "robotframework>=3.2.2,<6",
                       "robotframework-debuglibrary==2.3.0",
                       "selenium==4.1.0",
                       "Pillow==9.0.1",
