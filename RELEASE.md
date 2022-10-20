@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.5] - 2022-10-20
+### Added
+- Exclude Robot Framwork 6.x in requirements for now
+  
+### Fixed
+- Filtering out unnecessary tags (script etc.) in shadow dom text search
+- Fix for using attribute value as a locator in safari
+  - This was failing in iOS Safari if found element had no attributes
+
+
 ## [2.0.4] - 2022-09-22
 ### Added
 - Added support for index argument when using xpath
