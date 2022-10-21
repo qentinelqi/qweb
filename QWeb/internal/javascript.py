@@ -156,8 +156,10 @@ def get_by_attributes(elements: list[WebElement], locator: str,
             var full = [];
             var part = [];
             for (var i = 0; i < elems.length; i++) {
+               console.log(i)
                var attrs = elems[i].attributes;
                if (attrs == null){
+                console.log("attrs was null")
                 continue;
                }
                for (var j = 0; j < attrs.length; j++) {
