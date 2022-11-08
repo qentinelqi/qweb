@@ -30,6 +30,7 @@ from typing import Optional, Union, Any
 import time
 import fnmatch
 from robot.api import logger
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.action_chains import ActionChains
@@ -213,9 +214,13 @@ def checkbox_set(  # pylint: disable=unused-argument
             if locator_element:
                 locator_element.click()
             else:
-                javascript.execute_javascript(
-                    "arguments[0].checked={}".format("true" if value else "false"),
-                    checkbox_element)
+                parent_elem = checkbox_element.find_element(By.XPATH, "..")
+                if parent_elem.tag_name.lower() == "label":
+                    parent_elem.click()
+                if checkbox_element.is_selected() != value:
+                    javascript.execute_javascript(
+                        "arguments[0].checked={}".format("true" if value else "false"),
+                        checkbox_element)
 
 
 # pylint: disable=too-many-branches
