@@ -40,7 +40,11 @@ def drag_drop(locator: str,
               left: int = 0,
               right: int = 0,
               above: int = 0,
-              below: int = 0) -> None:
+              below: int = 0,
+              loc_left: int = 0,
+              loc_right: int = 0,
+              loc_above: int = 0,
+              loc_below: int = 0) -> None:
     # pylint: disable=unused-argument
     r"""Drag and drop element.
 
@@ -64,6 +68,7 @@ def drag_drop(locator: str,
         DragDrop       index          Foo       index=3
         DragDrop       draggable      target    dragtime=2s
         DragDrop       draggable      target    right=5   below=2
+        DragDrop       draggable      target    right=5   below=2   loc_above=40
 
     Parameters
     ----------
@@ -90,14 +95,22 @@ def drag_drop(locator: str,
         How long we try to find elemenst before failing
     dragtime : str | int
         How long drag should take. Some applications need longer time
-    right : int
-       Offset how many pixels right of target center we drag
     left : int
        Offset how many pixels left of target center we drag
+    right : int
+       Offset how many pixels right of target center we drag
     above : int
        Offset how many pixels above of target center we drag
     below : int
        Offset how many pixels below of target center we drag
+    loc_left : int
+       Offset how many pixels left of locator center we start dragging
+    loc_right : int
+       Offset how many pixels right of locator center we start dragging
+    loc_above : int
+       Offset how many pixels above of locator center we start dragging
+    loc_below : int
+       Offset how many pixels below of locator center we start dragging
 
     Related keywords
     ----------------
@@ -110,6 +123,8 @@ def drag_drop(locator: str,
     else:
         target_elem = internal_text.get_text_using_anchor(target_locator, target_anchor)
     x, y = _get_coordinates(draggable)
+    x = x + int(loc_right) - int(loc_left)
+    y = y - int(loc_above) + int(loc_below)
     logger.debug('draggable x is {} and y is {}'.format(x, y))
     pyautogui.moveTo(x, y)
     x, y = _get_coordinates(target_elem)
