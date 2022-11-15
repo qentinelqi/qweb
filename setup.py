@@ -52,7 +52,7 @@ setup(
                       "robotframework>=3.2.2,<6",
                       "robotframework-debuglibrary==2.3.0",
                       "selenium==4.1.0",
-                      "Pillow==9.0.1",
+                      "Pillow==9.2.0",
                       "scipy>=1.7.3",
                       "scikit-image==0.19.1",
                       "ply",
