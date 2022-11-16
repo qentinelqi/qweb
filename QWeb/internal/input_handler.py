@@ -18,6 +18,7 @@ from __future__ import annotations
 from typing import Optional, Any, Callable, Union
 import os
 import pyperclip
+from pyautogui import KEY_NAMES
 from robot.api import logger
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
@@ -137,6 +138,28 @@ class InputHandler:
                     hotkey.append(key)
                 return hotkey
             key = getattr(Keys, key)
+        return key
+
+
+    @staticmethod
+    def check_key_pyautogui(key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
+        if not key:
+            return None
+        if key == '{PASTE}':
+            return pyperclip.paste()
+        hotkey = []
+        if key.startswith('{') and key.endswith('}'):
+            key = key[1:-1].lower()
+            if '+' in key:
+                keys = key.split('+')
+                for k in keys:
+                    if not k.strip() in KEY_NAMES:
+                        raise AttributeError
+                    key = k.strip()
+                    hotkey.append(key)
+                return hotkey
+            if not key.strip() in KEY_NAMES:
+                raise AttributeError
         return key
 
 

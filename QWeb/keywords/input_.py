@@ -24,6 +24,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from robot.api.deco import keyword
+from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
@@ -731,7 +732,10 @@ def press_key(locator: str,
               **kwargs) -> None:
     r"""Simulate user pressing keyboard key on element identified by "locator".
 
-    The parameter "key" is either a single character or a keyboard key surrounded by '{ }'.
+    The parameter "key" is either a single character or a keyboard key combination
+    surrounded by '{ }'.
+
+    If ${EMPTY} is given as a locator, "global" hotkey combination is sent and handled by the OS.
 
     Examples
     --------
@@ -744,10 +748,23 @@ def press_key(locator: str,
         PressKey    other_field    {CONTROL + V}    # Paste copied text
         PressKey    text_field     {PASTE}          # Paste copied text
 
+        # Send ESC keypress without locator and let OS decide how it's consumed
+        # on Windows this opens task manager
+        PressKey    ${EMPTY}       {CTRL + SHIFT + ESC}
+
     Related keywords
     ----------------
     \`TypeSecret\`, \`TypeText\`, \`WriteText\`
     """
+    # no locator given, "global" hotkey
+    if not locator:
+        try:
+            key = input_handler.check_key_pyautogui(key) 
+        except AttributeError as e:
+            logger.console(e)
+            raise QWebValueError(f'Could not find key: {key}') from e
+        return hotkey(*key) if isinstance(key, list) else hotkey(key)
+
     driver = browser.return_browser()
     action = ActionChains(driver)
     try:
@@ -757,6 +774,7 @@ def press_key(locator: str,
                                                                      index=1,
                                                                      **kwargs)
         key = input_handler.check_key(key)  # type: ignore[assignment]
+
 
         # COMMAND key workaround on safari
         # supports normal text field CMD operations only
