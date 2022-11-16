@@ -228,7 +228,7 @@ Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master
 [linux_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/linux_acceptance.yml/badge.svg
 [win_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/win_acceptance.yml/badge.svg
 [macos_ci_badge]: https://github.com/qentinelqi/qweb/actions/workflows/mac_acceptance.yml/badge.svg
-[pace-url]: https://pace.qentinel.com
+[pace-url]: https://robotic.copado.com
 [pace-badge]: https://img.shields.io/badge/Tested%20with-Copado%20Robotic%20Testing-blue
 [python-versions-badge]: https://img.shields.io/pypi/pyversions/QWeb
 [pypi-badge]: https://img.shields.io/pypi/v/QWeb?color=green
