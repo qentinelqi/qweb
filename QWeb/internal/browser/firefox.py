@@ -26,7 +26,7 @@ def open_browser(profile_dir: Optional[str] = None,
                  headless: bool = False,
                  binary: Optional[Union[str, FirefoxBinary]] = None,
                  executable_path: str = "geckodriver",
-                 firefox_args: list[str] = None,
+                 firefox_args: Optional[list[str]] = None,
                  log_path: str = "geckodriver.log",
                  **kwargs: Any) -> WebDriver:
     """Open Firefox browser and cache the driver.

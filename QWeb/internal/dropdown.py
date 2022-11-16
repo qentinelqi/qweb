@@ -48,6 +48,15 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
         # First we look through all select elements' options, matching locator
         matches = []
         elements = _get_all_dropdown_elements()
+
+        shadow_dom = CONFIG['ShadowDOM']
+        if shadow_dom:
+            shadow_dropdowns = element.get_all_dropdowns_from_shadow_dom()
+            #  remove duplicates (normal search and including shadow search)
+            for el in shadow_dropdowns:
+                if el not in list(elements):
+                    elements.append(el)
+
         for dd_element in elements:
             options = [x.text for x in Select(dd_element).options]
             if locator in options:

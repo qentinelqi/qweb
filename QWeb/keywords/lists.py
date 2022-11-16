@@ -40,8 +40,8 @@ def use_list(
         locator: str,
         anchor: str = "1",
         timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        parent: str = None,
-        child: str = None,
+        parent: Optional[str] = None,
+        child: Optional[str] = None,
         **kwargs) -> None:
     r"""Define list for all other list keywords.
 

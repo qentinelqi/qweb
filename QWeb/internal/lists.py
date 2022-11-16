@@ -50,8 +50,8 @@ class List:
     def from_list_instance(cls,
                            locator: str,
                            anchor: str = "1",
-                           parent: str = None,
-                           child: str = None,
+                           parent: Optional[str] = None,
+                           child: Optional[str] = None,
                            **kwargs) -> List:
         """Find list and create list instance
 
