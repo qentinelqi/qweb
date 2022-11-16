@@ -17,6 +17,7 @@
 from __future__ import annotations
 from typing import Union, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import os
 import pkg_resources
@@ -377,7 +378,7 @@ def verify_links(url: str = 'current', log_all: bool = False, header_only: bool 
     else:
         window.go_to(url)
         driver = browser.get_current_browser()
-    elements = driver.find_elements_by_xpath("//a[@href]")
+    elements = driver.find_elements(By.XPATH, "//a[@href]")
     headers = {
         "User-Agent":
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
