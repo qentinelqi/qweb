@@ -44,7 +44,7 @@ setup(
     author_email='libraries@qentinel.com',
     python_requires= ">3.6,<4.0",
     license= "Apache License 2.0",
-    install_requires=["setuptools",
+    install_requires=["setuptools>=65.5.1",
                       "pyscreeze>=0.1.28",
                       "pyautogui>=0.9.53",
                       "pynput>=1.7.6",

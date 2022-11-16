@@ -6,7 +6,7 @@ robotframework-debuglibrary==2.3.0
 selenium==4.1.0
 ply
 pynput==1.7.6
-setuptools
+setuptools>=65.5.1
 opencv-python==4.5.5.62
 requests==2.27.1
 slate3k==0.5.3
