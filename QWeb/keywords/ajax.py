@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Union
+from typing import Union, Optional
 
 from QWeb.internal import decorators, ajax, util
 from robot.api.deco import keyword
@@ -25,10 +25,10 @@ from robot.api.deco import keyword
 @decorators.timeout_decorator
 def save_file(
         locator: str,
-        filename: str = None,
+        filename: Optional[str] = None,
         anchor: str = "1",
         timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        path: str = None,
+        path: Optional[str] = None,
         **kwargs) -> None:
     r"""Save file using http-request.
 

@@ -499,6 +499,23 @@ def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
     return execute_javascript(js)
 
 
+def get_all_dropdown_elements_from_shadow_dom() -> list[WebElement]:
+    js = get_recursive_walk() + """
+    function find_all_select_elements_from_shadow_dom(){
+        var results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+            if (node.tagName == "SELECT") {
+                    results.push(node);
+            }
+
+        });
+        return results;
+    }
+
+    return(find_all_select_elements_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js)
+
+
 def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_item_elements_from_shadow_dom(tag){

@@ -115,6 +115,13 @@ Text Counts with shadow DOM
     Should Be Equal As Numbers                              ${count}                    2
 
 
+Dropdown with shadow DOM
+    [Setup]                     SetConfig                   ShadowDOM                   False
+    Run Keyword And Expect Error    *    DropDown    Dropdown label    First
+    Set Config    ShadowDOM    True
+    DropDown    Dropdown label    Second
+
+
 External site with shadow DOM
     [tags]                      shadow_dom
     [Setup]                     SetConfig                   ShadowDOM                   False

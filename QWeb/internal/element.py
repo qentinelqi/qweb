@@ -317,8 +317,12 @@ def get_visible_elements_from_elements(web_elements: list[WebElement],
     return visible_elements + hiding_elements
 
 
-def get_all_inputs_from_shadow_dom() -> WebElement:
+def get_all_inputs_from_shadow_dom() -> list[WebElement]:
     return javascript.get_all_input_elements_from_shadow_dom()
+
+
+def get_all_dropdowns_from_shadow_dom() -> list[WebElement]:
+    return javascript.get_all_dropdown_elements_from_shadow_dom()
 
 
 def draw_borders(elements: Union[WebElement, list[WebElement]]) -> None:
