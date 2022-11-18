@@ -51,7 +51,7 @@ setup(
                       'requests>=2.27.0',
                       "robotframework>=3.2.2,<6",
                       "robotframework-debuglibrary==2.3.0",
-                      "selenium==4.1.0",
+                      "selenium==4.6.0",
                       "Pillow==9.3.0",
                       "scipy>=1.7.3",
                       "scikit-image==0.19.1",
