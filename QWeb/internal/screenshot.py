@@ -149,6 +149,7 @@ def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     return ref_image_c
 
 
+# pylint: disable=too-many-branches
 def save_screenshot(filename: str = 'screenshot_{}.png',
                     folder: str = SCREEN_SHOT_DIR_NAME,
                     pyautog: bool = False,
@@ -211,8 +212,13 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
         pyscreenshot(filepath)
         logger.info('Saved screenshot to {}'.format(filepath))
         return filepath
-    driver = browser.get_current_browser()
+    try:
+        driver = browser.get_current_browser()
+    except WebDriverException:
+        driver = None
+
     if driver:
+        saved: Union[str, bool]
         try:
             browser_name = driver.capabilities['browserName']
             if not fullpage:
@@ -275,11 +281,12 @@ def log_html() -> None:
 
 
 def get_url() -> Optional[str]:
-    driver = browser.get_current_browser()
-    if driver:
+    try:
+        driver = browser.get_current_browser()
         return driver.current_url
-    logger.warn('Could not take a screenshot of browser because it is not open.')
-    return None
+    except QWebDriverError:
+        logger.warn('Could not take a screenshot of browser because it is not open.')
+        return None
 
 
 def get_source() -> str:
@@ -324,7 +331,7 @@ def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
 
 def full_page_screenshot(driver: WebDriver, filepath: str, browser_name: str) -> str:
     if browser_name in firefox.NAMES:
-        saved = driver.get_full_page_screenshot_as_file(filepath)
+        saved = driver.get_full_page_screenshot_as_file(filepath)  # type: ignore
     elif browser_name in chrome.NAMES or browser_name in edge.NAMES:
         saved = chromium_full_screenshot(driver, filepath)
     else:

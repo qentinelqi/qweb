@@ -32,7 +32,11 @@ def open_browser(executable_path: str = "msedgedriver",
     chrome_args : Optional arguments to modify browser settings
     """
     options = Options()
-    options.use_chromium = True  # pylint: disable=no-member
+    # https://learn.microsoft.com/en-us/microsoft-edge/webdriver-chromium/?tabs=c-sharp
+    #     Remove all usages of the EdgeOptions.UseChromium property.
+    #     This property no longer exists in Selenium 4,
+    #     because Selenium 4 supports only Microsoft Edge (Chromium)
+    # options.use_chromium = True  # pylint: disable=no-member
 
     # Gets rid of Devtools listening .... printing
     # other non-sensical error messages
@@ -74,10 +78,11 @@ def open_browser(executable_path: str = "msedgedriver",
         CONFIG.set_value('Headless', True)
         options.add_argument("--headless")  # pylint: disable=no-member
     if 'prefs' in kwargs:
-        if isinstance(kwargs.get('prefs'), dict):
-            prefs = kwargs.get('prefs')
+        tmp_prefs = kwargs.get('prefs')
+        if isinstance(tmp_prefs, dict):
+            prefs = tmp_prefs
         else:
-            prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
+            prefs = util.prefs_to_dict(str(tmp_prefs).strip())
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
     driver = Edge(

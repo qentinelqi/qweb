@@ -79,7 +79,8 @@ def get_checkbox_by_locator(locator: str, anchor: str) -> tuple[WebElement, None
 
 
 def get_checkbox_elements_from_all_documents(locator: str, anchor: str, index: Union[int, str],
-                                             **kwargs: Any) -> tuple[WebElement, WebElement]:
+                                             **kwargs: Any
+                                             ) -> tuple[WebElement, Optional[WebElement]]:
     """Function for finding checkbox elements.
     Parameters
     ----------
@@ -93,6 +94,9 @@ def get_checkbox_elements_from_all_documents(locator: str, anchor: str, index: U
     -------
     WebElement
     """
+    checkbox_element: Optional[WebElement]
+    locator_element: Optional[WebElement]
+
     index = int(index) - 1
     css_selector = CONFIG["CssSelectors"]
     css = '[type="checkbox"], [role="checkbox"]'

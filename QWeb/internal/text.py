@@ -31,7 +31,7 @@ from QWeb.internal.config_defaults import CONFIG
 def get_element_by_locator_text(locator: str,
                                 anchor: str = "1",
                                 index: Union[int, str] = 1,
-                                **kwargs) -> WebElement:
+                                **kwargs) -> Optional[WebElement]:
     """Find element by it's visible text.
 
     Accepted kwargs:
@@ -266,7 +266,7 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
             len(elements), anchor_int + 1))
     if isinstance(anchor, str):  # Get closest element to anchor
         kwargs['stay_in_current_frame'] = True
-        anchor_element = None
+        anchor_element: WebElement
         if CONFIG['MultipleAnchors']:
             anchor_elements: list[WebElement] = []
             logger.debug('Multiple anchors enabled, trying to find first exact match')

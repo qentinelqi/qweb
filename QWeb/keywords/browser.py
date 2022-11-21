@@ -30,6 +30,7 @@ from QWeb.internal import browser, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
                                   bs_desktop, safari, edge
+from QWeb.internal.exceptions import QWebDriverError
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -247,8 +248,8 @@ def close_browser() -> None:
     ----------------
     \`CloseAllBrowsers\`, \`CloseRemoteBrowser\`, \`OpenBrowser\`
     """
-    driver = browser.get_current_browser()
-    if driver is not None:
+    try:
+        driver = browser.get_current_browser()
         if util.is_safari():
             safari.open_windows.clear()
         _close_remote_browser_session(driver, close_only=True)
@@ -257,7 +258,7 @@ def close_browser() -> None:
         # Clear browser re-use flag as no original session open anymore
         BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
         driver.quit()
-    else:
+    except QWebDriverError:
         logger.info("All browser windows already closed")
 
 
@@ -284,11 +285,11 @@ def close_remote_browser() -> None:
     ----------------
     \`CloseAllBrowsers\`, \`CloseBrowser\`, \`OpenBrowser\`
     """
-    driver = browser.get_current_browser()
-    if driver is not None:
+    try:
+        driver = browser.get_current_browser()
         if _close_remote_browser_session(driver):
             browser.remove_from_browser_cache(driver)
-    else:
+    except QWebDriverError:
         logger.info("All browser windows already closed")
 
 

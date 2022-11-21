@@ -47,7 +47,7 @@ def delete_all_cookies() -> None:
 
 
 @keyword(tags=("Browser", "Getters"))
-def list_cookies() -> set[dict[str, Any]]:
+def list_cookies() -> list[dict[str, Any]]:
     r"""List all cookies in browser.
 
     Cookies can be only listed when browser is open. Cookies are automatically

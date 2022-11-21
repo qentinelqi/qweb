@@ -82,7 +82,9 @@ class List:
             **kwargs)
         return List(web_list, web_element_list, locator, anchor, parent, child, **kwargs)
 
-    def create_list(self, locator: str, anchor: str, **kwargs) -> tuple[list[str], WebElement]:
+    def create_list(self, locator: str, anchor: str, **kwargs
+                    ) -> tuple[list[str], list[WebElement]]:
+        web_elements: Union[WebElement, list[WebElement]]
         if locator.startswith('//') or locator.startswith('xpath='):
             if locator.startswith('xpath='):
                 locator = locator.split("=", 1)[1]
@@ -95,6 +97,8 @@ class List:
             if CONFIG['SearchMode']:
                 element.draw_borders(web_elements)
             web_list = self.get_texts(web_elements)
+            if isinstance(web_elements, WebElement):
+                return web_list, [web_elements]
             return web_list, web_elements
         raise QWebElementNotFoundError('Suitable elements not found')
 
@@ -103,6 +107,9 @@ class List:
                                                   anchor: str,
                                                   index: int = 1,
                                                   **kwargs) -> Union[WebElement, list[WebElement]]:
+        web_element: Optional[WebElement]
+        locator_element: Optional[WebElement]
+
         index = int(index) - 1
         if 'tag' in kwargs:
             tag_name = kwargs.get('tag')
@@ -114,10 +121,10 @@ class List:
             tag_name = 'ul'
 
         web_element = text.get_element_by_locator_text(locator, anchor)
-        if 'parent' in kwargs and kwargs['parent']:
+        if 'parent' in kwargs and kwargs['parent'] and web_element is not None:
             tag = kwargs['parent']
             locator_element = element.get_parent_list_element(web_element, tag)
-        elif 'child' in kwargs and kwargs['child']:
+        elif 'child' in kwargs and kwargs['child'] and web_element is not None:
             tag = kwargs['child']
             locator_element = element.get_element_from_childnodes(web_element,
                                                                   tag,

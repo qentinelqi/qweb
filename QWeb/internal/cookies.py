@@ -27,7 +27,7 @@ def delete_all_cookies() -> None:
     driver.delete_all_cookies()
 
 
-def get_cookies() -> set[dict[str, Any]]:
+def get_cookies() -> list[dict[str, Any]]:
     driver = browser.get_current_browser()
     if driver is None:
         raise NoSuchWindowException("Can't list cookies, no open browser")

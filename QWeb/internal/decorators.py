@@ -44,7 +44,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
             *args: Any, **kwargs: Any) -> Union[Callable[..., Any], int, bool, None]:
         try:
             args, kwargs, locator = _equal_sign_handler(args, kwargs, fn)
-            msg = None
+            msg: Union[WebDriverException, QWebDriverError, QWebValueError, None] = None
             params = signature(fn).parameters
             args, kwargs = _args_to_kwargs(params, args, kwargs)
             timeout = get_timeout(**kwargs)

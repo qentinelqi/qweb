@@ -24,7 +24,7 @@ from QWeb.internal import javascript
 
 
 def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
-    visible_frames = []
+    visible_frames: list[WebElement] = []
     frames = javascript.execute_javascript('return document.querySelectorAll("iframe, frame")')
     if not frames:
         frames = []
@@ -38,7 +38,7 @@ def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
     for frame in frames_obj:
         offset = frame.get('offset')
         if offset:
-            visible_frames.append(frame.get('elem'))
+            visible_frames.append(frame.get('elem'))  # type: ignore
     if visible_frames:
         logger.debug('Found {} visible frames'.format(len(visible_frames)))
     return visible_frames

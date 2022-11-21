@@ -22,16 +22,22 @@ def open_browser(
         ie_options: Optional[Options] = None) -> WebDriver:
 
     capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
-    options = Options()
+
+    if ie_options is not None:
+        options = ie_options
+    else:
+        options = Options()
+
     options.ignore_zoom_level = True
-    options.require_window_focus = True
+    # next option property is currently broken in selenium
+    options.require_window_focus = True  # type: ignore
     options.ignore_protected_mode_settings = True
     options.native_events = False
-    options.enable_persistent_hover = True
+    options.persistent_hover = True
     options.ensure_clean_session = True
-    options.javascript_enabled = True
+    # options.javascript_enabled = True  # no such property
     driver = webdriver.Ie(executable_path, capabilities, port, timeout, host, log_level, log_file,
-                          options, ie_options)
+                          options)
 
     browser.cache_browser(driver)
     return driver

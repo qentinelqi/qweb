@@ -433,9 +433,10 @@ TextArea and line breks with check on
     TypeText     textarea1   This is just a sample text${\n}Just another text    check=True
 
 Global hotkeys
-    [Tags]    PressKey
+    [Tags]    PressKey    RESOLUTION_DEPENDENCY
     CloseAllBrowsers
     OpenBrowser           file://${CURDIR}/../resources/text.html    ${BROWSER}
+    Set Config            WindowSize    1920x1080
     ${scroll_text}=       GetText       Current scroll
     Should Be Equal As Strings    ${scroll_text}                     Current scroll = scroll the window
     PressKey              ${EMPTY}     END

@@ -218,8 +218,8 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
 
         # pylint: disable=W0102
         def search_from_frames_safari(driver: Optional[WebDriver] = None,
-                                      current_frame: Optional[WebElement] = None,
-                                      parent_tree: list[WebElement] = []):
+                                      current_frame: Union[Optional[WebElement], int] = None,
+                                      parent_tree: list[Union[WebElement, int]] = []):
             keep_frame = kwargs.get('stay_in_current_frame', CONFIG['StayInCurrentFrame'])
             if keep_frame:
                 return fn(*args, **kwargs)

@@ -17,6 +17,7 @@
 from typing import Union, Optional
 
 import pyautogui
+from selenium.webdriver.remote.webelement import WebElement
 from QWeb.internal import icon, decorators, screenshot, util, text, element
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebIconNotFoundError
 from QWeb.internal.config_defaults import CONFIG
@@ -225,12 +226,15 @@ def capture_icon(
     ----------------
     \`ClickIcon\`, \`IsIcon\`, \`VerifyIcon\`
     """
+    web_element: Optional[WebElement]
     if util.xpath_validator(locator):
         web_element = element.get_unique_element_by_xpath(locator)
     else:
         web_element = text.get_item_using_anchor(locator, anchor='1', **kwargs)
-    img = Image.open(io.BytesIO(web_element.screenshot_as_png))
-    filepath = os.path.join(screenshot.save_screenshot(filename, folder))
-    logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')), also_console=True)
-    img.save(filepath)
-    screenshot.log_screenshot_file(filepath)
+
+    if web_element is not None:
+        img = Image.open(io.BytesIO(web_element.screenshot_as_png))
+        filepath = os.path.join(screenshot.save_screenshot(filename, folder))
+        logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')), also_console=True)
+        img.save(filepath)
+        screenshot.log_screenshot_file(filepath)
