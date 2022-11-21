@@ -431,3 +431,17 @@ TextArea and line breks with check on
     TypeText     textarea1   This is just a sample text    check=True
     TypeText     textarea1   This is just a sample text\nJust another text       check=True
     TypeText     textarea1   This is just a sample text${\n}Just another text    check=True
+
+Global hotkeys
+    [Tags]    PressKey
+    CloseAllBrowsers
+    OpenBrowser           file://${CURDIR}/../resources/text.html    ${BROWSER}
+    ${scroll_text}=       GetText       Current scroll
+    Should Be Equal As Strings    ${scroll_text}                     Current scroll = scroll the window
+    PressKey              ${EMPTY}     END
+    ${scroll_text}=       GetText       Current scroll               delay=1
+    Should Not Be Equal As Strings    ${scroll_text}                 Current scroll = scroll the window
+    PressKey              ${EMPTY}     PAGEUP
+
+    ${scroll_text2}=       GetText       Current scroll              delay=1
+    Should Not Be Equal As Strings    ${scroll_text}                 ${scroll_text2}

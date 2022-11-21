@@ -140,7 +140,6 @@ class InputHandler:
             key = getattr(Keys, key)
         return key
 
-
     @staticmethod
     def check_key_pyautogui(key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
         if not key:

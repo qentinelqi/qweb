@@ -752,6 +752,41 @@ def press_key(locator: str,
         # on Windows this opens task manager
         PressKey    ${EMPTY}       {CTRL + SHIFT + ESC}
 
+    Notes
+    -----
+    Below is a list of supported keys that can be sent to a web element,
+    in addition to keys that consist of a single character (like 'c' or '?'):
+
+    'ADD', 'ALT', 'ARROW_DOWN', 'ARROW_LEFT', 'ARROW_RIGHT', 'ARROW_UP', 'BACKSPACE', 'BACK_SPACE',
+    'CANCEL', 'CLEAR',COMMAND', 'CONTROL', 'DECIMAL', 'DELETE', 'DIVIDE', 'DOWN', 'END', 'ENTER',
+    'EQUALS', 'ESCAPE', 'F1', 'F10', 'F11', 'F12', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9',
+    'HELP', 'HOME', 'INSERT', 'LEFT', 'LEFT_ALT', 'LEFT_CONTROL', 'LEFT_SHIFT', 'META', 'MULTIPLY',
+    'NULL', 'NUMPAD0', 'NUMPAD1', 'NUMPAD2', 'NUMPAD3', 'NUMPAD4', 'NUMPAD5', 'NUMPAD6', 'NUMPAD7',
+    'NUMPAD8', 'NUMPAD9', 'PAGE_DOWN', 'PAGE_UP', 'PAUSE', 'RETURN', 'RIGHT', 'SEMICOLON',
+    'SEPARATOR', 'SHIFT', 'SPACE', 'SUBTRACT', 'TAB', 'UP', 'ZENKAKU_HANKAKU'
+
+
+    Notes
+    -----
+    Below is a list of supported keys names that can be used as "global" hotkeys,
+    in addition to keys that consist of a single character (like 'c' or '?'):
+
+    'ACCEPT', 'ADD', 'ALT', 'ALTLEFT', 'ALTRIGHT', 'APPS', 'BACKSPACE', 'BROWSERBACK',
+    'BROWSERFAVORITES', 'BROWSERFORWARD', 'BROWSERHOME', 'BROWSERREFRESH', 'BROWSERSEARCH',
+    'BROWSERSTOP', 'CAPSLOCK', 'CLEAR','CONVERT', 'CTRL', 'CTRLLEFT', 'CTRLRIGHT', 'DECIMAL',
+    'DEL', 'DELETE', 'DIVIDE', 'DOWN', 'END', 'ENTER', 'ESC', 'ESCAPE', 'EXECUTE', 'F1', 'F10',
+    'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19','F2', 'F20', 'F21', 'F22',
+    'F23', 'F24', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'FINAL', 'FN', 'HANGUEL', 'HANGUL',
+    'HANJA', 'HELP', 'HOME', 'INSERT', 'JUNJA', 'KANA', 'KANJI', 'LAUNCHAPP1', 'LAUNCHAPP2',
+    'LAUNCHMAIL', 'LAUNCHMEDIASELECT', 'LEFT', 'MODECHANGE', 'MULTIPLY', 'NEXTTRACK', 'NONCONVERT',
+    'NUM0', 'NUM1', 'NUM2', 'NUM3', 'NUM4', 'NUM5', 'NUM6', 'NUM7', 'NUM8', 'NUM9', 'NUMLOCK',
+    'PAGEDOWN', 'PAGEUP', 'PAUSE', 'PGDN', 'PGUP', 'PLAYPAUSE', 'PREVTRACK', 'PRINT',
+    'PRINTSCREEN', 'PRNTSCRN', 'PRTSC', 'PRTSCR', 'RETURN', 'RIGHT', 'SCROLLLOCK', 'SELECT',
+    'SEPARATOR', 'SHIFT', 'SHIFTLEFT', 'SHIFTRIGHT', 'SLEEP', 'SPACE', 'STOP', 'SUBTRACT',
+    'TAB', 'UP', 'VOLUMEDOWN', 'VOLUMEMUTE', 'VOLUMEUP', 'WIN', 'WINLEFT', 'WINRIGHT, 'YEN',
+    'COMMAND', 'OPTION', 'OPTIONLEFT', 'OPTIONRIGHT'
+
+
     Related keywords
     ----------------
     \`TypeSecret\`, \`TypeText\`, \`WriteText\`
@@ -759,7 +794,7 @@ def press_key(locator: str,
     # no locator given, "global" hotkey
     if not locator:
         try:
-            key = input_handler.check_key_pyautogui(key) 
+            key = input_handler.check_key_pyautogui(key)
         except AttributeError as e:
             logger.console(e)
             raise QWebValueError(f'Could not find key: {key}') from e
@@ -775,7 +810,6 @@ def press_key(locator: str,
                                                                      **kwargs)
         key = input_handler.check_key(key)  # type: ignore[assignment]
 
-
         # COMMAND key workaround on safari
         # supports normal text field CMD operations only
         # (i.e. CMD+C, CMD+A, CMD+V etc.)
@@ -789,3 +823,4 @@ def press_key(locator: str,
     except AttributeError as e:
         logger.console(e)
         raise QWebValueError('Could not find key "{}"'.format(key)) from e
+    return None
