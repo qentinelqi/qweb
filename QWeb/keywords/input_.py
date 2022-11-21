@@ -794,11 +794,11 @@ def press_key(locator: str,
     # no locator given, "global" hotkey
     if not locator:
         try:
-            key = input_handler.check_key_pyautogui(key)
+            checked_key = input_handler.check_key_pyautogui(key)
         except AttributeError as e:
             logger.console(e)
             raise QWebValueError(f'Could not find key: {key}') from e
-        return hotkey(*key) if isinstance(key, list) else hotkey(key)
+        return hotkey(*checked_key) if isinstance(checked_key, list) else hotkey(checked_key)
 
     driver = browser.return_browser()
     action = ActionChains(driver)

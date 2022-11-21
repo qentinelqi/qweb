@@ -141,7 +141,7 @@ class InputHandler:
         return key
 
     @staticmethod
-    def check_key_pyautogui(key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
+    def check_key_pyautogui(key: Optional[str]) -> Union[Optional[str], list[str]]:
         if not key:
             return None
         if key == '{PASTE}':
