@@ -17,6 +17,7 @@
                 registerCustomElement( "foo-component", "fooTemplate" );
                 registerCustomElement( "input-component", "inputTemplate" );
                 registerCustomElement( "click-component", "clickTemplate" );
+                registerCustomElement( "select-component", "selectTemplate" );
             });
 
             function myFunction() {
@@ -66,7 +67,21 @@
 
                 </div>  
             </template>
-            <input type="text" placeholder="username" />
+            <select-component id="selectShadowRoot"></select-component>
+            <template id="selectTemplate">
+                <br><br>
+                <div id="shadowSelectTarget">
+                    <label>Dropdown label</label>
+                    <select id="select1">
+                        <option value="First">First</option>
+                        <option value="Second">Second</option>
+                        <option value="Third">Third</option>
+                    </select>
+                </div>
+                <br><br>
+            </template>
+
+            <input type="text" placeholder="username"/>
             <span>In both DOM</span>
             <div style="display:none" id="hiddenEL">This should be hidden</div>
         </body>
