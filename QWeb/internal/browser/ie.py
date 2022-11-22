@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.ie.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from QWeb.internal import browser
+from robot.api import logger
 
 NAMES: list[str] = ["ie", "internet explorer"]
 
@@ -40,4 +41,9 @@ def open_browser(
                           options)
 
     browser.cache_browser(driver)
+    logger.warn('Deprecated.\n'
+                'Internet Explorer has reached it\'s end of life on June 2022.\n'
+                'IE support will be removed from QWeb 1.1.2023. \n'
+                'Use Edge instead.')
+
     return driver
