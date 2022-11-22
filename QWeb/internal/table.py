@@ -76,6 +76,8 @@ class Table:
             table_element = cls.get_table_element_by_css(locator, anchor)
         else:
             table_element = cls.get_table_element(cls, locator, index)  # type: ignore[arg-type]
+        if table_element is None:
+            raise QWebElementNotFoundError("Could not find Table Element!")
         if not parent and not child:
             if CONFIG['SearchMode']:
                 element.draw_borders(table_element)
@@ -208,7 +210,8 @@ class Table:
                     return index + 1
         raise QWebValueError('Matching table cell not found for locator {}.'.format(locator))
 
-    def get_row(self, locator: str, anchor: str, row_index: bool = False, **kwargs) -> WebElement:
+    def get_row(self, locator: str, anchor: str, row_index: bool = False, **kwargs
+                ) -> Union[WebElement, int]:
         skip_header = util.par2bool(kwargs.get('skip_header', False))
         rows = self.get_all_rows()
         if locator.startswith('//last'):
@@ -233,15 +236,15 @@ class Table:
 
     @staticmethod
     def _get_row_by_locator_text(rows: list[WebElement], locator: str,
-                                 anchor: Union[str, int]) -> tuple[WebElement, WebElement]:
+                                 anchor: Union[str, int]) -> tuple[WebElement, int]:
         matches = []
         input_elements = []
         row_index = []
-        anchor_text = None
+        anchor_text = ""
         try:
             anchor = int(anchor) - 1
         except ValueError:
-            anchor_text = anchor
+            anchor_text = str(anchor)
         for index, row in enumerate(rows):
             row_content = row.text
             if locator == 'EMPTY' and row_content.strip() == '':
@@ -265,7 +268,9 @@ class Table:
         try:
             row = int(re.findall('r([+-]?[0-9]+)', coordinate_str)[0])
             if row < 0:
-                row = int(self.get_row('//last', self.anchor)) + (row + 1)
+                last_row = self.get_row('//last', self.anchor)
+                if isinstance(last_row, int):
+                    row = last_row + (row + 1)
         except IndexError:
             row = None
         try:

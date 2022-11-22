@@ -17,17 +17,18 @@
 from __future__ import annotations
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
 
 from robot.api import logger
 from QWeb.internal import javascript
 
 
 def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
-    visible_frames = []
+    visible_frames: list[WebElement] = []
     frames = javascript.execute_javascript('return document.querySelectorAll("iframe, frame")')
     if not frames:
         frames = []
-    frames += driver.find_elements_by_xpath("//iframe|//frame")
+    frames += driver.find_elements(By.XPATH, "//iframe|//frame")
     visible_only = kwargs.get('visibility', True)
     if not visible_only:
         return frames
@@ -37,7 +38,7 @@ def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
     for frame in frames_obj:
         offset = frame.get('offset')
         if offset:
-            visible_frames.append(frame.get('elem'))
+            visible_frames.append(frame.get('elem'))  # type: ignore
     if visible_frames:
         logger.debug('Found {} visible frames'.format(len(visible_frames)))
     return visible_frames

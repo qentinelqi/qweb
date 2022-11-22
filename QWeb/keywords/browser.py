@@ -17,6 +17,7 @@
 from __future__ import annotations
 from typing import Union, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import os
 import pkg_resources
@@ -29,6 +30,7 @@ from QWeb.internal import browser, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
                                   bs_desktop, safari, edge
+from QWeb.internal.exceptions import QWebDriverError
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -246,8 +248,8 @@ def close_browser() -> None:
     ----------------
     \`CloseAllBrowsers\`, \`CloseRemoteBrowser\`, \`OpenBrowser\`
     """
-    driver = browser.get_current_browser()
-    if driver is not None:
+    try:
+        driver = browser.get_current_browser()
         if util.is_safari():
             safari.open_windows.clear()
         _close_remote_browser_session(driver, close_only=True)
@@ -256,7 +258,7 @@ def close_browser() -> None:
         # Clear browser re-use flag as no original session open anymore
         BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
         driver.quit()
-    else:
+    except QWebDriverError:
         logger.info("All browser windows already closed")
 
 
@@ -283,11 +285,11 @@ def close_remote_browser() -> None:
     ----------------
     \`CloseAllBrowsers\`, \`CloseBrowser\`, \`OpenBrowser\`
     """
-    driver = browser.get_current_browser()
-    if driver is not None:
+    try:
+        driver = browser.get_current_browser()
         if _close_remote_browser_session(driver):
             browser.remove_from_browser_cache(driver)
-    else:
+    except QWebDriverError:
         logger.info("All browser windows already closed")
 
 
@@ -377,7 +379,7 @@ def verify_links(url: str = 'current', log_all: bool = False, header_only: bool 
     else:
         window.go_to(url)
         driver = browser.get_current_browser()
-    elements = driver.find_elements_by_xpath("//a[@href]")
+    elements = driver.find_elements(By.XPATH, "//a[@href]")
     headers = {
         "User-Agent":
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "

@@ -86,7 +86,7 @@ def open_browser(executable_path: str = "chromedriver",
         driver = Remote(command_executor=executor_url,
                         desired_capabilities=options.to_capabilities())
         BuiltIn().set_global_variable('${BROWSER_REMOTE_SESSION_ID}', driver.session_id)
-        driver.session_id = session_id
+        driver.session_id = session_id  # type: ignore
     else:
         if user.is_root():
             options.add_argument("no-sandbox")
@@ -101,10 +101,11 @@ def open_browser(executable_path: str = "chromedriver",
             CONFIG.set_value('Headless', True)
             options.add_argument("headless")
         if 'prefs' in kwargs:
-            if isinstance(kwargs.get('prefs'), dict):
-                prefs = kwargs.get('prefs')
+            tmp_prefs = kwargs.get('prefs')
+            if isinstance(tmp_prefs, dict):
+                prefs = tmp_prefs
             else:
-                prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
+                prefs = util.prefs_to_dict(str(tmp_prefs).strip())
             options.add_experimental_option('prefs', prefs)
 
         driver = Chrome(BuiltIn().get_variable_value('${CHROMEDRIVER_PATH}') or executable_path,
@@ -115,7 +116,7 @@ def open_browser(executable_path: str = "chromedriver",
             BuiltIn().get_variable_value('${BROWSER_REUSE_ENABLED}')) or False
         if browser_reuse_enabled:
             # Write WebDriver session info to RF arguments file for re-use
-            write_browser_session_argsfile(driver.session_id, driver.command_executor._url)  # pylint: disable=protected-access
+            write_browser_session_argsfile(driver.session_id, driver.command_executor._url)  # type: ignore # pylint: disable=protected-access,line-too-long
 
             # Clear possible existing global values
             BuiltIn().set_global_variable('${BROWSER_SESSION_ID}', None)

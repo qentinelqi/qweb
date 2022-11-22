@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Union
+from typing import Union, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
@@ -82,11 +82,14 @@ MIME_TYPES = ("application/epub+zip;"
               "video/webm;"
               "video/x-msvideo")
 
-_current_browser: WebDriver = None  # type: ignore[assignment]
+_current_browser: Optional[WebDriver] = None
 _open_browsers: list[WebDriver] = []
 
 
 def get_current_browser() -> WebDriver:
+    if _current_browser is None:
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
+                              " to open browser first")
     return _current_browser
 
 

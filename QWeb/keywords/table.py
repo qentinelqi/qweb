@@ -22,6 +22,7 @@ are usually refenced by coordinates or unique neighbouring values.
 """
 from typing import Union
 
+from selenium.webdriver.remote.webelement import WebElement
 from robot.api.deco import keyword
 from QWeb.internal import decorators, actions, util
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, \
@@ -256,7 +257,7 @@ def get_table_row(
         locator: str,
         anchor: str = "1",
         timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        **kwargs) -> None:
+        **kwargs) -> Union[WebElement, int]:
     r"""Get row (index) from current table.
 
     Get table row by some visible text or value.

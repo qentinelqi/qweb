@@ -86,6 +86,7 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
 
 def get_dd_elements_from_all_documents(locator: str, anchor: str, index: Union[int, str],
                                        **kwargs: Any) -> Select:
+    select: Optional[WebElement]
     if int(index) > 0:
         index = int(index) - 1
     css_selector = CONFIG["CssSelectors"]
@@ -95,8 +96,8 @@ def get_dd_elements_from_all_documents(locator: str, anchor: str, index: Union[i
         table = Table.ACTIVE_TABLE.update_table()
         if table is None:
             raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
-        locator = table.get_table_cell(locator, anchor)
-        select = element.get_element_from_childnodes(locator, 'select',
+        web_element = table.get_table_cell(locator, anchor)
+        select = element.get_element_from_childnodes(web_element, 'select',
                                                      dom_traversing=False)[int(index)]
     else:
         select = get_dropdown_element_by_css_selector(locator, anchor, int(index), **kwargs)

@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Any
+from typing import Any, Union
 from selenium.webdriver.remote.webelement import WebElement
 
 from QWeb.internal import browser
@@ -45,7 +45,7 @@ def execute_javascript(script: str, *args) -> Any:
     return driver.execute_script(script, *args)
 
 
-def get_visibility(web_elements: list[WebElement]) -> list[WebElement]:
+def get_visibility(web_elements: list[WebElement]) -> list[dict]:
     """Return web element objects.
 
     Object contains element itself, offset-status,
@@ -330,7 +330,8 @@ def get_by_label(locator_text: str, css: str, level: int,
     return execute_javascript(js, locator_text.replace("\'", "\\'"), css, level, partial_match)
 
 
-def get_parent_list(locator_element: str, css: str) -> list[WebElement]:
+def get_parent_list(locator_element: Union[WebElement, str], css: str
+                    ) -> Union[WebElement, list[WebElement]]:
     """Get parent list for web element.
 
     Parameters

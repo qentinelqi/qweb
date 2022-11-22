@@ -313,8 +313,8 @@ def get_visible_elements_from_elements(web_elements: list[WebElement],
     logger.debug('found {} visible elements and {} hiding ones'.format(
         len(visible_elements), len(hiding_elements)))
     if viewport_check:
-        return visible_elements
-    return visible_elements + hiding_elements
+        return visible_elements  # type: ignore
+    return visible_elements + hiding_elements  # type: ignore
 
 
 def get_all_inputs_from_shadow_dom() -> list[WebElement]:
@@ -695,7 +695,7 @@ def get_parent_list_element(locator_element: WebElement, css: str) -> WebElement
     except (WebDriverException, JavascriptException) as e:
         web_element = None
         logger.debug('Got Exception from get_parent_list: {}'.format(e))
-    if web_element:
+    if isinstance(web_element, WebElement):
         return web_element
     raise QWebElementNotFoundError('Parent with tag {} not found.'.format(css))
 

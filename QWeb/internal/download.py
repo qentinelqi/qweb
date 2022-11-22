@@ -111,7 +111,7 @@ def is_tmp_file(filepath: str) -> bool:
     elif isinstance(driver, webdriver.Edge):
         partial_download_suffix = 'crdownload'
     else:
-        raise ValueError('Unkown browser {}'.format(driver.name))
+        raise ValueError('Unknown browser {}'.format(driver.name))
     return filepath.endswith(partial_download_suffix)
 
 

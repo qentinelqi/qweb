@@ -24,6 +24,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from robot.api.deco import keyword
+from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
@@ -731,7 +732,10 @@ def press_key(locator: str,
               **kwargs) -> None:
     r"""Simulate user pressing keyboard key on element identified by "locator".
 
-    The parameter "key" is either a single character or a keyboard key surrounded by '{ }'.
+    The parameter "key" is either a single character or a keyboard key combination
+    surrounded by '{ }'.
+
+    If ${EMPTY} is given as a locator, "global" hotkey combination is sent and handled by the OS.
 
     Examples
     --------
@@ -744,10 +748,58 @@ def press_key(locator: str,
         PressKey    other_field    {CONTROL + V}    # Paste copied text
         PressKey    text_field     {PASTE}          # Paste copied text
 
+        # Send ESC keypress without locator and let OS decide how it's consumed
+        # on Windows this opens task manager
+        PressKey    ${EMPTY}       {CTRL + SHIFT + ESC}
+
+    Notes
+    -----
+    Below is a list of supported keys that can be sent to a web element,
+    in addition to keys that consist of a single character (like 'c' or '?'):
+
+    'ADD', 'ALT', 'ARROW_DOWN', 'ARROW_LEFT', 'ARROW_RIGHT', 'ARROW_UP', 'BACKSPACE', 'BACK_SPACE',
+    'CANCEL', 'CLEAR',COMMAND', 'CONTROL', 'DECIMAL', 'DELETE', 'DIVIDE', 'DOWN', 'END', 'ENTER',
+    'EQUALS', 'ESCAPE', 'F1', 'F10', 'F11', 'F12', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9',
+    'HELP', 'HOME', 'INSERT', 'LEFT', 'LEFT_ALT', 'LEFT_CONTROL', 'LEFT_SHIFT', 'META', 'MULTIPLY',
+    'NULL', 'NUMPAD0', 'NUMPAD1', 'NUMPAD2', 'NUMPAD3', 'NUMPAD4', 'NUMPAD5', 'NUMPAD6', 'NUMPAD7',
+    'NUMPAD8', 'NUMPAD9', 'PAGE_DOWN', 'PAGE_UP', 'PAUSE', 'RETURN', 'RIGHT', 'SEMICOLON',
+    'SEPARATOR', 'SHIFT', 'SPACE', 'SUBTRACT', 'TAB', 'UP', 'ZENKAKU_HANKAKU'
+
+
+    Notes
+    -----
+    Below is a list of supported keys names that can be used as "global" hotkeys,
+    in addition to keys that consist of a single character (like 'c' or '?'):
+
+    'ACCEPT', 'ADD', 'ALT', 'ALTLEFT', 'ALTRIGHT', 'APPS', 'BACKSPACE', 'BROWSERBACK',
+    'BROWSERFAVORITES', 'BROWSERFORWARD', 'BROWSERHOME', 'BROWSERREFRESH', 'BROWSERSEARCH',
+    'BROWSERSTOP', 'CAPSLOCK', 'CLEAR','CONVERT', 'CTRL', 'CTRLLEFT', 'CTRLRIGHT', 'DECIMAL',
+    'DEL', 'DELETE', 'DIVIDE', 'DOWN', 'END', 'ENTER', 'ESC', 'ESCAPE', 'EXECUTE', 'F1', 'F10',
+    'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19','F2', 'F20', 'F21', 'F22',
+    'F23', 'F24', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'FINAL', 'FN', 'HANGUEL', 'HANGUL',
+    'HANJA', 'HELP', 'HOME', 'INSERT', 'JUNJA', 'KANA', 'KANJI', 'LAUNCHAPP1', 'LAUNCHAPP2',
+    'LAUNCHMAIL', 'LAUNCHMEDIASELECT', 'LEFT', 'MODECHANGE', 'MULTIPLY', 'NEXTTRACK', 'NONCONVERT',
+    'NUM0', 'NUM1', 'NUM2', 'NUM3', 'NUM4', 'NUM5', 'NUM6', 'NUM7', 'NUM8', 'NUM9', 'NUMLOCK',
+    'PAGEDOWN', 'PAGEUP', 'PAUSE', 'PGDN', 'PGUP', 'PLAYPAUSE', 'PREVTRACK', 'PRINT',
+    'PRINTSCREEN', 'PRNTSCRN', 'PRTSC', 'PRTSCR', 'RETURN', 'RIGHT', 'SCROLLLOCK', 'SELECT',
+    'SEPARATOR', 'SHIFT', 'SHIFTLEFT', 'SHIFTRIGHT', 'SLEEP', 'SPACE', 'STOP', 'SUBTRACT',
+    'TAB', 'UP', 'VOLUMEDOWN', 'VOLUMEMUTE', 'VOLUMEUP', 'WIN', 'WINLEFT', 'WINRIGHT, 'YEN',
+    'COMMAND', 'OPTION', 'OPTIONLEFT', 'OPTIONRIGHT'
+
+
     Related keywords
     ----------------
     \`TypeSecret\`, \`TypeText\`, \`WriteText\`
     """
+    # no locator given, "global" hotkey
+    if not locator:
+        try:
+            checked_key = input_handler.check_key_pyautogui(key)
+        except AttributeError as e:
+            logger.console(e)
+            raise QWebValueError(f'Could not find key: {key}') from e
+        return hotkey(*checked_key) if isinstance(checked_key, list) else hotkey(checked_key)
+
     driver = browser.return_browser()
     action = ActionChains(driver)
     try:
@@ -771,3 +823,4 @@ def press_key(locator: str,
     except AttributeError as e:
         logger.console(e)
         raise QWebValueError('Could not find key "{}"'.format(key)) from e
+    return None

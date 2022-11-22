@@ -108,6 +108,7 @@ def get_input_elements_from_all_documents(
     -------
     WebElement
     """
+    input_element: Optional[WebElement]
     index = int(index) - 1
     css = 'input:not([type="hidden"]):not([type="submit"]):not([type="button"])' \
           ':not([type="reset"]):not([type="checkbox"]):not([type="radio"])' \
@@ -168,7 +169,8 @@ def get_input_element_by_css_selector(locator: str,
        -------
        WebElement
        """
-    partial_matches: WebElement = []
+    input_element: Union[Optional[WebElement], list[WebElement]]
+    partial_matches: list[WebElement] = []
     upload = kwargs.get('upload')
     if upload:
         try:

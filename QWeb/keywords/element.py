@@ -18,6 +18,7 @@
 from __future__ import annotations
 from typing import Union, Optional
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
@@ -409,7 +410,7 @@ def get_webelement(locator: str,
                    anchor: str = '1',
                    element_type: Optional[str] = None,
                    timeout: Union[int, float, str] = 0,
-                   **kwargs) -> Union[WebElement, list[WebElement]]:
+                   **kwargs) -> Union[Select, Optional[WebElement], list[WebElement]]:
     r"""Get Webelement using any Qword -stylish locator.
 
     Examples
@@ -472,6 +473,7 @@ def get_webelement(locator: str,
     ----------------
     \`ClickElement\`, \`HoverElement\`, \`TypeText\`
     """
+    web_elements: Union[Select, Optional[WebElement], list[WebElement]]
     elem_index = kwargs.get('index', None)
     kwargs['index'] = kwargs.get('index', 1)
     kwargs['timeout'] = timeout
@@ -496,9 +498,11 @@ def get_webelement(locator: str,
         web_elements = element.get_visible_elements_from_elements(
             element.get_elements_by_attributes(kwargs.get('tag'), locator, **kwargs))
     else:
-        web_elements = element.get_webelements(locator, **kwargs)
+        web_element_list = element.get_webelements(locator, **kwargs)
         if elem_index:
-            web_elements = element.get_element_by_index(web_elements, elem_index)
+            web_elements = element.get_element_by_index(web_element_list, elem_index)  # type: ignore # pylint: disable=line-too-long
+        else:
+            web_elements = web_element_list
     if web_elements:
         return web_elements
     raise QWebElementNotFoundError('No matching element found')

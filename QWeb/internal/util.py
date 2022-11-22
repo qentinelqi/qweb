@@ -18,6 +18,7 @@ from __future__ import annotations
 from typing import Union, Any, Callable, Optional
 
 from QWeb.internal import browser, javascript
+from QWeb.internal.browser.safari import NAMES as SAFARINAMES
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebUnexpectedConditionError
 from robot.api import logger
@@ -196,7 +197,7 @@ def is_retina() -> bool:
 
 def is_safari() -> bool:
     driver = browser.get_current_browser()
-    return driver.capabilities['browserName'].lower() in browser.safari.NAMES
+    return driver.capabilities['browserName'].lower() in SAFARINAMES
 
 
 def get_browser_width() -> int:
