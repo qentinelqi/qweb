@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.6] - 2022-11-23
+### Added
+- Added support for global hotkeys in PressKey keyword
+- Added offset arguments for locator element in DragDrop keyword
+- Added Shadow DOM support for DropDown keyword
+  
+### Changed
+- Deprecation warning added to OpenBrowser when using IE
+- Updated Selenium to 4.6.0 and improved typing
+- Updated Pillow to 9.3.0
+- Minor change how ClickCheckbox works to better support Salesforce checkboxes
+- Suppressed some unnecessary warnings from webdriver (moved to DEBUG log level)
+
+
 ## [2.0.5] - 2022-10-20
 ### Added
 - Exclude Robot Framwork 6.x in requirements for now
