@@ -25,6 +25,12 @@ Verify File Download Slow Bandwidth
 Verify File Download Fails If Multiple Files Found
     [Tags]    PROBLEM_IN_SAFARI
     VerifyText      Download small csv file
+    IF    "${BROWSER}"=="firefox"
+        Go To    about:config
+        Click Text    Accept the Risk and Continue
+        Type Text    Search preference name    browser.download.lastDir
+        Log Screenshot
+    END
     ExpectFileDownload
     Two Files Are Downloaded Without ExpectFileDownload Keyword
     Run Keyword And Expect Error    ValueError: Found more than one file that was modified
