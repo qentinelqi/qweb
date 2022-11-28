@@ -83,21 +83,18 @@ Automatic frame search table elements
 Automatic frame search checkbox elements
     [Tags]                      Frame
     SetConfig                   CSSSelectors                off
-    # Headless FF on GH Actions has small viewport
-    # so we're going to move the frame viewport with VerifyText
-    # so that the checkboxes are visible
-    VerifyText    CheckBox
+    VerifyText                  CheckBox
     VerifyCheckboxStatus        I have a bike               enabled
     VerifyCheckboxStatus        I should be disabled        disabled
-    ClickCheckbox               I have a bike               on
-    ClickCheckbox               I have a bike               off
-    ClickCheckbox               I have a bike               on
-    ClickCheckbox               I have a bike               off
-    ClickCheckbox               I have a bike               on
+    ClickCheckbox               I have a bike               on            visibility=False
+    ClickCheckbox               I have a bike               off           visibility=False
+    ClickCheckbox               I have a bike               on            visibility=False
+    ClickCheckbox               I have a bike               off           visibility=False
+    ClickCheckbox               I have a bike               on            visibility=False
     VerifyCheckboxValue         I have a bike               on
-    ClickCheckbox               I have a car                on
+    ClickCheckbox               I have a car                on            visibility=False
     VerifyCheckboxValue         I have a car                on
-    ClickCheckbox               I have a car                off
+    ClickCheckbox               I have a car                off           visibility=False
     VerifyCheckboxValue         I have a car                off
 
 Automatic frame search dropdown elements
