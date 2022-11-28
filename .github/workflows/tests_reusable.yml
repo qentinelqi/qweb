@@ -58,22 +58,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Setup Linux Firefox
-      # ubuntu-latest (22.04, @28.11.2022) image is missing FF and geckodriver
-      # geckodriver install script from:
-      # https://gist.github.com/cgoldberg/4097efbfeb40adf698a7d05e75e0ff51
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        install_dir="/usr/local/bin"
-        sudo apt-get install firefox
-        echo "Get DL URL"
-        json=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest)
-        url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("linux64")) | select(contains("asc") | not)')
-        echo "$url"
-        curl -s -L "$url" | tar -xz
-        chmod +x geckodriver
-        sudo mv geckodriver "$install_dir"
-
     - name: Setup Linux windowing
       if: matrix.os == 'ubuntu-latest'
       run: |
