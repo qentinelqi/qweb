@@ -82,8 +82,11 @@ Automatic frame search table elements
 
 Automatic frame search checkbox elements
     [Tags]                      Frame
-    Set Config                  WindowSize    1920x1080
     SetConfig                   CSSSelectors                off
+    # Headless FF on GH Actions has small viewport
+    # so we're going to move the frame viewport with VerifyText
+    # so that the checkboxes are visible
+    VerifyText    CheckBox
     VerifyCheckboxStatus        I have a bike               enabled
     VerifyCheckboxStatus        I should be disabled        disabled
     ClickCheckbox               I have a bike               on
