@@ -62,14 +62,15 @@ jobs:
       # Ubuntu 22.04 image is missing FF and geckodriver
       if: matrix.os == 'ubuntu-latest'
       run: |
+        install_dir="/usr/local/bin"
         sudo apt-get install firefox
+        echo "Get DL URL"
         json=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest)
-        url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("linux64"))')
+        url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("linux64")) | select(contains("asc") | not)')
+        echo "$url"
         curl -s -L "$url" | tar -xz
         chmod +x geckodriver
-        sudo mkdir /usr/local/share/geckodriver
-        sudo mv geckodriver /usr/local/share/geckodriver
-        PATH=$PATH:/usr/local/share/geckodriver
+        sudo mv geckodriver "$install_dir"
 
     - name: Setup Linux windowing
       if: matrix.os == 'ubuntu-latest'
