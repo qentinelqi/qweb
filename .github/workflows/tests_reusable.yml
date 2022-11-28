@@ -59,7 +59,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Setup Linux Firefox
-      # Ubuntu 22.04 image is missing FF and geckodriver
+      # ubuntu-latest (22.04, @28.11.2022) image is missing FF and geckodriver
+      # geckodriver install script from:
+      # https://gist.github.com/cgoldberg/4097efbfeb40adf698a7d05e75e0ff51
       if: matrix.os == 'ubuntu-latest'
       run: |
         install_dir="/usr/local/bin"
