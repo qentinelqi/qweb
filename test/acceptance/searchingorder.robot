@@ -12,8 +12,6 @@ ${BROWSER}    chrome
 InputElements
     [tags]                  inputsorder
     # Hover needed in ff 89
-    SetConfig               WindowSize      1920x1080
-    RefreshPage
     HoverText               Second input
     TypeText                Cell 1          Qentinel
     VerifyInputValue        field7          Qentinel  timeout=3
@@ -21,7 +19,7 @@ InputElements
     VerifyInputValue        field8          Robot
     TypeText                Cell 1 input:   Test Automation
     VerifyInputValue        field3          Test Automation
-    TypeText                Cell 1 input    FooBar      index=2
+    TypeText                Cell 1 input    FooBar      index=2         visibility=False
     VerifyInputValue        field3          FooBar
 
 CheckboxElements
