@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Full matches should always be first if text-attr is not used
 Library           QWeb
-Suite Setup       OpenBrowser  file://${CURDIR}/../resources/frame.html  ${BROWSER}  --headless
+Suite Setup       OpenBrowser  file://${CURDIR}/../resources/frame.html  ${BROWSER}
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 
@@ -12,6 +12,7 @@ ${BROWSER}    chrome
 InputElements
     [tags]                  inputsorder
     # Hover needed in ff 89
+    SetConfig               WindowSize      1920x1080
     HoverText               Second input
     TypeText                Cell 1          Qentinel
     VerifyInputValue        field7          Qentinel  timeout=3
