@@ -23,6 +23,8 @@ InputElements
     VerifyInputValue        field3          FooBar
 
 CheckboxElements
+    SetConfig               WindowSize              1920x1080
+    RefreshPage
     ClickCheckbox           I have a                on
     VerifyCheckboxValue     I have a bike           on
     ClickCheckbox           Sample text             on
