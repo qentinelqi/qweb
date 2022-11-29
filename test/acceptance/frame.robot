@@ -82,6 +82,7 @@ Automatic frame search table elements
 
 Automatic frame search checkbox elements
     [Tags]                      Frame
+    Set Config                  WindowSize                  1920x1080
     SetConfig                   CSSSelectors                off
     VerifyText                  CheckBox
     VerifyCheckboxStatus        I have a bike               enabled
