@@ -82,8 +82,9 @@ Automatic frame search table elements
 
 Automatic frame search checkbox elements
     [Tags]                      Frame
-    Set Config                  WindowSize                  1920x1080
+    SetConfig                   WindowSize                  1920x1080
     SetConfig                   CSSSelectors                off
+    RefreshPage
     VerifyText                  CheckBox
     VerifyCheckboxStatus        I have a bike               enabled
     VerifyCheckboxStatus        I should be disabled        disabled
