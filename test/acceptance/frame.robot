@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for frame keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}    --headless
+Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 
@@ -86,15 +86,15 @@ Automatic frame search checkbox elements
     VerifyText                  CheckBox
     VerifyCheckboxStatus        I have a bike               enabled
     VerifyCheckboxStatus        I should be disabled        disabled
-    ClickCheckbox               I have a bike               on            visibility=False
-    ClickCheckbox               I have a bike               off           visibility=False
-    ClickCheckbox               I have a bike               on            visibility=False
-    ClickCheckbox               I have a bike               off           visibility=False
-    ClickCheckbox               I have a bike               on            visibility=False
+    ClickCheckbox               I have a bike               on
+    ClickCheckbox               I have a bike               off
+    ClickCheckbox               I have a bike               on
+    ClickCheckbox               I have a bike               off
+    ClickCheckbox               I have a bike               on
     VerifyCheckboxValue         I have a bike               on
-    ClickCheckbox               I have a car                on            visibility=False
+    ClickCheckbox               I have a car                on
     VerifyCheckboxValue         I have a car                on
-    ClickCheckbox               I have a car                off           visibility=False
+    ClickCheckbox               I have a car                off
     VerifyCheckboxValue         I have a car                off
 
 Automatic frame search dropdown elements
