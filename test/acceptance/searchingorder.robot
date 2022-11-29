@@ -13,6 +13,7 @@ InputElements
     [tags]                  inputsorder
     # Hover needed in ff 89
     SetConfig               WindowSize      1920x1080
+    RefreshPage
     HoverText               Second input
     TypeText                Cell 1          Qentinel
     VerifyInputValue        field7          Qentinel  timeout=3
