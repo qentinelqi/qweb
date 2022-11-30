@@ -42,7 +42,7 @@ def get_downloads_dir() -> str:
     """
     home_dir = platform.get_home_dir()
     download_dir = Path(home_dir) / 'Downloads'
-    logger.info('Downloads directory is {}'.format(download_dir))
+    logger.debug('Downloads directory is {}'.format(download_dir))
     return str(download_dir)
 
 
@@ -128,9 +128,9 @@ def get_path(filename: str) -> Path:
     paths = [downloads, files, images, files_exec_dir, images_exec_dir]
 
     for path in paths:
-        logger.info(path, also_console=True)
+        logger.debug(path, also_console=True)
         if path.exists():
-            logger.debug(path)
+            logger.debug(f"Path exists: {path}")
             return path
     try:
         base_path = BuiltIn().get_variable_value('${base_image_path}')
