@@ -78,8 +78,8 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                     if any(s in str(e) for s in FATAL_MESSAGES):
                         CONFIG.set_value("OSScreenshots", True)
                         raise QWebBrowserError(e)  # pylint: disable=W0707
-                    logger.info('From timeout decorator: Webdriver exception. Retrying..')
-                    logger.info(e)
+                    logger.debug('From timeout decorator: Webdriver exception. Retrying..')
+                    logger.debug(e)
                     time.sleep(SHORT_DELAY)
                     err = QWebDriverError
                     msg = e
@@ -132,14 +132,14 @@ def timeout_decorator_for_actions(fn: Callable[..., Any]) -> Callable[..., Any]:
                 raise ve
             except (QWebStalingElementError, StaleElementReferenceException) as S:
                 if 'execute_click' in str(fn) or 'text_appearance' in str(fn):
-                    logger.info('Got staling element err from retry click.'
+                    logger.debug('Got staling element err from retry click.'
                                 'Action is probably triggered.')
                     raise QWebUnexpectedConditionError(S)  # pylint: disable=W0707
                 raise QWebStalingElementError('Staling element')  # pylint: disable=W0707
             except (WebDriverException, QWebDriverError) as wde:
                 if 'alert' in str(fn):
                     time.sleep(LONG_DELAY)
-                    logger.info("Got webdriver exception..{}. Retrying..".format(wde))
+                    logger.debug("Got webdriver exception..{}. Retrying..".format(wde))
                     err = QWebDriverError  # type: ignore[assignment]
                     msg = wde  # type: ignore[assignment]
                 else:

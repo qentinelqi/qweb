@@ -59,7 +59,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Setup Linux windowing
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-20.04'
       run: |
         sudo apt-get install matchbox scrot
         Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1

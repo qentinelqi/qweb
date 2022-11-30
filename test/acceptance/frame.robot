@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for frame keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}    --headless
+Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/frame.html                ${BROWSER}
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 
@@ -82,7 +82,10 @@ Automatic frame search table elements
 
 Automatic frame search checkbox elements
     [Tags]                      Frame
+    SetConfig                   WindowSize                  1920x1080
     SetConfig                   CSSSelectors                off
+    RefreshPage
+    VerifyText                  CheckBox
     VerifyCheckboxStatus        I have a bike               enabled
     VerifyCheckboxStatus        I should be disabled        disabled
     ClickCheckbox               I have a bike               on

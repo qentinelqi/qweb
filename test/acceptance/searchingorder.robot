@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Full matches should always be first if text-attr is not used
 Library           QWeb
-Suite Setup       OpenBrowser  file://${CURDIR}/../resources/frame.html  ${BROWSER}  --headless
+Suite Setup       OpenBrowser  file://${CURDIR}/../resources/frame.html  ${BROWSER}
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 
@@ -19,10 +19,12 @@ InputElements
     VerifyInputValue        field8          Robot
     TypeText                Cell 1 input:   Test Automation
     VerifyInputValue        field3          Test Automation
-    TypeText                Cell 1 input    FooBar      index=2
+    TypeText                Cell 1 input    FooBar      index=2         visibility=False
     VerifyInputValue        field3          FooBar
 
 CheckboxElements
+    SetConfig               WindowSize              1920x1080
+    RefreshPage
     ClickCheckbox           I have a                on
     VerifyCheckboxValue     I have a bike           on
     ClickCheckbox           Sample text             on
