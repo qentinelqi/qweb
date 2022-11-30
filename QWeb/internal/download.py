@@ -128,7 +128,7 @@ def get_path(filename: str) -> Path:
     paths = [downloads, files, images, files_exec_dir, images_exec_dir]
 
     for path in paths:
-        logger.debug(path, also_console=True)
+        logger.debug(path)
         if path.exists():
             logger.debug(f"Path exists: {path}")
             return path
