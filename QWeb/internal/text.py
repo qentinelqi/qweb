@@ -285,6 +285,8 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
                 if len(anchor_elements) > 0:
                     logger.debug('No exact match found, using first partial match')
                     anchor_element = anchor_elements[0]
+                else:
+                    raise QWebElementNotFoundError(f"Could not find elements for anchor: {anchor}")
         else:
             anchor_element = get_unique_text_element(anchor, **kwargs)
         return element.get_closest_element(anchor_element, elements)
