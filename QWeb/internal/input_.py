@@ -183,6 +183,7 @@ def get_input_element_by_css_selector(locator: str,
         full_matches, partial_matches = get_input_elements_by_css(locator, **kwargs)
 
         if full_matches:
+            full_matches = text.filter_by_modal_ancestor(full_matches)
             input_element = element.get_visible_elements_from_elements(full_matches, **kwargs)
             if input_element and str(anchor) == '1':
                 input_element = input_element[index]
@@ -199,6 +200,7 @@ def get_input_element_by_css_selector(locator: str,
         logger.trace('Element not found by visible text. Trying with partial match')
         input_elements = partial_matches
     if input_elements:
+        input_elements = text.filter_by_modal_ancestor(input_elements)
         visibles = element.get_visible_elements_from_elements(input_elements, **kwargs)
         if visibles:
             if element.is_enabled(visibles[index]) or enable_check is True:
