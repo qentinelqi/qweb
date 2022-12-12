@@ -226,26 +226,26 @@ def filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
     # no filtering if modal setting is the default one
     if modal_xpath == SearchStrategies.IS_MODAL_XPATH:
         return elements
-    else:
-        # filter elements by modal (dialog etc)
-        logger.debug("IsModalXpath filtering on, filtering...")
-        modal_exists = driver.find_elements(By.XPATH, modal_xpath)
-        # no filtering if modal element doesn't exist
-        if not modal_exists:
-            return elements
 
-        logger.debug(f"length before filtering: {len(elements)}")
-        elems_in_modal = []
+    # filter elements by modal (dialog etc)
+    logger.debug("IsModalXpath filtering on, filtering...")
+    modal_exists = driver.find_elements(By.XPATH, modal_xpath)
+    # no filtering if modal element doesn't exist
+    if not modal_exists:
+        return elements
 
-        for elem in elements:
-            try:
-                elem.find_element(By.XPATH, f"./../ancestor::{xpath}")
-                elems_in_modal.append(elem)
-            except NoSuchElementException:
-                logger.debug("Filtering out element, modal open but not under modal")
-                continue
+    logger.debug(f"length before filtering: {len(elements)}")
+    elems_in_modal = []
 
-        logger.debug(f"length after filtering: {len(elems_in_modal)}")
+    for elem in elements:
+        try:
+            elem.find_element(By.XPATH, f"./../ancestor::{xpath}")
+            elems_in_modal.append(elem)
+        except NoSuchElementException:
+            logger.debug("Filtering out element, modal open but not under modal")
+            continue
+
+    logger.debug(f"length after filtering: {len(elems_in_modal)}")
     return elems_in_modal
 
 
