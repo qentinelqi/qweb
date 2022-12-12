@@ -26,6 +26,7 @@ from QWeb.internal import element, javascript, frame, util, browser
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError,\
     QWebInstanceDoesNotExistError, QWebStalingElementError
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.search_strategy import SearchStrategies
 
 
 def get_element_by_locator_text(locator: str,
@@ -190,18 +191,11 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
     WebElement
     """
     web_elements = get_all_text_elements(text, **kwargs)
-    modal_xpath = CONFIG['IsModalXpath']
 
-    driver = browser.get_current_browser()
-    if modal_xpath != "//body":
-        # filter elements by modal (dialog etc)
-        logger.debug("IsModalXpath filtering on, filtering...")
-        modal_exists = driver.find_elements(By.XPATH, modal_xpath)
-        if modal_exists:
-            web_elements = _filter_by_modal_ancestor(web_elements)
-            logger.debug(f"after filtering there are: {len(web_elements)} matching elements")
-            if not web_elements:
-                raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
+    # filter elements by modal (dialog etc) if needed
+    web_elements = filter_by_modal_ancestor(web_elements)
+    if not web_elements:
+        raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
 
     if len(web_elements) == 1:
         return web_elements[0]
@@ -220,10 +214,25 @@ def _get_contains_text_element(text: str, **kwargs) -> list[WebElement]:
     return element.get_webelements_in_active_area(xpath, **kwargs)
 
 
-def _filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
+def filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
     xpath = CONFIG["IsModalXpath"]
+    if xpath.startswith("xpath="):
+        xpath = xpath.split("=", 1)[1]
     if xpath.startswith("//"):
         xpath = xpath[2:]
+
+    modal_xpath = CONFIG['IsModalXpath']
+    driver = browser.get_current_browser()
+    # no filtering if modal setting is the default one
+    if modal_xpath == SearchStrategies.IS_MODAL_XPATH:
+        return elements
+
+    # filter elements by modal (dialog etc)
+    logger.debug("IsModalXpath filtering on, filtering...")
+    modal_exists = driver.find_elements(By.XPATH, modal_xpath)
+    # no filtering if modal element doesn't exist
+    if not modal_exists:
+        return elements
 
     logger.debug(f"length before filtering: {len(elements)}")
     elems_in_modal = []
