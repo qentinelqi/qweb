@@ -9,7 +9,7 @@ Test Timeout                    60 seconds
 ${BROWSER}                      chrome
 
 *** Test Cases ***
-Basic inteactions with Shadow DOM
+Basic interactions with Shadow DOM
     [Setup]                     SetConfig                   ShadowDOM                   False
     
     ${error}=                   Run Keyword and Expect Error                            *
@@ -117,7 +117,7 @@ Text Counts with shadow DOM
 
 Dropdown with shadow DOM
     [Setup]                     SetConfig                   ShadowDOM                   False
-    Run Keyword And Expect Error    *    DropDown    Dropdown label    First
+    Run Keyword And Expect Error    *    DropDown    Dropdown label    First     timeout=3
     Set Config    ShadowDOM    True
     DropDown    Dropdown label    Second
 

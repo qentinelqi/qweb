@@ -53,9 +53,7 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
         if shadow_dom:
             shadow_dropdowns = element.get_all_dropdowns_from_shadow_dom()
             #  remove duplicates (normal search and including shadow search)
-            for el in shadow_dropdowns:
-                if el not in list(elements):
-                    elements.append(el)
+            elements = util.remove_duplicates_from_list(shadow_dropdowns, elements)
 
         for dd_element in elements:
             options = [x.text for x in Select(dd_element).options]
@@ -77,6 +75,12 @@ def get_dropdown_element_by_locator(locator: str, anchor: str) -> WebElement:
         elif not dropdown_elements:  # Find dropdown element using locator
             locator_element = text.get_text_using_anchor(locator, anchor)
             dropdown_elements = _get_all_dropdown_elements(stay_in_current_frame=True)
+            shadow_dom = CONFIG['ShadowDOM']
+            if shadow_dom:
+                shadow_dropdowns = element.get_all_dropdowns_from_shadow_dom()
+                #  remove duplicates (normal search and including shadow search)
+                dropdown_elements = util.remove_duplicates_from_list(shadow_dropdowns,
+                                                                     dropdown_elements)
             dropdown_element = element.get_closest_element(locator_element, dropdown_elements)
         else:  # Found many
             logger.debug("found many, using anchor")

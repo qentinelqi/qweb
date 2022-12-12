@@ -21,7 +21,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from QWeb.internal.exceptions import QWebElementNotFoundError, \
     QWebInstanceDoesNotExistError
-from QWeb.internal import element, text, frame, javascript
+from QWeb.internal import element, text, frame, javascript, util
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
@@ -58,9 +58,7 @@ def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs
             if shadow_dom:
                 shadow_inputs = element.get_all_inputs_from_shadow_dom()
                 #  remove duplicates (normal search and including shadow search)
-                for el in shadow_inputs:
-                    if el not in list(input_elements):
-                        input_elements.append(el)
+                input_elements = util.remove_duplicates_from_list(shadow_inputs, input_elements)
 
             input_element = element.get_closest_element(locator_element, input_elements)
         elif len(input_elements) == 1:
