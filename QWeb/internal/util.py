@@ -320,3 +320,11 @@ def anchor_to_index(anchor: str) -> int:
     except ValueError:
         index = 0
     return index
+
+
+def remove_duplicates_from_list(new_list: list, result_list: list) -> list:
+    #  remove duplicates (normal search and including shadow search)
+    for el in new_list:
+        if el not in list(result_list):
+            result_list.append(el)
+    return result_list

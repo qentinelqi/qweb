@@ -133,7 +133,7 @@ def timeout_decorator_for_actions(fn: Callable[..., Any]) -> Callable[..., Any]:
             except (QWebStalingElementError, StaleElementReferenceException) as S:
                 if 'execute_click' in str(fn) or 'text_appearance' in str(fn):
                     logger.debug('Got staling element err from retry click.'
-                                'Action is probably triggered.')
+                                 'Action is probably triggered.')
                     raise QWebUnexpectedConditionError(S)  # pylint: disable=W0707
                 raise QWebStalingElementError('Staling element')  # pylint: disable=W0707
             except (WebDriverException, QWebDriverError) as wde:
