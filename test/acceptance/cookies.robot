@@ -36,15 +36,12 @@ Verify That Cookies Are Deleted
     Run Keyword Unless      '${found}' == 'PASS'    run keywords
     ...                     GoTo                    http://127.0.0.1:5000/
     ...                     AND                     VerifyText              This is a cookie test page.   5
-    List Cookies
+    ${cookies}=             List Cookies
+    Dictionary Should Contain Key   ${cookies}[0]  domain
     Delete All Cookies
     ${cookies}=             List Cookies
-    Dictionary Should Not Contain Key   ${cookies}  domain
-    Dictionary Should Not Contain Key   ${cookies}  httpOnly
-    Dictionary Should Not Contain Key   ${cookies}  username
-    Dictionary Should Not Contain Key   ${cookies}  path
-    Dictionary Should Not Contain Key   ${cookies}  secure
-    Dictionary Should Not Contain Key   ${cookies}  value
+    Should Be Empty         ${cookies}
+
 
 *** Keywords ***
 Start Flask Server
