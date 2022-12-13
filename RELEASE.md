@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.7] - 2022-12-14
+### Added
+- Update wheel to enable usage of Robot Framework 6.x
+
+### Fixed
+- Filter by modal dialog was not working with inputs, if found with css search
+- Improved ability to find dropdowns under shadow DOM
+
+### Changed
+- Minor updates to CI pipeline
+- Moved unnecessary log messages to debug logging level
+
 ## [2.0.6] - 2022-11-23
 ### Added
 - Added support for global hotkeys in PressKey keyword
