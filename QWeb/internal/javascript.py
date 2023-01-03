@@ -483,6 +483,23 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
     return execute_javascript(js, locator, partial)
 
 
+def get_all_frames_from_shadow_dom() -> list[WebElement]:
+    js = get_recursive_walk() + """
+    function find_all_frames_from_shadow_dom(){
+        var results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+            if (node.tagName == "IFRAME" || node.tagName == "FRAME") {
+                    results.push(node);
+            }
+
+        });
+        return results;
+    }
+
+    return(find_all_frames_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js)
+
+
 def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_all_input_elements_from_shadow_dom(){

@@ -95,9 +95,10 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
     if shadow_dom:
         shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
         #  remove duplicates (normal search and including shadow search)
-        for el in shadow_elements:
-            if web_elements is not None and el not in list(web_elements):
-                web_elements.append(el)  # type: ignore[union-attr]
+        # for el in shadow_elements:
+        #     if web_elements is not None and el not in list(web_elements):
+        #         web_elements.append(el)  # type: ignore[union-attr]
+        return shadow_elements
     return web_elements
 
 
@@ -147,13 +148,15 @@ def check_all_nodes(text: str, **kwargs) -> Optional[list[WebElement]]:
 def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
     """Get all webelements found by text"""
     web_elements: list[WebElement] = []
+    shadow_dom = CONFIG['ShadowDOM']
     all_text_nodes = util.par2bool(kwargs.get('all_text_nodes', CONFIG['AllTextNodes']))
     kwargs['partial_match'] = kwargs.get('partial_match', CONFIG['PartialMatch'])
     if all_text_nodes:
         web_elements = check_all_nodes(text, **kwargs)
         if web_elements:
             return web_elements
-    if 'css' not in kwargs:
+    # if shadow dom is on, do full shadow dom search instead
+    if 'css' not in kwargs and not shadow_dom:
         try:
             web_elements = get_clickable_element_by_js(text, **kwargs)
         except (JavascriptException, WebDriverException, NoSuchFrameException,
