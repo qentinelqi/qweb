@@ -463,8 +463,10 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
         var unsupported_tags = ["script", "#document-fragment"]
         var elem = recursiveWalk(document.body, function(node) {
         //if (node.innerText == text) {
-        if (node.textContent.includes(text) && !unsupported_tags.includes(node.nodeName.toLowerCase())) {
+        if (node.textContent.replace(/\u00a0/g, ' ').includes(text) && !unsupported_tags.includes(node.nodeName.toLowerCase())) {
             nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
+            // handle non-breaking spaces
+            nodetext = nodetext.replace(/\u00A0/g, ' ')
             if (nodetext == text) {
                 results.push(node);
             }
