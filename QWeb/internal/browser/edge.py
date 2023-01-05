@@ -85,6 +85,16 @@ def open_browser(executable_path: str = "msedgedriver",
             prefs = util.prefs_to_dict(str(tmp_prefs).strip())
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
+
+    if 'emulation' in kwargs:
+            emulation = kwargs['emulation']
+            try:
+                width_str, height_str = util._parse_pixels(emulation)
+                emulate_device = {"deviceMetrics": {"width": int(width_str), "height": int(height_str)}}
+            except ValueError:
+                emulate_device = {"deviceName": emulation}
+            
+            options.add_experimental_option("mobileEmulation", emulate_device)    
     driver = Edge(
         BuiltIn().get_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
         or executable_path,
