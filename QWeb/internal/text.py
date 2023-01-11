@@ -163,6 +163,7 @@ def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
                 QWebStalingElementError) as e:
             logger.debug('got {}. Syntax might be invalid'.format(e))
     if not web_elements:
+        # shadow dom search is done inside get_text_elements
         web_elements = get_text_elements(text, **kwargs)  # type: ignore[assignment]
     if not web_elements:
         raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))

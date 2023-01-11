@@ -20,7 +20,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 
 from robot.api import logger
-from QWeb.internal import javascript, util
+from QWeb.internal import javascript
 from QWeb.internal.config_defaults import CONFIG
 
 

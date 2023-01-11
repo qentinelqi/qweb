@@ -79,8 +79,8 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         ${prefs_d}=    Create Dictionary     option1    value1    option2    value2
         OpenBrowser    http://google.com     firefox    prefs=${prefs_d}
         #Mobile emulation
-        OpenBrowser    http://google.com     chrome    emulation=iPhone SE 
-        OpenBrowser    http://google.com     chrome    emulation=375x812 
+        OpenBrowser    http://google.com     chrome    emulation=iPhone SE
+        OpenBrowser    http://google.com     chrome    emulation=375x812
 
 
     Experimental feature for test debugging (for Chrome only):
@@ -122,13 +122,14 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         Arguments for initialization of WebDriver objects(chrome).
         Some available opts: https://peter.sh/experiments/chromium-command-line-switches/
     kwargs
-        prefs=args: 
+        prefs=args:
             Experimental options for chrome browser.
         emulation:
             Turns on "mobile emulation" in desktop browser. Useful for testing websites
             simulating a mobile device screen dimensions.
             Supported browsers: desktop Chrome and Edge only.
-            Existing device profile name (i.e. "iPhone SE", must exist) OR device dimensions in format:
+            Existing device profile name (i.e. "iPhone SE", must exist)
+            OR device dimensions in format:
             WIDTHxHEIGHT (i.e. 385x812)
 
     Raises

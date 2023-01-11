@@ -71,10 +71,9 @@ def open_browser(profile_dir: Optional[str] = None,
     options.set_preference("privacy.socialtracking.block_cookies.enabled", False)
     kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
     if 'prefs' in kwargs:
-        if isinstance(kwargs.get('prefs'), dict):
-            prefs = kwargs.get('prefs')
-        else:
-            prefs = util.prefs_to_dict(str(kwargs.get('prefs')).strip())
+        tmp_prefs = kwargs.get('prefs')
+        prefs = util.validate_prefs(tmp_prefs)
+
         for item in prefs.items():  # type: ignore[union-attr]
             key, value = item[0], item[1]
             logger.info('Using prefs: {} = {}'.format(key, value), also_console=True)
