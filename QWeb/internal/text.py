@@ -155,15 +155,15 @@ def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
         web_elements = check_all_nodes(text, **kwargs)
         if web_elements:
             return web_elements
-    # if shadow dom is on, do full shadow dom search instead
-    if 'css' not in kwargs and not shadow_dom:
+
+    if 'css' not in kwargs:
         try:
-            web_elements = get_clickable_element_by_js(text, **kwargs)
+            web_elements = get_clickable_element_by_js(text, shadow_dom=shadow_dom, **kwargs)
         except (JavascriptException, WebDriverException, NoSuchFrameException,
                 QWebStalingElementError) as e:
             logger.debug('got {}. Syntax might be invalid'.format(e))
     if not web_elements:
-        # shadow dom search is done inside get_text_elements
+        # shadow dom search for all texts is done inside get_text_elements
         web_elements = get_text_elements(text, **kwargs)  # type: ignore[assignment]
     if not web_elements:
         raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
@@ -363,9 +363,16 @@ def _get_item_by_css(text: str, **kwargs) -> Optional[list[WebElement]]:
 
 
 @frame.all_frames
-def get_clickable_element_by_js(locator: str, **kwargs) -> Optional[list[WebElement]]:
-    web_elements = element.get_visible_elements_from_elements(javascript.get_clickable(locator),
-                                                              **kwargs)
+def get_clickable_element_by_js(locator: str,
+                                shadow_dom: bool = False,
+                                **kwargs) -> Optional[list[WebElement]]:
+    partial = kwargs['partial_match']
+    if shadow_dom:
+        web_elements = element.get_visible_elements_from_elements(
+                       javascript.get_clickable_from_shadow_dom(locator, partial))
+    else:
+        web_elements = element.get_visible_elements_from_elements(javascript.get_clickable(
+                                                                  locator), **kwargs)
     if web_elements:
         logger.debug('Found elements by js: {}'.format(web_elements))
         return web_elements

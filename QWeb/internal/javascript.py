@@ -485,6 +485,41 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
     return execute_javascript(js, locator, partial)
 
 
+def get_clickable_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
+    js = get_recursive_walk() + """
+    function find_clickable_from_shadow_dom(text, partial){
+        var results = [];
+        var full = [];
+        var parts = [];
+        var clickable_types = ["button", "reset", "submit"]
+        var elem = recursiveWalk(document.body, function(node) {
+            try {
+                if ((node.getAttribute('onclick')!=null) ||
+                   (node.getAttribute('href')!=null) ||
+                   (node.getAttribute('role')=='button') ||
+                   (clickable_types.includes(node.getAttribute('type')))) {
+                    if (node.tagName.toLowerCase() == "input" && node.type("radio")) {
+                        nodetext = node.value;
+                    }
+                    else {
+                        nodetext = node.innerText;
+                    }
+                    if(nodetext.trim() === text) {
+                        full.push(node);
+                    }
+                    else if (partial && nodetext.trim().includes(text)) {
+                        parts.push(node)
+                    }
+                }
+            } catch(ex) {}
+        });
+        results = full.concat(parts);
+        return results;
+    }
+    return(find_clickable_from_shadow_dom(arguments[0], arguments[1]))"""
+    return execute_javascript(js, locator, partial)
+
+
 def get_all_frames_from_shadow_dom() -> list[WebElement]:
     js = get_recursive_walk() + """
     function find_all_frames_from_shadow_dom(){
