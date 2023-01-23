@@ -257,7 +257,7 @@ def _handle_old_style_prefs(prefs: str) -> dict:
     return d
 
 
-def validate_prefs(prefs: Optional[Any]) -> dict:
+def parse_prefs(prefs: Optional[Any]) -> dict:
     if isinstance(prefs, dict):
         return prefs
 

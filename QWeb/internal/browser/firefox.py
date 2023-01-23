@@ -72,7 +72,7 @@ def open_browser(profile_dir: Optional[str] = None,
     kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
     if 'prefs' in kwargs:
         tmp_prefs = kwargs.get('prefs')
-        prefs = util.validate_prefs(tmp_prefs)
+        prefs = util.parse_prefs(tmp_prefs)
 
         for item in prefs.items():  # type: ignore[union-attr]
             key, value = item[0], item[1]

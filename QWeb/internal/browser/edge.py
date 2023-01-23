@@ -79,7 +79,7 @@ def open_browser(executable_path: str = "msedgedriver",
         options.add_argument("--headless")  # pylint: disable=no-member
     if 'prefs' in kwargs:
         tmp_prefs = kwargs.get('prefs')
-        prefs = util.validate_prefs(tmp_prefs)
+        prefs = util.parse_prefs(tmp_prefs)
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
 

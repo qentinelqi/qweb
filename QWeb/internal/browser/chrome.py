@@ -102,7 +102,7 @@ def open_browser(executable_path: str = "chromedriver",
             options.add_argument("headless")
         if 'prefs' in kwargs:
             tmp_prefs = kwargs.get('prefs')
-            prefs = util.validate_prefs(tmp_prefs)
+            prefs = util.parse_prefs(tmp_prefs)
             options.add_experimental_option('prefs', prefs)
         if 'emulation' in kwargs:
             emulation = kwargs['emulation']
