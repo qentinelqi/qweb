@@ -82,6 +82,33 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     chrome    emulation=iPhone SE
         OpenBrowser    http://google.com     chrome    emulation=375x812
 
+    Mobile emulation
+    ----------------
+    Giving a valid device profile or screen dimensions in "emulation" argument turns on
+    "mobile emulation".
+
+    Supported browsers: desktop Chrome and Edge only.
+
+    See examples above. Always make sure the device profile name exists. You can either define
+    a new one or use one of the default profiles:
+
+        * iPhone SE
+        * iPhone XR
+        * iPhone 12 Pro
+        * Pixel 5
+        * Samsung Galaxy S8+
+        * Samsung Galaxy S20 Ultra
+        * iPad Air
+        * iPad Mini
+        * Surface Pro 7
+        * Surface Duo
+        * Galaxy Fold
+        * Samsung Glazy A51/71
+        * Nest Hub
+        * Nest Hub Max
+
+    Note that profile names given above are expected to change in new browser releases.
+    Always check that the name you are using still exists.
 
     Experimental feature for test debugging (for Chrome only):
     ----------------------------------------------------------
