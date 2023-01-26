@@ -21,6 +21,7 @@ from selenium.webdriver.common.by import By
 
 from robot.api import logger
 from QWeb.internal import javascript
+from QWeb.internal.config_defaults import CONFIG
 
 
 def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
@@ -29,6 +30,9 @@ def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
     if not frames:
         frames = []
     frames += driver.find_elements(By.XPATH, "//iframe|//frame")
+    shadow_dom = CONFIG['ShadowDOM']
+    if shadow_dom:
+        frames = javascript.get_all_frames_from_shadow_dom()
     visible_only = kwargs.get('visibility', True)
     if not visible_only:
         return frames

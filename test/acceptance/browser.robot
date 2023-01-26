@@ -94,6 +94,25 @@ Open Browser with invalid experimental args string
     ...     prefs=Foobar, "anotherone":"false"
     Close Browsers And Remove CHROME_ARGS
 
+Open Browser in mobile emulation mode
+    [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX
+    Close All Browsers
+    
+    OpenBrowser     http://howbigismybrowser.com/    ${BROWSER}    emulation=385x812
+    Log Screenshot
+    ExecuteJavascript   return window.innerWidth;   $width
+    Log To Console     ${width}   
+    Should Be Equal As Integers                     ${width}     385
+
+    CloseBrowser
+    OpenBrowser     http://howbigismybrowser.com/     ${BROWSER}    emulation=iPhone SE
+    Log Screenshot
+    CloseBrowser
+    Run Keyword And Expect Error    QWebDriverError: *
+    ...     OpenBrowser     about:blank     ${BROWSER}    emulation=should not be found
+
+    Close Browsers And Remove CHROME_ARGS
+
 Open Browser with dictionary prefs
     [tags]          exp             PROBLEM_IN_SAFARI
     Close All Browsers

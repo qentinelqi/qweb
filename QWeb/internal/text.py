@@ -95,9 +95,10 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
     if shadow_dom:
         shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
         #  remove duplicates (normal search and including shadow search)
-        for el in shadow_elements:
-            if web_elements is not None and el not in list(web_elements):
-                web_elements.append(el)  # type: ignore[union-attr]
+        # for el in shadow_elements:
+        #     if web_elements is not None and el not in list(web_elements):
+        #         web_elements.append(el)  # type: ignore[union-attr]
+        return shadow_elements
     return web_elements
 
 
@@ -147,19 +148,22 @@ def check_all_nodes(text: str, **kwargs) -> Optional[list[WebElement]]:
 def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
     """Get all webelements found by text"""
     web_elements: list[WebElement] = []
+    shadow_dom = CONFIG['ShadowDOM']
     all_text_nodes = util.par2bool(kwargs.get('all_text_nodes', CONFIG['AllTextNodes']))
     kwargs['partial_match'] = kwargs.get('partial_match', CONFIG['PartialMatch'])
     if all_text_nodes:
         web_elements = check_all_nodes(text, **kwargs)
         if web_elements:
             return web_elements
+
     if 'css' not in kwargs:
         try:
-            web_elements = get_clickable_element_by_js(text, **kwargs)
+            web_elements = get_clickable_element_by_js(text, shadow_dom=shadow_dom, **kwargs)
         except (JavascriptException, WebDriverException, NoSuchFrameException,
                 QWebStalingElementError) as e:
             logger.debug('got {}. Syntax might be invalid'.format(e))
     if not web_elements:
+        # shadow dom search for all texts is done inside get_text_elements
         web_elements = get_text_elements(text, **kwargs)  # type: ignore[assignment]
     if not web_elements:
         raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
@@ -359,9 +363,16 @@ def _get_item_by_css(text: str, **kwargs) -> Optional[list[WebElement]]:
 
 
 @frame.all_frames
-def get_clickable_element_by_js(locator: str, **kwargs) -> Optional[list[WebElement]]:
-    web_elements = element.get_visible_elements_from_elements(javascript.get_clickable(locator),
-                                                              **kwargs)
+def get_clickable_element_by_js(locator: str,
+                                shadow_dom: bool = False,
+                                **kwargs) -> Optional[list[WebElement]]:
+    partial = kwargs['partial_match']
+    if shadow_dom:
+        web_elements = element.get_visible_elements_from_elements(
+                       javascript.get_clickable_from_shadow_dom(locator, partial))
+    else:
+        web_elements = element.get_visible_elements_from_elements(javascript.get_clickable(
+                                                                  locator), **kwargs)
     if web_elements:
         logger.debug('Found elements by js: {}'.format(web_elements))
         return web_elements

@@ -463,8 +463,12 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
         var unsupported_tags = ["script", "#document-fragment"]
         var elem = recursiveWalk(document.body, function(node) {
         //if (node.innerText == text) {
-        if (node.textContent.includes(text) && !unsupported_tags.includes(node.nodeName.toLowerCase())) {
+        // handle non-breaking spaces, they are not considered the same as normal space
+        // when querying textContent
+        if (node.textContent.replace(/\u00a0/g, ' ').includes(text) && !unsupported_tags.includes(node.nodeName.toLowerCase())) {
             nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
+            // handle non-breaking spaces
+            nodetext = nodetext.replace(/\u00A0/g, ' ')
             if (nodetext == text) {
                 results.push(node);
             }
@@ -481,6 +485,58 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
     }
     return(find_text_from_shadow_dom(arguments[0], arguments[1]))"""
     return execute_javascript(js, locator, partial)
+
+
+def get_clickable_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
+    js = get_recursive_walk() + """
+    function find_clickable_from_shadow_dom(text, partial){
+        var results = [];
+        var full = [];
+        var parts = [];
+        var clickable_types = ["button", "reset", "submit"]
+        var elem = recursiveWalk(document.body, function(node) {
+            try {
+                if ((node.getAttribute('onclick')!=null) ||
+                   (node.getAttribute('href')!=null) ||
+                   (node.getAttribute('role')=='button') ||
+                   (clickable_types.includes(node.getAttribute('type')))) {
+                    if (node.tagName.toLowerCase() == "input" && node.type("radio")) {
+                        nodetext = node.value;
+                    }
+                    else {
+                        nodetext = node.innerText;
+                    }
+                    if(nodetext.trim() === text) {
+                        full.push(node);
+                    }
+                    else if (partial && nodetext.trim().includes(text)) {
+                        parts.push(node)
+                    }
+                }
+            } catch(ex) {}
+        });
+        results = full.concat(parts);
+        return results;
+    }
+    return(find_clickable_from_shadow_dom(arguments[0], arguments[1]))"""
+    return execute_javascript(js, locator, partial)
+
+
+def get_all_frames_from_shadow_dom() -> list[WebElement]:
+    js = get_recursive_walk() + """
+    function find_all_frames_from_shadow_dom(){
+        var results = [];
+        var elem = recursiveWalk(document.body, function(node) {
+            if (node.tagName == "IFRAME" || node.tagName == "FRAME") {
+                    results.push(node);
+            }
+
+        });
+        return results;
+    }
+
+    return(find_all_frames_from_shadow_dom(arguments[0]))"""
+    return execute_javascript(js)
 
 
 def get_all_input_elements_from_shadow_dom() -> list[WebElement]:

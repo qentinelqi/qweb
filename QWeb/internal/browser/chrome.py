@@ -102,11 +102,12 @@ def open_browser(executable_path: str = "chromedriver",
             options.add_argument("headless")
         if 'prefs' in kwargs:
             tmp_prefs = kwargs.get('prefs')
-            if isinstance(tmp_prefs, dict):
-                prefs = tmp_prefs
-            else:
-                prefs = util.prefs_to_dict(str(tmp_prefs).strip())
+            prefs = util.parse_prefs(tmp_prefs)
             options.add_experimental_option('prefs', prefs)
+        if 'emulation' in kwargs:
+            emulation = kwargs['emulation']
+            emulate_device = util.get_emulation_pref(emulation)
+            options.add_experimental_option("mobileEmulation", emulate_device)
 
         driver = Chrome(BuiltIn().get_variable_value('${CHROMEDRIVER_PATH}') or executable_path,
                         options=options,

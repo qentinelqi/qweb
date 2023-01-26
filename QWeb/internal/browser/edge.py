@@ -79,12 +79,14 @@ def open_browser(executable_path: str = "msedgedriver",
         options.add_argument("--headless")  # pylint: disable=no-member
     if 'prefs' in kwargs:
         tmp_prefs = kwargs.get('prefs')
-        if isinstance(tmp_prefs, dict):
-            prefs = tmp_prefs
-        else:
-            prefs = util.prefs_to_dict(str(tmp_prefs).strip())
+        prefs = util.parse_prefs(tmp_prefs)
         options.add_experimental_option('prefs', prefs)
         logger.warn("prefs: {}".format(prefs))
+
+    if 'emulation' in kwargs:
+        emulation = kwargs['emulation']
+        emulate_device = util.get_emulation_pref(emulation)
+        options.add_experimental_option("mobileEmulation", emulate_device)
     driver = Edge(
         BuiltIn().get_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
         or executable_path,

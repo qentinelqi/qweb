@@ -99,6 +99,17 @@ def set_input_handler(input_method: str) -> str:
     return input_method.lower()
 
 
+def get_emulation_pref(device_or_dimension: str) -> dict[str, Any]:
+    """Sets correct mobile emulation option string based on given input
+     (existing device profile name or screen dimensions).
+    """
+    try:
+        width_str, height_str = _parse_pixels(device_or_dimension)
+        return {"deviceMetrics": {"width": int(width_str), "height": int(height_str)}}
+    except ValueError:
+        return {"deviceName": device_or_dimension}
+
+
 def set_line_break(key: str) -> str:
     if key == '\ue000':
         current_browser = browser.get_current_browser().capabilities['browserName']
@@ -244,6 +255,13 @@ def _handle_old_style_prefs(prefs: str) -> dict:
         else:
             raise QWebUnexpectedConditionError
     return d
+
+
+def parse_prefs(prefs: Optional[Any]) -> dict:
+    if isinstance(prefs, dict):
+        return prefs
+
+    return prefs_to_dict(str(prefs).strip())
 
 
 def validate_run_before(value: Union[list[str], str]) -> Optional[Union[list[str], str]]:
