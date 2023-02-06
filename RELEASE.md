@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2023-02-06
+
+### Added
+- Mobile emulation support to Open Browser
+
+### Fixed
+- Improved Shadow DOM support for:
+  - frames
+  - clickable elements
+  - elements having non-breaking spaces in text
+- Minor fixes to keyword documentation
+
 ## [2.0.7] - 2022-12-14
 ### Added
 - Update wheel to enable usage of Robot Framework 6.x
