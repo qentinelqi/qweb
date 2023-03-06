@@ -20,7 +20,8 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import InvalidSelectorException, JavascriptException, \
-    WebDriverException, NoSuchFrameException, NoSuchElementException
+    WebDriverException, NoSuchFrameException, NoSuchElementException, \
+    StaleElementReferenceException
 from robot.api import logger
 from QWeb.internal import element, javascript, frame, util, browser
 from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError,\
@@ -94,11 +95,18 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
     shadow_dom = CONFIG['ShadowDOM']
     if shadow_dom:
         shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
+
+        # remove staling elements from original list
+        for elem in reversed(web_elements):
+            try:
+                elem.text
+            except StaleElementReferenceException:
+                web_elements.remove(elem)
         #  remove duplicates (normal search and including shadow search)
-        # for el in shadow_elements:
-        #     if web_elements is not None and el not in list(web_elements):
-        #         web_elements.append(el)  # type: ignore[union-attr]
-        return shadow_elements
+        for el in shadow_elements:
+            if web_elements is not None and el not in list(web_elements):
+                web_elements.append(el)  # type: ignore[union-attr]
+
     return web_elements
 
 

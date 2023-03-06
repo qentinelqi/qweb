@@ -59,6 +59,18 @@ Shadow DOM with attributes
     VerifyText                  hidden
 
 
+Shadow DOM on, normal DOM elements
+    [Setup]                     SetConfig                   ShadowDOM                   True
+    GoTo                        file://${CURDIR}/../resources/shadow_dom.html
+    # verifying items that are in normal dom
+    VerifyText                  In both DOM
+    VerifyText                  Level 1
+    VerifyText                  Level 2
+    VerifyText                  Normal Button
+    VerifyItem                  normalbutton
+    VerifyText                  Matcha
+
+
 VerifyAll & VerifyAny with shadow DOM
     [Setup]                     SetConfig                   ShadowDOM                   False
     GoTo                        file://${CURDIR}/../resources/shadow_dom.html
