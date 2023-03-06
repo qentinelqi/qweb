@@ -97,11 +97,11 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
         shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
 
         # remove staling elements from original list
-        for elem in reversed(web_elements):
+        for elem in reversed(web_elements):  # type: ignore
             try:
                 elem.text
             except StaleElementReferenceException:
-                web_elements.remove(elem)
+                web_elements.remove(elem)  # type: ignore
         #  remove duplicates (normal search and including shadow search)
         for el in shadow_elements:
             if web_elements is not None and el not in list(web_elements):
