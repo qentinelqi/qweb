@@ -11,7 +11,8 @@ opencv-python==4.5.5.62
 requests==2.27.1
 slate3k==0.5.3
 scipy>=1.7.3
-scikit-image==0.19.1
+scikit-image==0.19.1;python_version=="3.7"
+scikit-image==0.20;python_version>"3.7"
 pyobjc-core==8.3; sys_platform == "darwin"
 pyobjc==8.3; sys_platform == "darwin"
 

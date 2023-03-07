@@ -34,6 +34,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'License :: OSI Approved :: Apache Software License',
         'Framework :: Robot Framework',
         'Framework :: Robot Framework :: Library'
@@ -54,7 +55,8 @@ setup(
                       "selenium==4.6.0",
                       "Pillow==9.3.0",
                       "scipy>=1.7.3",
-                      "scikit-image==0.19.1",
+                      "scikit-image==0.19.1;python_version=='3.7'",
+                      "scikit-image==0.20;python_version>'3.7'",
                       "ply",
                       "opencv-python==4.5.5.62",
                       "slate3k>=0.5.3"],

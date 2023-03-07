@@ -94,11 +94,11 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
     shadow_dom = CONFIG['ShadowDOM']
     if shadow_dom:
         shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
-        #  remove duplicates (normal search and including shadow search)
-        # for el in shadow_elements:
-        #     if web_elements is not None and el not in list(web_elements):
-        #         web_elements.append(el)  # type: ignore[union-attr]
-        return shadow_elements
+        # remove possible stale elements
+        web_elements = util.remove_stale_elements(web_elements)  # type: ignore
+        # remove duplicates
+        web_elements = util.remove_duplicates_from_list(shadow_elements,
+                                                        web_elements)  # type: ignore
     return web_elements
 
 

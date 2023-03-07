@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Union, Any, Callable, Optional
+from typing import Union, Any, Callable, Optional, List
 
 from QWeb.internal import browser, javascript
 from QWeb.internal.browser.safari import NAMES as SAFARINAMES
@@ -23,6 +23,8 @@ from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebUnexpectedConditionError
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.remote.webelement import WebElement
 import json
 import platform
 import re
@@ -343,6 +345,18 @@ def anchor_to_index(anchor: str) -> int:
 def remove_duplicates_from_list(new_list: list, result_list: list) -> list:
     #  remove duplicates (normal search and including shadow search)
     for el in new_list:
-        if el not in list(result_list):
+        if result_list is not None and el not in list(result_list):
             result_list.append(el)
     return result_list
+
+
+def remove_stale_elements(elems: Optional[List[WebElement]]) -> Optional[List[WebElement]]:
+    if elems is None:
+        return None
+    # remove staling elements from original list
+    for elem in reversed(elems):
+        try:
+            elem.text
+        except StaleElementReferenceException:
+            elems.remove(elem)
+    return elems
