@@ -69,6 +69,10 @@ Shadow DOM on, normal DOM elements
     VerifyText                  Normal Button
     VerifyItem                  normalbutton
     VerifyText                  Matcha
+    VerifyText                  Coffee
+    VerifyText                  Water                       anchor=White Tea
+    VerifyTextCount             Coffee                      2
+    LogScreenshot
 
 
 VerifyAll & VerifyAny with shadow DOM
