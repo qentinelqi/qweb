@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2023-03-08
+
+### Added
+- Updated dependencies to support Python 3.11
+### Fixed
+- Fixed regression where in special cases normal elements where not found correctly when Shadow DOM setting was on
+
+
 ## [2.1.0] - 2023-02-06
 
 ### Added

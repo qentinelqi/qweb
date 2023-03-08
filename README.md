@@ -38,14 +38,17 @@
 
 ## Introduction
 
-QWeb is an open source web automation interface in [Robot Framework](https://robotframework.org/). It makes automation **rapid, robust, and fun**.
+QWeb is a powerful and versatile [Robot Framework](https://robotframework.org/) library that enables efficient and reliable web testing and automation. One of the key strengths of QWeb is its intuitive and user-friendly syntax, which makes it easy to write and maintain complex test cases. 
 
 QWeb aims to make web automation easy and maintainable by:
-* providing high level keywords for accessing any web page element
-* preferring text locators (UI texts) but supporting also other locator strategies (xpaths, css selectors)
-* automatically handling latencies etc. via automatic wait times
-* automatically handling unexpected alerts
-* minimizing the maintenance effort
+* providing an intuitive and **user-friendly syntax for writing and maintaining** complex test cases.
+* providing **smart locators**: finding elements by text or by any attribute value with a simple syntax
+* automatically handling latencies etc. via **automatic wait times**
+* automatically handling **frames**
+* automatically handling unexpected **alerts**
+* providing support for finding **shadow dom** elements with an easy syntax
+* providing **in-built bitmap comparison** for special cases where element can't be identified by any other means
+* being **technology agnostic** and providing extensive support for various web technologies/frameworks 
 
 See [examples](#examples).
 
@@ -86,7 +89,7 @@ Running the above command installs also supported Selenium and Robot Framework v
 See list of keywords and their usage on 
 
 * [Keyword documentation](https://qentinelqi.github.io/qweb/QWeb.html)
-* [Copado Robotic Testing support pages](https://help.pace.qentinel.com/pacewords-reference/current/pacewords/all.html) 
+* [Copado Robotic Testing support pages](https://docs.copado.com/articles/#!copado-robotic-testing-publication/all-qwords) 
 
 [Back To The Top](#qweb)
 
