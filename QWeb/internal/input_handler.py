@@ -50,7 +50,7 @@ class InputHandler:
 
     @input_method.setter
     def input_method(self, input_method: str) -> None:
-        required = ["selenium", "raw"]
+        required = ["javascript", "selenium", "raw"]
         if input_method not in required:
             raise QWebValueError('Unknown input_method: {}, required: {}'.format(
                 input_method, required))
@@ -89,6 +89,8 @@ class InputHandler:
     def _get_writer(self) -> Callable[..., Any]:
         if self._input_method == "selenium":
             return InputHandler._selenium_writer
+        if self._input_method == "javascript":
+            return InputHandler._js_writer
         return self._raw_writer
 
     @staticmethod
@@ -98,6 +100,14 @@ class InputHandler:
             logger.warn("Element not enabled. Try with alternative input method?")
             raise QWebInvalidElementStateError("Input element is not enabled")
         input_element.send_keys(input_text)
+
+    @staticmethod
+    def _js_writer(input_element: WebElement, input_text: str) -> None:
+        """ Use JavaScript to set input element value."""
+        if not input_element.is_enabled():
+            logger.warn("Element not enabled. Try with alternative input method?")
+            raise QWebInvalidElementStateError("Input element is not enabled")
+        javascript.execute_javascript(f'arguments[0].value = "{input_text}"', input_element)
 
     @staticmethod
     def _raw_writer(input_element: WebElement, input_text: str) -> None:

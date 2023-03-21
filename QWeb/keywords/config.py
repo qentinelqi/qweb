@@ -68,7 +68,8 @@ def set_config(par: str, val: str) -> Any:
     | HighlightColor_     | Sets the highlight color to use when    |   blue         |
     |                     | element is highlighted.                 |                |
     +---------------------+-----------------------------------------+----------------+
-    | InputHandler_       | Use selenium or pyautogui to input text | selenium       |
+    | InputHandler_       | Use JavaSCript, selenium or pyautogui   | selenium       |
+    |                     | to input text.                          |                |
     +---------------------+-----------------------------------------+----------------+
     | InViewport_         | If set to true every element outside of | False          |
     |                     | current viewport is considered invisible|                |
@@ -550,6 +551,9 @@ def set_config(par: str, val: str) -> Any:
 
          SetConfig      InputHandler        raw
          SetConfig      InputHandler        selenium
+
+         # Use JavaScript to set the text to input element's value attribute
+         SetConfig      InputHandler        javascript
 
     .. _offsetcheck:
 
