@@ -196,7 +196,7 @@ def capture_icon(
         folder: str = 'screenshots',
         filename: str = 'screenshot_{}.png',
         timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        **kwargs) -> None:  # pylint: disable=unused-argument
+        **kwargs) -> Optional[str]:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 
     Examples
@@ -207,8 +207,8 @@ def capture_icon(
         CaptureIcon          ${some_xpath}
 
         CaptureIcon          Button3
-        CaptureIcon          Button3    custom_screenshot_name_123.png
-        CaptureIcon          Button3    custom_screenshot_name_123.png      C:/custom/folder/path
+        CaptureIcon          Button3    filename=custom_screenshot_name_123.png
+        CaptureIcon          Button3    C:/custom/folder/path   custom_screenshot_name_123.png
 
     Parameters
     ----------
@@ -221,6 +221,10 @@ def capture_icon(
         Optional filename.
     timeout : int
         How long we try to find the element for.
+
+    Returns
+    -------
+    filepath : full path to saved screenshot
 
     Related keywords
     ----------------
@@ -238,3 +242,5 @@ def capture_icon(
         logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')), also_console=True)
         img.save(filepath)
         screenshot.log_screenshot_file(filepath)
+
+    return filepath
