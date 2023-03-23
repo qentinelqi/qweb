@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2023-03-24
+
+### Added
+- New InputHandler javascript for cases where send_keys does not work reliably (e.g. iPad)
+
+### Changed
+- CaptureIcon returns saved file's path in order to work same way as LogScreenshot
+- Minor documentation fixes
+
 ## [2.1.1] - 2023-03-08
 
 ### Added
