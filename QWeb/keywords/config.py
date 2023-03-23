@@ -68,7 +68,7 @@ def set_config(par: str, val: str) -> Any:
     | HighlightColor_     | Sets the highlight color to use when    |   blue         |
     |                     | element is highlighted.                 |                |
     +---------------------+-----------------------------------------+----------------+
-    | InputHandler_       | Use JavaSCript, selenium or pyautogui   | selenium       |
+    | InputHandler_       | Use javascript, selenium or pyautogui   | selenium       |
     |                     | to input text.                          |                |
     +---------------------+-----------------------------------------+----------------+
     | InViewport_         | If set to true every element outside of | False          |
@@ -540,9 +540,9 @@ def set_config(par: str, val: str) -> Any:
     the web element is writable (enabled). Inserts tab character
     at the end of text.
 
-    Alternative writer "raw" uses pyautogui to input text directly
-    without checking the web element state. This version is intended
-    to be used when the web page doesn't update input element status
+    Alternative writers "raw" and "javascript. "raw" uses pyautogui to input text directly
+    without checking the web element state. "javascript" uses javascript for input.
+    These version are intended to be used when the web page doesn't update input element status
     Selenium compliant way.
 
     Examples
