@@ -196,7 +196,7 @@ def capture_icon(
         folder: str = 'screenshots',
         filename: str = 'screenshot_{}.png',
         timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        **kwargs) -> None:  # pylint: disable=unused-argument
+        **kwargs) -> Optional[str]:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 
     Examples
