@@ -91,7 +91,7 @@ jobs:
 
     - name: Unit tests
       run: |
-        xvfb-run --auto-servernumpytest -v --junit-xml=unittests.xml --cov=QWeb
+        pytest -v --junit-xml=unittests.xml --cov=QWeb
 
     - name: Acceptance tests
       id: initial-acceptance-tests
