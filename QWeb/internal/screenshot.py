@@ -204,7 +204,7 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
 
     try:
         driver = browser.get_current_browser()
-    except (WebDriverException, QWebDriverError):
+    except QWebDriverError:
         driver = None
         config.set_config("OSScreenshots", True)
 

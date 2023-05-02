@@ -81,6 +81,13 @@ duty lint
 
 ...on repo root.
 
+##### Typing
+We use *mypy* for typechecking. To run typechecking locally, run:
+
+```bash
+duty typing
+```
+
 ##### Unit tests
 
 We use **pytest** for unit tests. Unit tests are located in `/test/unit` folder. You can run unit test locally by running command:
