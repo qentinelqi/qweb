@@ -63,7 +63,8 @@ jobs:
       run: |
         sudo apt-get install matchbox scrot
         pip install python-xlib
-        Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
+        which Xvfb
+        sudo Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
         matchbox-window-manager -use_titlebar no &
 
     - name: Install RFW 3.2.2
@@ -91,7 +92,7 @@ jobs:
 
     - name: Unit tests
       run: |
-        pytest -v --junit-xml=unittests.xml --cov=QWeb
+        xvfb-run --auto-servernum  pytest -v --junit-xml=unittests.xml --cov=QWeb
 
     - name: Acceptance tests
       id: initial-acceptance-tests
