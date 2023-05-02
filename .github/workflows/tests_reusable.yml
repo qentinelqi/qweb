@@ -87,11 +87,11 @@ jobs:
 
     - name: Display screen resolution
       run: |
-        python -c "import pyautogui; print(pyautogui.size())"
+        xvfb-run --auto-servernum python -c "import pyautogui; print(pyautogui.size())"
 
     - name: Unit tests
       run: |
-        pytest -v --junit-xml=unittests.xml --cov=QWeb
+        xvfb-run --auto-servernumpytest -v --junit-xml=unittests.xml --cov=QWeb
 
     - name: Acceptance tests
       id: initial-acceptance-tests
