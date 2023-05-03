@@ -63,6 +63,7 @@ jobs:
       run: |
         sudo apt-get install matchbox scrot
         Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
+        xauth generate  :$DISPLAY .
         matchbox-window-manager -use_titlebar no &
         pip install python-xlib
 
@@ -85,9 +86,9 @@ jobs:
       run: |
         python -m pip show robotframework
 
-    # - name: Display screen resolution
-    #   run: |
-    #     python -c "import pyautogui; print(pyautogui.size())"
+     - name: Display screen resolution
+       run: |
+         python -c "import pyautogui; print(pyautogui.size())"
 
     - name: Unit tests
       run: |
