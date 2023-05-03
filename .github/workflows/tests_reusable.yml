@@ -44,7 +44,6 @@ jobs:
         os: ${{fromJson(inputs.os)}}
         browser: ${{fromJson(inputs.browser)}}
         python-version: ${{fromJson(inputs.python-version)}}
-        set_display: Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1; matchbox-window-manager -use_titlebar no &
         
     runs-on: ${{ matrix.os }}
     env:
