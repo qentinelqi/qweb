@@ -44,6 +44,7 @@ jobs:
         os: ${{fromJson(inputs.os)}}
         browser: ${{fromJson(inputs.browser)}}
         python-version: ${{fromJson(inputs.python-version)}}
+        set_display: Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1; matchbox-window-manager -use_titlebar no &
         
     runs-on: ${{ matrix.os }}
     env:
@@ -63,10 +64,10 @@ jobs:
       run: |
         sudo apt-get install matchbox scrot
         pip install python-xlib
-        which Xvfb
-        sudo /usr/bin/Xvfb $DISPLAY -screen 0 1920x1080x24 &
+        Xvfb $DISPLAY -screen 0 1920x1080x24 &
         sleep 1
         matchbox-window-manager -use_titlebar no &
+        touch /home/runner/.Xauthority
 
     - name: Install RFW 3.2.2
       if: matrix.python-version == inputs.rfw-322-python
@@ -88,12 +89,14 @@ jobs:
         python -m pip show robotframework
 
     - name: Display screen resolution
-      run: |
-        xvfb-run --auto-servernum python -c "import pyautogui; print(pyautogui.size())"
+      if: runner.os == 'Linux'
+      run: | 
+        ${{ matrix.set_display }}
+        python -c "import pyautogui; print(pyautogui.size())"
 
     - name: Unit tests
       run: |
-        xvfb-run --auto-servernum  pytest -v --junit-xml=unittests.xml --cov=QWeb
+       pytest -v --junit-xml=unittests.xml --cov=QWeb
 
     - name: Acceptance tests
       id: initial-acceptance-tests
