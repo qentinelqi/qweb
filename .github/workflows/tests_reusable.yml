@@ -59,12 +59,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Setup Linux windowing
-      if: matrix.os == 'ubuntu-20.04'
+      if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get install matchbox scrot
         Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
         matchbox-window-manager -use_titlebar no &
-        xauth list
         pip install python-xlib
 
     - name: Install RFW 3.2.2
