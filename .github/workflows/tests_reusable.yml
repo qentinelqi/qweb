@@ -91,7 +91,7 @@ jobs:
         python -m pip show robotframework
 
     - name: Display screen resolution
-      run: | 
+      run: |
         python -c "import pyautogui; print(pyautogui.size())"
 
     - name: Unit tests
