@@ -59,12 +59,17 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Setup Linux windowing
-      if: matrix.os == 'ubuntu-20.04'
+      if: runner.os == 'Linux'
       run: |
         sudo apt-get install matchbox scrot
-        Xvfb $DISPLAY -screen 0 1920x1080x24 & sleep 1
-        matchbox-window-manager -use_titlebar no &
         pip install python-xlib
+        Xvfb $DISPLAY -screen 0 1920x1080x24 &
+        sleep 1
+        matchbox-window-manager -use_titlebar no &
+        touch /home/runner/.Xauthority
+        pushd /home/runner
+        xauth generate $DISPLAY .
+        popd
 
     - name: Install RFW 3.2.2
       if: matrix.python-version == inputs.rfw-322-python
@@ -85,13 +90,13 @@ jobs:
       run: |
         python -m pip show robotframework
 
-    # - name: Display screen resolution
-    #   run: |
-    #     python -c "import pyautogui; print(pyautogui.size())"
+    - name: Display screen resolution
+      run: | 
+        python -c "import pyautogui; print(pyautogui.size())"
 
     - name: Unit tests
       run: |
-        pytest -v --junit-xml=unittests.xml --cov=QWeb
+       pytest -v --junit-xml=unittests.xml --cov=QWeb
 
     - name: Acceptance tests
       id: initial-acceptance-tests

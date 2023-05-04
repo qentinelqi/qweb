@@ -40,7 +40,7 @@ Verify File Download Fail No File Downloading
 
 
 Verify File Download Fail Timeout
-    [Tags]    PROBLEM_IN_SAFARI		PROBLEM_IN_FIREFOX
+    [Tags]    PROBLEM_IN_SAFARI		PROBLEM_IN_FIREFOX  PROBLEM_IN_EDGE
     VerifyText      Download small csv file
     ExpectFileDownload
     ClickText       Download large csv file
