@@ -24,6 +24,11 @@ Close All Browsers 2
     OpenBrowser     about:blank             firefox         # force another (firefox) browser to open
     [Teardown]      CloseAllBrowsers
 
+Missing webdriver message
+    [Tags]        PROBLEM_IN_MACOS
+    [Setup]    No Operation
+    Run Keyword and Expect Error    SafariDriver was not found*    OpenBrowser    about:blank    safari
+
 No browser open message
     ${previous}=    SetConfig               LogScreenshot    False
     CloseAllBrowsers
@@ -108,7 +113,7 @@ Open Browser in mobile emulation mode
     OpenBrowser     http://howbigismybrowser.com/     ${BROWSER}    emulation=iPhone SE
     Log Screenshot
     CloseBrowser
-    Run Keyword And Expect Error    QWebDriverError: *
+    Run Keyword And Expect Error    InvalidArgumentException: *
     ...     OpenBrowser     about:blank     ${BROWSER}    emulation=should not be found
 
     Close Browsers And Remove CHROME_ARGS

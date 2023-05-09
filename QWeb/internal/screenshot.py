@@ -202,6 +202,12 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
 
     filepath = os.path.join(screen_shot_dir, filename)
 
+    try:
+        driver = browser.get_current_browser()
+    except QWebDriverError:
+        driver = None
+        config.set_config("OSScreenshots", True)
+
     if pyautog is True or config.get_config("OSScreenshots"):
         # try to remove image, needed for scrot > 0.9
         try:
@@ -212,10 +218,6 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
         pyscreenshot(filepath)
         logger.info('Saved screenshot to {}'.format(filepath))
         return filepath
-    try:
-        driver = browser.get_current_browser()
-    except WebDriverException:
-        driver = None
 
     if driver:
         saved: Union[str, bool]
