@@ -89,6 +89,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                     msg = ve
                     time.sleep(SHORT_DELAY)
             if msg:
+                # pylint: disable=used-before-assignment
                 raise err(msg)
             if 'count' in str(fn):
                 return 0
