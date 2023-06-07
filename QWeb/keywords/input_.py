@@ -827,7 +827,9 @@ def press_key(locator: str,
 
 
 @keyword(tags=("Browser", "Interaction"))
-def scroll(locator: str, direction: str = 'pagedown', **kwargs) -> None:
+def scroll(locator: str,
+           direction: str = 'pagedown',
+           timeout: Union[int, float, str] = 0, **kwargs) -> None:
     r"""Scrolls the page/element to given direction.
 
     Examples
@@ -858,14 +860,18 @@ def scroll(locator: str, direction: str = 'pagedown', **kwargs) -> None:
         Xpath to scrollable element or attribute value of an scrollable element.
     direction : str
         Direction to scroll to (down, up, left, right, top, bottom, page_down, page_up).
-        Down/up/left/right map to respective ARROW keys.
-        Top/Bottom map to HOME & END.
-        Page_up/Page_down map to PAGE_UP and PAGE_DOWN keys.
+          * Down/up/left/right map to respective ARROW keys.
+          * Top/Bottom map to HOME & END keys.
+          * Page_up/Page_down map to PAGE_UP and PAGE_DOWN keys.
+    timeout : int
+        How long to scroll in seconds, before timing out.
 
     Raises
     ------
     QWebValueError
         If direction is not given in correct format.
+    QWebElementNotFoundError
+        If the given scrollable element is not found.
 
     Related keywords
     ----------------
@@ -886,4 +892,4 @@ def scroll(locator: str, direction: str = 'pagedown', **kwargs) -> None:
     except KeyError as e:
         raise QWebValueError("""Unknown 'direction'. Valid values are: page_down,
                              page_up, down, up, left, right, top, bottom""") from e
-    press_key(locator, key, **kwargs)
+    press_key(locator, key, timeout=timeout, **kwargs)
