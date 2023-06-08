@@ -824,3 +824,72 @@ def press_key(locator: str,
         logger.console(e)
         raise QWebValueError('Could not find key "{}"'.format(key)) from e
     return None
+
+
+@keyword(tags=("Browser", "Interaction"))
+def scroll(locator: str,
+           direction: str = 'pagedown',
+           timeout: Union[int, float, str] = 0, **kwargs) -> None:
+    r"""Scrolls the page/element to given direction.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        # Scroll page down default value (one page)
+        Scroll  //html
+
+        # Scroll page up
+        Scroll  //html      page_up
+
+        # Scroll page right
+        Scroll  //html      right
+
+        # Scroll to the bottom of a list using attribute value and tag
+        Scroll  uiScroller    bottom    tag=div
+
+        # Scroll to the top of a list using attribute value and tag
+        Scroll  uiScroller    top    tag=div
+
+        # Scroll (page) down 3 times in a list
+        Repeat Keyword     3 times    Scroll    uiScroller   down    tag=div
+
+    Parameters
+    ----------
+    locator : str
+        Xpath to scrollable element or attribute value of an scrollable element.
+    direction : str
+        Direction to scroll to (down, up, left, right, top, bottom, page_down, page_up).
+          * Down/up/left/right map to respective ARROW keys.
+          * Top/Bottom map to HOME & END keys.
+          * Page_up/Page_down map to PAGE_UP and PAGE_DOWN keys.
+    timeout : int
+        How long to scroll in seconds, before timing out.
+
+    Raises
+    ------
+    QWebValueError
+        If direction is not given in correct format.
+    QWebElementNotFoundError
+        If the given scrollable element is not found.
+
+    Related keywords
+    ----------------
+    \`ScrollTo\`, \`ScrollText\`
+    """
+
+    keys = {"pagedown": "{PAGE_DOWN}",
+            "pageup": "{PAGE_UP}",
+            "top": "{HOME}",
+            "bottom": "{END}",
+            "up": "{ARROW_UP}",
+            "down": "{ARROW_DOWN}",
+            "left": "{ARROW_LEFT}",
+            "right": "{ARROW_RIGHT}"}
+
+    try:
+        key = keys[direction.lower().replace("_", "")]
+    except KeyError as e:
+        raise QWebValueError("""Unknown 'direction'. Valid values are: page_down,
+                             page_up, down, up, left, right, top, bottom""") from e
+    press_key(locator, key, timeout=timeout, **kwargs)
