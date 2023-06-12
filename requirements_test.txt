@@ -1,14 +1,14 @@
 # Testing dependencies
 Flask==2.0.2
 flake8
-mock==4.0.3
-pydocstyle==6.1.1
-pylint==2.12.2
+mock==5.0.2
+pydocstyle
+pylint==2.13.9
 pytest
 pytest-pythonpath
 pytest-cov
 coverage
-duty == 0.7.0
+duty == 0.11.1
 mypy
 types-setuptools
 types-requests
