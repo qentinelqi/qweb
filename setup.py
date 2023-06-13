@@ -62,5 +62,5 @@ setup(
                       "slate3k>=0.5.3"],
 
     extras_require={':"linux" in sys_platform': ['xlib'],
-                    ':"darwin" in sys_platform': ['pyobjc-core==8.3', 'pyobjc==8.3']}
+                    ':"darwin" in sys_platform': ['pyobjc-core==9.2', 'pyobjc==9.2']}
 )
