@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2023-06-14
+
+### Added
+- New keyword [Scroll](https://qentinelqi.github.io/qweb/QWeb.html#Scroll) for scrolling with keys (PageDown etc.) in cases where other scrolling means do not work reliably.
+
+### Changed
+
+- Updated pyobjc-core and pyobjc for Mac. This should enable direct installation with Python 3.11 on Mac.
+- Locked PyScreeze dependency version, as the latest one has a slight issue with Mac.
+- Bumped versions of testing dependencies.
+- Added Edge to Linux pipeline
+- Modified over aggressive "No Browser Open" error message. One should get more meaningful messages in other fatal cases, for example when webdriver / browser is not installed at all.
+
+
 ## [2.1.2] - 2023-03-24
 
 ### Added
