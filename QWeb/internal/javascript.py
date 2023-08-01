@@ -163,9 +163,11 @@ def get_by_attributes(elements: list[WebElement], locator: str,
                for (var j = 0; j < attrs.length; j++) {
                     if (attrs[j].value.trim() == locator) {
                         full.push(elems[i]);
+                        break;
                     }
                     else if (partial && attrs[j].value.includes(locator)){
                         part.push(elems[i]);
+                        break;
                     }
                }
             }
