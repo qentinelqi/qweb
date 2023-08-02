@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2023-08-02
+
+### Fixed
+- Handled situation where Chrome v115 gives a new exception
+- Minor fix to improve finding input via label under shadow dom
+  
 ## [2.2.0] - 2023-06-14
 
 ### Added
