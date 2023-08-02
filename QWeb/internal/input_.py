@@ -223,6 +223,9 @@ def get_inputs_including_shadow_dom(locator: str, **kwargs) -> list[WebElement]:
 
 def get_input_elements_by_css(locator: str, **kwargs):
     full_matches, partial_matches = element.get_elements_by_css(locator, **kwargs)
+    # return if we already get a full match
+    if full_matches:
+        return full_matches, partial_matches
 
     shadow_dom = CONFIG['ShadowDOM']
     if shadow_dom:
