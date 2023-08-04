@@ -56,7 +56,7 @@ setup(
                       "Pillow==9.3.0",
                       "scipy>=1.7.3",
                       "scikit-image==0.19.1;python_version=='3.7'",
-                      "scikit-image==0.20;python_version>'3.7'",
+                      "scikit-image==0.21;python_version>'3.7'",
                       "ply",
                       "opencv-python==4.8.0.74",
                       "slate3k>=0.5.3"],
