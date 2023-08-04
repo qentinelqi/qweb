@@ -3,7 +3,7 @@ PyAutoGUI>=0.9.53
 Pillow==9.5.0
 robotframework>=3.2.2,<7
 robotframework-debuglibrary==2.3.0
-selenium==4.6.0
+selenium==4.9.0
 ply
 pynput==1.7.6
 setuptools>=65.5.1
