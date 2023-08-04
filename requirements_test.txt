@@ -8,7 +8,7 @@ pytest
 pytest-pythonpath
 pytest-cov
 coverage
-duty == 0.11.1
+duty
 mypy
 types-setuptools
 types-requests
