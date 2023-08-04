@@ -8,7 +8,7 @@ ply
 pynput==1.7.6
 setuptools>=65.5.1
 opencv-python==4.8.0.74
-requests==2.27.1
+requests==2.31.0
 slate3k==0.5.3
 scipy>=1.7.3
 scikit-image==0.19.1;python_version=="3.7"
