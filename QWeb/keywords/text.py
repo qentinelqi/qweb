@@ -33,7 +33,7 @@ from QWeb.internal.actions import scroll as _scroll, \
     scroll_first_scrollable_parent_element as _scroll_first_scrollable_parent_element
 from QWeb.internal import element, decorators, util, download, text as internal_text
 from QWeb.internal.config_defaults import CONFIG
-from QWeb.internal.exceptions import QWebValueError, QWebEnvironmentError, QWebTimeoutError,\
+from QWeb.internal.exceptions import QWebValueError, QWebEnvironmentError, QWebTimeoutError, \
     QWebElementNotFoundError, QWebDriverError, QWebInstanceDoesNotExistError
 from robot.api import logger
 from robot.api.deco import keyword

@@ -23,7 +23,7 @@ from robot.api import logger
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException
-from QWeb.internal.exceptions import QWebInvalidElementStateError, QWebValueError,\
+from QWeb.internal.exceptions import QWebInvalidElementStateError, QWebValueError, \
     QWebEnvironmentError
 from QWeb.internal import javascript
 

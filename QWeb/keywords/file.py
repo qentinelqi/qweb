@@ -19,7 +19,7 @@ from pathlib import Path
 
 from QWeb.internal.file import File
 from QWeb.internal import download
-from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError,\
+from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError, \
     QWebUnexpectedConditionError, QWebValueError, QWebFileNotFoundError
 from zipfile import ZipFile
 from os.path import basename as _basename

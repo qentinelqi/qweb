@@ -28,7 +28,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from QWeb.keywords import window
 from QWeb.internal import browser, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
-from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
+from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile, \
                                   bs_desktop, safari, edge
 from QWeb.internal.exceptions import QWebDriverError
 

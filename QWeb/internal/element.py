@@ -22,10 +22,10 @@ from robot.api import logger
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, \
-    StaleElementReferenceException, JavascriptException, InvalidSelectorException,\
+    StaleElementReferenceException, JavascriptException, InvalidSelectorException, \
     WebDriverException, NoSuchFrameException
 from QWeb.internal import frame
-from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElementError,\
+from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElementError, \
     QWebValueError, QWebSearchingMode
 from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG

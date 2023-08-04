@@ -25,6 +25,8 @@ disable=fixme, # comment containing FIXME, XXX, or TODO
 # run arbitrary code.
 extension-pkg-whitelist=cv2
 
+generated-members=cv2.*
+
 [REPORTS]
 
 # Set the output format. Available formats are text, parseable, colorized, msvs
