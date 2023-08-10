@@ -649,14 +649,14 @@ def hover_item(locator: str,
 
 @keyword(tags=("Text", "Verification"))
 @decorators.timeout_decorator
-def is_text(text: str, timeout: Union[int, float, str] = "0.1s", **kwargs) -> bool:
+def is_text(text: str, timeout: Union[int, float, str] = "0.5s", **kwargs) -> bool:
     r"""Return True/False if text is found on the screen.
 
     Used to get text presence to variable. This keyword returns after text is found.
 
     Returns True if text is found. Returns False if text is not found within timeout.
 
-    If timeout is not set, keyword returns immediately.
+    If timeout is not set, default timeout of 0.5 sec is used.
 
     Examples
     --------
@@ -671,7 +671,7 @@ def is_text(text: str, timeout: Union[int, float, str] = "0.1s", **kwargs) -> bo
         Text to be searched from the screen.
 
     timeout : str | int
-        How long we wait for text to appear before returning. Default 0.1s
+        How long we wait for text to appear before returning. Default 0.5s
 
     Returns
     -------
@@ -1422,7 +1422,7 @@ def scroll_to(text_to_find: str,
     """
     visible = is_text(text_to_find)
     if visible:
-        scroll_text(text_to_find)
+        scroll_text(text_to_find, anchor)
         return
     slow_mode = util.par2bool(kwargs.get('slow_mode', False))
     if locator:  # If we are trying to scroll a specific element
