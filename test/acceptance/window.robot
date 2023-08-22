@@ -2,7 +2,7 @@
 Documentation                   Tests for window handling
 Library                         QWeb
 Library                         Collections
-Test Setup                      OpenBrowser                 about:blank                 ${BROWSER}                  --headless
+Test Setup                      OpenBrowser                 about:blank                 ${BROWSER}                 # --headless
 Test Teardown                   CloseBrowser
 Test Timeout                    90 seconds
 

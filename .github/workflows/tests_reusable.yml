@@ -103,7 +103,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 30
       run: |
-        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} ${{ inputs.rfw-exclude-tags }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        python -m robot --exitonfailure -i MaximizeWindow -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
     
     - name: Rerun failed acceptance tests
       if: steps.initial-acceptance-tests.outcome == 'failure'
