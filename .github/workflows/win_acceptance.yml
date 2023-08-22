@@ -1,25 +1,25 @@
-# name: Windows
+name: Windows
 
-# on:
-#   push:
-#     branches: [ master ]
-#     paths-ignore:
-#       - '**.md'
-#   pull_request:
-#     branches: [ master ]
-#     paths-ignore:
-#       - '**.md'
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
 
-# jobs:
-#   windows_acceptance:
-#     name: Windows
-#     uses: ./.github/workflows/tests_reusable.yml
-#     with:
-#       # arrays for matrices must be given as string for json parsing
-#       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
-#       os: '["windows-latest"]'
-#       browser: '["chrome", "edge", "firefox"]'
-#       python-version: '["3.9", "3.10"]'
-#       rfw-322-python: "3.9"
-#       rfw-exclude-tags: "-e FLASK"
+jobs:
+  windows_acceptance:
+    name: Windows
+    uses: ./.github/workflows/tests_reusable.yml
+    with:
+      # arrays for matrices must be given as string for json parsing
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
+      os: '["windows-latest"]'
+      browser: '["chrome", "edge", "firefox"]'
+      python-version: '["3.9", "3.10"]'
+      rfw-322-python: "3.9"
+      rfw-exclude-tags: "-e FLASK"
       
