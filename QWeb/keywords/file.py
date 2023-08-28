@@ -418,4 +418,4 @@ def verify_file(filename: str) -> Path:
         return path
     except QWebFileNotFoundError as e:
         raise QWebFileNotFoundError('File not found from default folders. '
-                                    'It\'s not exists or you may need a full path.') from e
+                                    'It may not exists or you may need a full path.') from e
