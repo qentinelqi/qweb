@@ -22,7 +22,7 @@ from QWeb.internal.browser.safari import NAMES as SAFARINAMES
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebUnexpectedConditionError
 from robot.api import logger
-from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.remote.webelement import WebElement
 import json
@@ -306,9 +306,20 @@ def option_handler(options: Optional[str]) -> list[str]:
     options2 = []
     if options:
         options2 += options.split(',')
-    if BuiltIn().get_variable_value('${BROWSER_OPTIONS}'):
-        options2 += BuiltIn().get_variable_value('${BROWSER_OPTIONS}').split(',')
+
+    if get_rfw_variable_value('${BROWSER_OPTIONS}'):
+        options2 += get_rfw_variable_value('${BROWSER_OPTIONS}').split(',')
+
     return options2
+
+
+def get_rfw_variable_value(key: str, default_value=None) -> Any:
+    """ Return robot fw variable value if robot is running.
+        Returns default value if robot is not running."""
+    try:
+        return BuiltIn().get_variable_value(key)
+    except RobotNotRunningError:
+        return default_value
 
 
 def get_callable(pw: str) -> Callable[..., Any]:

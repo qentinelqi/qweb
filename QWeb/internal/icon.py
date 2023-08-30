@@ -22,11 +22,10 @@ import numpy as np
 import math
 import os
 from pathlib import Path
-from QWeb.internal import frame, download
+from QWeb.internal import frame, download, util
 from QWeb.internal.meas import MEAS
 from QWeb.internal.screenshot import save_screenshot, log_screenshot_file, SCREEN_SHOT_DIR_NAME
 from QWeb.internal.config_defaults import CONFIG
-from robot.libraries.BuiltIn import BuiltIn
 from uuid import uuid4
 
 
@@ -406,7 +405,7 @@ class QIcon:
                  (0, 0, 255), 2)
 
         if CONFIG.get_value("LogMatchedIcons"):
-            output = BuiltIn().get_variable_value('${OUTPUT DIR}')
+            output = util.get_rfw_variable_value('${OUTPUT DIR}') or os.getcwd()
             filename = "temp_matched_image-{}".format(uuid4()) + ".png"
             filepath = os.path.join(output, SCREEN_SHOT_DIR_NAME, filename)
             cv2.imwrite(filepath, result)

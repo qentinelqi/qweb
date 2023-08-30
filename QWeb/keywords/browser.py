@@ -181,8 +181,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         logger.warn('You have {} browser sessions already open'.format(number_of_open_sessions))
     option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
-    bs_project_name = BuiltIn().get_variable_value('${PROJECTNAME}') or ""
-    bs_run_id = BuiltIn().get_variable_value('${RUNID}') or ""
+
     if os.getenv('QWEB_HEADLESS'):
         kwargs = dict(headless=True)
     if os.getenv('CHROME_ARGS') is not None:
@@ -191,9 +190,17 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         else:
             option_list = option_list + os.getenv('CHROME_ARGS', '').split(',')
     logger.debug('Options: {}'.format(option_list))
-    provider = BuiltIn().get_variable_value('${PROVIDER}')
+
+    bs_project_name = util.get_rfw_variable_value('${PROJECTNAME}') or ""
+    bs_run_id = util.get_rfw_variable_value('${RUNID}') or ""
+    provider = util.get_rfw_variable_value('${PROVIDER}')
+    # except RobotNotRunningError:
+    #     bs_project_name = os.getenv('PROJECTNAME', "")
+    #     bs_run_id = os.getenv('RUNID', "")
+    #     provider = os.getenv('PROVIDER', "")
+
     if provider in ('bs', 'browserstack'):
-        bs_device = BuiltIn().get_variable_value('${DEVICE}')
+        bs_device = util.get_rfw_variable_value('${DEVICE}')
         if not bs_device and b_lower in bs_desktop.NAMES:
             driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id, **kwargs)
         elif bs_device:
@@ -207,7 +214,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     # If user wants to re-use Chrome browser then he/she has to give
     # variable BROWSER_REUSE=True. In that case no URL loaded needed as
     # user wants to continue with the existing browser session
-    is_browser_reused = util.par2bool(BuiltIn().get_variable_value('${BROWSER_REUSE}')) or False
+    is_browser_reused = util.par2bool(util.get_rfw_variable_value('${BROWSER_REUSE}')) or False
     if not (is_browser_reused and b_lower == 'chrome'):
         driver.get(url)
     xhr.setup_xhr_monitor()
@@ -248,7 +255,7 @@ def _close_remote_browser_session(driver: WebDriver, close_only: bool = False) -
     driver_type = str(type(driver))
     if 'remote.webdriver' in driver_type:
         session_id = driver.session_id
-        remote_session_id = BuiltIn().get_variable_value('${BROWSER_REMOTE_SESSION_ID}')
+        remote_session_id = util.get_rfw_variable_value('${BROWSER_REMOTE_SESSION_ID}')
         if remote_session_id:
             logger.debug('Closing remote session id: {}, target session: {}'.format(
                 remote_session_id, session_id))

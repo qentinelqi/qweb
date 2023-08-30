@@ -22,14 +22,14 @@ from QWeb.internal.exceptions import QWebException
 import pytest
 
 
-@patch('QWeb.internal.browser.bs_desktop.BuiltIn.get_variable_value')
+@patch('QWeb.internal.util.get_rfw_variable_value')
 def test_desktop_bs_open_browser(patch_robot_builtin):
     patch_robot_builtin.return_value = 'foobar'
     with pytest.raises(QWebException):
         ob_desktop('asd', 'project_name', 'run_id_test')
 
 
-@patch('QWeb.internal.browser.bs_mobile.BuiltIn.get_variable_value')
+@patch('QWeb.internal.util.get_rfw_variable_value')
 def test_mobile_bs_open_browser(patch_robot_builtin):
     patch_robot_builtin.return_value = 'foobar'
     with pytest.raises(QWebException):

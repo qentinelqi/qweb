@@ -28,6 +28,7 @@
     - [Other locators](#other-locators)
     - [Working with tables](#working-with-tables)
     - [Changing configuration](#changing-configuration)
+    - [Changing configuration](#changing-configuration-1)
 - [Changelog](#changelog)
 - [Contribute](#contribute)
 - [Community](#community)
@@ -189,6 +190,28 @@ SetConfig     SearchMode     Draw       # Highlight all found elements with blue
 SetConfig     DefaultTimeout    60s     # change default/automatic timeout for all keywords
 VerifyText    User account created      # Re-tries to find text "User account created" 60 seconds and then fails, if text is not visible
 ```
+
+#### Changing configuration
+QWeb can be used directly with Python as well.
+
+```Python
+
+from QWeb import QWeb
+
+qweb = QWeb()
+
+qweb.open_browser("about:blank", "chome")
+qweb.go_to("https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_select")
+title = qweb.get_title()
+# returns 'W3Schools Tryit Editor'
+qweb.verify_text("The select element")
+qweb.drop_down("Choose a car", "Saab")
+qweb.click_text("Submit")
+qweb.verify_text("Your input was received as:")
+qweb.verify_text("cars=volvo")
+
+```
+
 More examples on [QWeb tutorial](https://github.com/qentinelqi/qweb_workshop).
 
 [Back To The Top](#qweb)

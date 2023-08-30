@@ -5,8 +5,7 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from typing import Any
 from robot.api import logger
-from robot.libraries.BuiltIn import BuiltIn
-from QWeb.internal import browser, exceptions
+from QWeb.internal import browser, exceptions, util
 
 NAMES: dict[str, tuple[str, str]] = {
     # Default  versions for different browsers.
@@ -27,9 +26,9 @@ OS: dict[str, str] = {
 
 
 def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any) -> WebDriver:
-    bs_key = BuiltIn().get_variable_value('${APIKEY}') or os.environ.get('bskey')
-    bs_user = BuiltIn().get_variable_value('${USERNAME}') or os.environ.get('bsuser')
-    bs_os = BuiltIn().get_variable_value('${BSOS}') or 'windows'
+    bs_key = util.get_rfw_variable_value('${APIKEY}') or os.environ.get('bskey')
+    bs_user = util.get_rfw_variable_value('${USERNAME}') or os.environ.get('bsuser')
+    bs_os = util.get_rfw_variable_value('${BSOS}') or 'windows'
 
     desired_caps: dict = {
         'bstack:options': {
@@ -37,15 +36,15 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
             "projectName": project_name,
             "sessionName": run_id,
             'os': bs_os,
-            'osVersion': BuiltIn().get_variable_value('${BSOSVERSION}') or OS[bs_os.lower()],
-            'resolution': BuiltIn().get_variable_value('${BSRESOLUTION}') or '1920x1080',
-            "local": BuiltIn().get_variable_value('${BSLOCAL}') or "false",
-            "localIdentifier": BuiltIn().get_variable_value('${BSLOCALID}') or '',
+            'osVersion': util.get_rfw_variable_value('${BSOSVERSION}') or OS[bs_os.lower()],
+            'resolution': util.get_rfw_variable_value('${BSRESOLUTION}') or '1920x1080',
+            "local": util.get_rfw_variable_value('${BSLOCAL}') or "false",
+            "localIdentifier": util.get_rfw_variable_value('${BSLOCALID}') or '',
             **kwargs,
         },
 
-        'browserName': BuiltIn().get_variable_value('${BROWSER}') or NAMES[bs_browser][0],
-        'browserVersion': BuiltIn().get_variable_value('${BROWSERVERSION}') or NAMES[bs_browser][1]
+        'browserName': util.get_rfw_variable_value('${BROWSER}') or NAMES[bs_browser][0],
+        'browserVersion': util.get_rfw_variable_value('${BROWSERVERSION}') or NAMES[bs_browser][1]
     }
 
     # handle issue where any, even empty value in localIdentifier turns local to true

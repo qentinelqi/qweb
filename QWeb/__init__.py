@@ -31,7 +31,7 @@ try:
     from QWeb.internal.config_defaults import CONFIG
     from robot.api import logger
     from robot.utils import timestr_to_secs as _timestr_to_secs
-    from robot.libraries.BuiltIn import BuiltIn
+    from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
     from robot.libraries import Dialogs
 
 # Print system exit message. This can happen on fresh linux when tkinter
@@ -90,8 +90,11 @@ class QWeb:
                 logger.debug(traceback.format_exc())
                 if not self._is_run_on_failure_keyword(keyword_method):
                     if not util.par2bool(kwargs.get('skip_screenshot', False)):
-                        BuiltIn().run_keyword(self._run_on_failure_keyword)
-                devmode = util.par2bool(BuiltIn().get_variable_value('${DEV_MODE}', False))
+                        try:
+                            BuiltIn().run_keyword(self._run_on_failure_keyword)
+                        except RobotNotRunningError:
+                            logger.debug("Robot not running")
+                devmode = util.par2bool(util.get_rfw_variable_value('${DEV_MODE}', False))
                 if devmode and not config.get_config('Debug_Run'):
                     Dialogs.pause_execution('Keyword {} {} {} failed. \n'
                                             'Got {}'.format(
