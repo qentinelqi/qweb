@@ -24,7 +24,7 @@ import pkg_resources
 import requests
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from QWeb.keywords import window
 from QWeb.internal import browser, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
@@ -194,10 +194,6 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     bs_project_name = util.get_rfw_variable_value('${PROJECTNAME}') or ""
     bs_run_id = util.get_rfw_variable_value('${RUNID}') or ""
     provider = util.get_rfw_variable_value('${PROVIDER}')
-    # except RobotNotRunningError:
-    #     bs_project_name = os.getenv('PROJECTNAME', "")
-    #     bs_run_id = os.getenv('RUNID', "")
-    #     provider = os.getenv('PROVIDER', "")
 
     if provider in ('bs', 'browserstack'):
         bs_device = util.get_rfw_variable_value('${DEVICE}')
@@ -296,10 +292,13 @@ def close_browser() -> None:
         browser.remove_from_browser_cache(driver)
 
         # Clear browser re-use flag as no original session open anymore
+        # not supported when running directly from Python
         BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
         driver.quit()
     except QWebDriverError:
         logger.info("All browser windows already closed")
+    except RobotNotRunningError:
+        driver.quit()
 
 
 @keyword(tags=("Browser", "Interaction", "Remote"))
@@ -356,7 +355,10 @@ def close_all_browsers() -> None:
     browser.clear_browser_cache()
 
     # Clear browser re-use flag as no session open anymore
-    BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
+    try:
+        BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
+    except RobotNotRunningError:
+        logger.debug("Only supported when run with Robot Framework")
 
     # safari specific
     safari.open_windows.clear()
