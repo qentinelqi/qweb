@@ -135,8 +135,10 @@ def get_path(filename: str) -> Path:
     try:
         base_path = BuiltIn().get_variable_value('${base_image_path}')
         full_path = os.path.join(base_path, "{}".format(filename.lower()))
+        if not Path(full_path).exists():
+            raise QWebFileNotFoundError("File not found from base image path")
         return Path(full_path)
-    except TypeError as e:
+    except (TypeError, QWebFileNotFoundError) as e:
         raise QWebFileNotFoundError(
             'File not found from default folders. Set variable for base image path') from e
 

@@ -22,7 +22,7 @@ from selenium.webdriver.support.select import Select
 
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
-from QWeb.internal import element, decorators, actions, text, input_,\
+from QWeb.internal import element, decorators, actions, text, input_, \
     dropdown, checkbox
 
 

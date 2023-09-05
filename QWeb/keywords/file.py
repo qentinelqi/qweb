@@ -19,7 +19,7 @@ from pathlib import Path
 
 from QWeb.internal.file import File
 from QWeb.internal import download
-from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError,\
+from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError, \
     QWebUnexpectedConditionError, QWebValueError, QWebFileNotFoundError
 from zipfile import ZipFile
 from os.path import basename as _basename
@@ -418,4 +418,4 @@ def verify_file(filename: str) -> Path:
         return path
     except QWebFileNotFoundError as e:
         raise QWebFileNotFoundError('File not found from default folders. '
-                                    'It\'s not exists or you may need a full path.') from e
+                                    'It may not exists or you may need a full path.') from e

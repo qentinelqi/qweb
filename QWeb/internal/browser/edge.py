@@ -5,7 +5,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Edge
 from selenium.webdriver.edge.options import Options
 from robot.api import logger
-from robot.libraries.BuiltIn import BuiltIn
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal import browser, user, util
 
@@ -61,7 +60,7 @@ def open_browser(executable_path: str = "msedgedriver",
     # set from argument file, then OpenBrowser will use those
     # parameters instead of opening new chrome session.
     # New Remote Web Driver is created in headless mode.
-    edge_path = kwargs.get('edge_path', None) or BuiltIn().get_variable_value('${EDGE_PATH}')
+    edge_path = kwargs.get('edge_path', None) or util.get_rfw_variable_value('${EDGE_PATH}')
     if edge_path:
         options.binary_location = edge_path  # pylint: disable=no-member
 
@@ -88,7 +87,7 @@ def open_browser(executable_path: str = "msedgedriver",
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
     driver = Edge(
-        BuiltIn().get_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
+        util.get_rfw_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
         or executable_path,
         options=options,
         capabilities=desired_capabilities)

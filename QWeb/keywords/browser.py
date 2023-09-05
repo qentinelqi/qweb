@@ -24,11 +24,11 @@ import pkg_resources
 import requests
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from QWeb.keywords import window
 from QWeb.internal import browser, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
-from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile,\
+from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile, \
                                   bs_desktop, safari, edge
 from QWeb.internal.exceptions import QWebDriverError
 
@@ -181,8 +181,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         logger.warn('You have {} browser sessions already open'.format(number_of_open_sessions))
     option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
-    bs_project_name = BuiltIn().get_variable_value('${PROJECTNAME}') or ""
-    bs_run_id = BuiltIn().get_variable_value('${RUNID}') or ""
+
     if os.getenv('QWEB_HEADLESS'):
         kwargs = dict(headless=True)
     if os.getenv('CHROME_ARGS') is not None:
@@ -191,9 +190,13 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         else:
             option_list = option_list + os.getenv('CHROME_ARGS', '').split(',')
     logger.debug('Options: {}'.format(option_list))
-    provider = BuiltIn().get_variable_value('${PROVIDER}')
+
+    bs_project_name = util.get_rfw_variable_value('${PROJECTNAME}') or ""
+    bs_run_id = util.get_rfw_variable_value('${RUNID}') or ""
+    provider = util.get_rfw_variable_value('${PROVIDER}')
+
     if provider in ('bs', 'browserstack'):
-        bs_device = BuiltIn().get_variable_value('${DEVICE}')
+        bs_device = util.get_rfw_variable_value('${DEVICE}')
         if not bs_device and b_lower in bs_desktop.NAMES:
             driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id, **kwargs)
         elif bs_device:
@@ -207,7 +210,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     # If user wants to re-use Chrome browser then he/she has to give
     # variable BROWSER_REUSE=True. In that case no URL loaded needed as
     # user wants to continue with the existing browser session
-    is_browser_reused = util.par2bool(BuiltIn().get_variable_value('${BROWSER_REUSE}')) or False
+    is_browser_reused = util.par2bool(util.get_rfw_variable_value('${BROWSER_REUSE}')) or False
     if not (is_browser_reused and b_lower == 'chrome'):
         driver.get(url)
     xhr.setup_xhr_monitor()
@@ -248,7 +251,7 @@ def _close_remote_browser_session(driver: WebDriver, close_only: bool = False) -
     driver_type = str(type(driver))
     if 'remote.webdriver' in driver_type:
         session_id = driver.session_id
-        remote_session_id = BuiltIn().get_variable_value('${BROWSER_REMOTE_SESSION_ID}')
+        remote_session_id = util.get_rfw_variable_value('${BROWSER_REMOTE_SESSION_ID}')
         if remote_session_id:
             logger.debug('Closing remote session id: {}, target session: {}'.format(
                 remote_session_id, session_id))
@@ -289,10 +292,13 @@ def close_browser() -> None:
         browser.remove_from_browser_cache(driver)
 
         # Clear browser re-use flag as no original session open anymore
+        # not supported when running directly from Python
         BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
         driver.quit()
     except QWebDriverError:
         logger.info("All browser windows already closed")
+    except RobotNotRunningError:
+        driver.quit()
 
 
 @keyword(tags=("Browser", "Interaction", "Remote"))
@@ -349,7 +355,10 @@ def close_all_browsers() -> None:
     browser.clear_browser_cache()
 
     # Clear browser re-use flag as no session open anymore
-    BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
+    try:
+        BuiltIn().set_global_variable('${BROWSER_REUSE}', False)
+    except RobotNotRunningError:
+        logger.debug("Only supported when run with Robot Framework")
 
     # safari specific
     safari.open_windows.clear()

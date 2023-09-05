@@ -4,8 +4,7 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from typing import Any
 from robot.api import logger
-from robot.libraries.BuiltIn import BuiltIn
-from QWeb.internal import browser, exceptions
+from QWeb.internal import browser, exceptions, util
 
 
 def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) -> WebDriver:
@@ -17,8 +16,8 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
             "sessionName": run_id,
             "deviceName": bs_device,
             "realMobile": "true",
-            "local": BuiltIn().get_variable_value('${BSLOCAL}') or "false",
-            "localIdentifier": BuiltIn().get_variable_value('${BSLOCALID}') or '',
+            "local": util.get_rfw_variable_value('${BSLOCAL}') or "false",
+            "localIdentifier": util.get_rfw_variable_value('${BSLOCALID}') or '',
             **kwargs,
         }
     }
@@ -27,8 +26,8 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
     if desired_cap["bstack:options"]["local"] == 'false':
         del desired_cap["bstack:options"]["localIdentifier"]
 
-    bs_key = BuiltIn().get_variable_value('${APIKEY}') or os.environ.get('bskey')
-    bs_user = BuiltIn().get_variable_value('${USERNAME}') or os.environ.get('bsuser')
+    bs_key = util.get_rfw_variable_value('${APIKEY}') or os.environ.get('bskey')
+    bs_user = util.get_rfw_variable_value('${USERNAME}') or os.environ.get('bsuser')
 
     try:
         driver = webdriver.Remote(

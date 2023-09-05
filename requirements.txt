@@ -1,18 +1,18 @@
 PyScreeze==0.1.28
 PyAutoGUI>=0.9.53
-Pillow==9.3.0
+Pillow==9.5.0
 robotframework>=3.2.2,<7
 robotframework-debuglibrary==2.3.0
-selenium==4.6.0
+selenium==4.9.0
 ply
 pynput==1.7.6
 setuptools>=65.5.1
-opencv-python==4.5.5.62
-requests==2.27.1
+opencv-python==4.8.0.74
+requests==2.31.0
 slate3k==0.5.3
 scipy>=1.7.3
 scikit-image==0.19.1;python_version=="3.7"
-scikit-image==0.20;python_version>"3.7"
+scikit-image==0.21;python_version>"3.7"
 pyobjc-core==9.2; sys_platform == "darwin"
 pyobjc==9.2; sys_platform == "darwin"
 
