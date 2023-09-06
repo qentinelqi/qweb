@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.2] - 2023-09-06
+
+### Added
+- Enable using QWeb directly from Python
+### Fixed
+- ClickCell not clicking a sub-element when tag used
+- VerifyFile keyword not working correctly when ${BASE_IMAGE_PATH} variable is used
+
+### Changed
+- IsText default timeout increaded to 0.5
+- ScrollTo keyword to support anchor
+- Bumped opencv, selenium, Pillow, scikit-image, and requests dependency version. 
+
 ## [2.2.1] - 2023-08-02
 
 ### Fixed
