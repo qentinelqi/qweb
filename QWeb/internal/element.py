@@ -657,6 +657,9 @@ def get_element_from_childnodes(locator_element: WebElement,
     except (WebDriverException, JavascriptException) as e:
         web_elements = None
         logger.debug('Got Exception from get_element_from_childnodes: {}'.format(e))
+    # if all else fails, try to find children with xpath
+    if not web_elements:
+        web_elements = locator_element.find_elements(By.XPATH, f".//{css}")
     if web_elements:
         return web_elements
     raise QWebElementNotFoundError('Child with tag {} not found.'.format(css))
