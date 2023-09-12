@@ -610,6 +610,22 @@ def get_elements_by_attributes(
             elements,
             locator.replace("\'", "\\'"),  # type: ignore[union-attr]
             partial)
+        
+        # try with xpath if no matches
+        # there have been few where css search doesn't work
+        # this is supported only if tag argument is given
+        if len(matches.get("full")) == 0 and len(matches.get("partial")) == 0:
+            try:
+                driver = browser.get_current_browser()
+                elements = driver.find_elements(By.XPATH, f'//{css}')
+
+                matches = javascript.get_by_attributes(
+                    elements,
+                    locator.replace("\'", "\\'"),  # type: ignore[union-attr]
+                    partial)
+            except InvalidSelectorException:
+                matches = None
+            
 
         logger.debug('attrfunc found full matches: {}, partial matches: {}'.format(
             matches.get('full'), matches.get('partial')))
@@ -659,7 +675,10 @@ def get_element_from_childnodes(locator_element: WebElement,
         logger.debug('Got Exception from get_element_from_childnodes: {}'.format(e))
     # if all else fails, try to find children with xpath
     if not web_elements:
-        web_elements = locator_element.find_elements(By.XPATH, f".//{css}")
+        try:
+            web_elements = locator_element.find_elements(By.XPATH, f".//{css}")
+        except InvalidSelectorException:
+            web_elements = None
     if web_elements:
         return web_elements
     raise QWebElementNotFoundError('Child with tag {} not found.'.format(css))
