@@ -610,7 +610,7 @@ def get_elements_by_attributes(
             elements,
             locator.replace("\'", "\\'"),  # type: ignore[union-attr]
             partial)
-        
+
         # try with xpath if no matches
         # there have been few where css search doesn't work
         # this is supported only if tag argument is given
@@ -625,7 +625,6 @@ def get_elements_by_attributes(
                     partial)
             except InvalidSelectorException:
                 matches = None
-            
 
         logger.debug('attrfunc found full matches: {}, partial matches: {}'.format(
             matches.get('full'), matches.get('partial')))
