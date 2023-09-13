@@ -4,6 +4,7 @@ from typing import Optional, Any
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Edge
 from selenium.webdriver.edge.options import Options
+from selenium.webdriver.edge.service import Service
 from robot.api import logger
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal import browser, user, util
@@ -41,15 +42,6 @@ def open_browser(executable_path: str = "msedgedriver",
     # other non-sensical error messages
     options.add_experimental_option('excludeSwitches', ['enable-logging'])  # pylint: disable=no-member
 
-    if platform.system().lower() == "windows":
-        options.set_capability("platform", "WINDOWS")
-
-    if platform.system().lower() == "linux":
-        options.set_capability("platform", "LINUX")
-
-    if platform.system().lower() == "darwin":
-        options.set_capability("platform", "MAC")
-
     # If user wants to re-use existing browser session then
     # he/she has to set variable BROWSER_REUSE_ENABLED to True.
     # If enabled, then web driver connection details are written
@@ -86,10 +78,14 @@ def open_browser(executable_path: str = "msedgedriver",
         emulation = kwargs['emulation']
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
-    driver = Edge(
-        util.get_rfw_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
-        or executable_path,
-        options=options,
-        capabilities=desired_capabilities)
+    
+    service = Service(util.get_rfw_variable_value('${EDGEDRIVER_PATH}') or executable_path)
+    driver = Edge(service=service, options=options)
+
+    # driver = Edge(
+    #     util.get_rfw_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
+    #     or executable_path,
+    #     options=options,
+    #     capabilities=desired_capabilities)
     browser.cache_browser(driver)
     return driver
