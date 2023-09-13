@@ -73,6 +73,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     chrome    --allow-running-insecure-content, --xyz
         OpenBrowser    http://google.com     chrome    prefs="opt1":"True", "opt2":"False"
         OpenBrowser    http://google.com     firefox   -headless, -private, -xyz
+        OpenBrowser    http://google.com     edge      -headless, -inprivate, -xyz
         OpenBrowser    http://google.com     firefox   prefs="option1":"value1", "option2":"value2"
         #Use existing profile
         OpenBrowser    http://google.com     firefox   -profile /path/to/profile
