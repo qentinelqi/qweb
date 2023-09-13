@@ -4,6 +4,7 @@ from typing import Optional, Any
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Chrome, Remote
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from QWeb.internal import browser, user, util
@@ -109,9 +110,8 @@ def open_browser(executable_path: str = "chromedriver",
             emulate_device = util.get_emulation_pref(emulation)
             options.add_experimental_option("mobileEmulation", emulate_device)
 
-        driver = Chrome(util.get_rfw_variable_value('${CHROMEDRIVER_PATH}') or executable_path,
-                        options=options,
-                        desired_capabilities=desired_capabilities)
+        service = Service(util.get_rfw_variable_value('${CHROMEDRIVER_PATH}') or executable_path)
+        driver = Chrome(service=service, options=options)
 
         browser_reuse_enabled = util.par2bool(
             util.get_rfw_variable_value('${BROWSER_REUSE_ENABLED}')) or False
