@@ -22,11 +22,9 @@ NAMES: list[str] = ["firefox", "ff"]
 
 # pylint: disable=too-many-branches
 def open_browser(profile_dir: Optional[str] = None,
-                 capabilities: Optional[dict[str, Any]] = None,
-                 proxy: Optional[str] = None,
                  headless: bool = False,
                  binary: Optional[Union[str, FirefoxBinary]] = None,
-                 executable_path: str = "",
+                 driver_path: str = "",
                  firefox_args: Optional[list[str]] = None,
                  log_path: str = "geckodriver.log",
                  **kwargs: Any) -> WebDriver:
@@ -99,7 +97,7 @@ def open_browser(profile_dir: Optional[str] = None,
 
     if binary:
         options.binary = binary
-    service = Service(executable_path) if executable_path else Service()
+    service = Service(driver_path, log_path=log_path) if driver_path else Service(log_path=log_path)
     driver = webdriver.Firefox(service=service,
                                options=options
                                )

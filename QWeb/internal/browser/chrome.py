@@ -42,7 +42,6 @@ def write_browser_session_argsfile(session_id: str,
 
 def open_browser(executable_path: str = "",
                  chrome_args: Optional[list[str]] = None,
-                 desired_capabilities: Optional[dict[str, Any]] = None,
                  **kwargs: Any) -> WebDriver:
     """Open Chrome browser instance and cache the driver.
 

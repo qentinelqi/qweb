@@ -13,7 +13,6 @@ NAMES: list[str] = ["edge", "msedge"]
 
 def open_browser(executable_path: str = "",
                  edge_args: Optional[list[str]] = None,
-                 desired_capabilities: Optional[dict[str, Any]] = None,
                  **kwargs: Any) -> WebDriver:
     """Open Edge browser instance and cache the driver.
 
