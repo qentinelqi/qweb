@@ -55,6 +55,7 @@ def return_browser() -> WebDriver:
 
 @keyword(tags=("Browser", "Interaction"))
 def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **kwargs):
+    # pylint: disable=line-too-long
     r"""Open new browser to given url.
 
     Browser options can also be given in the robot command, for example:

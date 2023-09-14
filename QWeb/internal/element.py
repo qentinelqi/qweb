@@ -614,7 +614,7 @@ def get_elements_by_attributes(
         # try with xpath if no matches
         # there have been few where css search doesn't work
         # this is supported only if tag argument is given
-        if len(matches.get("full")) == 0 and len(matches.get("partial")) == 0:
+        if len(matches.get("full", [])) == 0 and len(matches.get("partial", [])) == 0:
             try:
                 driver = browser.get_current_browser()
                 elements = driver.find_elements(By.XPATH, f'//{css}')
@@ -624,10 +624,10 @@ def get_elements_by_attributes(
                     locator.replace("\'", "\\'"),  # type: ignore[union-attr]
                     partial)
             except InvalidSelectorException:
-                matches = None
+                matches = {'full': [], 'partial': []}
 
         logger.debug('attrfunc found full matches: {}, partial matches: {}'.format(
-            matches.get('full'), matches.get('partial')))
+            matches.get('full', []), matches.get('partial', [])))
         full_matches, partial_matches = matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException, AttributeError) as e:
         logger.debug('Got exception from get elements by attributes: {}'.format(e))
@@ -653,7 +653,7 @@ def get_element_by_label_for(
     try:
         matches = javascript.get_by_label(locator.replace("\'", "\\'"), css, level, partial)
         logger.debug('labelfunc found full matches: {}, partial matches: {}'.format(
-            matches.get('full'), matches.get('partial')))
+            matches.get('full', []), matches.get('partial', [])))
         return matches.get('full', []), matches.get('partial', [])
     except (WebDriverException, JavascriptException) as e:
         logger.warn('Exception from label func: {}'.format(e))
