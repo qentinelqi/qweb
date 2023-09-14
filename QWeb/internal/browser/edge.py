@@ -1,5 +1,4 @@
 from __future__ import annotations
-import platform
 from typing import Optional, Any
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Edge
@@ -79,7 +78,7 @@ def open_browser(executable_path: str = "",
         emulation = kwargs['emulation']
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
-    
+
     service = Service(edgedriver_path) if edgedriver_path else Service()
     driver = Edge(service=service, options=options)
 

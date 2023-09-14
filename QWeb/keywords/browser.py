@@ -28,7 +28,7 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from QWeb.keywords import window
 from QWeb.internal import browser, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
-from QWeb.internal.browser import chrome, firefox, ie, android, bs_mobile, \
+from QWeb.internal.browser import chrome, firefox, android, bs_mobile, \
                                   bs_desktop, safari, edge
 from QWeb.internal.exceptions import QWebDriverError
 
@@ -482,9 +482,6 @@ def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> Web
     def use_ff():
         return firefox.open_browser(firefox_args=options, *args, **kwargs)
 
-    def use_ie():
-        return ie.open_browser(*args)
-
     def use_safari():
         return safari.open_browser(*args)
 
@@ -499,8 +496,6 @@ def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> Web
         'gc': use_chrome,
         'firefox': use_ff,
         'ff': use_ff,
-        'ie': use_ie,
-        'internet explorer': use_ie,
         'safari': use_safari,
         'sf': use_safari,
         'android': use_android,
