@@ -26,7 +26,7 @@ def open_browser(profile_dir: Optional[str] = None,
                  proxy: Optional[str] = None,
                  headless: bool = False,
                  binary: Optional[Union[str, FirefoxBinary]] = None,
-                 executable_path: str = "geckodriver",
+                 executable_path: str = "",
                  firefox_args: Optional[list[str]] = None,
                  log_path: str = "geckodriver.log",
                  **kwargs: Any) -> WebDriver:
@@ -100,7 +100,7 @@ def open_browser(profile_dir: Optional[str] = None,
 
     if binary:
         options.binary = binary
-    service = Service(executable_path, log_path=log_path,)
+    service = Service(executable_path) if executable_path else Service()
     driver = webdriver.Firefox(service=service,
                                options=options
                                )

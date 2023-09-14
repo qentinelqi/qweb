@@ -40,7 +40,7 @@ def write_browser_session_argsfile(session_id: str,
     return args_fn
 
 
-def open_browser(executable_path: str = "chromedriver",
+def open_browser(executable_path: str = "",
                  chrome_args: Optional[list[str]] = None,
                  desired_capabilities: Optional[dict[str, Any]] = None,
                  **kwargs: Any) -> WebDriver:
@@ -75,6 +75,7 @@ def open_browser(executable_path: str = "chromedriver",
     # set from argument file, then OpenBrowser will use those
     # parameters instead of opening new chrome session.
     # New Remote Web Driver is created in headless mode.
+    chromedriver_path = util.get_rfw_variable_value('${CHROMEDRIVER_PATH}') or executable_path
     chrome_path = kwargs.get('chrome_path', None) or util.get_rfw_variable_value('${CHROME_PATH}')
     if chrome_path:
         options.binary_location = chrome_path
@@ -110,7 +111,7 @@ def open_browser(executable_path: str = "chromedriver",
             emulate_device = util.get_emulation_pref(emulation)
             options.add_experimental_option("mobileEmulation", emulate_device)
 
-        service = Service(util.get_rfw_variable_value('${CHROMEDRIVER_PATH}') or executable_path)
+        service = Service(chromedriver_path) if chromedriver_path else Service()
         driver = Chrome(service=service, options=options)
 
         browser_reuse_enabled = util.par2bool(

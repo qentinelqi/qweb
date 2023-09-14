@@ -12,7 +12,7 @@ from QWeb.internal import browser, user, util
 NAMES: list[str] = ["edge", "msedge"]
 
 
-def open_browser(executable_path: str = "msedgedriver",
+def open_browser(executable_path: str = "",
                  edge_args: Optional[list[str]] = None,
                  desired_capabilities: Optional[dict[str, Any]] = None,
                  **kwargs: Any) -> WebDriver:
@@ -52,6 +52,7 @@ def open_browser(executable_path: str = "msedgedriver",
     # set from argument file, then OpenBrowser will use those
     # parameters instead of opening new chrome session.
     # New Remote Web Driver is created in headless mode.
+    edgedriver_path = util.get_rfw_variable_value('${EDGEDRIVER_PATH}') or executable_path
     edge_path = kwargs.get('edge_path', None) or util.get_rfw_variable_value('${EDGE_PATH}')
     if edge_path:
         options.binary_location = edge_path  # pylint: disable=no-member
@@ -79,7 +80,7 @@ def open_browser(executable_path: str = "msedgedriver",
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
     
-    service = Service(util.get_rfw_variable_value('${EDGEDRIVER_PATH}') or executable_path)
+    service = Service(edgedriver_path) if edgedriver_path else Service()
     driver = Edge(service=service, options=options)
 
     # driver = Edge(
