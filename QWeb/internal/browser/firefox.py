@@ -88,7 +88,6 @@ def open_browser(profile_dir: Optional[str] = None,
                 profile_dir = _get_profile_dir(option)
                 options.add_argument("-profile")
                 options.add_argument(profile_dir)
-
             elif option.startswith("-"):
                 options.add_argument(option)
             else:
