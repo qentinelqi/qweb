@@ -55,6 +55,7 @@ def return_browser() -> WebDriver:
 
 @keyword(tags=("Browser", "Interaction"))
 def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **kwargs):
+    # pylint: disable=line-too-long
     r"""Open new browser to given url.
 
     Browser options can also be given in the robot command, for example:
@@ -73,8 +74,18 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     chrome    prefs="opt1":"True", "opt2":"False"
         OpenBrowser    http://google.com     firefox   -headless, -private, -xyz
         OpenBrowser    http://google.com     firefox   prefs="option1":"value1", "option2":"value2"
+        #Use existing profile
         OpenBrowser    http://google.com     firefox   -profile /path/to/profile
+        OpenBrowser    http://google.com     chrome
+        ...            --user-data-dir\=C:\\temp,--profile-directory\=Test2
         OpenBrowser    http://google.com     firefox   -private    prefs="option1":"value1"
+        #Use portable browser / non-standard installation path
+        OpenBrowser    about:support    firefox
+        ...            binary=C:/Users/SomeUser/temp/FirefoxPortable/App/Firefox64/firefox.exe
+        #Use proxy
+        OpenBrowser    http://google.com    chrome    --proxy_server\=http://127.0.0.1:8080
+        OpenBrowser    http://google.com    firefox
+        ...            prefs="network.proxy.type":"1","network.proxy.http":"localhost","network.proxy.http_port":"8080"
         #Supply preferences from a dictionary
         ${prefs_d}=    Create Dictionary     option1    value1    option2    value2
         OpenBrowser    http://google.com     firefox    prefs=${prefs_d}
