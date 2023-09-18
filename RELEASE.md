@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.3] - 2023-09-18
+### Fixed
+- Regression: VerifyCheckboxValue not finding checkbox by label in specific views
+- Improved attribute search in specific Salesforce views
+### Added
+- Examples of using proxies, profiles and portable binary to OpenBrowser kw doc
+
+### Changed
+- Changed deprecated license_file parameter in setup.cfg
+
 ## [2.2.2] - 2023-09-06
 
 ### Added
