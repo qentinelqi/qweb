@@ -483,7 +483,7 @@ def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> Web
         return firefox.open_browser(firefox_args=options, *args, **kwargs)
 
     def use_safari():
-        return safari.open_browser(*args)
+        return safari.open_browser(*args, **kwargs)
 
     def use_android():
         return android.open_browser()
