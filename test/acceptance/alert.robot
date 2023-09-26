@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for handling of alerts
 Library           QWeb
-Suite Setup       OpenBrowser    file://${CURDIR}/../resources/alert.html    ${BROWSER}   --headless
+Suite Setup       OpenBrowser    file://${CURDIR}/../resources/alert.html    ${BROWSER}   #--headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 
@@ -67,3 +67,11 @@ GetAlertText from alert
     ${TEXT}             GetAlertText
     ShouldBeEqual       ${TEXT}      Tell me your name
     Close alert         accept
+
+HandleAlerts
+    SetConfig           HandleAlerts    False
+    ClickText           Show alert
+    Run Keyword and Expect Error    QWebUnexpectedAlert:*    VerifyText    Alert popup
+    SetConfig           HandleAlerts    True
+    ClickText           Show alert
+    VerifyText          Alert popup
