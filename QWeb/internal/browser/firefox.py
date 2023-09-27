@@ -6,7 +6,6 @@ from logging import Logger
 import os
 
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -23,7 +22,8 @@ NAMES: list[str] = ["firefox", "ff"]
 # pylint: disable=too-many-branches
 def open_browser(profile_dir: Optional[str] = None,
                  headless: bool = False,
-                 binary: Optional[Union[str, FirefoxBinary]] = None,
+                 #binary: Optional[Union[str, FirefoxBinary]] = None,
+                 binary: Optional[str] = None,
                  driver_path: str = "",
                  firefox_args: Optional[list[str]] = None,
                  log_path: str = "geckodriver.log",
@@ -95,7 +95,7 @@ def open_browser(profile_dir: Optional[str] = None,
                             f'Argument "{option}" has incorrect format and was ignored')
 
     if binary:
-        options.binary = binary
+        options.binary_location = binary
     service = Service(driver_path, log_path=log_path) if driver_path else Service(log_path=log_path)
     driver = webdriver.Firefox(service=service,
                                options=options
