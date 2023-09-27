@@ -248,9 +248,9 @@ def select_option(
         if option.isdigit():
             try:
                 if unselect:
-                    select.deselect_by_index(option)
+                    select.deselect_by_index(option)  # type: ignore
                 else:
-                    select.select_by_index(option)
+                    select.select_by_index(option)  # type: ignore
                 return True
             except TypeError as te:
                 raise QWebValueMismatchError('Index out of range') from te
