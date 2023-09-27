@@ -7,7 +7,7 @@ from selenium.webdriver.firefox.options import Options as firefox_options
 from selenium.webdriver.safari.options import Options as safari_options
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from typing import Any
+from typing import Any, Union
 from robot.api import logger
 from QWeb.internal import browser, exceptions, util
 
@@ -51,6 +51,8 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
         del desired_caps["localIdentifier"]
 
     # create options instance based on selected browser
+    options: Union[chrome_options, edge_options, firefox_options, safari_options]
+
     if browser_name == 'Chrome':
         options = chrome_options()
     elif browser_name == 'Edge':
