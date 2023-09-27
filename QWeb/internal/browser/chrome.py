@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 from typing import Optional, Any
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver import Chrome, Remote
+from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from robot.api import logger
@@ -36,7 +36,6 @@ def write_browser_session_argsfile(dbg_addr: str,
         args_file.write(f'-v BROWSER_REUSE:{True}{os.linesep}')
         args_file.write(f'-v BROWSER_DEBUGGER_ADDRESS:{dbg_addr}{os.linesep}')
         args_file.write(f'-v BROWSER_EXECUTOR_URL:{executor_url}{os.linesep}')
-
 
     return args_fn
 
@@ -77,16 +76,16 @@ def open_browser(executable_path: str = "",
     # New Remote Web Driver is created in headless mode.
     chromedriver_path = util.get_rfw_variable_value('${CHROMEDRIVER_PATH}') or executable_path
     chrome_path = kwargs.get('chrome_path', None) or util.get_rfw_variable_value('${CHROME_PATH}')
-    chrome_version = kwargs.get('browser_version', None) or util.get_rfw_variable_value('${BROWSER_VERSION}')
+    chrome_version_kwarg = kwargs.get('browser_version', None)
+    chrome_version = chrome_version_kwarg or util.get_rfw_variable_value('${BROWSER_VERSION}')
     if chrome_path:
         options.binary_location = chrome_path
     if chrome_version:
         options.browser_version = chrome_version
-    browser_reuse, debugger_address, executor_url,  = check_browser_reuse(**kwargs)
+    browser_reuse, debugger_address, executor_url = check_browser_reuse(**kwargs)
     logger.debug(f'browser_reuse: {browser_reuse}, '
-                  'executor_url: {executor_url}, '
-                  'debugger_address: {debugger_address}'
-                )
+                 f'executor_url: {executor_url}, '
+                 f'debugger_address: {debugger_address}')
     if browser_reuse and executor_url and debugger_address:
         options_new = Options()
         options_new.add_argument("headless")
@@ -94,8 +93,6 @@ def open_browser(executable_path: str = "",
         service = Service()
         driver = Chrome(service=service,
                         options=options_new)
-        #BuiltIn().set_global_variable('${BROWSER_REMOTE_SESSION_ID}', driver.session_id)
-        #driver.session_id = session_id  # type: ignore
     else:
         if user.is_root():
             options.add_argument("no-sandbox")

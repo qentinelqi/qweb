@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Any, Union
+from typing import Optional, Any
 
 import logging
 from logging import Logger
@@ -22,7 +22,6 @@ NAMES: list[str] = ["firefox", "ff"]
 # pylint: disable=too-many-branches
 def open_browser(profile_dir: Optional[str] = None,
                  headless: bool = False,
-                 #binary: Optional[Union[str, FirefoxBinary]] = None,
                  binary: Optional[str] = None,
                  driver_path: str = "",
                  firefox_args: Optional[list[str]] = None,

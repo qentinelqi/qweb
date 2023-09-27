@@ -42,9 +42,7 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
         'resolution': util.get_rfw_variable_value('${BSRESOLUTION}') or '1920x1080',
         "local": util.get_rfw_variable_value('${BSLOCAL}') or "false",
         "localIdentifier": util.get_rfw_variable_value('${BSLOCALID}') or '',
-        **kwargs,
-        }
-
+        **kwargs, }
 
     # handle issue where any, even empty value in localIdentifier turns local to true
     if desired_caps["local"] == 'false':
@@ -63,8 +61,9 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
         options = safari_options()
     else:
         raise exceptions.QWebException('Incorrect Browser name.')
-    
-    options.set_capability('browserVersion', util.get_rfw_variable_value('${BROWSERVERSION}') or NAMES[bs_browser][1])
+
+    browser_version = util.get_rfw_variable_value('${BROWSERVERSION}') or NAMES[bs_browser][1]
+    options.set_capability('browserVersion', browser_version)
     options.set_capability('bstack:options', desired_caps)
 
     try:

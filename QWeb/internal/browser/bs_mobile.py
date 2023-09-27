@@ -19,9 +19,7 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
         "realMobile": "true",
         "local": util.get_rfw_variable_value('${BSLOCAL}') or "false",
         "localIdentifier": util.get_rfw_variable_value('${BSLOCALID}') or '',
-        **kwargs,
-        }
-
+        **kwargs, }
 
     # handle issue where any, even empty value in localIdentifier turns local to true
     if desired_cap["local"] == 'false':
@@ -29,7 +27,7 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
 
     # create options instance based on selected browser
     options: Union[chrome_options, safari_options]
-    if any(model in bs_device.lower() for model in ("iphone","ipad")):
+    if any(model in bs_device.lower() for model in ("iphone", "ipad")):
         options = safari_options()
     else:
         options = chrome_options()
