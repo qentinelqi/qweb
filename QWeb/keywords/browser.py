@@ -443,29 +443,29 @@ def verify_links(url: str = 'current', log_all: bool = False, header_only: bool 
     broken = []
     logger.info('\nVerifying links on {}'.format(driver.current_url), also_console=True)
     for elem in elements:
-        url = elem.get_attribute("href")
-        if util.url_validator(url) and url not in checked:
+        a_url = elem.get_attribute("href") or ""
+        if util.url_validator(a_url) and a_url not in checked:
             try:
-                r = requests.head(url, headers=headers)
+                r = requests.head(a_url, headers=headers)
                 status = r.status_code
                 if not header_only and status in [404, 405]:
-                    r = requests.get(url, headers=headers)
+                    r = requests.get(a_url, headers=headers)
                     status = r.status_code
             except requests.exceptions.ConnectionError as e:
                 logger.error("{} can't be reached. Error message: {}".format(url, e))
-                broken.append(url)
+                broken.append(a_url)
                 continue
             if 399 < status < 600:
-                error = 'Status of {} = {}'.format(url, status)
+                error = 'Status of {} = {}'.format(a_url, status)
                 logger.error(error)
-                broken.append(url)
+                broken.append(a_url)
             elif status == 999:
                 logger.info('Status of {} = {} (Linkedin specific error code. '
-                            'Everything is probably fine.)'.format(url, status),
+                            'Everything is probably fine.)'.format(a_url, status),
                             also_console=True)
             elif log_all:
-                logger.info('Status of {} = {}'.format(url, status), also_console=True)
-            checked.append(url)
+                logger.info('Status of {} = {}'.format(a_url, status), also_console=True)
+            checked.append(a_url)
     errors = len(broken)
     if len(checked) == 0:
         logger.warn('No links found.')
