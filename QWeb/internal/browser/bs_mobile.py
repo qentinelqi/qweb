@@ -21,6 +21,10 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
         "localIdentifier": util.get_rfw_variable_value('${BSLOCALID}') or '',
         **kwargs, }
 
+    os_version = util.get_rfw_variable_value('${BSOSVERSION}')
+    if os_version:
+        desired_cap["osVersion"] = os_version
+
     # handle issue where any, even empty value in localIdentifier turns local to true
     if desired_cap["local"] == 'false':
         del desired_cap["localIdentifier"]
