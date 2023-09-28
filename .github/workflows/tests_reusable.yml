@@ -71,15 +71,6 @@ jobs:
         xauth generate $DISPLAY .
         popd
 
-    - name: Install working edgedriver
-      if: runner.os == 'Linux'
-      run: |
-        sudo wget -N https://msedgedriver.azureedge.net/115.0.1901.183/edgedriver_linux64.zip &&
-        unzip edgedriver_linux64.zip &&
-        rm edgedriver_linux64.zip
-        chmod +x msedgedriver &&
-        sudo mv -f msedgedriver /usr/local/share/edge_driver
-
     - name: Install RFW 3.2.2
       if: matrix.python-version == inputs.rfw-322-python
       run: |
