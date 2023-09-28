@@ -63,36 +63,105 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
 
     Examples
     --------
-     .. code-block:: robotframework
+    .. code-block:: robotframework
 
+        # Basic usage
         OpenBrowser    http://google.com     chrome
-        #Use Chromium instead of Chrome:
-        OpenBrowser    http://google.com     chrome    chrome_path=/path/to/chromium/chrome.exe
-        OpenBrowser    http://google.com     chrome    executable_path=/path/to/my/chromedriver.exe
         OpenBrowser    file://resources/window.html    firefox
+
+        # Multiple options
         OpenBrowser    http://google.com     chrome    --allow-running-insecure-content, --xyz
-        OpenBrowser    http://google.com     chrome    prefs="opt1":"True", "opt2":"False"
         OpenBrowser    http://google.com     firefox   -headless, -private, -xyz
         OpenBrowser    http://google.com     edge      -headless, -inprivate, -xyz
+
+        # Multiple preferences
+        OpenBrowser    http://google.com     chrome    prefs="opt1":"True", "opt2":"False"
         OpenBrowser    http://google.com     firefox   prefs="option1":"value1", "option2":"value2"
-        #Use existing profile
+
+        # Use existing profile
         OpenBrowser    http://google.com     firefox   -profile /path/to/profile
         OpenBrowser    http://google.com     chrome
         ...            --user-data-dir\=C:\\temp,--profile-directory\=Test2
         OpenBrowser    http://google.com     firefox   -private    prefs="option1":"value1"
-        #Use portable browser / non-standard installation path
+
+        # Use portable browser / non-standard installation path / specific driver
         OpenBrowser    about:support    firefox
         ...            binary=C:/Users/SomeUser/temp/FirefoxPortable/App/Firefox64/firefox.exe
-        #Use proxy
+        # Use Chromium instead of Chrome:
+        OpenBrowser    http://google.com     chrome    chrome_path=/path/to/chromium/chrome.exe
+        OpenBrowser    http://google.com     chrome    executable_path=/path/to/my/chromedriver.exe
+
+        # Use proxy
         OpenBrowser    http://google.com    chrome    --proxy_server\=http://127.0.0.1:8080
         OpenBrowser    http://google.com    firefox
         ...            prefs="network.proxy.type":"1","network.proxy.http":"localhost","network.proxy.http_port":"8080"
-        #Supply preferences from a dictionary
+
+        # Supply preferences from a dictionary
         ${prefs_d}=    Create Dictionary     option1    value1    option2    value2
         OpenBrowser    http://google.com     firefox    prefs=${prefs_d}
-        #Mobile emulation
+
+        # Mobile emulation
         OpenBrowser    http://google.com     chrome    emulation=iPhone SE
         OpenBrowser    http://google.com     chrome    emulation=375x812
+
+    Selenium Manager
+    ----------------
+
+    If browser driver(s) can be found in path, they will be used. If not, Selenium
+    Manager tries to download and install them. With Chrome also specific version of
+    browser ("Chrome for Testing") can be used.
+
+    **NOTE**: if you are using QWeb in some cloud service,
+    it's best to use their method of setting browser version.
+
+    .. code-block:: robotframework
+
+        # If Chrome 117 is already installed, it will be used.
+        # If not, Chrome for Testing v117 will be downloaded and used.
+        OpenBrowser   https://www.google.com    chrome    browser_version=117
+
+    BrowserStack usage
+    ------------------
+    QWeb can be directly used with BrowserStack for desktop and mobile browser
+    testing. Your own Browserstack credentials are required.
+
+    .. code-block:: robotframework
+
+        # Using BrowserStack for DESKTOP browser testing
+        
+        # Note that these variables can be given in run command
+        ${PROVIDER}=    Set Variable      bs
+        ${USERNAME}=    Set Variable      your_browserstack_username
+        ${APIKEY}=      Set Variable      your_browserstack_token
+        ${PROJECTNAME}=    Set Variable   qweb_run
+        ${RUNID}=       Set Variable      qweb_run
+        ${BSOS}=        Set Variable      windows  # optional, default is windows
+        OpenBrowser     https://www.google.com    chrome
+
+        ${BSOS}=        Set Variable      osx
+        OpenBrowser     https://www.google.com    safari
+
+        # Different os version, browser version and resolution
+        ${BSOSVERSION}=    Set Variable      Monterey
+        ${BROWSERVERSION}=    Set Variable      15
+        ${BSRESOLUTION}=   Set Variable   2560x1440
+        OpenBrowser        https://www.google.com    safari
+
+
+        # Using BrowserStack for MOBILE browser testing
+        ${PROVIDER}=    Set Variable      bs
+        ${USERNAME}=    Set Variable      your_browserstack_username
+        ${APIKEY}=      Set Variable      your_browserstack_token
+        ${DEVICE}=      Set Variable      Google Pixel 4
+        ${PROJECTNAME}=    Set Variable   qweb_run
+        ${RUNID}=       Set Variable      qweb_run_id
+        OpenBrowser          https://www.google.com    safari
+
+        # Change to Android device and use specific Android version
+        ${DEVICE}=      Set Variable      Google Pixel 4
+        ${BSOSVERSION}=    Set Variable      11  # optional
+        OpenBrowser     https://www.google.com    chrome
+
 
     Mobile emulation
     ----------------
@@ -121,6 +190,28 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
 
     Note that profile names given above are expected to change in new browser releases.
     Always check that the name you are using still exists.
+
+    Local Android device usage
+    --------------------------
+    QWeb can be used with local Android device with Chrome. Note that this requires
+    Android SDK and Appium to be installed in local machine, developer options enabled
+    in mobile and USB debugging enabled.
+    
+    NOTE: that this feature is not officially supported nor tested in every release. We
+    can't guarantee that it will work with every future release and we can't offer support for Android
+    side setup.
+
+    Once you have installed Android SDK, starter Appium server and have your local
+    Android device plugged in with USB cable, you can run QWeb against local Chrome
+    with the following command:
+    
+    .. code-block:: robotframework
+
+        OpenBrowser    about:support    android
+
+
+    To check if your device is correctly connected, run:
+    `adb devices` on your terminal and verify that your device is listed.
 
     Experimental feature for test debugging (for Chrome only):
     ----------------------------------------------------------
