@@ -39,7 +39,8 @@ def unit_tests(ctx):
 @duty
 def acceptance_tests(ctx,
                      browser="chrome",
-                     exitonfailure="True"):
+                     exitonfailure="True",
+                     listener=None):
     """
     Runs robot Acceptance tests
     Args:
@@ -48,6 +49,8 @@ def acceptance_tests(ctx,
                     Default: chrome
         exitonfailure: Stop tests upon first failing test. True/False
                     Default: True
+        listener: Path to listener to use temporarily, for example notification purposes
+                    Default: None
                           
     """
     def remove_extra_whitespaces(string: str) -> str:
@@ -56,6 +59,10 @@ def acceptance_tests(ctx,
     cmd_exit_on_failure = ""
     if exitonfailure.lower() == "true":
         cmd_exit_on_failure = "--exitonfailure"
+
+    listener_cmd = ""
+    if listener:
+        listener_cmd = f" --listener {listener}"
 
     os = system().upper()
     if os == "DARWIN":
@@ -74,6 +81,7 @@ def acceptance_tests(ctx,
 
     cmd_str = remove_extra_whitespaces(
                f" {python_exe} -m robot"
+               f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
                f" {cmd_excludes}"
