@@ -128,7 +128,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     .. code-block:: robotframework
 
         # Using BrowserStack for DESKTOP browser testing
-        
+
         # Note that these variables can be given in run command
         ${PROVIDER}=    Set Variable      bs
         ${USERNAME}=    Set Variable      your_browserstack_username
@@ -196,7 +196,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     QWeb can be used with local Android device with Chrome. Note that this requires
     Android SDK and Appium to be installed in local machine, developer options enabled
     in mobile and USB debugging enabled.
-    
+
     NOTE: that this feature is not officially supported nor tested in every release. We
     can't guarantee that it will work with every future release and we can't offer support for Android
     side setup.
@@ -204,7 +204,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     Once you have installed Android SDK, starter Appium server and have your local
     Android device plugged in with USB cable, you can run QWeb against local Chrome
     with the following command:
-    
+
     .. code-block:: robotframework
 
         OpenBrowser    about:support    android
