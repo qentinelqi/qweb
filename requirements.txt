@@ -1,13 +1,13 @@
 PyScreeze==0.1.28
 PyAutoGUI>=0.9.53
-Pillow==9.5.0
+Pillow>=10.0.1,<11
 robotframework>=3.2.2,<7
 robotframework-debuglibrary==2.3.0
 selenium>=4.10.0<5
 ply
 pynput==1.7.6
 setuptools>=65.5.1
-opencv-python==4.8.0.74
+opencv-python==4.8.1.78
 requests==2.31.0
 slate3k==0.5.3
 scipy>=1.7.3
