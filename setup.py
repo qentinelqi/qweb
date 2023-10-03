@@ -30,7 +30,6 @@ setup(
     packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test"]),
 
     classifiers=[
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
@@ -43,7 +42,7 @@ setup(
     keywords='test automation robot framework',
     author='Qentinel Group',
     author_email='libraries@qentinel.com',
-    python_requires= ">3.6,<4.0",
+    python_requires= ">3.7,<4.0",
     license= "Apache License 2.0",
     install_requires=["setuptools>=65.5.1",
                       "pyscreeze==0.1.28",
@@ -55,8 +54,7 @@ setup(
                       "selenium>=4.10.0,<5",
                       "Pillow>=10.0.1,<11",
                       "scipy>=1.7.3",
-                      "scikit-image==0.19.1;python_version=='3.7'",
-                      "scikit-image==0.21;python_version>'3.7'",
+                      "scikit-image==0.21",
                       "ply",
                       "opencv-python==4.8.1.78",
                       "slate3k>=0.5.3"],
