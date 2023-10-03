@@ -1,5 +1,5 @@
 # Testing dependencies
-Flask==2.0.2
+Flask==3.0.0
 flake8
 mock==5.0.2
 pydocstyle
