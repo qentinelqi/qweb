@@ -59,7 +59,7 @@ See [examples](#examples).
 
 ---
 ## Requirements
-Python **3.8-3.11** and Robot Framework 3.2.2 or above. Browser drivers need to be installed separately.
+Python **3.8-3.11** and Robot Framework 4.1.3 or above.
 
 (Note that support on Macs with Apple based silicon (M1) requires MacOS version 12/Monterey or above or [custom installation](https://github.com/qentinelqi/qweb/blob/master/docs/qweb_mac_m1_installation.md).)
 

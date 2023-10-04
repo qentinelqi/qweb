@@ -1,7 +1,7 @@
 PyScreeze==0.1.28
 PyAutoGUI>=0.9.53
 Pillow>=10.0.1,<11
-robotframework>=3.2.2,<7
+robotframework>=4.1.3,<7
 robotframework-debuglibrary==2.3.0
 selenium>=4.10.0<5
 ply

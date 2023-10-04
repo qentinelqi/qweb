@@ -20,6 +20,6 @@ jobs:
       os: '["windows-latest"]'
       browser: '["chrome", "edge", "firefox"]'
       python-version: '["3.10", "3.11"]'
-      rfw-322-python: "3.10"
+      rfw-4x-python: "3.10"
       rfw-exclude-tags: "-e FLASK"
       

@@ -20,4 +20,4 @@ jobs:
       os: '["ubuntu-latest"]'
       browser: '["chrome", "firefox", "edge"]'
       python-version: '["3.8", "3.9"]'
-      rfw-322-python: "3.8"
+      rfw-4x-python: "3.8"
