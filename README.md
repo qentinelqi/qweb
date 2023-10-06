@@ -142,9 +142,12 @@ Example:
 ```RobotFramework
 *** Settings ***
 Library    QWeb     # Import library
-SetConfig            ShadowDOM            True  # extends search to shadow dom elements
-OpenBrowser          chrome://settings/content/popups   chrome
-ClickText            Sites can send pop-ups 
+
+*** Test Cases ***
+Click shadow dom element
+  SetConfig            ShadowDOM            True  # extends search to shadow dom elements
+  OpenBrowser          chrome://settings/content/popups   chrome
+  ClickText            Sites can send pop-ups 
 ```
 
 #### Timeouts and anchors
