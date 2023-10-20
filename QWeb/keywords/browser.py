@@ -78,6 +78,13 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     chrome    prefs="opt1":"True", "opt2":"False"
         OpenBrowser    http://google.com     firefox   prefs="option1":"value1", "option2":"value2"
 
+        # Supply preferences from a dictionary
+        ${prefs_d}=    Create Dictionary     option1    value1    option2    value2
+        OpenBrowser    http://google.com     firefox    prefs=${prefs_d}
+
+        # Common examples:
+        # ----------------
+
         # Use existing profile
         OpenBrowser    http://google.com     firefox   -profile /path/to/profile
         OpenBrowser    http://google.com     chrome
@@ -96,9 +103,13 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com    firefox
         ...            prefs="network.proxy.type":"1","network.proxy.http":"localhost","network.proxy.http_port":"8080"
 
-        # Supply preferences from a dictionary
-        ${prefs_d}=    Create Dictionary     option1    value1    option2    value2
-        OpenBrowser    http://google.com     firefox    prefs=${prefs_d}
+        # Make Chrome download pdf files instead of opening them
+        Open Browser    about:blank         chrome
+        ...prefs=download.prompt_for_download: False, plugins.always_open_pdf_externally: True
+
+        # Disable "Save Address" and "Save Credit Card details" dialogs on Chrome.
+        OpenBrowser    about:blank           chrome
+        ...            prefs="autofill.profile_enabled":false, "autofill.credit_card_enabled":false
 
         # Mobile emulation
         OpenBrowser    http://google.com     chrome    emulation=iPhone SE
