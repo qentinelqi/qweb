@@ -26,6 +26,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchWindowException, \
                                        StaleElementReferenceException, \
+                                       UnexpectedAlertPresentException, \
                                        WebDriverException, InvalidSessionIdException
 from QWeb.keywords import config
 import QWeb.internal.frame_checker as fc
@@ -59,6 +60,8 @@ def wait_page_loaded() -> None:
         except InvalidSessionIdException as ie:
             CONFIG.set_value("OSScreenshots", True)
             raise QWebBrowserError("Browser session lost. Did browser crash?") from ie
+        except UnexpectedAlertPresentException as uea:
+            raise uea
         except (NoSuchWindowException, WebDriverException) as e:
             logger.warn(
                 'Cannot switch to default context, maybe window is closed. Err: {}'.format(e))

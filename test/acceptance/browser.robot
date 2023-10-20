@@ -27,7 +27,7 @@ Close All Browsers 2
 Missing webdriver message
     [Tags]        PROBLEM_IN_MACOS
     [Setup]    No Operation
-    Run Keyword and Expect Error    SafariDriver was not found*    OpenBrowser    about:blank    safari
+    Run Keyword and Expect Error    NoSuchDriverException*    OpenBrowser    about:blank    safari
 
 No browser open message
     ${previous}=    SetConfig               LogScreenshot    False

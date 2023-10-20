@@ -24,7 +24,7 @@ from QWeb.internal.search_strategy import SearchStrategies
 
 # pylint: disable=too-many-lines
 @keyword(tags=["Config"])
-def set_config(par: str, val: str) -> Any:
+def set_config(par: str, val: Any) -> Any:
     r"""Set configuration parameter to given value. Return previous value.
 
     Summary of possible configurations and their purpose. More information below.

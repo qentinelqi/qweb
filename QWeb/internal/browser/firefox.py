@@ -1,14 +1,14 @@
 from __future__ import annotations
-from typing import Optional, Any, Union
+from typing import Optional, Any
 
 import logging
 from logging import Logger
 import os
 
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.firefox.webdriver import FirefoxBinary
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from QWeb.internal import browser, util
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import QWebValueError
@@ -21,11 +21,9 @@ NAMES: list[str] = ["firefox", "ff"]
 
 # pylint: disable=too-many-branches
 def open_browser(profile_dir: Optional[str] = None,
-                 capabilities: Optional[dict[str, Any]] = None,
-                 proxy: Optional[str] = None,
                  headless: bool = False,
-                 binary: Optional[Union[str, FirefoxBinary]] = None,
-                 executable_path: str = "geckodriver",
+                 binary: Optional[str] = None,
+                 driver_path: str = "",
                  firefox_args: Optional[list[str]] = None,
                  log_path: str = "geckodriver.log",
                  **kwargs: Any) -> WebDriver:
@@ -87,19 +85,20 @@ def open_browser(profile_dir: Optional[str] = None,
             option = option.strip()
             if option.startswith("-profile"):
                 profile_dir = _get_profile_dir(option)
+                options.add_argument("-profile")
+                options.add_argument(profile_dir)
             elif option.startswith("-"):
                 options.add_argument(option)
             else:
                 logger.warn(f'Firefox arguments start with "-". '
                             f'Argument "{option}" has incorrect format and was ignored')
 
-    driver = webdriver.Firefox(executable_path=executable_path,
-                               proxy=proxy,
-                               firefox_binary=binary,
-                               desired_capabilities=capabilities,
-                               options=options,
-                               firefox_profile=profile_dir,
-                               log_path=log_path)
+    if binary:
+        options.binary_location = binary
+    service = Service(driver_path, log_path=log_path) if driver_path else Service(log_path=log_path)
+    driver = webdriver.Firefox(service=service,
+                               options=options
+                               )
     if os.name == 'nt':  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)

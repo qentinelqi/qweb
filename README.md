@@ -19,6 +19,8 @@
 - [Installation](#installation)
   - [Windows](#windows)
   - [Linux/Mac](#linuxmac)
+  - [Automatic browser \& driver management](#automatic-browser--driver-management)
+  - [Manual driver management](#manual-driver-management)
 - [Usage](#usage)
   - [Keyword documentation](#keyword-documentation)
   - [Examples](#examples)
@@ -57,7 +59,7 @@ See [examples](#examples).
 
 ---
 ## Requirements
-Python **3.7-3.11** and Robot Framework 3.2.2 or above. Browser drivers need to be installed separately.
+Python **3.8-3.11** and Robot Framework 4.1.3 or above.
 
 (Note that support on Macs with Apple based silicon (M1) requires MacOS version 12/Monterey or above or [custom installation](https://github.com/qentinelqi/qweb/blob/master/docs/qweb_mac_m1_installation.md).)
 
@@ -74,8 +76,19 @@ Python **3.7-3.11** and Robot Framework 3.2.2 or above. Browser drivers need to 
     python3 -m pip install QWeb
 ```
 
+Running the above command installs also supported Selenium and Robot Framework versions + other dependencies.
 
-Running the above command installs also supported Selenium and Robot Framework versions + other dependencies, but you still need to install `browser drivers` separately. Please refer to [Selenium documentation](https://www.selenium.dev/selenium/docs/api/py/index.html#drivers) for more information on how to install browser drivers manually OR use 3rd party packages like [WebDriverManager](https://pypi.org/project/webdrivermanager/).
+### Automatic browser & driver management
+Since Selenium 4.10.0 `browser drivers` can be automatically downloaded and installed using Selenium Manager, provided that driver is not found in PATH.
+
+For Chrome `browser_version` can also be given; if your locally installed Chrome matches this version,
+it will be used. If not, a suitable version of `Chrome for Testing` will be automatically downloaded.
+
+Examples in [OpenBrowser keyword documentation](https://qentinelqi.github.io/qweb/QWeb.html#Open%20Browser)
+
+
+### Manual driver management
+For manual installation of drivers, please refer to [Selenium documentation](https://www.selenium.dev/selenium/docs/api/py/index.html#drivers) for more information OR use 3rd party packages like [WebDriverManager](https://pypi.org/project/webdrivermanager/).
 
 
 [Back To The Top](#qweb)
@@ -129,9 +142,12 @@ Example:
 ```RobotFramework
 *** Settings ***
 Library    QWeb     # Import library
-SetConfig            ShadowDOM            True  # extends search to shadow dom elements
-OpenBrowser          chrome://settings/content/popups   chrome
-ClickText            Sites can send pop-ups 
+
+*** Test Cases ***
+Click shadow dom element
+  SetConfig            ShadowDOM            True  # extends search to shadow dom elements
+  OpenBrowser          chrome://settings/content/popups   chrome
+  ClickText            Sites can send pop-ups 
 ```
 
 #### Timeouts and anchors

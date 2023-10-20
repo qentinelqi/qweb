@@ -58,8 +58,7 @@ def get_draggable_element(text: str, index: Union[int, str],
             logger.warn('Text is not matching to any draggable element. Found {} '
                         'draggable elements. Using index..'.format(len(web_elements)))
             return web_elements[index]
-        return get_text_using_anchor(text, anchor)
-    raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
+    return get_text_using_anchor(text, anchor)
 
 
 def _find_matches(web_elements: list[WebElement], text: str) -> Optional[list[WebElement]]:

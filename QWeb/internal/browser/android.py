@@ -1,6 +1,7 @@
 from __future__ import annotations
 import subprocess
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from robot.api import logger
 from QWeb.internal import browser
@@ -25,14 +26,15 @@ def open_browser() -> WebDriver:
         ss_type = 'true'
     version = subprocess.check_output(['adb', 'shell',
                                        'getprop ro.build.version.release']).decode().strip()
-    desired_cap = {
-        'platformName': 'Android',
-        'platformVersion': version,
-        'deviceName': devices[0],
-        'browserName': 'Chrome',
-        'nativeWebScreenshot': ss_type
-    }
+
+    options = Options()
+    options.set_capability('platformName', 'Android')
+    options.set_capability('platformVersion', version)
+    options.set_capability('deviceName', devices[0])
+    options.set_capability('browserName', 'Chrome')
+    options.set_capability('nativeWebScreenshot', ss_type)
+
     driver = webdriver.Remote(command_executor='http://localhost:4723/wd/hub',
-                              desired_capabilities=desired_cap)
+                              options=options)
     browser.cache_browser(driver)
     return driver
