@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2023-10-20
+
+### Added
+- OpenBrowser keyword to support Selenium 4.10 and above
+  - Service class taken into use
+  - Support for automatic driver/browser management via Selenium Manager (if drivers are not in PATH)
+  - Chrome: Support for specific **browser_version** (downloads Chrome for Testing if needed)
+- BrowserStack/mobile integration to support OS Version
+- Added "Introduction" section to keyword documentation
+  
+### Changed
+- OpenBrowser kw documentation updated/more examples added, including BrowserStack usage and local android device usage.
+- DragDrop to support also elements that do not have "draggable" attribute set
+- Re-used variable "url" renamed in VerifyLinks
+- Security: bumped opencv and Pillow versions
+- Updated readme.md
+  
+### Fixed
+- `SetConfig HandleAlerts False` was not raising exceptions
+- SetConfig argument types modified in order to avoid automatic type conversion
+  - This fixes issue of using robot fw format (variable containing list) in `SetConfig RunBefore`
+
+### Removed
+- IE Support
+- Robot Framework 3.2.2 support (4.1.3 is the new minimum)
+- Python 3.7 support as it has been [already EOL'd](https://devguide.python.org/versions/) and some security fixes for dependencies are not released for Python 3.7
+
+
 ## [2.2.3] - 2023-09-18
 ### Fixed
 - Regression: VerifyCheckboxValue not finding checkbox by label in specific views
