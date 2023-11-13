@@ -331,7 +331,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
 
 
 @keyword(tags=("Browser", "Interaction"))
-def switch_browser(index: Union[int, str], restore: bool = False) -> None:
+def switch_browser(index: Union[int, str]) -> None:
     r"""Switches to another browser instance in browser cache.
 
 
@@ -347,30 +347,20 @@ def switch_browser(index: Union[int, str], restore: bool = False) -> None:
         SwitchBrowser   NEW     # following keywords will interact with latest opened browser (edge)
         ...
         SwitchBrowser   2       # following keywords will interact with firefox instance
-        ...
-        # following keywords will interact with firefox instance AND will try to force
-        # that window to focus be restoring it
-        SwitchBrowser   2       True
 
     Parameters
     ----------
     index : str or int
         Index of the browser instance to switch to
-    restore : bool
-        Try forcing focus to window by restoring it
 
     Related keywords
     ----------------
      \`OpenBrowser\,  \`CloseBrowser\,  \`SwitchWindow\, \`GetWebElement\`
     """
     browser.set_current_browser(index)
-    # try to restore window to force it to focus
-    if restore:
-        driver = browser.get_current_browser()
-        driver.switch_to.window(driver.current_window_handle)
-        window_rect = driver.get_window_rect()
-        driver.minimize_window()
-        driver.set_window_rect(**window_rect)
+    # try to move to currently active window
+    driver = browser.get_current_browser()
+    driver.switch_to.window(driver.current_window_handle)
 
 
 def _sessions_open() -> int:
