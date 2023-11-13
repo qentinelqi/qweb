@@ -11,6 +11,7 @@ import pytest
 
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.keywords import config
+from QWeb import custom_config
 from QWeb.internal.search_strategy import SearchStrategies
 from QWeb.internal import util
 
@@ -152,3 +153,16 @@ class TestConfig:
         # pylint: disable=W0212
         with pytest.raises(ValueError):
             util._parse_pixels('1920, 1080')
+
+    @staticmethod
+    def test_set_non_callable_wait_function():        
+        # pylint: disable=W0212
+        with pytest.raises(ValueError):
+            custom_config.set_wait_function("not a funcS")
+
+    @staticmethod
+    def test_set_callable_wait_function():
+        def my_wait_function():
+            return None
+        
+        custom_config.set_wait_function(my_wait_function)

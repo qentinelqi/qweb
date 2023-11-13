@@ -20,7 +20,7 @@ import types
 import time
 
 from functools import wraps
-import QWeb.config as custom_config
+from QWeb import custom_config
 
 try:
     from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox, input_,

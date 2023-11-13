@@ -5,6 +5,24 @@ from QWeb.internal import element, frame
 def set_wait_function(function: Callable[..., Any]) -> Callable[..., Any]:
     """Set custom wait function that is run at the beginning of keywords.
 
+    **Note**: Not meant to be used as robot framework keyword but as a helper
+    function to extend / customize QWeb via Python.
+
+    Examples
+    --------
+     .. code-block:: python
+
+        from QWeb.custom_config import set_wait_function
+
+        def my_wait_function():
+            # your own wait logic here
+            ...
+
+        # This will make QWeb use "my_wait_function" as wait function
+        # instead of the default one
+        set_wait_function(my_wait_function)
+
+
     Parameters
     ----------
     function : function
