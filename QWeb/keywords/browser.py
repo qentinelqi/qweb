@@ -348,10 +348,6 @@ def switch_browser(index: Union[int, str]) -> None:
         ...
         SwitchBrowser   2       # following keywords will interact with firefox instance
 
-    Parameters
-    ----------
-    index : str or int
-        Index of the browser instance to switch to
 
     Related keywords
     ----------------
