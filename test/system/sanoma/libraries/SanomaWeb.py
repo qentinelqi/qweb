@@ -63,8 +63,8 @@ class SanomaWeb(object):
         timeout = 15
         start = time.time()
         xpath = '//img[@alt="Loading..."]'
+        found = False
         while time.time() - start < timeout:
-            found = False
             try:
                 webelements = element.get_webelements(xpath)
             except Exception:
