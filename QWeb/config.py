@@ -10,12 +10,12 @@ def set_wait_function(function: Callable[..., Any]) -> Callable[..., Any]:
     function : function
         Function that does not need to return anything.
     """
-    previous = frame.wait_page_loaded
+    prev = frame.wait_page_loaded
     if callable(function):
         frame.wait_page_loaded = function
     else:
         raise ValueError('Argument needs to be callable: {}'.format(function))
-    return previous
+    return prev
 
 
 def set_active_area_function(function: Callable[..., Any]):
