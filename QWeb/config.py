@@ -1,7 +1,7 @@
 from typing import Callable, Any
 from QWeb.internal import element, frame
 
-
+# Added fake comment
 def set_wait_function(function: Callable[..., Any]) -> Callable[..., Any]:
     """Set custom wait function that is run at the beginning of keywords.
 
