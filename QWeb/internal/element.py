@@ -310,7 +310,7 @@ def get_visible_elements_from_elements(web_elements: list[WebElement],
                 hiding_elements.append(el.get('elem'))
         elif css_visibility:
             hiding_elements.append(el.get('elem'))
-    logger.debug('found {} visible elements and {} hiding ones'.format(
+    logger.info('found {} visible elements and {} hiding ones'.format(
         len(visible_elements), len(hiding_elements)))
     if viewport_check:
         return visible_elements  # type: ignore
