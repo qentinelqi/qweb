@@ -354,6 +354,9 @@ def switch_browser(index: Union[int, str]) -> None:
      \`OpenBrowser\,  \`CloseBrowser\,  \`SwitchWindow\, \`GetWebElement\`
     """
     browser.set_current_browser(index)
+    # try to move to currently active window
+    driver = browser.get_current_browser()
+    driver.switch_to.window(driver.current_window_handle)
 
 
 def _sessions_open() -> int:
