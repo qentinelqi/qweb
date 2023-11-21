@@ -16,7 +16,7 @@
 # ---------------------------
 
 import time
-import QWeb.config as config
+import QWeb.custom_config as config
 
 from robot.api import logger
 from robot.api.deco import keyword
