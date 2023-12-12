@@ -325,11 +325,11 @@ def get_rfw_variable_value(key: str, default_value=None) -> Any:
 def get_callable(pw: str) -> Callable[..., Any]:
     """Return function by Paceword name if exists."""
     lib = BuiltIn().get_library_instance('QWeb')
-    pacewords = lib.__dir__()
+    pacewords = dir(lib)
     for paceword in pacewords:
         if not paceword.startswith('__'):
             if str(pw).replace(' ', '').lower() == paceword.replace('_', ''):
-                fn = lib.__getattribute__(paceword)
+                fn = getattr(lib, paceword)
                 return fn
     raise QWebUnexpectedConditionError('Paceword {} not found'.format(pw))
 

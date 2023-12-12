@@ -30,7 +30,7 @@ def verify_app(imagename: str) -> None:
     """
     status = screenshot.compare_screenshots(imagename, CONFIG["VerifyAppAccuracy"])
     if status is False:
-        raise Exception('Images differ')
+        raise ValueError('Images differ')
 
 
 @keyword(tags=["Logging"])

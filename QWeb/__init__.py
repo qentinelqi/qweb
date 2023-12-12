@@ -38,7 +38,7 @@ try:
 # dependencies are not installed. This is a workaround as normally system
 # exit message is not cathced by robot framework / debugger.
 except SystemExit as se:
-    raise Exception(se)  # pylint: disable=W0707
+    raise Exception(se) from se  # pylint: disable=W0719
 
 
 class QWeb:
