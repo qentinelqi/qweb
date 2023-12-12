@@ -14,6 +14,7 @@ from QWeb.internal import browser, exceptions, util
 NAMES: dict[str, tuple[str, str]] = {
     # Default  versions for different browsers.
     'chrome': ('Chrome', 'latest'),
+    'gc': ('Chrome', 'latest'),
     'edge': ('Edge', 'latest'),
     'firefox': ('Firefox', 'latest'),
     'ff': ('Firefox', 'latest'),
@@ -51,13 +52,13 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
     # create options instance based on selected browser
     options: Union[chrome_options, edge_options, firefox_options, safari_options]
 
-    if browser_name == 'Chrome':
+    if browser_name.lower() == 'chrome' or browser_name.lower() == 'gc':
         options = chrome_options()
-    elif browser_name == 'Edge':
+    elif browser_name.lower() == 'edge':
         options = edge_options()
-    elif browser_name == 'Firefox':
+    elif browser_name.lower() == 'firefox' or browser_name.lower() == 'ff':
         options = firefox_options()
-    elif browser_name == 'Safari':
+    elif browser_name.lower() == 'safari':
         options = safari_options()
     else:
         raise exceptions.QWebException('Incorrect Browser name.')
