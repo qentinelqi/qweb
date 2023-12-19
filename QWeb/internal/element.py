@@ -473,6 +473,7 @@ def _overlap(element1: WebElement, element2: WebElement) -> float:
     corners_locations1 = _get_corners_locations(element1)
     corners_locations2 = _get_corners_locations(element2)
 
+    # pylint: disable=R1728
     r1_left = min([i['x'] for i in corners_locations1])
     r1_right = max([i['x'] for i in corners_locations1])
     r1_top = max([i['y'] for i in corners_locations1])

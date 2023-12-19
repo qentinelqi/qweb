@@ -64,7 +64,7 @@ Test VerifyApp
     File Should Exist              ${OUTPUT_DIR}/verifyapp/Test_VerifyApp_verifyapp_ref.png
     VerifyApp                      verifyapp
     Go To                          file://${CURDIR}/../resources/dropdown.html
-    Run keyword and expect error   Images differ    VerifyApp      verifyapp
+    Run keyword and expect error   *Images differ    VerifyApp      verifyapp
     Remove File                    ${OUTPUT_DIR}/verifyapp/Test_VerifyApp_verifyapp_ref.png
 
 Test VerifyApp Accuracy
@@ -75,4 +75,4 @@ Test VerifyApp Accuracy
     Go To          file://${CURDIR}/../resources/dropdown.html
     VerifyApp      acctest
     SetConfig      VerifyAppAccuracy        0.9999
-    Run keyword and expect error            Images differ    VerifyApp      acctest
+    Run keyword and expect error            *Images differ    VerifyApp      acctest

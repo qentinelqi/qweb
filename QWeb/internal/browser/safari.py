@@ -14,7 +14,6 @@ open_windows: list[str] = []
 
 def open_browser(port: int = 0,
                  driver_path: str = '',
-                 reuse_service: bool = False,
                  desired_capabilities: Optional[dict[str, Any]] = None,
                  quiet: bool = False) -> WebDriver:
 
@@ -40,9 +39,7 @@ def open_browser(port: int = 0,
     else:
         service = Service(port=port, quiet=quiet)
 
-    driver = webdriver.Safari(reuse_service=reuse_service,
-                              service=service,
-                              options=options)
+    driver = webdriver.Safari(service=service, options=options)
 
     # If implicit_wait is not > 0 Safaridriver starts raising TimeoutExceptions
     #    instead of proper exception types

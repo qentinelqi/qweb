@@ -101,7 +101,7 @@ def type_secret3(locator: str,
         TypeSecret3      name    ${NAME}
         TypeSecret3      r1c1    ${NAME} #table
     """
-    length = (len(input_text))
+    length = len(input_text)
     if length > 4:
         logger.info('SECRET: {}'.format(input_text[:3]) + (length - 3) * '*')
     else:

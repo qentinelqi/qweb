@@ -122,7 +122,7 @@ def close_others() -> None:
     \`CloseBrowser\`, \`CloseWindow\`, \`GoTo\`, \`OpenWindow\`, \`SwitchWindow\`
     """
     window_handles = window.get_window_handles()
-    logger.info("Current browser has {} tabs".format(len(window_handles)))
+    logger.info(f"Current browser has {len(window_handles)} tabs")
     if len(window_handles) == 1:
         return
     driver = browser.get_current_browser()
@@ -139,7 +139,7 @@ def close_others() -> None:
 
     number_of_handles = len(window.get_window_handles())
     if number_of_handles != 1:
-        raise Exception('Expected 1 window open, found {0}'.format(number_of_handles))
+        raise ValueError(f'Expected 1 window open, found {number_of_handles}')
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
@@ -329,11 +329,7 @@ def get_url() -> str:
     ----------------
     \`GetTitle\`,\`VerifyTitle\`, \`VerifyUrl\`
     """
-    driver = browser.get_current_browser()
-    if driver is None:
-        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                              " to open browser first")
-    return driver.current_url
+    return window.get_url()
 
 
 @keyword(tags=("Browser", "Verification"))

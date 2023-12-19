@@ -4,6 +4,10 @@
 # paths.
 ignore=.git,libs,vendor,versioneer.py, _version.py, remake_pyconly_wheel.py
 
+# List of plugins (as comma separated values of python modules names) to load,
+# usually to register additional checkers.
+load-plugins=
+
 [MESSAGES CONTROL]
 
 disable=fixme, # comment containing FIXME, XXX, or TODO
@@ -15,7 +19,7 @@ disable=fixme, # comment containing FIXME, XXX, or TODO
         too-many-instance-attributes,
         too-many-locals,
         wrong-import-order,
-        line-break-before-binary-operator,
+        #line-break-before-binary-operator,
         C0328,
         W1514,
         consider-using-f-string
@@ -48,8 +52,6 @@ max-module-lines=1000
 # Regexp for a line that is allowed to be longer than the limit.
 ignore-long-lines=^(\s*(# )?<?https?://\S+>?|.*u'//.+)$
 
-# List of optional constructs for which whitespace checking is disabled
-no-space-check=trailing-comma,dict-separator
 
 # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
 expected-line-ending-format=LF
