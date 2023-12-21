@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2023-12-21
+
+### Fixed
+- Browserstack desktop browser names changed to be case insensitive
+
+### Removed
+- Argument "reuse_service" removed from Safari as it was removed in selenium 4.16
+
+### Changed
+- Pylint version bumped
+- SwitchBrowser will try to focus on previously focused tab in order to bring window to foreground.
+  - Success depends on os/window manager 
+- Refactored QWeb/config as functions there were masked by keywords/config.
+  - This will make it easier to use set_wait_function to override default wait function
+
 ## [3.0.0] - 2023-10-20
 
 ### Added
