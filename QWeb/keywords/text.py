@@ -804,6 +804,17 @@ def get_text(
         GetText          someattr       tag=div     int=True    #return integer
         GetText          someattr       tag=div     from_start=3    float=True  #return float
 
+        # Get text between " characters. Since one character separator will match the first
+        # instance, it's better to include parts of words right before or after them.
+        # Let's assume full text would return:
+        # Case "1234567" was created.
+        GetText          someattr       between=Case "???" was  # Would return 1234567
+
+
+    Note: when using 'between' argument, separators are expected to be unique, preferably words.
+    If you want to get text between one character separators like ",
+    it's best to include parts from words right before or after them. See the last example above.
+
     Parameters
     ----------
     locator : str
