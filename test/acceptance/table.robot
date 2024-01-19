@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation    Tests for table keywords
 Library          QWeb
+Library          Collections
 Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table.html  ${BROWSER}  --headless      
 Suite Teardown   CloseBrowser
 Test Timeout     60 seconds
@@ -74,3 +75,80 @@ Row count
     # exluding headers:
     ${content}              GetTableRow             //last      skip_header=True
     Should Be Equal         '${content}'            '4'
+
+Get specific Column header
+    UseTable                Sample
+    ${value}=               GetColumn              3
+    Should Be Equal         ${value}               Age
+
+Get All columns to list
+    UseTable                Sample
+    ${all}=                 GetColumn
+    ${length}=              Get Length       ${all}
+    Should Be Equal As Integers    ${length}    4
+    List Should Contain Value      ${all}       Date
+    Log List   ${all}
+
+Get Column errors
+    UseTable                Sample
+    # Value differs
+    ${value}=               GetColumn              3
+    Should Not Be Equal     ${value}               Date
+    # too low index
+    Run Keyword And Expect Error    QWebValueError:*    GetColumn            -1
+    # index larger than column count
+    Run Keyword And Expect Error    QWebValueError: Column index out of range*   
+    ...                             GetColumn            88
+    # index not a number
+    Run Keyword And Expect Error    ValueError*   
+    ...                             GetColumn            abc
+    # index is number but not int
+    Run Keyword And Expect Error    ValueError*
+    ...                             GetColumn              3.8  
+
+
+VerifyColumn value positive
+    UseTable                Sample
+    # Column must exist in specific index
+    VerifyColumn            Age    3
+    # Column exists at any position
+    VerifyColumn            Date
+    # Column exists, 0 given as index
+    VerifyColumn            Date   0   
+    # partial match on
+    VerifyColumn            name   2    partial_match=True
+    VerifyColumn            First       partial_match=True
+    VerifyColumn            Firstname   partial_match=False
+
+
+    
+
+VerifyColumn value errors
+    UseTable                Sample
+    # too low index
+    Run Keyword And Expect Error    QWebValueError:*    VerifyColumn            Age    -1
+    # index larger than column count
+    Run Keyword And Expect Error    QWebValueError: Column index out of range*   
+    ...                             VerifyColumn            Age    88
+    # not matching expected
+    Run Keyword And Expect Error    QWebElementNotFoundError:*   VerifyColumn         Age    2           
+    # Column does not exist at any position
+    Run Keyword And Expect Error    QWebElementNotFoundError:*   VerifyColumn         Not Here
+    # index not numeric
+    Run Keyword And Expect Error    ValueError:*   VerifyColumn         Age    Age
+    # index not int
+    Run Keyword And Expect Error    ValueError:*   VerifyColumn         Age    3.99 
+    # column exists but partial_match is False
+    Run Keyword And Expect Error    QWebElementNotFoundError*
+    ...                             VerifyColumn            First       partial_match=False
+    # column exists at index but partial_match is False
+    Run Keyword And Expect Error    QWebElementNotFoundError*
+    ...                             VerifyColumn            First   1   partial_match=False
+
+Column count
+    UseTable                Sample
+    ${amount}               GetColumnCount
+    Should Be Equal As Integers         ${amount}             4
+    UseTable                CheckBox
+    ${amount2}               GetColumnCount
+    Should Be Equal As Integers         ${amount2}            2

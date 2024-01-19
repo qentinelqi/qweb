@@ -335,3 +335,28 @@ class Table:
         table = self.from_table_instance(self.locator, self.anchor, self.parent, self.child,
                                          self.level, self.index)
         return table
+
+    def get_columns(self) -> list[WebElement]:
+        js = """var columns = function(tableRef){
+                    var columnCount = 0;
+                    var headers = [];
+
+                    try {
+                        // Get the first row of the table header
+                        var headerRow = tableRef.querySelector('thead tr');
+
+                        // Get all the header cells in that row
+                        headers = headerRow.querySelectorAll('th');
+
+                    } catch (error) {
+                        // If the table doesn't have a header, count the columns in the first body row
+                        var firstBodyRow = tableRef.querySelector('tbody tr');
+                        if (firstBodyRow) {
+                            headers = firstBodyRow.querySelectorAll('th');
+                        }
+                    }
+
+                    return headers;
+                    }
+                return(columns(arguments[0]));"""
+        return javascript.execute_javascript(js, self.table)
