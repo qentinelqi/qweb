@@ -137,18 +137,18 @@ def appstate(block: str, *args) -> None:
 
 @decorators.timeout_decorator
 def _execute_block(steps: list[dict[str, Any]], timeout: Union[int, float, str] = 0, **kwargs):  # pylint: disable=unused-argument
-    logger.trace('Timeout for block: {}'.format(timeout))
-    logger.trace(steps)
+    logger.trace(f'Timeout for block: {timeout}')
+    logger.trace(f"{steps=}")
     for step in steps:
         fn = step.get('paceword')
         var_name = step.get('variable', None)
         args = blocks.set_robot_args(*step.get('args', []), **step.get('kwargs', {}))
         status, res = BuiltIn().run_keyword_and_ignore_error(fn, *args)
-        logger.trace('status: {}, res: {}'.format(status, res))
+        logger.trace(f'status: {status}, res: {res}')
         if status == 'FAIL':
             teardown = kwargs.get('exp_handler', None)
             if teardown:
                 BuiltIn().run_keyword_and_ignore_error(teardown)
-            raise QWebElementNotFoundError('Err from block {}'.format(res))
+            raise QWebElementNotFoundError(f'Err from block {res}')
         if var_name:
-            BuiltIn().set_suite_variable('{}'.format(var_name), res)
+            BuiltIn().set_suite_variable(f'{var_name}', res)

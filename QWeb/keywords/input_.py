@@ -796,7 +796,7 @@ def press_key(locator: str,
         try:
             checked_key = input_handler.check_key_pyautogui(key)
         except AttributeError as e:
-            logger.console(e)
+            logger.console(str(e))
             raise QWebValueError(f'Could not find key: {key}') from e
         return hotkey(*checked_key) if isinstance(checked_key, list) else hotkey(checked_key)
 
@@ -821,8 +821,8 @@ def press_key(locator: str,
         else:
             input_element.send_keys(key)
     except AttributeError as e:
-        logger.console(e)
-        raise QWebValueError('Could not find key "{}"'.format(key)) from e
+        logger.console(str(e))
+        raise QWebValueError(f'Could not find key "{key}"') from e
     return None
 
 

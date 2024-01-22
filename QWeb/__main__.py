@@ -17,7 +17,7 @@
 import argparse
 import sys
 from ._version import get_versions  # pylint: disable-msg=E0611
-from robot import libdoc
+from robot import libdoc  # type: ignore
 
 
 def cli() -> None:

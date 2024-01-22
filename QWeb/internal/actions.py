@@ -195,7 +195,7 @@ def wd_click(web_element: WebElement, **kwargs: Any) -> None:
     try:
         web_element.click()
     except WebDriverException as e:
-        logger.debug(e)
+        logger.debug(str(e))
         js_click_on_failure = util.par2bool(kwargs.get('js_click', True))
         if js_click_on_failure:
             js_click(web_element)

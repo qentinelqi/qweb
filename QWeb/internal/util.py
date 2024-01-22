@@ -282,7 +282,7 @@ def validate_run_before(value: Union[list[str], str]) -> Optional[Union[list[str
 
 def initial_logging(capabilities: dict[str, Any]) -> None:
     """Log version numbers at the start of test runs."""
-    logger.debug(capabilities)
+    logger.debug(f"{capabilities}")
     try:
         b_n, b_v = capabilities['browserName'], capabilities['browserVersion']
         logger.info('Browser: {}'.format(b_n), also_console=True)
