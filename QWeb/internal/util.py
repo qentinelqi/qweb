@@ -237,6 +237,14 @@ def prefs_to_dict(prefs: Union[dict, str]) -> dict[str, Any]:
                 raise QWebUnexpectedConditionError(
                     'Invalid argument! Experimental opts should given in robot dict '
                     'or string in format: key1:value1, key2:value2') from e
+    # handle booleans in string format
+    for key, value in list(d.items()):
+        if isinstance(value, str):  # Check if the value is a string
+            value_lower = value.lower()
+            if value_lower == "true":
+                d[key] = True
+            elif value_lower == "false":
+                d[key] = False
     return d
 
 
