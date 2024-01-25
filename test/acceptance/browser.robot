@@ -103,6 +103,7 @@ Open Browser with options and verify
     SetConfig       ShadowDOM       On
     GoTo            chrome://extensions/
     VerifyText      Developer mode
+    VerifyText      Load unpacked
     Close All Browsers
     
     # Deprecated format
@@ -111,6 +112,7 @@ Open Browser with options and verify
     SetConfig       ShadowDOM       On
     GoTo            chrome://extensions/
     VerifyText      Developer mode
+    VerifyText      Load unpacked
     Close All Browsers
 
 Open Browser with invalid experimental args string
