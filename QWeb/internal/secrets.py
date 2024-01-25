@@ -62,7 +62,15 @@ def _replace_keyword_args(keyword: Keyword, args: tuple) -> None:
 
 
 def _hide_keyword_arg_values(keyword: Keyword) -> list[str]:
-    par_index, secret = filtered_keywords[keyword.kwname]
+    if hasattr(keyword, 'kwname'):
+        par_index, secret = filtered_keywords[keyword.kwname]
+    else:  # rfw 7
+        # name is in different format
+        kw_name = ''.join(
+            f' {char}' if char.isupper() else char.strip()
+            for char in keyword.name
+        ).strip()
+        par_index, secret = filtered_keywords[kw_name]
     censored_args = list(keyword.args)
     if secret == 'hint':
         censored_args[par_index] = 'SECRET'
@@ -101,6 +109,34 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
             LOGGER._other_loggers[0].log_message = lambda x: None
 
 
+def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, result: Keyword):
+    # pylint: disable=protected-access, global-statement
+    global log_level
+    # using implementation.name as data.name is in slightly different format
+    apply_filter = implementation.name in filtered_keywords
+    original_args = data.args
+
+    if apply_filter:
+        censored_args = _hide_keyword_arg_values(data)
+        _hide_keyword_arg_values(result)
+        _replace_keyword_args(data, tuple(censored_args))
+        _replace_keyword_args(result, tuple(censored_args))
+
+    LOGGER._started_keywords += 1
+    LOGGER.log_message = LOGGER._log_message
+    for start_logger in LOGGER.start_loggers:
+        start_logger.start_library_keyword(data, implementation, result)
+
+    if apply_filter:
+        _replace_keyword_args(data, tuple(original_args))
+        b = BuiltIn()
+        # Disable logging and store previous log level
+        if 'INFO' not in b.get_variables()['${LOG_LEVEL}']:
+            log_level = b.set_log_level("INFO")
+        if debugfile_log:
+            LOGGER._other_loggers[0].log_message = lambda x: None
+
+
 def _filtered_end_keyword(keyword: Keyword) -> None:
     """Modify Robot FW internal function "end_keyword".
 
@@ -130,6 +166,37 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
             LOGGER._other_loggers[0].log_message = debugfile_log
 
 
+def _filtered_end_library_keyword(data: Keyword, implementation: Keyword, result: Keyword) -> None:
+    """Modify Robot FW internal function "end_keyword".
+
+    This function removes secret data from "end keyword"
+    logs and returns previous log level.
+    """
+    # pylint: disable=protected-access, global-statement
+    apply_filter = result.name in filtered_keywords
+    original_args = result.args
+    if apply_filter:
+        censored_args = _hide_keyword_arg_values(result)
+        _hide_keyword_arg_values(data)
+        _replace_keyword_args(result, tuple(censored_args))
+        _replace_keyword_args(data, tuple(censored_args))
+
+    LOGGER._started_keywords -= 1
+    for end_logger in LOGGER.end_loggers:
+        end_logger.end_library_keyword(data, implementation, result)
+
+    if not LOGGER._started_keywords:
+        LOGGER.log_message = LOGGER.message
+
+    if apply_filter:
+        _replace_keyword_args(result, tuple(original_args))
+        b = BuiltIn()
+        # Return previous log level
+        b.set_log_level(log_level)
+        if debugfile_log:
+            LOGGER._other_loggers[0].log_message = debugfile_log
+
+
 def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None:
     """Add keyword to secrets filtering.
 
@@ -152,5 +219,11 @@ except IndexError:
     debugfile_log = False
 
 # Monkey patch Robot FW methods
-LOGGER.start_keyword = _filtered_start_keyword
-LOGGER.end_keyword = _filtered_end_keyword
+rfw_major_version, *_ = BuiltIn.ROBOT_LIBRARY_VERSION.split('.', maxsplit=1)
+rfw_major_version = int(rfw_major_version)
+if rfw_major_version < 7:
+    LOGGER.start_keyword = _filtered_start_keyword
+    LOGGER.end_keyword = _filtered_end_keyword
+else:
+    LOGGER.start_library_keyword = _filtered_start_library_keyword
+    LOGGER.end_library_keyword = _filtered_end_library_keyword
