@@ -20,12 +20,12 @@ Row count
 
 Get specific Column header
     UseTable                Firstname
-    ${value}=               GetColumn              4
+    ${value}=               GetColHeader              4
     Should Be Equal         ${value}               Email
 
 Get All columns to list
     UseTable                Firstname
-    ${all}=                 GetColumn
+    ${all}=                 GetColHeader
     ${length}=              Get Length       ${all}
     Should Be Equal As Integers    ${length}    6
     List Should Contain Value      ${all}       City
@@ -34,15 +34,15 @@ Get All columns to list
 VerifyColumn value with thead table
     UseTable                Firstname
     # Column must exist in specific index
-    VerifyColumn            Email    4
+    VerifyColHeader            Email    4
     # Column exists at any position
-    VerifyColumn            City
+    VerifyColHeader            City
     # Column exists, 0 given as index
-    VerifyColumn            Country   0         
+    VerifyColHeader            Country   0         
     
 
 Column count thead table
     UseTable                Firstname
-    ${amount}               GetColumnCount
+    ${amount}               GetColHeaderCount
     Should Be Equal As Integers         ${amount}             6
     

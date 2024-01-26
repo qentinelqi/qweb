@@ -299,8 +299,8 @@ def get_table_row(
 
 
 @keyword(tags=("Tables", "Getters"))
-def get_column_count() -> int:
-    r"""Get Count of columns in current active table.
+def get_col_header_count() -> int:
+    r"""Get Count of column headers in current active table.
 
     Note: only visible columns may be counted in some dynamic tables.
 
@@ -309,7 +309,7 @@ def get_column_count() -> int:
     .. code-block:: robotframework
 
         UseTable    my_table
-        ${count}    GetColumnCount
+        ${count}    GetColHeaderCount
 
     Raises
     ------
@@ -318,7 +318,7 @@ def get_column_count() -> int:
 
     Related keywords
     ----------------
-    \`GetColumn\`, \`VerifyColumn\`, \`UseTable\`, \`VerifyTable\`
+    \`GetColHeader\`, \`VerifyColHeader\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
@@ -327,7 +327,7 @@ def get_column_count() -> int:
 
 
 @keyword(tags=("Tables", "Getters"))
-def get_column(index: Optional[int] = None) -> Union[str, List[str]]:
+def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
     r"""Get column header names/text as a list.
 
     Note: only visible columns may be counted in some dynamic tables.
@@ -344,10 +344,10 @@ def get_column(index: Optional[int] = None) -> Union[str, List[str]]:
 
         UseTable    my_table
         # Get all column headers as list
-        ${columns}  GetColumn
+        ${columns}  GetColHeader
         # -> ['col1', 'col2', 'col3']
         # Get column header by index
-        ${column_at_index_2}    GetColumn  2
+        ${column_at_index_2}    GetColHeader  2
         # -> 'col2 header'
 
     Parameters
@@ -368,7 +368,7 @@ def get_column(index: Optional[int] = None) -> Union[str, List[str]]:
 
     Related keywords
     ----------------
-    \`GetColumnCount\`, \`VerifyColumn\`, \`UseTable\`, \`VerifyTable\`
+    \`GetColHeaderCount\`, \`VerifyColHeader\`, \`GetColHeader\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
@@ -390,10 +390,10 @@ def get_column(index: Optional[int] = None) -> Union[str, List[str]]:
 
 
 @keyword(tags=("Tables", "Verification"))
-def verify_column(expected: str,
-                  index: Optional[int] = None,
-                  **kwargs) -> bool:
-    r"""Verifies that a column with given index matches the expected text.
+def verify_col_header(expected: str,
+                      index: Optional[int] = None,
+                      **kwargs) -> bool:
+    r"""Verifies that a column header with given index matches the expected text.
 
     Note: only visible columns may be counted in some dynamic tables.
 
@@ -410,11 +410,11 @@ def verify_column(expected: str,
         # Verifies that second column's text is Year
         UseTable    my_table
         # Verifies that table includes column "Year" at any position
-        VerifyColumn    Year
-        VerifyColumn    Year    0  # 0 = any column
+        VerifyColHeader    Year
+        VerifyColHeader    Year    0  # 0 = any column
         # Verifies that table includes column "Year" at position 2
-        VerifyColumn    Year    2
-        VerifyColumn    Year    index=2
+        VerifyColHeader    Year    2
+        VerifyColHeader    Year    index=2
 
     Parameters
     ----------
@@ -442,7 +442,7 @@ def verify_column(expected: str,
 
     Related keywords
     ----------------
-    \`GetColumnCount\`, \`GetColumn\`, \`UseTable\`, \`VerifyTable\`
+    \`GetColHeaderCount\`, \`GetColHeader\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
