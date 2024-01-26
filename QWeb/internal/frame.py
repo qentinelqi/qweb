@@ -187,7 +187,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                     driver.switch_to.frame(current_frame)
                     logger.debug('switching to childframe {}'.format(str(fn)))
                 except (StaleElementReferenceException, WebDriverException) as e:
-                    logger.debug(e)
+                    logger.debug(str(e))
                     driver.switch_to.default_content()
                     raise e
             try:
@@ -235,7 +235,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                     driver.switch_to.frame(current_frame)
                     logger.debug('switching to childframe {}'.format(str(fn)))
                 except (StaleElementReferenceException, WebDriverException) as e:
-                    logger.debug(e)
+                    logger.debug(str(e))
                     driver.switch_to.default_content()
                     raise e
             try:

@@ -316,8 +316,8 @@ class QWeb:
                         eval(run_before)  # pylint: disable=W0123
                     else:
                         BuiltIn().run_keyword(run_before)
-                logger.trace(keyword_method)
-                logger.trace(args, kwargs)
+                logger.trace(f"{keyword_method=}")
+                logger.trace(f"{args=}, {kwargs=}")
                 return keyword_method(*args, **kwargs)
             except Exception as e:  # pylint: disable=W0703
                 logger.debug(traceback.format_exc())

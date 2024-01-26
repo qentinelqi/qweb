@@ -64,7 +64,7 @@ def list_cookies() -> list[dict[str, Any]]:
     \`DeleteAllCookies\`, \`IsCookie\`
     """
     cookies_list = cookies.get_cookies()
-    logger.info(cookies_list)
+    logger.info(f"{cookies_list}")
     return cookies_list
 
 

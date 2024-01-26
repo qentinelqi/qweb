@@ -79,7 +79,7 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                         CONFIG.set_value("OSScreenshots", True)
                         raise QWebBrowserError(e)  # pylint: disable=W0707
                     logger.debug('From timeout decorator: Webdriver exception. Retrying..')
-                    logger.debug(e)
+                    logger.debug(str(e))
                     time.sleep(SHORT_DELAY)
                     err = QWebDriverError
                     msg = e

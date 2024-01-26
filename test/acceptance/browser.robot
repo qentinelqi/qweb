@@ -92,6 +92,29 @@ Open Browser with options and experimental args
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="download.prompt_for_download": "False", "plugins.always_open_pdf_externally": "True"
 
+Open Browser with options and verify
+    [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE
+    [Documentation]                 Run this only in Chrome
+    [Teardown]                      SetConfig            ShadowDOM             Off
+    Close All Browsers
+    # Suggested format
+    OpenBrowser     about:blank     ${BROWSER}
+    ...     prefs="extensions.ui.developer_mode": "True"
+    SetConfig       ShadowDOM       On
+    GoTo            chrome://extensions/
+    VerifyText      Developer mode
+    VerifyText      Load unpacked
+    Close All Browsers
+    
+    # Deprecated format
+    OpenBrowser     about:blank     ${BROWSER}
+    ...     prefs=extensions.ui.developer_mode: True
+    SetConfig       ShadowDOM       On
+    GoTo            chrome://extensions/
+    VerifyText      Developer mode
+    VerifyText      Load unpacked
+    Close All Browsers
+
 Open Browser with invalid experimental args string
     [tags]          exp             PROBLEM_IN_SAFARI
     Run Keyword And Expect Error    QWebUnexpectedConditionError: Invalid argument*

@@ -72,7 +72,7 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
         driver = webdriver.Remote(command_executor=executor_url, options=options)
         logger.info(f'BrowserStack session ID: {driver.session_id}', also_console=True)
     except WebDriverException as e:
-        logger.error(e)
+        logger.error(str(e))
         raise exceptions.QWebException('Incorrect Browserstack capabilities.')
     browser.cache_browser(driver)
     return driver

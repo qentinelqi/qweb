@@ -20,14 +20,15 @@ Table elements are used to show many kinds of data. Tables have cells in
 contain rows and columns. Cells can contain all kinds of elements. Cells
 are usually refenced by coordinates or unique neighbouring values.
 """
-from typing import Union
+from typing import Union, List, Optional
 
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api.deco import keyword
 from QWeb.internal import decorators, actions, util
 from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, \
-    QWebTimeoutError
+    QWebTimeoutError, QWebValueError, QWebElementNotFoundError
 from QWeb.internal.table import Table
+from QWeb.internal.config_defaults import CONFIG
 
 ACTIVE_TABLE: Table = None  # type: ignore[assignment]
 
@@ -295,3 +296,199 @@ def get_table_row(
     if isinstance(ACTIVE_TABLE, Table) is False:
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
     return table.get_row(locator, anchor, row_index=True, **kwargs)
+
+
+@keyword(tags=("Tables", "Getters"))
+def get_col_header_count() -> int:
+    r"""Get Count of column headers in current active table.
+
+    Note: only visible columns may be counted in some dynamic tables.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        UseTable    my_table
+        ${count}    GetColHeaderCount
+
+    Raises
+    ------
+    QWebInstanceDoesNotExistError
+       If the table is not defined by UseTable keyword
+
+    Related keywords
+    ----------------
+    \`GetColHeader\`, \`VerifyColHeader\`, \`UseTable\`, \`VerifyTable\`
+    """
+    if not isinstance(ACTIVE_TABLE, Table):
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+    return len(table.get_columns())
+
+
+@keyword(tags=("Tables", "Getters"))
+def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
+    r"""Get column header names/text as a list.
+
+    Note: only visible columns may be counted in some dynamic tables.
+
+    Note2: If column header has attribute 'aria-label', it's value is returned.
+    If not and 'title' attribute exists, then 'title' value is returned.
+    If neither aria-label or title exists, then full text of column element is returned.
+    This is done due to fact that in many web applications header element text contains other texts
+    than what is visible to end users.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        UseTable    my_table
+        # Get all column headers as list
+        ${columns}  GetColHeader
+        # -> ['col1', 'col2', 'col3']
+        # Get column header by index
+        ${column_at_index_2}    GetColHeader  2
+        # -> 'col2 header'
+
+    Parameters
+    ----------
+    index : int
+      Column index. If given, gets the header text of the given column.
+      If not given or if 0 is given, returns all column headers as a list.
+
+
+    Raises
+    ------
+    QWebInstanceDoesNotExistError
+       If the table is not defined by UseTable keyword.
+    QWebElementNotFoundError
+        If the given index value is out of range.
+    ValueError
+        Index argument is not an integer.
+
+    Related keywords
+    ----------------
+    \`GetColHeaderCount\`, \`VerifyColHeader\`, \`GetColHeader\`, \`UseTable\`, \`VerifyTable\`
+    """
+    if not isinstance(ACTIVE_TABLE, Table):
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+    columns = table.get_columns()
+
+    column_texts = _get_column_header_texts(columns)
+
+    if not index:
+        return column_texts
+
+    if not str(index).isdigit():
+        raise QWebValueError('Column index should be a positive integer')
+
+    if len(columns) < index:
+        raise QWebValueError(f'Column index out of range: {index=}, {len(columns)=}')
+
+    return column_texts[index - 1]
+
+
+@keyword(tags=("Tables", "Verification"))
+def verify_col_header(expected: str,
+                      index: Optional[int] = None,
+                      **kwargs) -> bool:
+    r"""Verifies that a column header with given index matches the expected text.
+
+    Note: only visible columns may be counted in some dynamic tables.
+
+    Note2: If column header has attribute 'aria-label', it's value is considered as expected value.
+    If not and 'title' attribute exists, then title is considered as expected value.
+    If neither aria-label or title exists, then column text is considered as expected value.
+    This is done due to fact that in many web applications header element text contains other texts
+    than what is visible to end users.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        # Verifies that second column's text is Year
+        UseTable    my_table
+        # Verifies that table includes column "Year" at any position
+        VerifyColHeader    Year
+        VerifyColHeader    Year    0  # 0 = any column
+        # Verifies that table includes column "Year" at position 2
+        VerifyColHeader    Year    2
+        VerifyColHeader    Year    index=2
+
+    Parameters
+    ----------
+    expected : str
+      Text or value which should be in the column
+    index : int
+      Column index. If given, expected text is verified against the given column.
+      If not given or if 0 is given, expected text is verified against any column
+      (i.e. column text must exist at any position)
+    Accepted kwargs:
+        partial_match: Allow partial match of expected text. Defaults to True unless default value
+        has been changed with SetConfig    PartialMatch
+
+    Raises
+    ------
+    QWebInstanceDoesNotExistError
+       If the table is not defined by UseTable keyword
+    QWebValueError
+        If the given index value is out of range
+    ValueError
+        Index argument is not an integer.
+    QWebElementNotFoundError
+        If the expected text does not match the actual column text
+
+
+    Related keywords
+    ----------------
+    \`GetColHeaderCount\`, \`GetColHeader\`, \`UseTable\`, \`VerifyTable\`
+    """
+    if not isinstance(ACTIVE_TABLE, Table):
+        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+    columns = table.get_columns()
+    column_texts = _get_column_header_texts(columns)
+    partial = kwargs.get('partial_match', CONFIG['PartialMatch'])
+
+    # If index is not specified, verify that the expected text is in any column
+    if not index:
+        # accept partial match
+        if util.par2bool(partial):
+            found = found = any(expected in c for c in column_texts)
+        # full match
+        else:
+            found = expected in column_texts
+        if found:
+            return True
+
+        raise QWebElementNotFoundError(f'Column text "{expected}" does not exist.')
+
+    if not str(index).isdigit():
+        raise QWebValueError('Column index should be a positive integer')
+
+    if len(columns) < index:
+        raise QWebValueError(f'Column index out of range: {index=}, {len(columns)=}')
+
+    actual = column_texts[index - 1]
+    # accept partial match
+    if util.par2bool(partial) and expected in actual:
+        return True
+
+    # full match
+    if actual == expected:
+        return True
+
+    raise QWebElementNotFoundError(f'Column "{index}" "{actual}" does not match "{expected}".')
+
+
+def _get_column_header_texts(columns: List[WebElement]) -> List[str]:
+    # prefer using title, then aria-label, then text
+    column_texts = [
+        c.get_attribute("aria-label")
+        or c.get_attribute("title")
+        or c.text
+        for c in columns
+    ]
+
+    return column_texts

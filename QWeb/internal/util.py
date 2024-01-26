@@ -237,6 +237,14 @@ def prefs_to_dict(prefs: Union[dict, str]) -> dict[str, Any]:
                 raise QWebUnexpectedConditionError(
                     'Invalid argument! Experimental opts should given in robot dict '
                     'or string in format: key1:value1, key2:value2') from e
+    # handle booleans in string format
+    for key, value in list(d.items()):
+        if isinstance(value, str):  # Check if the value is a string
+            value_lower = value.lower()
+            if value_lower == "true":
+                d[key] = True
+            elif value_lower == "false":
+                d[key] = False
     return d
 
 
@@ -282,7 +290,7 @@ def validate_run_before(value: Union[list[str], str]) -> Optional[Union[list[str
 
 def initial_logging(capabilities: dict[str, Any]) -> None:
     """Log version numbers at the start of test runs."""
-    logger.debug(capabilities)
+    logger.debug(f"{capabilities}")
     try:
         b_n, b_v = capabilities['browserName'], capabilities['browserVersion']
         logger.info('Browser: {}'.format(b_n), also_console=True)
