@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2024-01-26
+
+### Added
+- Support for **Robot Framework 7**
+- New keywords for handling table column headers:
+  - **GetColHeaderCount** (Gets the amount of columns)
+  - **GetColHeader** (Gets all column headers as list or specific column header based on index)
+  - **VerifyColHeader** (Verifies that column headers includes specific text, optionally in specific position) 
+
+### Fixed
+-  Handling of booleans given in string format in OpenBrowser prefs (i.e… "True")
+
+### Changed
+- Updated workflow actions to newer version
+- Bumped lowest allowed Pillow version (security fixes)
+
 ## [3.0.1] - 2023-12-21
 
 ### Fixed
