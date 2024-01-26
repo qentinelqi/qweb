@@ -110,6 +110,11 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
 
 
 def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, result: Keyword):
+    """Modify Robot FW 7+ internal function "start_library_keyword".
+
+    This function removes secret data from "start library keyword"
+    logs and disables logging during the keyword.
+    """
     # pylint: disable=protected-access, global-statement
     global log_level
     # using implementation.name as data.name is in slightly different format
@@ -167,9 +172,9 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
 
 
 def _filtered_end_library_keyword(data: Keyword, implementation: Keyword, result: Keyword) -> None:
-    """Modify Robot FW internal function "end_keyword".
+    """Modify Robot FW 7+ internal function "end_library_keyword".
 
-    This function removes secret data from "end keyword"
+    This function removes secret data from "end library keyword"
     logs and returns previous log level.
     """
     # pylint: disable=protected-access, global-statement
