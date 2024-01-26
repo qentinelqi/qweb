@@ -333,7 +333,7 @@ def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
     Note: only visible columns may be counted in some dynamic tables.
 
     Note2: If column header has attribute 'aria-label', it's value is returned.
-    If not and 'title' attirbute exists, then 'title' value is returned.
+    If not and 'title' attribute exists, then 'title' value is returned.
     If neither aria-label or title exists, then full text of column element is returned.
     This is done due to fact that in many web applications header element text contains other texts
     than what is visible to end users.
@@ -398,7 +398,7 @@ def verify_col_header(expected: str,
     Note: only visible columns may be counted in some dynamic tables.
 
     Note2: If column header has attribute 'aria-label', it's value is considered as expected value.
-    If not and 'title' attirbute exists, then title is considered as expected value.
+    If not and 'title' attribute exists, then title is considered as expected value.
     If neither aria-label or title exists, then column text is considered as expected value.
     This is done due to fact that in many web applications header element text contains other texts
     than what is visible to end users.
@@ -485,8 +485,8 @@ def verify_col_header(expected: str,
 def _get_column_header_texts(columns: List[WebElement]) -> List[str]:
     # prefer using title, then aria-label, then text
     column_texts = [
-        c.get_attribute("title")
-        or c.get_attribute("aria-label")
+        c.get_attribute("aria-label")
+        or c.get_attribute("title")
         or c.text
         for c in columns
     ]
