@@ -275,7 +275,7 @@ IsNoText Timeout False
     Should Not Be True          ${ret}
 
 IsNoText Text is out of viewport when viewport check is on
-    [Tags]                      jailed
+    [Tags]
     RefreshPage
     ${ret}=                     IsNoText                    TextToScroll
     ShouldNotBeTrue             ${ret}
@@ -310,10 +310,6 @@ ClickText Invisible Text
     ${message}=                 Set Variable                QWebElementNotFoundError: Unable*
     Run Keyword and Expect Error                            ${message}                  ClickText                   Invisible text              1               timeout=0.1s
 
-ClickText Overlapping
-    [tags]                      jailed                      PROBLEM_IN_FIREFOX
-    ${message}=                 Set Variable                QWebDriverError:*
-    Run Keyword and Expect Error                            ${message}                  ClickText                   Button6                     1               0.1s
 
 Click Button and verify hidden text
     RefreshPage

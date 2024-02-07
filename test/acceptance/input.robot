@@ -69,12 +69,6 @@ Type Text
     TypeText                row2column2             22
     VerifyInputValue        xpath\=//input[@id\="r2c2"]   22
 
-Type Text Another Input Field To The Left
-    [Tags]                  jailed
-    Log                     Not implemented correctly yet
-    #TypeText               row1column3             13
-    #VerifyInputValue       xpath\=//input[@id\="r1c3"]   13
-
 Type Text into Tel Type Inputbox
     [Tags]                  PROBLEM_IN_SAFARI
     SetConfig               CSSSelectors            False
@@ -86,11 +80,6 @@ TypeText but box id delayed
     ClickText               Show inputbox
     TypeText                hiddenbox               not hidden
     VerifyInputValue        //*[@id\='hide']         not hidden
-
-Verify Input Value Empty
-    [Tags]                  jailed
-    Log                     Not implemented correctly yet
-    #VerifyInputValue       row1column1             ${EMPTY}
 
 Verify Input Status Enabled
     VerifyInputStatus       row1column1             Enabled
@@ -299,17 +288,6 @@ Secret Without Debug Logs When Debugfile Option Used
     Should Not Contain      ${TextFileContent}    fdfsdf98723fdkjc9vsdv22
     Should Not Contain      ${TextFileContent}    223423423423423432
     Should Contain          ${TextFileContent}    DEBUG - Preferred text: "View this text in debug file"
-
-Test Input kw:s when traverse limit is false
-    [documentation]         Find input from overly nested dom.
-    [tags]                  jailed	PROBLEM_IN_FIREFOX
-    ScrollText              Foobar
-    Run Keyword And Expect Error    QWebElementNotFoundError: Unable to find*
-    ...     TypeText               Foobar                Testi         timeout=0.5s
-    Run Keyword And Expect Error    QWebElementNotFoundError: Unable to find*
-    ...     VerifyInputValue       Foobar                ${EMPTY}      timeout=0.5s
-    TypeText                Foobar                 Qentinel     limit_traverse=False
-    VerifyInputValue        Foobar                 Qentinel     limit_traverse=False
 
 Test ClearKey Parameter
     [documentation]         Use optional clear key
