@@ -75,7 +75,7 @@ def wait_page_loaded() -> None:
     try:
         xhr.wait_xhr(timestr_to_secs(timeout))
     except (WebDriverException, QWebDriverError) as e:
-        logger.info('Unable to check AJAX requests due error: {}'.format(e))
+        logger.debug(f'Unable to check AJAX requests due error: {e}')
 
 
 def get_raw_html() -> str:
