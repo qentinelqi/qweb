@@ -413,7 +413,9 @@ def click_text(text: str,
         If set to true, uses javascript instead of selenium to click element.
     Accepted kwargs:
         css=False/off: Use this to bypass css search when finding elements
-        by visible text
+        by visible text. In practise this means that also non-clickable texts
+        (e.g. spans) are considered. By default ClickText only finds texts that
+        are considered "clickable".
 
     Related keywords
     ----------------
