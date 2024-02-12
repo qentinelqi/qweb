@@ -31,6 +31,7 @@ from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG
 
 ACTIVE_AREA_FUNCTION: Optional[Callable[..., Any]] = None
+DEFAULT_DISTANCE = 1000000.0  # Just some large number
 
 
 def is_enabled(element: WebElement) -> bool:
@@ -103,7 +104,7 @@ def get_closest_element(locator_element: WebElement,
     if not candidate_elements:
         raise QWebElementNotFoundError('No elements visible')
     closest_element_list = []
-    closest_distance = 1000000.0  # Just some large number
+    closest_distance = DEFAULT_DISTANCE
     for candidate_element in candidate_elements:
         element_info = _list_info(candidate_element)
         logger.debug("Measuring distance for: {}".format(element_info))
@@ -119,11 +120,17 @@ def get_closest_element(locator_element: WebElement,
         elif distance < closest_distance:
             closest_distance = distance
             closest_element_list = [candidate_element]
+    # if search direction is "forced" and closest distance is in default value
+    # then we don't have the element on correct direction from the anchor
+    enforce_direction = CONFIG.enforce_direction()
+    if enforce_direction and closest_distance == DEFAULT_DISTANCE:
+        logger.debug(f'No elements in expected direction {CONFIG.get_value("SearchDirection")}')
+        raise QWebElementNotFoundError("No elements found in enforced direction")
 
     closest_element = _get_closest_ortho_element(locator_element, closest_element_list)
 
-    logger.debug("Closest distance found is {}".format(closest_distance))
-    logger.debug("Closest element is: {}".format(_list_info(closest_element)))
+    logger.debug(f"Closest distance found is {closest_distance}")
+    logger.debug(f"Closest element is: {_list_info(closest_element)}")
     return closest_element
 
 
@@ -360,7 +367,7 @@ def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> f
     search_direction = CONFIG["SearchDirection"]
     corners_locations1 = _get_corners_locations(element1)
     corners_locations2 = _get_corners_locations(element2)
-    closest_distance = 1000000.0  # Some large number
+    closest_distance = DEFAULT_DISTANCE
     for corner1 in corners_locations1:
         for corner2 in corners_locations2:
             distance = _manhattan_distance(corner1['x'], corner1['y'], corner2['x'], corner2['y'])
@@ -369,26 +376,27 @@ def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> f
                 # small y is above
                 angle = math.degrees(
                     math.atan2(corner2['y'] - corner1['y'], corner2['x'] - corner1['x']))
-            if search_direction == 'down':
+
+            if 'down' in search_direction:
                 if not 5 < angle < 175:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
-                    distance = 1000000.0
-            elif search_direction == 'up':
+                    distance = DEFAULT_DISTANCE
+            elif 'up' in search_direction:
                 if not -175 < angle < -5:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
-                    distance = 1000000.0
-            elif search_direction == 'left':
+                    distance = DEFAULT_DISTANCE
+            elif 'left' in search_direction:
                 if not abs(angle) > 95:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
-                    distance = 1000000.0
-            elif search_direction == 'right':
+                    distance = DEFAULT_DISTANCE
+            elif 'right' in search_direction:
                 if not -85 < angle < 85:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
-                    distance = 1000000.0
+                    distance = DEFAULT_DISTANCE
             if closest_distance > distance > 0:
                 closest_distance = distance
     return closest_distance
@@ -517,7 +525,7 @@ def _get_closest_ortho_element(locator_element: WebElement,
     elif list_len == 0:
         raise IndexError
 
-    closest_distance = 1000000.0
+    closest_distance = DEFAULT_DISTANCE
     for candidate_element in element_list:
         distance = _calculate_closest_ortho_distance(locator_element, candidate_element)
         logger.debug("Candidate {}: horizontal distance: {}".format(candidate_element, distance))
