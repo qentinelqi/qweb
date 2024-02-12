@@ -17,4 +17,4 @@ VerifyLinks
 VerifyLinksError
     [Tags]          VerifyLinks      Error
     Run Keyword And Expect Error    QWebException: Found 2 broken link(s):*
-    ...             VerifyLinks     file://${CURDIR}/../resources/verifybrokenlinks.html
+    ...             VerifyLinks     file://${CURDIR}/../resources/verifybrokenlinks.html    timeout=5
