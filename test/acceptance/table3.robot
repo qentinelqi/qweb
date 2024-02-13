@@ -2,9 +2,9 @@
 Documentation    Tests for table keywords
 Library          QWeb
 Library          Collections
-Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table3.html  ${BROWSER}  --headless      
+Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table3.html  ${BROWSER}  #--headless      
 Suite Teardown   CloseBrowser
-Test Timeout     60 seconds
+#Test Timeout     60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -45,4 +45,36 @@ Column count thead table
     UseTable                Firstname
     ${amount}               GetColHeaderCount
     Should Be Equal As Integers         ${amount}             6
+
+
+VerifyTable Duplicated columns
+    UseTable                Table with Duplicate Columns
+    # exact row/column coordinates, partial_match False
+    VerifyTable             r2/c5    john.doe2@example.com    partial_match=False
+    Run Keyword And Expect Error     QWebValueError*                 
+    ...                        VerifyTable                    r2/c5    john                     partial_match=False    timeout=3
+
+    # with column text in coordinates, partial_match=False
+    VerifyTable             r2/c?Email    john.doe2@example.com        partial_match=False
     
+    # with column text in coordinates, partial_match True
+    # should match the first column containing "Email"
+    VerifyTable             r2/c?Email    john.doe@    partial_match=True
+
+
+Click Cells Duplicated columns
+    UseTable                Table with Duplicate Columns
+    # exact row/column coordinates
+    ClickCell               r2/c5
+    VerifyAlertText         Row 1: Secondary Email address copied!
+    CloseAlert              Accept
+    
+    # with column text in coordinates, partial_match=False
+    ClickCell               r2/c?Email    partial_match=False
+    VerifyAlertText         Row 1: Secondary Email address copied!
+    CloseAlert              Accept
+    
+    # with column text in coordinates, partial_match=True
+    ClickCell               r2/c?Email    partial_match=True
+    VerifyAlertText         Row 1: Primary Email address copied!
+    CloseAlert              Accept

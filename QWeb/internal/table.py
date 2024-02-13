@@ -129,31 +129,36 @@ class Table:
                 table_element = text.get_element_using_anchor(table_elements, anchor)
         if table_element:
             return table_element
-        raise QWebElementNotFoundError('Table element not found by locator {}'.format(locator))
+        raise QWebElementNotFoundError(f'Table element not found by locator {locator}')
 
     def get_table_cell(self, coordinates: str, anchor: str, **kwargs) -> WebElement:  # pylint: disable=unused-argument
         cell = None
         try:
             if '/' in coordinates:
-                cell = self.get_using_text_in_coordinates(coordinates, anchor)
+                cell = self.get_using_text_in_coordinates(coordinates, anchor, **kwargs)
             else:
                 row, column = self._convert_coordinates(coordinates)
                 try:
                     cell = self.table.find_element(By.XPATH,
                                                    './/tr[{0}]//td[{1}]'.format(row, column))
                 except AttributeError as e:
-                    logger.debug('exception {}'.format(e))
+                    logger.debug(f'exception {e}')
                     self.update_table()
             if cell:
                 if CONFIG['SearchMode']:
                     element.draw_borders(cell)
                 return cell
         except (StaleElementReferenceException, NoSuchElementException) as e:
-            logger.debug('exception {}'.format(e))
+            logger.debug(f'exception {e}')
             self.update_table()
-        raise QWebElementNotFoundError('Cell for coords {} not found after'.format(coordinates))
+        raise QWebElementNotFoundError(
+            f'Cell for coords {coordinates} not found after'
+        )
 
-    def get_using_text_in_coordinates(self, coordinates: str, anchor: str) -> WebElement:
+    def get_using_text_in_coordinates(self,
+                                      coordinates: str,
+                                      anchor: str,
+                                      **kwargs) -> WebElement:
         row: Optional[int]
         column: Optional[int]
         row_elem = None
@@ -164,7 +169,7 @@ class Table:
         else:
             row, _ = self._convert_coordinates(locator[0])
         if locator[1].startswith('c?'):
-            column = self.get_cell_by_locator(locator[1][2:])
+            column = self.get_cell_by_locator(locator[1][2:], **kwargs)
         else:
             _, column = self._convert_coordinates(locator[1])
         if row_elem:
@@ -183,7 +188,7 @@ class Table:
                            **kwargs) -> WebElement:
         if int(index) < 1:
             raise QWebValueError('Index should be greater than 0.')
-        table_cell = self.get_table_cell(coordinates, anchor)
+        table_cell = self.get_table_cell(coordinates, anchor, **kwargs)
         if 'tag' in kwargs:
             clickable_child = element.get_element_from_childnodes(table_cell,
                                                                   str(kwargs.get('tag')),
@@ -193,7 +198,8 @@ class Table:
             return clickable_child[int(index) - 1]
         return table_cell
 
-    def get_cell_by_locator(self, locator: str) -> int:
+    def get_cell_by_locator(self, locator: str, **kwargs) -> int:
+        partial_match = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
         rows = self.get_all_rows()
         for i, r in enumerate(rows):  # pylint: disable=unused-variable
             cells = self.get_cells_from_row(r)
@@ -206,9 +212,13 @@ class Table:
                     value = javascript.execute_javascript('return arguments[0].value', c)
                     if value:
                         cell_text += str(value)
-                if locator in cell_text:
-                    return index + 1
-        raise QWebValueError('Matching table cell not found for locator {}.'.format(locator))
+                if partial_match:
+                    if locator in cell_text:
+                        return index + 1
+                else:
+                    if locator == cell_text:
+                        return index + 1
+        raise QWebValueError(f'Matching table cell not found for locator {locator}.')
 
     def get_row(self, locator: str, anchor: str, row_index: bool = False, **kwargs
                 ) -> Union[WebElement, int]:
@@ -225,7 +235,7 @@ class Table:
             return index + 1
         if matches:
             return matches
-        raise QWebValueError('Matching table row not found for locator {}.'.format(locator))
+        raise QWebValueError(f'Matching table row not found for locator {locator}.')
 
     def get_all_rows(self) -> list[WebElement]:
         return javascript.execute_javascript('return arguments[0].rows', self.table)
@@ -260,8 +270,9 @@ class Table:
                 matches.append(row)
         if matches and not anchor_text:
             return matches[int(anchor)], row_index[int(anchor)]
-        raise QWebElementNotFoundError('Row that includes texts {} and {} not found'.format(
-            locator, anchor_text))
+        raise QWebElementNotFoundError(
+            f'Row that includes texts {locator} and {anchor_text} not found'
+        )
 
     def _convert_coordinates(self, coordinate_str: str) -> tuple[Optional[int], Optional[int]]:
         """Return row and column from coordinate string."""

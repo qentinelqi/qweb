@@ -216,6 +216,7 @@ Upload element inside of table cell
 Use Parent table
     [tags]                  parent
     SetConfig               CSSSelectors            on
+    SetConfig               PartialMatch            True
     UseTable                Qentiro                 parent=True
     VerifyTable             r?one/c?text            Robot Automation
     VerifyTable             r?two/c?text            Qentinel
