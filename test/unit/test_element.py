@@ -135,12 +135,12 @@ def test_get_closest_element_one_candidate_searchdirection():
     assert get_closest_element(locator_element, [cand1]) == cand1
 
     # set forced searchdirection, should raise exception
-    CONFIG.set_value("SearchDirection", "!up")
+    CONFIG.set_value("SearchDirection", "up!")
     with pytest.raises(QWebElementNotFoundError):
         assert get_closest_element(locator_element, [cand1]) is None
 
     # set forced searchdirection down, element should be returned
-    CONFIG.set_value("SearchDirection", "!down")
+    CONFIG.set_value("SearchDirection", "down!")
     assert get_closest_element(locator_element, [cand1]) == cand1
 
     CONFIG.reset_value("SearchDirection")
@@ -174,7 +174,7 @@ def test_get_closest_element_two_candidates_searchdirection():
     assert get_closest_element(locator_element, [cand1, cand2]) == cand2
 
     # enforce left, should raise exception
-    CONFIG.set_value("SearchDirection", "!left")
+    CONFIG.set_value("SearchDirection", "left!")
     with pytest.raises(QWebElementNotFoundError):
         assert get_closest_element(locator_element, [cand2, cand1]) is None
 

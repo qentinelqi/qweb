@@ -228,19 +228,21 @@ def set_config(par: str, val: Any) -> Any:
     Set search direction for element search.
 
     Search direction is "closest, "up", "down", "left", "right",
-    "!up", "!down", "!left", "!right".
+    "up!", "down!", "left!", "right!".
     "Closest" is the default value.
 
     Elements are searched according to their relative position to anchor.
 
-    With this setting you can choose between two ways of searching: normal mode and enforced mode
-    (starting with "!").
+    With this setting you can choose between two ways of searching:
+
+    - **normal mode**
+    - **strict mode** (ending with "!").
 
     **Normal Mode**: In this mode, you start looking for something starting from a specific point
     or direction you've chosen. If you can't find it there, the search will then try to find
     the closest match, even if it's not exactly in the direction you started from.
 
-    **Enforced Mode**: This mode is stricter. You also start searching from a specific direction,
+    **Strict Mode**: This mode is stricter. You also start searching from a specific direction,
     but the big difference is that if what you're looking for isn't found exactly in that direction,
     the search will fail.
     It won't try to find the next closest thing. The search insists that the item must be found in
@@ -251,17 +253,24 @@ def set_config(par: str, val: Any) -> Any:
 
     Examples
     ^^^^^^^^
+
     .. code-block:: robotframework
 
-        SetConfig    SearchDirection       right
-        TypeText     MyLocator   Robot     # finds text "My Locator" on the right of text "Robot"
-        SetConfig    SearchDirection       up
-        TypeText     MyLocator   Robot     # finds text "My Locator" above of text "Robot"
-        # with textual locators enforced mode (!) fails, if locator text is not found
-        # in the right direction from the anchor
-        SetConfig    SearchDirection       !left
-        VerifyText   Firstname             anchor=Lastname
-        SetConfig    SearchDirection       closest
+        *** Test Cases ***
+        SearchDirection Example
+            # finds input using text "My Locator" on the right of text "Robot"
+            SetConfig    SearchDirection       right
+            TypeText     MyLocator  Hello  Robot
+
+            # finds input using text "My Locator" above of text "Robot"
+            SetConfig    SearchDirection       up
+            TypeText     MyLocator  Hello  Robot
+
+            # with tstrict mode (!) test case fails, if locator text is not found in the
+            # correct direction from the anchor
+            SetConfig    SearchDirection       left!
+            VerifyText   Firstname             anchor=Lastname
+            SetConfig    SearchDirection       closest
 
     .. _linebreak:
 

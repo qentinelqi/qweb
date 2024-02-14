@@ -106,6 +106,6 @@ class Config:
     def enforce_direction(self) -> bool:
         search_direction = self.get_value("SearchDirection")
         if search_direction:
-            return search_direction.startswith("!")
+            return search_direction.endswith("!")
 
         return False

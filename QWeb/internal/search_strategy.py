@@ -87,10 +87,10 @@ class SearchStrategies:
             "left",
             "right",
             "closest",
-            "!up",
-            "!down",
-            "!left",
-            "!right",
+            "up!",
+            "down!",
+            "left!",
+            "right!",
         ]
         direction = direction.lower()
         if direction not in valid_directions:

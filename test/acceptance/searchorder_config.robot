@@ -17,7 +17,7 @@ VerifyText SearchDirection
     SetConfig                   SearchDirection                                         up
     VerifyText                  Current scroll                                          anchor=TextToScroll
     # text is below, setting is enforced
-    SetConfig                   SearchDirection                                         !up
+    SetConfig                   SearchDirection                                         up!
     Run Keyword And Expect Error                        QWebElementNotFound*            VerifyText                  Current scroll    timeout=3                                       anchor=TextToScroll    timeout=3
     
 ClickText SearchDirection
@@ -35,7 +35,7 @@ ClickText SearchDirection
     VerifyText                  Clicks: 1
     RefreshPage
 
-    # searchdirection not enforced
-    SetConfig                   SearchDirection                                         !left
+    # searchdirection enforced
+    SetConfig                   SearchDirection                                         left!
     Run Keyword And Expect Error        QWebElementNotFound*     ClickText              Click me    anchor=Show hidden        timeout=3
     VerifyNoText                Clicks: 1                        timeout=2
