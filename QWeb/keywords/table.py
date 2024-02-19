@@ -144,9 +144,10 @@ def verify_table(coordinates: str,
     ----------------
     \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`UseTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     table_cell = table.ACTIVE_TABLE.get_table_cell(coordinates, anchor, **kwargs)
     partial_match = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
     expected = f"{expected}*" if partial_match else expected
@@ -201,9 +202,10 @@ def get_cell_text(coordinates: str,
     ----------------
     \`ClickCell\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     table_cell = table.get_table_cell(coordinates, anchor)
     try:
         text = actions.get_element_text(table_cell, timeout=timeout)
@@ -269,9 +271,10 @@ def click_cell(
     ----------------
     \`GetCellText\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     table_cell = table.get_clickable_cell(coordinates, anchor, index, **kwargs)
     actions.execute_click_and_verify_condition(table_cell, **kwargs)
 
@@ -316,9 +319,10 @@ def get_table_row(
     ----------------
     \`ClickCell\`, \`GetCellText\`, \`UseTable\`, \`VerifyTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     return table.get_row(locator, anchor, row_index=True, **kwargs)
 
 
