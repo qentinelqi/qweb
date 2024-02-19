@@ -520,14 +520,16 @@ def get_attribute(locator: str,
 
     Examples
     --------
-    Using attributes or xpaths like with ClickElement etc. kw:s without specified
-    element_type. If element_type is not specified end result is a type of list:
+    Using xpaths like with ClickElement etc. kw:s without specified
+    element_type. Index must be given if element is not unique:
 
     .. code-block:: robotframework
 
         ${attribute_value}  GetAttribute            click_me     id         tag=button
         ${attribute_value}  GetAttribute            //*[@id\="click_me"]    id
         ${attribute_value}  GetAttribute            xpath\=//*[@id\="click_me"] name
+        # Get id attribute value from 3rd matching element
+        ${attribute_value}  GetAttribute            //button    id  index=3
 
     GetAttribute using element_type attribute to locate element.
     Text elements works as ClickText, VerifyText, GetText etc.:
@@ -574,7 +576,8 @@ def get_attribute(locator: str,
         |  Accepted kwargs:
         |       Any available for picked searching method.
         |       See interacting with text, item, input etc. elements from
-        |       documentation
+        |       documentation. When using xpath as locator **index** should be
+        |       specified unless xpath matches to a single element.
 
     Returns
     -------
