@@ -54,6 +54,23 @@ def verify_text(
 
     VerifyText does not require for the text to be unique.
 
+    *Note: Slots are a bit unique as they do not have size/offset. This means
+    that our default visibility check will treat slots as not visible. If text is
+    directly on the slot, use visibility=False argument in VerifyText keyword. For example:*
+
+    .. code-block:: html
+
+        <slot>My Text</slot>
+
+    *The above needs visibility=False argument, as text is directly on the slot. However,
+    this one would work without turning visibility check off, since text is on a child
+    element under slot:*
+
+    .. code-block:: html
+
+        <slot><span>My Text</span></slot>
+
+
     Examples
     --------
     .. code-block:: robotframework
