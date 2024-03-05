@@ -1215,13 +1215,16 @@ def scroll_text(text: str,
 
 
 @keyword(tags=("input", "Text", "Interaction"))
-def write_text(text: str) -> None:
+def write_text(text: str, **kwargs) -> None:  # pylint: disable=W0613
     r"""Type text with single-character keys.
 
     Parameters
     ----------
     text : str
         Text to type.
+
+    Accepted kwargs:
+        delay = Time to wait (seconds) before typing.
 
     Examples
     --------
