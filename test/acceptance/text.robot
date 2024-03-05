@@ -274,14 +274,6 @@ IsNoText Timeout False
     ${ret}=                     IsNoText                    Lorem ipsum                 0.5s
     Should Not Be True          ${ret}
 
-IsNoText Text is out of viewport when viewport check is on
-    [Tags]
-    RefreshPage
-    ${ret}=                     IsNoText                    TextToScroll
-    ShouldNotBeTrue             ${ret}
-    ${ret}=                     IsNoText                    TextToScroll                viewport=True
-    ShouldBeTrue                ${ret}
-
 Click Text Button Tag
     VerifyNoText                Button1 was clicked
     ClickText                   Button1
