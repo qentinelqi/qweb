@@ -65,16 +65,16 @@ VerifyTable Duplicated columns
 Click Cells Duplicated columns
     UseTable                Table with Duplicate Columns
     # exact row/column coordinates
-    ClickCell               r2/c5
+    ClickCell               r2/c5    tag=a
     VerifyAlertText         Row 1: Secondary Email address copied!
     CloseAlert              Accept
     
     # with column text in coordinates, partial_match=False
-    ClickCell               r2/c?Email    partial_match=False
+    ClickCell               r2/c?Email    partial_match=False    tag=a
     VerifyAlertText         Row 1: Secondary Email address copied!
     CloseAlert              Accept
     
     # with column text in coordinates, partial_match=True
-    ClickCell               r2/c?Email    partial_match=True
+    ClickCell               r2/c?Email    partial_match=True     tag=a
     VerifyAlertText         Row 1: Primary Email address copied!
     CloseAlert              Accept
