@@ -113,7 +113,7 @@ def set_config(par: str, val: Any) -> Any:
     +---------------------+-----------------------------------------+----------------+
     | SearchDirection_    | Set relative search direction for       | closest        |
     |                     | element search (closest, up, down, left,|                |
-    |                     | right, !up, !down, !left, !right)       |                |
+    |                     | right, up!, down!, left!, right!)       |                |
     +---------------------+-----------------------------------------+----------------+
     | SearchMode_         | Options for highlighting elements found | draw           |
     |                     | by searches (None, debug, draw).        |                |
