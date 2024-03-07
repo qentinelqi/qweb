@@ -377,26 +377,27 @@ def _calculate_closest_distance(element1: WebElement, element2: WebElement) -> f
                 angle = math.degrees(
                     math.atan2(corner2['y'] - corner1['y'], corner2['x'] - corner1['x']))
 
-            if 'down' in search_direction:
+            if search_direction in ('down', 'down!'):
                 if not 5 < angle < 175:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
                     distance = DEFAULT_DISTANCE
-            elif 'up' in search_direction:
+            elif search_direction in ('up', 'up!'):
                 if not -175 < angle < -5:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
                     distance = DEFAULT_DISTANCE
-            elif 'left' in search_direction:
+            elif search_direction in ('left', 'left!'):
                 if not abs(angle) > 95:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
                     distance = DEFAULT_DISTANCE
-            elif 'right' in search_direction:
+            elif search_direction in ('right', 'right!'):
                 if not -85 < angle < 85:
                     logger.debug(
                         'Search direction is {} and element is not in arc'.format(search_direction))
                     distance = DEFAULT_DISTANCE
+
             if closest_distance > distance > 0:
                 closest_distance = distance
     return closest_distance
