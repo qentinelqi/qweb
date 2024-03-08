@@ -266,8 +266,8 @@ def set_config(par: str, val: Any) -> Any:
             SetConfig    SearchDirection       up
             TypeText     MyLocator  Hello  Robot
 
-            # with tstrict mode (!) test case fails, if locator text is not found in the
-            # correct direction from the anchor
+            # When using strict mode (!), the test case fails if the locator text is
+            # not found in the correct direction from the anchor.
             SetConfig    SearchDirection       left!
             VerifyText   Firstname             anchor=Lastname
             SetConfig    SearchDirection       closest

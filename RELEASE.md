@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [3.2.0] - 2024-03-11
+
+### Added
+- Adds "strict mode" to SetConfig [SearchDirection](https://qentinelqi.github.io/qweb/QWeb.html#searchdirection)
+- Adds "delay" kwarg support to WriteText
+- Adds "partial_match" support to VerifyTable and Click Cell
+
+### Fixed
+- QWeb tries to inject JQuery to web pages #139
+- Let user decide if cookies are logged or not #138
+- Clean up unit tests and acceptance tests #90 
+- Table keywords gave unhelpful error if UseTable was not used
+- Many keyword doc fixes
+
 ## [3.1.0] - 2024-01-26
 
 ### Added
