@@ -23,22 +23,6 @@ Swipe and verify images
     SwipeUp         2
     VerifyIcon      person
 
-Swipe with starting points and verify images
-    [Tags]          swipe   jailed	PROBLEM_IN_FIREFOX  RESOLUTION_DEPENDENCY
-    SetCOnfig       WindowSize   1600x900
-    SwipeRight      3       Test text 123
-    VerifyIcon      power
-    SwipeLeft       1    Test text 123
-    VerifyText      Test text 123
-    SwipeLeft       5    Test text 123
-    VerifyIcon      person
-    SwipeDown       2       Test text 487
-    VerifyIcon      lock
-    SwipeUp         1       Test text 487
-    VerifyText      Test text 487
-    SwipeUp         5       Test text 487
-    VerifyIcon      person
-
 ScrollTo
     [Tags]            ScrollTo  RESOLUTION_DEPENDENCY
     [Timeout]         20 seconds

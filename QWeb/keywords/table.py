@@ -94,7 +94,8 @@ def use_table(
 def verify_table(coordinates: str,
                  expected: str,
                  anchor: str = "1",
-                 timeout: Union[int, float, str] = 0) -> None:
+                 timeout: Union[int, float, str] = 0,
+                 **kwargs) -> None:
     r"""Verify text in table coordinates.
 
     Reads cell value from coordinates in active table and verifies it
@@ -122,6 +123,17 @@ def verify_table(coordinates: str,
         distance.
     timeout : str | int
         How long we search before failing. Default = Search Strategy default timeout (10s)
+    kwargs :
+        |  Accepted kwargs:
+        |       **partial_match**: This argument lets you decide if you want to find column names
+        |       by looking for an exact match to your search term or if a partial match is
+        |       good enough. For example, when you're specifying which column to look at using
+        |       a text-based method (like "r1/?cRobot"), this determines whether the system should
+        |       look for an exact match to "Robot" or if it can work with columns that only partly
+        |       match the word "Robot".
+        |       It also applies to checking values: this setting controls whether a value that only
+        |       partially matches your criteria is considered okay.
+        |       Default: if partial_match is not given, the value of SetConfig PartialMatch is used.
 
     Raises
     ------
@@ -132,10 +144,13 @@ def verify_table(coordinates: str,
     ----------------
     \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`UseTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
-    table_cell = table.ACTIVE_TABLE.get_table_cell(coordinates, anchor)
+    table = Table.ACTIVE_TABLE.update_table()
+
+    table_cell = table.ACTIVE_TABLE.get_table_cell(coordinates, anchor, **kwargs)
+    partial_match = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
+    expected = f"{expected}*" if partial_match else expected
     actions.get_element_text(table_cell, expected=expected, timeout=timeout)
 
 
@@ -187,9 +202,10 @@ def get_cell_text(coordinates: str,
     ----------------
     \`ClickCell\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     table_cell = table.get_table_cell(coordinates, anchor)
     try:
         text = actions.get_element_text(table_cell, timeout=timeout)
@@ -235,6 +251,16 @@ def click_cell(
     index : int
        Use index when table cell contains more than one clickable element and preferred one
        is not the first one. Requires the use of tag and value should be > 0, default = 1.
+    kwargs :
+        |  Accepted kwargs:
+        |       **partial_match**: This argument lets you decide if you want to find column names
+        |       by looking for an exact match to your search term or if a partial match is
+        |       good enough. For example, when you're specifying which column to look at using
+        |       a text-based method (like "r1/?cRobot"), this determines whether the system should
+        |       look for an exact match to "Robot" or if it can work with columns that only partly
+        |       match the word "Robot".
+        |       Default: if partial_match is not given, the value of SetConfig PartialMatch is used.
+
 
     Raises
     ------
@@ -245,9 +271,10 @@ def click_cell(
     ----------------
     \`GetCellText\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     table_cell = table.get_clickable_cell(coordinates, anchor, index, **kwargs)
     actions.execute_click_and_verify_condition(table_cell, **kwargs)
 
@@ -292,9 +319,10 @@ def get_table_row(
     ----------------
     \`ClickCell\`, \`GetCellText\`, \`UseTable\`, \`VerifyTable\`
     """
-    table = Table.ACTIVE_TABLE.update_table()
-    if isinstance(ACTIVE_TABLE, Table) is False:
+    if not isinstance(ACTIVE_TABLE, Table):
         raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+    table = Table.ACTIVE_TABLE.update_table()
+
     return table.get_row(locator, anchor, row_index=True, **kwargs)
 
 

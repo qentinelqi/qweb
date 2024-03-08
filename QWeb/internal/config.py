@@ -102,3 +102,10 @@ class Config:
         trans_table = str.maketrans(dropped_chars_dict)
         _string_value = string_value.lower().translate(trans_table)
         return _string_value
+
+    def enforce_direction(self) -> bool:
+        search_direction = self.get_value("SearchDirection")
+        if search_direction:
+            return search_direction.endswith("!")
+
+        return False

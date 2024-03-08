@@ -74,7 +74,7 @@ def write(
             logger.debug("Could not send line break key to input")
     else:
         input_handler.write(input_element, input_text, **kwargs)
-    logger.debug('Preferred text: "{}"'.format(input_text))
+    logger.debug(f'Preferred text: "{input_text}"')
 
 
 @decorators.timeout_decorator_for_actions
@@ -91,11 +91,12 @@ def compare_input_values(
         expected_value = str(util.get_substring(expected_value, **kwargs))
     except QWebValueError:
         real_value = ""
-    logger.debug('Real value: {}, expected value {}'.format(real_value, expected_value))
+    logger.debug(f'Real value: {real_value}, expected value {expected_value}')
     if fnmatch.fnmatch(str(real_value).strip(), expected_value):
         return True
-    raise QWebValueMismatchError('Expected value "{}" didn\'t match to real value "{}"'.format(
-        expected_value, real_value))
+    raise QWebValueMismatchError(
+        f"""Expected value "{expected_value}" didn\'t match to real value "{real_value}\""""
+    )
 
 
 @decorators.timeout_decorator_for_actions
@@ -111,7 +112,7 @@ def input_value(input_element: WebElement, timeout: int, **kwargs: Any) -> str:
         return value.strip()
     if blind:
         return ''
-    raise QWebValueError('No Value found after {} sec'.format(timeout))
+    raise QWebValueError(f'No Value found after {timeout} sec')
 
 
 @decorators.timeout_decorator_for_actions
@@ -146,7 +147,7 @@ def execute_click_and_verify_condition(web_element: WebElement,
                 wd_click(web_element, **kwargs)
                 logger.debug('element clicked')
         except WebDriverException as e:
-            logger.info('Got {} when tried to click.'.format(e))
+            logger.info(f'Got {e} when tried to click.')
             if 'text' not in kwargs:
                 raise e
         if 'text' in kwargs:
@@ -287,8 +288,9 @@ def is_not_in_dropdown(select: Select, option: str, **kwargs: Any) -> bool:
     """"Verifies that the selected option is not in the dropdown list"""
     option_list = get_select_options(select, **kwargs)
     if option in option_list:
-        raise QWebValueError("Found the value {} from the dropdown menu: {}.".format(
-            option, option_list))
+        raise QWebValueError(
+            f"Found the value {option} from the dropdown menu: {option_list}."
+        )
     return True
 
 
@@ -314,8 +316,9 @@ def get_selected_value(
     if expected:
         if expected in selected:
             return True
-        raise QWebValueMismatchError('Expected value "{}" didn\'t match to real value "{}".'.format(
-            expected, txt_selected))
+        raise QWebValueMismatchError(
+            f"""Expected value "{expected}" didn\'t match to real value "{txt_selected}"."""
+        )
     return txt_selected
 
 
@@ -331,7 +334,7 @@ def get_select_options(
             if fnmatch.fnmatch(expected, option.text):
                 return True
         raise QWebValueMismatchError(
-            'Expected value "{}" not found from selectable options'.format(expected))
+            f'Expected value "{expected}" not found from selectable options')
     # parse all options to a list and return it
     option_list = []
     for option in options:
@@ -390,7 +393,7 @@ def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -
         try:
             return _compare_texts(real_text, expected.strip(), timeout)
         except QWebValueMismatchError as e:
-            raise QWebValueError('Expected {}, found {}'.format(expected, real_text)) from e
+            raise QWebValueError(f'Expected {expected}, found {real_text}') from e
     if real_text is not None:
         return real_text
     raise QWebValueMismatchError('Text not found')
@@ -398,7 +401,7 @@ def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -
 
 def _compare_texts(text_to_compare: str, expected: str, timeout: int) -> bool:  # pylint: disable=unused-argument
     if fnmatch.fnmatch(text_to_compare, expected) is False:
-        raise QWebValueMismatchError('Expected {0}, found {1}'.format(expected, text_to_compare))
+        raise QWebValueMismatchError(f'Expected {expected}, found {text_to_compare}')
     return True
 
 
@@ -447,7 +450,7 @@ def scroll_first_scrollable_parent_element(locator: str, anchor: str, text_to_fi
         return getScrollParent(arguments[0]);
     """
     js_element_position = "return arguments[0].scrollTop;"
-    js_element_scroll = "arguments[0].scrollBy(0, {})".format(scroll_length or '1000')
+    js_element_scroll = f"arguments[0].scrollBy(0, {scroll_length or '1000'})"
     web_element = internal_text.get_element_by_locator_text(locator, anchor)
     scrollable_element = javascript.execute_javascript(js_get_parent_element, web_element)
     current_pos = javascript.execute_javascript(js_element_position, scrollable_element)
@@ -461,22 +464,25 @@ def scroll_first_scrollable_parent_element(locator: str, anchor: str, text_to_fi
             current_pos = javascript.execute_javascript(js_element_position, scrollable_element)
             visible = internal_text.get_element_by_locator_text(text_to_find,
                                                                 allow_non_existent=True)
-            logger.info('Old pos: {}\nNew pos: {}\nVisible: {}'.format(
-                old_pos, current_pos, visible),
-                        also_console=True)
+            logger.info(
+                f'Old pos: {old_pos}\nNew pos: {current_pos}\nVisible: {visible}',
+                also_console=True,
+            )
     else:
-        logger.info('\nSlow mode is on, execution will only stop if the text "{}" is found or if '
-                    'the timeout is reached.'.format(text_to_find),
-                    also_console=True)
+        logger.info(
+            f'\nSlow mode is on, execution will only stop if the text "{text_to_find}" '
+            ' is found or if the timeout is reached.',
+            also_console=True,
+        )
         while not visible and time.time() < float(timeout) + start:
             javascript.execute_javascript(js_element_scroll, scrollable_element)
             time.sleep(.5)
             visible = internal_text.get_element_by_locator_text(text_to_find,
                                                                 allow_non_existent=True)
-            logger.info('\nVisible: {}'.format(visible), also_console=True)
+            logger.info(f'\nVisible: {visible}', also_console=True)
     if visible:
         return
-    raise QWebTextNotFoundError('Text {} not found.'.format(text_to_find))
+    raise QWebTextNotFoundError(f'Text {text_to_find} not found.')
 
 
 def scroll_dynamic_web_page(text_to_find: str, scroll_length: Optional[Union[int, str]],
@@ -485,7 +491,7 @@ def scroll_dynamic_web_page(text_to_find: str, scroll_length: Optional[Union[int
     js_browser_height = "return window.innerHeight"
     height = javascript.execute_javascript(js_browser_height)  # Length of one scroll
     js_current_pos = "return window.pageYOffset;"
-    js_scroll = 'window.scrollBy(0,{})'.format(scroll_length or height)
+    js_scroll = f'window.scrollBy(0,{scroll_length or height})'
     current_pos = javascript.execute_javascript(js_current_pos)
     old_pos = None
     start = time.time()
@@ -497,21 +503,25 @@ def scroll_dynamic_web_page(text_to_find: str, scroll_length: Optional[Union[int
             current_pos = javascript.execute_javascript(js_current_pos)
             visible = internal_text.get_element_by_locator_text(text_to_find,
                                                                 allow_non_existent=True)
-            logger.info('\nOld pos: {}\nCurrent pos: {}\nVisible: {}'.format(
-                old_pos, current_pos, visible),
-                        also_console=True)
+            logger.info(
+                f'\nOld pos: {old_pos}\nCurrent pos: {current_pos}\nVisible: {visible}',
+                also_console=True,
+            )
     else:
-        logger.info('\nSlow mode is on, execution will only stop if the text "{}" is found or if '
-                    'the timeout is reached.'.format(text_to_find),
-                    also_console=True)
+        logger.info(
+            '\nSlow mode is on, execution will only stop if '
+            f'the text "{text_to_find}" is found or if the timeout is reached.',
+            also_console=True,
+        )
         while not visible and time.time() < float(timeout) + start:
             javascript.execute_javascript(js_scroll)
             time.sleep(.5)
             visible = internal_text.get_element_by_locator_text(text_to_find,
                                                                 allow_non_existent=True)
-            logger.info('\nVisible: {}'.format(visible), also_console=True)
+            logger.info(f'\nVisible: {visible}', also_console=True)
 
     if visible:
         return True
-    raise QWebTextNotFoundError('Could not find text "{}" after scrolling for {} pixels.'.format(
-        text_to_find, current_pos))
+    raise QWebTextNotFoundError(
+        f'Could not find text "{text_to_find}" after scrolling for {current_pos} pixels.'
+    )

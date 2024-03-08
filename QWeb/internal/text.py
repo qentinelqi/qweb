@@ -52,7 +52,7 @@ def get_element_by_locator_text(locator: str,
             no_raise = util.par2bool(kwargs.get('allow_non_existent', False))
             if no_raise:
                 return None
-            raise QWebElementNotFoundError(e)  # pylint: disable=W0707
+            raise QWebElementNotFoundError(e) from e
     if web_element:
         if 'parent' in kwargs and kwargs['parent']:
             tag_name = kwargs['parent']
@@ -201,7 +201,8 @@ def get_text_using_anchor(text: str, anchor: str, **kwargs) -> WebElement:
     if not web_elements:
         raise QWebElementNotFoundError('Webpage did not contain text "{}"'.format(text))
 
-    if len(web_elements) == 1:
+    # return directly if 1 match and direction does not need to be checked
+    if len(web_elements) == 1 and not CONFIG.enforce_direction():
         return web_elements[0]
     # Found many elements, use anchors to determine correct element
     correct_element = get_element_using_anchor(web_elements, anchor, **kwargs)

@@ -20,7 +20,7 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError
 from QWeb.internal.element import _overlap, \
                                   _get_closest_ortho_element, \
                                   get_closest_element, \
-                                  get_unique_element_by_xpath
+                                  get_unique_element_by_xpath, CONFIG
 from QWeb.keywords.config import  set_config
 from unittest.mock import patch, MagicMock
 
@@ -114,6 +114,71 @@ def test_get_closest_element_two_candidates():
 
     assert get_closest_element(locator_element, [cand1, cand2]) == cand1
     assert get_closest_element(locator_element, [cand2, cand1]) == cand1
+
+
+def test_get_closest_element_one_candidate_searchdirection():
+    locator_element = MagicMock()
+    locator_element.location = {'x': 28, 'y': 328}
+    locator_element.size = {'width': 337, 'height': 31}
+    locator_element.get_attribute.return_value = 'foo'
+
+    cand1 = MagicMock()
+    cand1.location = {'x': 370, 'y': 450}
+    cand1.size = {'width': 96, 'height': 22}
+    cand1.get_attribute.return_value = 'foo'
+
+    # default settings, closest, should find element
+    assert get_closest_element(locator_element, [cand1]) == cand1
+
+    # set non-forced searchdirection, closest should be returned
+    CONFIG.set_value("SearchDirection", "up")
+    assert get_closest_element(locator_element, [cand1]) == cand1
+
+    # set forced searchdirection, should raise exception
+    CONFIG.set_value("SearchDirection", "up!")
+    with pytest.raises(QWebElementNotFoundError):
+        assert get_closest_element(locator_element, [cand1]) is None
+
+    # set forced searchdirection down, element should be returned
+    CONFIG.set_value("SearchDirection", "down!")
+    assert get_closest_element(locator_element, [cand1]) == cand1
+
+    CONFIG.reset_value("SearchDirection")
+
+def test_get_closest_element_two_candidates_searchdirection():
+    locator_element = MagicMock()
+    locator_element.location = {'x': 28, 'y': 328}
+    locator_element.size = {'width': 337, 'height': 31}
+    locator_element.get_attribute.return_value = 'foo'
+
+    cand1 = MagicMock()
+    cand1.location = {'x': 370, 'y': 150}
+    cand1.size = {'width': 96, 'height': 22}
+    cand1.get_attribute.return_value = 'foo'
+
+    cand2 = MagicMock()
+    cand2.location = {'x': 550, 'y': 432}
+    cand2.size = {'width': 96, 'height': 22}
+    cand2.get_attribute.return_value = 'foo'
+
+    # prefer up, should return cand1
+    CONFIG.set_value("SearchDirection", "up")
+    assert get_closest_element(locator_element, [cand1, cand2]) == cand1
+
+    # prefer down, should return cand2
+    CONFIG.set_value("SearchDirection", "down")
+    assert get_closest_element(locator_element, [cand2, cand1]) == cand2
+
+    # prefer right, should return cand2
+    CONFIG.set_value("SearchDirection", "right")
+    assert get_closest_element(locator_element, [cand1, cand2]) == cand2
+
+    # enforce left, should raise exception
+    CONFIG.set_value("SearchDirection", "left!")
+    with pytest.raises(QWebElementNotFoundError):
+        assert get_closest_element(locator_element, [cand2, cand1]) is None
+
+    CONFIG.reset_value("SearchDirection")
 
 
 def test_get_closest_element_rounding_simulate_py2_rounding():

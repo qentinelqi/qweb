@@ -47,11 +47,11 @@ def delete_all_cookies() -> None:
 
 
 @keyword(tags=("Browser", "Getters"))
-def list_cookies() -> list[dict[str, Any]]:
+def list_cookies(log: bool = True) -> list[dict[str, Any]]:
     r"""List all cookies in browser.
 
     Cookies can be only listed when browser is open. Cookies are automatically
-    deleted when you Close All Browsers
+    deleted when you Close All Browsers.
 
     Examples
     --------
@@ -59,12 +59,19 @@ def list_cookies() -> list[dict[str, Any]]:
 
         ListCookies
 
+    Parameters
+    ----------
+    log : bool
+        If true, log list of cookies to html log file. If False, only returns cookie list.
+        Default is True.
+
     Related keywords
     ----------------
     \`DeleteAllCookies\`, \`IsCookie\`
     """
     cookies_list = cookies.get_cookies()
-    logger.info(f"{cookies_list}")
+    if log:
+        logger.info(f"{cookies_list}")
     return cookies_list
 
 

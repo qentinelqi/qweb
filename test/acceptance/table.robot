@@ -10,10 +10,6 @@ Test Timeout     60 seconds
 ${BROWSER}    chrome
 
 *** Test Cases ***
-# Jailed test due to random failures in pipeline
-#Verify No Table Defined
-#    Run Keyword And Expect Error
-#...    ValueError: Table has not been defined with UseTable keyword    VerifyTable     r2c1        Jill
 
 Verify Value by coordinates
     UseTable                Sample

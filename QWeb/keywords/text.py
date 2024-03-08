@@ -54,6 +54,23 @@ def verify_text(
 
     VerifyText does not require for the text to be unique.
 
+    *Note: Slots are a bit unique as they do not have size/offset. This means
+    that our default visibility check will treat slots as not visible. If text is
+    directly on the slot, use visibility=False argument in VerifyText keyword. For example:*
+
+    .. code-block:: html
+
+        <slot>My Text</slot>
+
+    *The above needs visibility=False argument, as text is directly on the slot. However,
+    this one would work without turning visibility check off, since text is on a child
+    element under slot:*
+
+    .. code-block:: html
+
+        <slot><span>My Text</span></slot>
+
+
     Examples
     --------
     .. code-block:: robotframework
@@ -413,7 +430,9 @@ def click_text(text: str,
         If set to true, uses javascript instead of selenium to click element.
     Accepted kwargs:
         css=False/off: Use this to bypass css search when finding elements
-        by visible text
+        by visible text. In practise this means that also non-clickable texts
+        (e.g. spans) are considered. By default ClickText only finds texts that
+        are considered "clickable".
 
     Related keywords
     ----------------
@@ -1213,13 +1232,16 @@ def scroll_text(text: str,
 
 
 @keyword(tags=("input", "Text", "Interaction"))
-def write_text(text: str) -> None:
+def write_text(text: str, **kwargs) -> None:  # pylint: disable=W0613
     r"""Type text with single-character keys.
 
     Parameters
     ----------
     text : str
         Text to type.
+
+    Accepted kwargs:
+        delay = Time to wait (seconds) before typing.
 
     Examples
     --------

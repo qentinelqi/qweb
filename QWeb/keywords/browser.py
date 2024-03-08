@@ -512,7 +512,7 @@ def close_all_browsers() -> None:
 
 @keyword(tags=("Browser", "Verification"))
 def verify_links(
-    url: str = "current", log_all: bool = False, header_only: bool = True, timeout=None
+    url: str = "current", log_all: bool = False, header_only: bool = True, timeout=0
 ) -> None:
     r"""Verify that all links on a given website return good HTTP status codes.
 

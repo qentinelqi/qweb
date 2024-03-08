@@ -11,10 +11,10 @@ ${BROWSER}    chrome
 
 *** Test Cases ***
 VerifyLinks
-    [Tags]          VerifyLinks     jailed
+    [Tags]          VerifyLinks    jailed
     VerifyLinks
 
 VerifyLinksError
-    [Tags]          VerifyLinks      Error  jailed
+    [Tags]          VerifyLinks      Error    jailed
     Run Keyword And Expect Error    QWebException: Found 2 broken link(s):*
-    ...             VerifyLinks     file://${CURDIR}/../resources/verifybrokenlinks.html
+    ...             VerifyLinks     file://${CURDIR}/../resources/verifybrokenlinks.html    timeout=5
