@@ -862,23 +862,28 @@ def get_text(
     \`Is Text\`, \`VerifyText\`
     """
     anchor_int = util.anchor_to_index(anchor)
-    tag = kwargs.get('tag', None)
+    tag = kwargs.pop('tag', None)
     if tag:
         try:
             kwargs['element_kw'] = True
             shadow_dom = CONFIG['ShadowDOM']
             if shadow_dom:
-                web_element = internal_text.get_items_including_shadow_dom(locator, tag)[anchor_int]
+                web_element = internal_text.get_items_including_shadow_dom(locator,
+                                                                           tag,
+                                                                           **kwargs)[anchor_int]
             else:
                 web_element = element.get_elements_by_attributes(tag, locator, **kwargs)[anchor_int]
         except ValueError as e:
             raise QWebValueError(
                 'Only index is allowed anchor when searching element by it\'s attribute') from e
     elif '//' not in locator:
-        web_element = internal_text.get_text_using_anchor(locator, anchor)
+        # css=False means we include non-clickable texts
+        web_element = internal_text.get_text_using_anchor(locator, anchor, css=False, **kwargs)
     else:
         web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
-    text = web_element.text
+    # selenium's .text does not see all texts directly under slots
+    # use innerText as a backup
+    text = web_element.text or web_element.get_attribute('innerText')
     if CONFIG['SearchMode']:
         element.draw_borders(web_element)
     return util.get_substring(text, **kwargs)
