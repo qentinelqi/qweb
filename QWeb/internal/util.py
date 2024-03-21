@@ -23,7 +23,7 @@ from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.internal.exceptions import QWebValueMismatchError, QWebUnexpectedConditionError
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 import json
 import platform
@@ -376,6 +376,6 @@ def remove_stale_elements(elems: Optional[List[WebElement]]) -> Optional[List[We
     for elem in reversed(elems):
         try:
             elem.text
-        except StaleElementReferenceException:
+        except (StaleElementReferenceException, NoSuchElementException):
             elems.remove(elem)
     return elems
