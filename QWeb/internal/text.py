@@ -291,14 +291,26 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
                 logger.debug('Got no such frame from get exact text')
             if len(anchor_elements) > 0:
                 # Using first exact match as anchor
-                anchor_element = anchor_elements[0]
+                # We need to return the element that has the text, not parent
+                anchor_element = None
+                for el in anchor_elements:
+                    if el.get_attribute("innerText") == anchor:
+                        anchor_element = el
+                        break
+                anchor_element = anchor_element or anchor_elements[0]
             else:
                 # No exact matches found, trying to find partial
                 anchor_elements = get_text_elements(  # type: ignore[assignment]
                     anchor, **kwargs)
                 if len(anchor_elements) > 0:
                     logger.debug('No exact match found, using first partial match')
-                    anchor_element = anchor_elements[0]
+                    # We need to return the element that includes the text, not parent
+                    anchor_element = None
+                    for el in anchor_elements:
+                        if anchor in el.get_attribute("innerText"):
+                            anchor_element = el
+                            break
+                    anchor_element = anchor_element or anchor_elements[0]
                 else:
                     raise QWebElementNotFoundError(f"Could not find elements for anchor: {anchor}")
         else:
