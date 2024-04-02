@@ -155,7 +155,8 @@ GetAttributeNOK
     Go To                       file://${CURDIR}/../resources/text.html
     Run Keyword And Expect Error    QWebElementNotFoundError:*    GetAttribute         //button[@name\="somethingthatdoesnotexist"]    id    timeout=2
     Run Keyword And Expect Error    QWebValueError:*              GetAttribute         //button                                        id    timeout=2
-    Run Keyword And Expect Error    QWebElementNotFoundError:*    GetAttribute         //button                                        id    element_type=css    timeout=2
+    # jailed, Chrome 123
+    #Run Keyword And Expect Error    QWebElementNotFoundError:*    GetAttribute         //button                                        id    element_type=css    timeout=2
 
 VerifyAttributeOK
     [Tags]                      VerifyAttribute
@@ -257,7 +258,8 @@ VerifyAttributeNOK
     Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button[@name\="somethingthatdoesnotexist"]    id    something    timeout=2
     Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      //button             value                Button2              element_type=Text    timeout=2
     # not valid css
-    Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button             value                Button2              element_type=css     timeout=2
+    # jailed, Chrome 123
+    # Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button             value                Button2              element_type=css     timeout=2
     # multiple found css
     Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      button               value                Button2              element_type=css     timeout=2
 

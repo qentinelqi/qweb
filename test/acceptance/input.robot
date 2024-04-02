@@ -252,11 +252,15 @@ Search Direction All Directions
     SetConfig               CSSSelectors            True
 
 No Textbox found
+    [Tags]                  jailed
+    # jailed due to Chrome 123 bug
     GoTo                    file://${CURDIR}/../resources/input.html
     Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find*
     ...   TypeText   Lorem   foo   1   3
 
 No Textboxes on page
+    [Tags]                  jailed
+    # jailed due to Chrome 123 bug
     GoTo                    file://${CURDIR}/../resources/text.html
     Run Keyword And Expect Error    QWebElementNotFoundError: Unable to find*
     ...   TypeText                  HoverDropdown    Qwerty     timeout=2
