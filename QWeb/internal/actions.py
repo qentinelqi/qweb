@@ -388,7 +388,11 @@ def text_appearance(text: str, **kwargs: Any) -> bool:
 
 @decorators.timeout_decorator_for_actions
 def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -> Union[bool, str]:  # pylint: disable=unused-argument
-    real_text = web_element.text.strip() or web_element.get_attribute('innerText').strip()
+    real_text = (
+        (web_element.text or "").strip()
+        or (web_element.get_attribute('innerText') or "").strip()
+    )
+
     if expected is not None:
         try:
             return _compare_texts(real_text, expected.strip(), timeout)

@@ -280,7 +280,7 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
             len(elements), anchor_int + 1))
     if isinstance(anchor, str):  # Get closest element to anchor
         kwargs['stay_in_current_frame'] = True
-        anchor_element: WebElement
+        anchor_element: Optional[WebElement]
         if CONFIG['MultipleAnchors']:
             anchor_elements: list[WebElement] = []
             logger.debug('Multiple anchors enabled, trying to find first exact match')
@@ -293,9 +293,9 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
                 # Using first exact match as anchor
 
                 # We need to return the element that has the text, not parent
-                anchor_element = anchor_element = _get_anchor_with_inner_text(anchor_elements,
-                                                                              anchor,
-                                                                              exact_match=False)
+                anchor_element = _get_anchor_with_inner_text(anchor_elements,
+                                                             anchor,
+                                                             exact_match=True)
                 anchor_element = anchor_element or anchor_elements[0]
             else:
                 # No exact matches found, trying to find partial
@@ -390,7 +390,7 @@ def _get_anchor_with_inner_text(anchor_elements: list[WebElement],
     """
 
     for el in anchor_elements:
-        inner_text = el.get_attribute("innerText")
+        inner_text = el.get_attribute("innerText") or ""
         if (exact_match and anchor == inner_text) or (not exact_match and anchor in inner_text):
             return el
     return None
