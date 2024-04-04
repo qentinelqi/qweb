@@ -181,21 +181,18 @@ Chrome via aria-label
     Run Keyword and Expect Error                            *                           VerifyItem           Cool grey    tag=div               timeout=2
     SetConfig                   ShadowDOM                   True
     
-    TRY
+    ${new_format}=              IsItem                      Cool grey                   tag=cr-theme-color       timeout=2  
+
+    IF                          ${new_format}               
         # Chrome 123
-        VerifyItem              Cool grey                   tag=cr-theme-color       timeout=2                 
-    EXCEPT
+        VerifyItem              Cool grey                   tag=cr-theme-color
+        ClickItem               Green                       tag=cr-theme-color               
+    ELSE
         # Chrome < 123
         VerifyItem              Cool grey                   tag=div
-    END
-    
-    TRY
-        # Chrome 123
-        ClickItem               Green                       tag=cr-theme-color       timeout=2
-    EXCEPT
-        # Chrome < 123
         ClickItem               Midnight blue               tag=div
     END
+    
     LogScreenshot
 
 *** Keywords ***
