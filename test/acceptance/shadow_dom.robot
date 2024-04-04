@@ -177,10 +177,25 @@ Chrome via aria-label
     [tags]                      shadow_dom                  PROBLEM_IN_EDGE             PROBLEM_IN_FIREFOX          PROBLEM_IN_SAFARI
     [Setup]                     SetConfig                   ShadowDOM                   False
     GoTo                        chrome://settings/manageProfile
-    ${error}=                   Run Keyword and Expect Error                            *                           VerifyItem           Cool grey    tag=cr-theme-color    timeout=2
+    Run Keyword and Expect Error                            *                           VerifyItem           Cool grey    tag=cr-theme-color    timeout=2
+    Run Keyword and Expect Error                            *                           VerifyItem           Cool grey    tag=div               timeout=2
     SetConfig                   ShadowDOM                   True
-    VerifyItem                  Cool grey                   tag=cr-theme-color
-    ClickItem                   Green                       tag=cr-theme-color
+    
+    TRY
+        # Chrome 123
+        VerifyItem              Cool grey                   tag=cr-theme-color       timeout=2                 
+    EXCEPT
+        # Chrome < 123
+        VerifyItem              Cool grey                   tag=div
+    END
+    
+    TRY
+        # Chrome 123
+        ClickItem               Green                       tag=cr-theme-color       timeout=2
+    EXCEPT
+        # Chrome < 123
+        ClickItem               Midnight blue               tag=div
+    END
     LogScreenshot
 
 *** Keywords ***
