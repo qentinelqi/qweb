@@ -280,7 +280,7 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
             len(elements), anchor_int + 1))
     if isinstance(anchor, str):  # Get closest element to anchor
         kwargs['stay_in_current_frame'] = True
-        anchor_element: WebElement
+        anchor_element: Optional[WebElement]
         if CONFIG['MultipleAnchors']:
             anchor_elements: list[WebElement] = []
             logger.debug('Multiple anchors enabled, trying to find first exact match')
@@ -291,14 +291,24 @@ def get_element_using_anchor(elements: list[WebElement], anchor: Optional[Union[
                 logger.debug('Got no such frame from get exact text')
             if len(anchor_elements) > 0:
                 # Using first exact match as anchor
-                anchor_element = anchor_elements[0]
+
+                # We need to return the element that has the text, not parent
+                anchor_element = _get_anchor_with_inner_text(anchor_elements,
+                                                             anchor,
+                                                             exact_match=True)
+                anchor_element = anchor_element or anchor_elements[0]
             else:
                 # No exact matches found, trying to find partial
                 anchor_elements = get_text_elements(  # type: ignore[assignment]
                     anchor, **kwargs)
                 if len(anchor_elements) > 0:
                     logger.debug('No exact match found, using first partial match')
-                    anchor_element = anchor_elements[0]
+                    # We need to return the element that includes the text, not parent
+                    anchor_element = _get_anchor_with_inner_text(anchor_elements,
+                                                                 anchor,
+                                                                 exact_match=False)
+
+                    anchor_element = anchor_element or anchor_elements[0]
                 else:
                     raise QWebElementNotFoundError(f"Could not find elements for anchor: {anchor}")
         else:
@@ -360,6 +370,29 @@ def _get_item_by_css(text: str, **kwargs) -> Optional[list[WebElement]]:
     web_elements = element.get_visible_elements_from_elements(full + partial, **kwargs)
     if web_elements:
         return web_elements
+    return None
+
+
+def _get_anchor_with_inner_text(anchor_elements: list[WebElement],
+                                anchor: str,
+                                exact_match: bool = True) -> Optional[WebElement]:
+    """
+    Finds the appropriate anchor element containing the given text in innertext based on
+    whether we are searching for an exact match or partial match.
+
+    Parameters:
+    - anchor_elements: List[WebElement], a list of WebElement objects to search through.
+    - anchor: str, the text to match against the element's innerText.
+    - exact_match: bool, specifies whether to look for an exact match or partial match.
+
+    Returns:
+    - Optional[WebElement]
+    """
+
+    for el in anchor_elements:
+        inner_text = el.get_attribute("innerText") or ""
+        if (exact_match and anchor == inner_text) or (not exact_match and anchor in inner_text):
+            return el
     return None
 
 

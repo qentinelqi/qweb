@@ -88,7 +88,10 @@ def run_block(block: str, *args, timeout: Union[int, float, str] = 0, **kwargs) 
     \`Appstate\`, \`SetConfig\`
     """
     step = [{'paceword': block, 'args': args, 'kwargs': {}}]
-    _execute_block(step, timeout=timeout, **kwargs)
+    try:
+        _execute_block(step, timeout=timeout, **kwargs)
+    except QWebElementNotFoundError as e:
+        raise QWebUnexpectedConditionError(f"Runblock did not succeed in {timeout} seconds") from e
 
 
 @keyword(tags=("Config", "Error handling"))
@@ -149,6 +152,7 @@ def _execute_block(steps: list[dict[str, Any]], timeout: Union[int, float, str] 
             teardown = kwargs.get('exp_handler', None)
             if teardown:
                 BuiltIn().run_keyword_and_ignore_error(teardown)
+
             raise QWebElementNotFoundError(f'Err from block {res}')
         if var_name:
             BuiltIn().set_suite_variable(f'{var_name}', res)

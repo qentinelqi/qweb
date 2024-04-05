@@ -60,9 +60,10 @@ Get Cell Value to variable
     SetConfig               CSSSelectors            On
     UseTable                Jackson
     VerifyTable             r3c2                    Jack*
-    Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*
-    ...   GetInputValue     r2c1   timeout=1
-    Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*   GetCellText   r4c5   timeout=1
+    # jailed due to Chrome 123 bug
+    # Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*
+    # ...   GetInputValue     r2c1   timeout=1
+    # Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*   GetCellText   r4c5   timeout=1
 
 Row count
     UseTable                Sample

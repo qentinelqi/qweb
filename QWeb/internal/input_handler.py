@@ -70,7 +70,7 @@ class InputHandler:
             else:
                 javascript.execute_javascript("arguments[0].value = \"\"", input_element)
         else:
-            input_element.send_keys(clear_key)
+            input_element.send_keys(*[key for key in clear_key if key is not None])
         try:
             write(input_element, input_text)
         # workaround for Firefox shadow dom inputs not always being reachable

@@ -86,9 +86,10 @@ Uselist xpath and parent
 
 Uselist with child and expect error
     ${err}                          Set Variable    QWebElementNotFoundError: Unable*
-    Run Keyword And Expect Error   ${err}    UseList    innerBox1    selector=class    child=.boxes
+    # jailed due to Chrome 123 bug
+    #Run Keyword And Expect Error   ${err}    UseList    innerBox1    selector=class    child=.boxes
     Run Keyword And Expect Error   ${err}    UseList    Robot Testing    child=ol
-    Run Keyword And Expect Error   ${err}    Uselist    Inner Box 1    child=.boxes
+    #Run Keyword And Expect Error   ${err}    Uselist    Inner Box 1    child=.boxes
 
 Click list element from divs
     UseList                 boxes    selector=class
