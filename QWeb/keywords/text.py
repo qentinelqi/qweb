@@ -883,7 +883,9 @@ def get_text(
         web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
     # selenium's .text does not see all texts directly under slots
     # use innerText as a backup
-    text = web_element.text or web_element.get_attribute('innerText')
+    # note that "" at the end is important so that we don't get None instead of empty string
+    # if there is no text.
+    text = web_element.text or web_element.get_attribute('innerText') or ""
     if CONFIG['SearchMode']:
         element.draw_borders(web_element)
     return util.get_substring(text, **kwargs)

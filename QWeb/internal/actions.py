@@ -388,6 +388,8 @@ def text_appearance(text: str, **kwargs: Any) -> bool:
 
 @decorators.timeout_decorator_for_actions
 def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -> Union[bool, str]:  # pylint: disable=unused-argument
+    # if both text and innerText are missing, innerText would return None instead of ""
+    # This needs to be handled here.
     real_text = (
         (web_element.text or "").strip()
         or (web_element.get_attribute('innerText') or "").strip()
