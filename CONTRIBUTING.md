@@ -60,7 +60,7 @@ pip install -r requirements.txt -r requrements_test.txt
 
 #### Install dependencies
 
-Install pre-commit hook which automatically performs whitespace cleaning, type checking, and linting on each commit by issuing command:
+Install pre-commit hook which automatically performs type checking, and linting on each commit by issuing command:
 
 ```bash
 pre-commit install
