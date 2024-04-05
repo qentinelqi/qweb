@@ -162,12 +162,12 @@ class InputHandler:
             if '+' in key:
                 keys = key.split('+')
                 for k in keys:
-                    if not k.strip() in KEY_NAMES:
+                    if k.strip() not in KEY_NAMES:
                         raise AttributeError
                     key = k.strip()
                     hotkey.append(key)
                 return hotkey
-            if not key.strip() in KEY_NAMES:
+            if key.strip() not in KEY_NAMES:
                 raise AttributeError
         return key
 

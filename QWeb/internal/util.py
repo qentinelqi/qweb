@@ -140,7 +140,7 @@ def set_clear_key(key: str) -> Optional[str]:
 
 def highlight_validation(color: str) -> str:
     """ Validates the given highligh color is among supported basic colors """
-    if not color.lower() in [
+    if color.lower() not in [
             "red", "green", "blue", "black", "orange", "yellow", "fuchsia", "lime", "olive", "teal",
             "purple", "navy", "aqua"
     ]:

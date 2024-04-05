@@ -86,7 +86,7 @@ class QIcon:
                 " can't be zero or less".format(device_res_w, template_res_w)
             )
 
-        if not round(device_res_w / template_res_w, 2) in scale_ratios:
+        if round(device_res_w / template_res_w, 2) not in scale_ratios:
             scale_ratios.insert(0, round(device_res_w / template_res_w, 2))
 
         return scale_ratios
