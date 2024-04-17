@@ -37,6 +37,10 @@ Hover Element by WebElement instance
     HoverElement                ${elem}
     VerifyText                  Hover Link
 
+Get Webelement Invalid Element Type
+    [Tags]                      WebElement
+    Run Keyword And Expect Error    QWebValueError*    GetWebElement    hover_me    element_type=invalid
+
 Click Element by xpath
     ClickElement                //*[@value\="Button3"]
     VerifyText                  Button3 was clicked

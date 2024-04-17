@@ -411,6 +411,7 @@ def get_webelement(locator: str,
                    element_type: Optional[str] = None,
                    timeout: Union[int, float, str] = 0,
                    **kwargs) -> Union[Select, Optional[WebElement], list[WebElement]]:
+    # pylint: disable=too-many-branches
     r"""Get Webelement using any Qword -stylish locator.
 
     Examples
@@ -480,17 +481,23 @@ def get_webelement(locator: str,
     if element_type:
         if element_type.lower() == 'text':
             web_elements = text.get_element_by_locator_text(locator, anchor, **kwargs)
-        if element_type.lower() == 'item':
+        elif element_type.lower() == 'item':
             web_elements = text.get_item_using_anchor(locator, anchor, **kwargs)
-        if element_type.lower() == "dropdown":
+        elif element_type.lower() == "dropdown":
             web_elements = dropdown.get_dd_elements_from_all_documents(locator, anchor, **kwargs)
-        if element_type.lower() == "input":
+        elif element_type.lower() == "input":
             web_elements = input_.get_input_elements_from_all_documents(locator, anchor, **kwargs)
-        if element_type.lower() == "checkbox":
+        elif element_type.lower() == "checkbox":
             web_elements = checkbox.get_checkbox_elements_from_all_documents(
                 locator, anchor, **kwargs)[0]
-        if element_type.lower() == "css":
+        elif element_type.lower() == "css":
             web_elements = element.get_webelement_by_css(locator, **kwargs)
+        else:
+            msg = (
+                f"Invalid 'element_type':'{element_type}'!\n"
+                "\tValid types: 'text', 'item', 'dropdown', 'input', 'checkbox', 'css'"
+            )
+            raise QWebValueError(msg)
         return web_elements
 
     kwargs['element_kw'] = True
