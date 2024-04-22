@@ -12,11 +12,12 @@ NAMES: list[str] = ["safari", "sf"]
 open_windows: list[str] = []
 
 
-def open_browser(port: int = 0,
-                 driver_path: str = '',
-                 desired_capabilities: Optional[dict[str, Any]] = None,
-                 quiet: bool = False) -> WebDriver:
-
+def open_browser(
+    port: int = 0,
+    driver_path: str = "",
+    desired_capabilities: Optional[dict[str, Any]] = None,
+    quiet: bool = False,
+) -> WebDriver:
     options = Options()
 
     # safari options can be given as desired_capabilities (dict)
@@ -28,11 +29,12 @@ def open_browser(port: int = 0,
             for k, v in desired_capabilities.items():
                 options.set_capability(k, v)
         except AttributeError:
-            logger.warn("Safari options/desired capabilities "
-                        "should be given as a dictionary. Example:\n\n"
-                        "&{caps}=\tCreate Dictionary\tsafari:automaticInspection=True\n"
-                        "OpenBrowser\thttps://www.google.com\tsafari\tdesired_capabilities=${caps}"
-                        )
+            logger.warn(
+                "Safari options/desired capabilities "
+                "should be given as a dictionary. Example:\n\n"
+                "&{caps}=\tCreate Dictionary\tsafari:automaticInspection=True\n"
+                "OpenBrowser\thttps://www.google.com\tsafari\tdesired_capabilities=${caps}"
+            )
 
     if driver_path:
         service = service = Service(driver_path, port=port, quiet=quiet)

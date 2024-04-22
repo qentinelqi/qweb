@@ -163,4 +163,4 @@ def verify_alert_text(text: str, timeout: Union[int, float, str] = 0) -> None:
     alert_ = alert.wait_alert(timeout=timeout)
     if text in alert_.text:
         return
-    raise QWebValueError('Text {} is not presented in Alert'.format(text))
+    raise QWebValueError("Text {} is not presented in Alert".format(text))

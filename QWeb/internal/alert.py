@@ -23,15 +23,16 @@ from QWeb.internal import browser, decorators
 
 @decorators.timeout_decorator_for_actions
 def close_alert(alert: Alert, action: str) -> None:
-    if action.upper() == 'ACCEPT':
+    if action.upper() == "ACCEPT":
         alert.accept()
-    elif action.upper() == 'DISMISS':
+    elif action.upper() == "DISMISS":
         alert.dismiss()
-    elif action.upper() == 'NOTHING':
+    elif action.upper() == "NOTHING":
         return
     else:
         raise QWebDriverError(
-            "Invalid alert action '{}'. Must be ACCEPT, DISMISS or LEAVE".format(action))
+            "Invalid alert action '{}'. Must be ACCEPT, DISMISS or LEAVE".format(action)
+        )
 
 
 @decorators.timeout_decorator_for_actions

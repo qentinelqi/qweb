@@ -21,7 +21,6 @@ import copy
 
 
 class Config:
-
     DROPPED_DELIMITER_CHARS: str = " _-"
 
     def __init__(self, config_defaults: dict[str, Any]) -> None:
@@ -35,13 +34,13 @@ class Config:
         self.config = copy.deepcopy(self._config_defaults)
 
     def is_value(self, par: str) -> bool:
-        """ Return True if parameter exists. """
+        """Return True if parameter exists."""
         _par = self._clean_string(par)
         return _par in self.config
 
     def get_value(self, par: str) -> Optional[Any]:
-        """ Return value(s) for given parameter,
-            or None if parameter doesn't exist. """
+        """Return value(s) for given parameter,
+        or None if parameter doesn't exist."""
         _par = self._clean_string(par)
         config_value, _ = self.config.get(_par, (None, None))
         return config_value
@@ -57,8 +56,8 @@ class Config:
         return _all_configs
 
     def set_value(self, par: str, value: Any) -> Any:
-        """ Set value for given parameter. Setter uses pre-defined adapter function to process value
-        before storage. Adapter functions are set in config_defaults. Returns old value. """
+        """Set value for given parameter. Setter uses pre-defined adapter function to process value
+        before storage. Adapter functions are set in config_defaults. Returns old value."""
         _par = self._clean_string(par)
         if not self.is_value(_par):
             raise ValueError("Parameter {} doesn't exist".format(par))
@@ -68,7 +67,7 @@ class Config:
         return old_val
 
     def reset_value(self, par: Optional[str] = None) -> None:
-        """ Reset value(s) to original. """
+        """Reset value(s) to original."""
         if par:
             _par = self._clean_string(par)
             self.config[_par] = copy.deepcopy(self._config_defaults[_par])
@@ -85,7 +84,7 @@ class Config:
             self.set_value(_par, str(val))
 
     def __getitem__(self, par: str) -> Any:
-        """ Allow accessing parameters in dictionary like syntax."""
+        """Allow accessing parameters in dictionary like syntax."""
         _par = self._clean_string(par)
         config_value, _ = self.config[_par]
         return config_value

@@ -294,18 +294,14 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     """
     try:
         logger.info(
-            "\nQWeb version number: {}".format(
-                pkg_resources.get_distribution("QWeb").version
-            ),
+            "\nQWeb version number: {}".format(pkg_resources.get_distribution("QWeb").version),
             also_console=True,
         )
     except pkg_resources.DistributionNotFound:
         logger.info("Could not find QWeb version number.")
     number_of_open_sessions = _sessions_open()
     if number_of_open_sessions > 0:
-        logger.warn(
-            "You have {} browser sessions already open".format(number_of_open_sessions)
-        )
+        logger.warn("You have {} browser sessions already open".format(number_of_open_sessions))
     option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
 
@@ -325,17 +321,11 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     if provider in ("bs", "browserstack"):
         bs_device = util.get_rfw_variable_value("${DEVICE}")
         if not bs_device and b_lower in bs_desktop.NAMES:
-            driver = bs_desktop.open_browser(
-                b_lower, bs_project_name, bs_run_id, **kwargs
-            )
+            driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id, **kwargs)
         elif bs_device:
-            driver = bs_mobile.open_browser(
-                bs_device, bs_project_name, bs_run_id, **kwargs
-            )
+            driver = bs_mobile.open_browser(bs_device, bs_project_name, bs_run_id, **kwargs)
         else:
-            raise exceptions.QWebException(
-                "Unknown browserstack browser {}".format(browser_alias)
-            )
+            raise exceptions.QWebException("Unknown browserstack browser {}".format(browser_alias))
     else:
         driver = _browser_checker(b_lower, option_list, **kwargs)
     util.initial_logging(driver.capabilities)
@@ -343,9 +333,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     # If user wants to re-use Chrome browser then he/she has to give
     # variable BROWSER_REUSE=True. In that case no URL loaded needed as
     # user wants to continue with the existing browser session
-    is_browser_reused = (
-        util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE}")) or False
-    )
+    is_browser_reused = util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE}")) or False
     if not (is_browser_reused and b_lower == "chrome"):
         driver.get(url)
     xhr.setup_xhr_monitor()

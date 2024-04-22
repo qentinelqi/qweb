@@ -87,7 +87,7 @@ def run_block(block: str, *args, timeout: Union[int, float, str] = 0, **kwargs) 
     ----------------
     \`Appstate\`, \`SetConfig\`
     """
-    step = [{'paceword': block, 'args': args, 'kwargs': {}}]
+    step = [{"paceword": block, "args": args, "kwargs": {}}]
     try:
         _execute_block(step, timeout=timeout, **kwargs)
     except QWebElementNotFoundError as e:
@@ -133,26 +133,27 @@ def appstate(block: str, *args) -> None:
     \`RunBlock\`, \`SetConfig\`
     """
     status, res = BuiltIn().run_keyword_and_ignore_error(block, *args)
-    if status == 'FAIL':
+    if status == "FAIL":
         raise QWebUnexpectedConditionError(
-            'Unable to set correct pre-condition for test due error: {}'.format(res))
+            "Unable to set correct pre-condition for test due error: {}".format(res)
+        )
 
 
 @decorators.timeout_decorator
 def _execute_block(steps: list[dict[str, Any]], timeout: Union[int, float, str] = 0, **kwargs):  # pylint: disable=unused-argument
-    logger.trace(f'Timeout for block: {timeout}')
+    logger.trace(f"Timeout for block: {timeout}")
     logger.trace(f"{steps=}")
     for step in steps:
-        fn = step.get('paceword')
-        var_name = step.get('variable', None)
-        args = blocks.set_robot_args(*step.get('args', []), **step.get('kwargs', {}))
+        fn = step.get("paceword")
+        var_name = step.get("variable", None)
+        args = blocks.set_robot_args(*step.get("args", []), **step.get("kwargs", {}))
         status, res = BuiltIn().run_keyword_and_ignore_error(fn, *args)
-        logger.trace(f'status: {status}, res: {res}')
-        if status == 'FAIL':
-            teardown = kwargs.get('exp_handler', None)
+        logger.trace(f"status: {status}, res: {res}")
+        if status == "FAIL":
+            teardown = kwargs.get("exp_handler", None)
             if teardown:
                 BuiltIn().run_keyword_and_ignore_error(teardown)
 
-            raise QWebElementNotFoundError(f'Err from block {res}')
+            raise QWebElementNotFoundError(f"Err from block {res}")
         if var_name:
-            BuiltIn().set_suite_variable(f'{var_name}', res)
+            BuiltIn().set_suite_variable(f"{var_name}", res)

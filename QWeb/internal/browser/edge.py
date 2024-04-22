@@ -11,9 +11,9 @@ from QWeb.internal import browser, user, util
 NAMES: list[str] = ["edge", "msedge"]
 
 
-def open_browser(executable_path: str = "",
-                 edge_args: Optional[list[str]] = None,
-                 **kwargs: Any) -> WebDriver:
+def open_browser(
+    executable_path: str = "", edge_args: Optional[list[str]] = None, **kwargs: Any
+) -> WebDriver:
     """Open Edge browser instance and cache the driver.
 
     Parameters
@@ -38,7 +38,7 @@ def open_browser(executable_path: str = "",
 
     # Gets rid of Devtools listening .... printing
     # other non-sensical error messages
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])  # pylint: disable=no-member
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])  # pylint: disable=no-member
 
     # If user wants to re-use existing browser session then
     # he/she has to set variable BROWSER_REUSE_ENABLED to True.
@@ -50,31 +50,31 @@ def open_browser(executable_path: str = "",
     # set from argument file, then OpenBrowser will use those
     # parameters instead of opening new chrome session.
     # New Remote Web Driver is created in headless mode.
-    edgedriver_path = util.get_rfw_variable_value('${EDGEDRIVER_PATH}') or executable_path
-    edge_path = kwargs.get('edge_path', None) or util.get_rfw_variable_value('${EDGE_PATH}')
+    edgedriver_path = util.get_rfw_variable_value("${EDGEDRIVER_PATH}") or executable_path
+    edge_path = kwargs.get("edge_path", None) or util.get_rfw_variable_value("${EDGE_PATH}")
     if edge_path:
         options.binary_location = edge_path  # pylint: disable=no-member
 
     if user.is_root() or user.is_docker():
         options.add_argument("no-sandbox")  # pylint: disable=no-member
     if edge_args:
-        if any('--headless' in _.lower() for _ in edge_args):
-            CONFIG.set_value('Headless', True)
+        if any("--headless" in _.lower() for _ in edge_args):
+            CONFIG.set_value("Headless", True)
         for item in edge_args:
             options.add_argument(item.lstrip())  # pylint: disable=no-member
     options.add_argument("start-maximized")  # pylint: disable=no-member
     options.add_argument("--disable-notifications")  # pylint: disable=no-member
-    if 'headless' in kwargs:
-        CONFIG.set_value('Headless', True)
+    if "headless" in kwargs:
+        CONFIG.set_value("Headless", True)
         options.add_argument("--headless")  # pylint: disable=no-member
-    if 'prefs' in kwargs:
-        tmp_prefs = kwargs.get('prefs')
+    if "prefs" in kwargs:
+        tmp_prefs = kwargs.get("prefs")
         prefs = util.parse_prefs(tmp_prefs)
-        options.add_experimental_option('prefs', prefs)
+        options.add_experimental_option("prefs", prefs)
         logger.warn("prefs: {}".format(prefs))
 
-    if 'emulation' in kwargs:
-        emulation = kwargs['emulation']
+    if "emulation" in kwargs:
+        emulation = kwargs["emulation"]
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
 

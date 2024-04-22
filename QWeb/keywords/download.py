@@ -69,22 +69,22 @@ def verify_file_download(timeout: Union[int, float, str] = 0) -> str:
         modified_files = download.remove_win_temp(modified_files)
         if len(modified_files) == 1:
             if not download.is_tmp_file(modified_files[0]):
-                logger.info('Found downloaded file {}'.format(modified_files[0]))
+                logger.info("Found downloaded file {}".format(modified_files[0]))
                 return modified_files[0]
         elif not modified_files:
-            message = 'Could not find any modified files'
+            message = "Could not find any modified files"
             if previous_message != message:
                 logger.info(message)
                 previous_message = message
         else:
-            message = 'Modified files\n{}'.format('\n'.join(modified_files))
+            message = "Modified files\n{}".format("\n".join(modified_files))
             if previous_message != message:
                 logger.info(message)
                 previous_message = message
             if all(not download.is_tmp_file(modified_file) for modified_file in modified_files):
-                raise ValueError('Found more than one file that was modified')
+                raise ValueError("Found more than one file that was modified")
         time.sleep(SHORT_DELAY)
-    raise ValueError('Could not find any modified files after {}s'.format(timeout_int))
+    raise ValueError("Could not find any modified files after {}s".format(timeout_int))
 
 
 @keyword(tags=("Browser", "Verification"))
@@ -107,6 +107,9 @@ def expect_file_download() -> None:
     \`SaveFile\`, \`UploadFile\`, \`VerifyFileDownload\`
     """
     now = time.time()
-    logger.info('The time has been set to {}'.format(
-        time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now))))
+    logger.info(
+        "The time has been set to {}".format(
+            time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
+        )
+    )
     download.start_epoch = now

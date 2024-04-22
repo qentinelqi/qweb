@@ -30,10 +30,12 @@ import os
 
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
-def click_icon(image: str,
-               template_res_w: Optional[int] = None,
-               browser_res_w: Optional[int] = None,
-               timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
+def click_icon(
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+) -> None:
     r"""Click the icon on the screen.
 
     In case you want to click icons you always have to have reference images.
@@ -129,10 +131,10 @@ def is_icon(
 @keyword(tags=("Icon", "Verification"))
 @decorators.timeout_decorator
 def verify_icon(
-        image: str,
-        template_res_w: Optional[int] = None,
-        browser_res_w: Optional[int] = None,
-        timeout: Union[int, float, str] = 0  # pylint: disable=unused-argument
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
 ) -> bool:
     r"""Verify page contains icon.
 
@@ -192,11 +194,12 @@ def verify_icon(
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
 def capture_icon(
-        locator: str,
-        folder: str = 'screenshots',
-        filename: str = 'screenshot_{}.png',
-        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        **kwargs) -> Optional[str]:  # pylint: disable=unused-argument
+    locator: str,
+    folder: str = "screenshots",
+    filename: str = "screenshot_{}.png",
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    **kwargs,
+) -> Optional[str]:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 
     Examples
@@ -234,12 +237,12 @@ def capture_icon(
     if util.xpath_validator(locator):
         web_element = element.get_unique_element_by_xpath(locator)
     else:
-        web_element = text.get_item_using_anchor(locator, anchor='1', **kwargs)
+        web_element = text.get_item_using_anchor(locator, anchor="1", **kwargs)
 
     if web_element is not None:
         img = Image.open(io.BytesIO(web_element.screenshot_as_png))
         filepath = os.path.join(screenshot.save_screenshot(filename, folder))
-        logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')), also_console=True)
+        logger.info("Screenshot path: {}".format(filepath.replace("\\", "/")), also_console=True)
         img.save(filepath)
         screenshot.log_screenshot_file(filepath)
 

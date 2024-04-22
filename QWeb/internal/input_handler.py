@@ -23,23 +23,27 @@ from robot.api import logger
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException
-from QWeb.internal.exceptions import QWebInvalidElementStateError, QWebValueError, \
-    QWebEnvironmentError
+from QWeb.internal.exceptions import (
+    QWebInvalidElementStateError,
+    QWebValueError,
+    QWebEnvironmentError,
+)
 from QWeb.internal import javascript
 
 try:
-    if not os.getenv('QWEB_HEADLESS', None):
+    if not os.getenv("QWEB_HEADLESS", None):
         from pynput.keyboard import Controller
 except ImportError:
-    logger.warn('Cannot import pynput.keyboard, no display detected')
+    logger.warn("Cannot import pynput.keyboard, no display detected")
 
 
 class InputHandler:
-
-    def __init__(self,
-                 input_method: str = "selenium",
-                 line_break_key: str = "\ue004",
-                 clear_key: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        input_method: str = "selenium",
+        line_break_key: str = "\ue004",
+        clear_key: Optional[str] = None,
+    ) -> None:
         self._input_method = input_method
         self.line_break_key = line_break_key
         self.clear_key = clear_key
@@ -52,23 +56,24 @@ class InputHandler:
     def input_method(self, input_method: str) -> None:
         required = ["javascript", "selenium", "raw"]
         if input_method not in required:
-            raise QWebValueError('Unknown input_method: {}, required: {}'.format(
-                input_method, required))
+            raise QWebValueError(
+                "Unknown input_method: {}, required: {}".format(input_method, required)
+            )
         self._input_method = input_method
 
     def write(self, input_element: WebElement, input_text: str, **kwargs) -> None:
-        """ Writes the given text using configured writer. """
+        """Writes the given text using configured writer."""
         write = self._get_writer()
         # By clearing the input field with Javascript,
         # we avoid triggering focus events right after
         # clear and trigger them only on send_keys call.
-        clear_key = self.check_key(kwargs.get('clear_key', self.clear_key))
-        shadow_dom = kwargs.get('shadow_dom', False)
+        clear_key = self.check_key(kwargs.get("clear_key", self.clear_key))
+        shadow_dom = kwargs.get("shadow_dom", False)
         if not clear_key:
             if self.is_editable_text_element(input_element):
                 javascript.execute_javascript('arguments[0].innerText=""', input_element)
             else:
-                javascript.execute_javascript("arguments[0].value = \"\"", input_element)
+                javascript.execute_javascript('arguments[0].value = ""', input_element)
         else:
             input_element.send_keys(*[key for key in clear_key if key is not None])
         try:
@@ -77,12 +82,12 @@ class InputHandler:
         except ElementNotInteractableException as e:
             if shadow_dom:
                 javascript.execute_javascript(f'arguments[0].value = "{input_text}"', input_element)
-                kwargs['key'] = None
+                kwargs["key"] = None
             else:
                 raise e from e
 
-        if 'check' not in kwargs:
-            line_break = kwargs.get('key', self.check_key(self.line_break_key))
+        if "check" not in kwargs:
+            line_break = kwargs.get("key", self.check_key(self.line_break_key))
             if line_break:
                 input_element.send_keys(line_break)
 
@@ -95,7 +100,7 @@ class InputHandler:
 
     @staticmethod
     def _selenium_writer(input_element: WebElement, input_text: str) -> None:
-        """ Use Selenium librarys input methods clear() and send_keys(). """
+        """Use Selenium librarys input methods clear() and send_keys()."""
         if not input_element.is_enabled():
             logger.warn("Element not enabled. Try with alternative input method?")
             raise QWebInvalidElementStateError("Input element is not enabled")
@@ -103,7 +108,7 @@ class InputHandler:
 
     @staticmethod
     def _js_writer(input_element: WebElement, input_text: str) -> None:
-        """ Use JavaScript to set input element value."""
+        """Use JavaScript to set input element value."""
         if not input_element.is_enabled():
             logger.warn("Element not enabled. Try with alternative input method?")
             raise QWebInvalidElementStateError("Input element is not enabled")
@@ -111,21 +116,22 @@ class InputHandler:
 
     @staticmethod
     def _raw_writer(input_element: WebElement, input_text: str) -> None:
-        """ Control keyboard and text input with pyautogui. This doesn't
-            do any checks for the element state.
+        """Control keyboard and text input with pyautogui. This doesn't
+        do any checks for the element state.
         """
         # Sanity check even if the input_element is not required for the input
         if not input_element:
-            raise QWebValueError('Input element is not available.')
-        if os.getenv('QWEB_HEADLESS', None):
-            raise QWebEnvironmentError('Running in headless environment. Pynput is unavailable.')
+            raise QWebValueError("Input element is not available.")
+        if os.getenv("QWEB_HEADLESS", None):
+            raise QWebEnvironmentError("Running in headless environment. Pynput is unavailable.")
         keyboard = Controller()
         keyboard.type(input_text)
 
     @staticmethod
     def is_editable_text_element(input_element: WebElement) -> bool:
         if javascript.execute_javascript(
-                'return arguments[0].getAttribute("contenteditable") == "true"', input_element):
+            'return arguments[0].getAttribute("contenteditable") == "true"', input_element
+        ):
             return True
         return False
 
@@ -133,13 +139,13 @@ class InputHandler:
     def check_key(key: Optional[str]) -> Union[Optional[str], list[Optional[str]]]:
         if not key:
             return None
-        if key == '{PASTE}':
+        if key == "{PASTE}":
             return pyperclip.paste()
         hotkey = []
-        if key.startswith('{') and key.endswith('}'):
+        if key.startswith("{") and key.endswith("}"):
             key = key[1:-1].upper()
-            if '+' in key:
-                keys = key.split('+')
+            if "+" in key:
+                keys = key.split("+")
                 for k in keys:
                     try:
                         key = getattr(Keys, k.strip())
@@ -154,20 +160,20 @@ class InputHandler:
     def check_key_pyautogui(key: Optional[str]) -> Union[Optional[str], list[str]]:
         if not key:
             return None
-        if key == '{PASTE}':
+        if key == "{PASTE}":
             return pyperclip.paste()
         hotkey = []
-        if key.startswith('{') and key.endswith('}'):
+        if key.startswith("{") and key.endswith("}"):
             key = key[1:-1].lower()
-            if '+' in key:
-                keys = key.split('+')
+            if "+" in key:
+                keys = key.split("+")
                 for k in keys:
-                    if not k.strip() in KEY_NAMES:
+                    if k.strip() not in KEY_NAMES:
                         raise AttributeError
                     key = k.strip()
                     hotkey.append(key)
                 return hotkey
-            if not key.strip() in KEY_NAMES:
+            if key.strip() not in KEY_NAMES:
                 raise AttributeError
         return key
 
