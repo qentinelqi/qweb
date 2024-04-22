@@ -81,6 +81,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_test.txt
+        pip install -e .
 
     - name: Display Python version
       run: |
@@ -103,7 +104,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 30
       run: |
-        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} ${{ inputs.rfw-exclude-tags }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+        python -m pabot.pabot --ordering test/acceptance/.pabot_suite_order --exitonfailure ${{ inputs.additional-rfw-parameters }} ${{ inputs.rfw-exclude-tags }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
     
     - name: Rerun failed acceptance tests
       if: steps.initial-acceptance-tests.outcome == 'failure'
