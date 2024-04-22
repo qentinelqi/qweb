@@ -80,8 +80,15 @@ We use [duty](https://github.com/pawamoy/duty) python package to run development
 duty --list
 ```
 
+##### Autoformatting
+We use *ruff* for automatic formatting of files. To run automatic formatting locally, run:
+
+```bash
+duty format
+```
+
 ##### Linting
-We use *ruff*, *pylint* and *flake8* for linting. To run these locally, run:
+We use *ruff* *pylint* and *flake8* for linting. To run these locally, run:
 
 ```bash
 duty lint

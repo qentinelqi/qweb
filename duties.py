@@ -6,6 +6,16 @@ from duty import duty
 python_exe = sys.executable
 
 @duty
+def format(ctx, path="QWeb"):
+    """
+    Automatic formatting of files
+    Arguments:
+        ctx: The context instance (passed automatically)
+        path: path of folder/file to check
+    """
+    ctx.run(f"{python_exe} -m ruff format {path}", title="Autoformatting files: ruff", capture=False)
+
+@duty
 def typing(ctx, path="QWeb"):
     """
     Check code typing
