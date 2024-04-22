@@ -89,17 +89,22 @@ def acceptance_tests(ctx,
     ]
     cmd_excludes = f'-e {" -e ".join(excludes)}'
 
-
-    cmd_str = remove_extra_whitespaces(
-               f" {python_exe} -m pabot.pabot"
-               f" --ordering test/acceptance/.pabot_suite_order"
-               f" --name Acceptance"
-               f" {listener_cmd}"
+    if os == "MACOS": 
+        # need to run tests in single process
+        # https://developer.apple.com/documentation/webkit/about_webdriver_for_safari#2957226
+        cmd_str = remove_extra_whitespaces(f" {python_exe} -m robot")
+    else:
+        # run in parallel
+        cmd_str = remove_extra_whitespaces(
+                f" {python_exe} -m pabot.pabot"
+                f" --ordering test/acceptance/.pabot_all"
+                f" --name Acceptance"
+                )
+    cmd_str += remove_extra_whitespaces(f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
                f" {cmd_excludes}"
-               f" test/acceptance"
-            )
+               f" test/acceptance")
     print(cmd_str)
     ctx.run(cmd_str, title="Acceptance tests", capture=False)
 

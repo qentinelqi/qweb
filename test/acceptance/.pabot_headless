@@ -1,16 +1,3 @@
-# RESOLUTION_DEPENDENCY & FLASK
-{
---suite Browser
---suite Cookies
---suite Download
---suite Icon
---suite Input
---suite Requests
---suite Shadow Dom
---suite Swipe
---suite Xhr
-}
-
 # Long duration suites in order of longest to shortest
 --suite Window
 --suite Text3
@@ -29,6 +16,7 @@
 --suite Cli
 --suite ClickItem
 --suite Config
+--suite Cookies
 --suite Dropdown
 --suite Element Corners
 --suite File
@@ -37,6 +25,7 @@
 --suite Lists
 --suite No Body
 --suite Paceblock
+--suite Requests
 --suite Searchingorder
 --suite Searchorder Config
 --suite Selectors
@@ -44,9 +33,3 @@
 --suite Text Multi
 --suite Upload
 --suite Verifylinks
-
-# RESOLUTION_DEPENDENCY (resource heavy so run as last)
-{
---suite Dragdrop
---suite Screenshot
-}

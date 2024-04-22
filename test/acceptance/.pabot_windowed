@@ -1,0 +1,12 @@
+# RESOLUTION_DEPENDENCY & FLASK suites which require screen
+{
+--suite Browser
+--suite Download
+--suite Dragdrop
+--suite Icon
+--suite Input
+--suite Screenshot
+--suite Shadow Dom
+--suite Swipe
+--suite Xhr
+}
