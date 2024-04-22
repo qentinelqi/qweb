@@ -3,11 +3,9 @@
 --suite Browser
 --suite Cookies
 --suite Download
---suite Dragdrop
 --suite Icon
 --suite Input
 --suite Requests
---suite Screenshot
 --suite Shadow Dom
 --suite Swipe
 --suite Xhr
@@ -47,4 +45,8 @@
 --suite Upload
 --suite Verifylinks
 
-
+# RESOLUTION_DEPENDENCY (resource heavy so run as last)
+{
+--suite Dragdrop
+--suite Screenshot
+}
