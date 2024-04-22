@@ -1,21 +1,18 @@
-# RESOLUTION_DEPENDENCY / not headless FLASK
-# "Download" needs to last so that other FLASK suites have finished running
+# RESOLUTION_DEPENDENCY & FLASK
 {
 --suite Browser
+--suite Cookies
+--suite Download
 --suite Dragdrop
 --suite Icon
 --suite Input
+--suite Requests
 --suite Screenshot
 --suite Shadow Dom
 --suite Swipe
---suite Download
-}
-# FLASK
-{
---suite Cookies
---suite Requests
 --suite Xhr
 }
+
 # Long duration suites in order of longest to shortest
 --suite Window
 --suite Text3
