@@ -92,7 +92,7 @@ def acceptance_tests(ctx,
 
     cmd_str = remove_extra_whitespaces(
                f" {python_exe} -m pabot.pabot"
-               f" --ordering test/.pabotsuitenames"
+               f" --ordering test/acceptance/.pabot_suite_order"
                f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"

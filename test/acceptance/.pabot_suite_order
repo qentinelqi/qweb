@@ -1,7 +1,3 @@
-datasources:ae22fbf5f3d1533d10186a8eae507db0f1136730
-commandlineoptions:97d170e1550eee4afc0af065b78cda302a97674c
-suitesfrom:no-suites-from-option
-file:da4c8d69ffa655b2ce6f7a632351339e082b22f1
 {
 --suite Acceptance.Browser
 --suite Acceptance.Shadow Dom
