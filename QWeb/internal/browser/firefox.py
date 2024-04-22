@@ -20,13 +20,15 @@ NAMES: list[str] = ["firefox", "ff"]
 
 
 # pylint: disable=too-many-branches
-def open_browser(profile_dir: Optional[str] = None,
-                 headless: bool = False,
-                 binary: Optional[str] = None,
-                 driver_path: str = "",
-                 firefox_args: Optional[list[str]] = None,
-                 log_path: str = "geckodriver.log",
-                 **kwargs: Any) -> WebDriver:
+def open_browser(
+    profile_dir: Optional[str] = None,
+    headless: bool = False,
+    binary: Optional[str] = None,
+    driver_path: str = "",
+    firefox_args: Optional[list[str]] = None,
+    log_path: str = "geckodriver.log",
+    **kwargs: Any,
+) -> WebDriver:
     """Open Firefox browser and cache the driver.
 
     Parameters
@@ -50,10 +52,12 @@ def open_browser(profile_dir: Optional[str] = None,
     """
     options = Options()
     if headless:
-        logger.warn('Deprecated.\n'
-                    'Headless mode can be activated just like any other firefox option:\n'
-                    '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"')
-        options.add_argument('-headless')
+        logger.warn(
+            "Deprecated.\n"
+            "Headless mode can be activated just like any other firefox option:\n"
+            '"OpenBrowser   https://qentinel.com    ${BROWSER}   -headless"'
+        )
+        options.add_argument("-headless")
         CONFIG.set_value("Headless", True)
     # if profile_dir:
     #     logger.warn('Deprecated.\n'
@@ -68,18 +72,18 @@ def open_browser(profile_dir: Optional[str] = None,
     options.set_preference("dom.webnotifications.enabled", False)
     options.set_preference("privacy.socialtracking.block_cookies.enabled", False)
     kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
-    if 'prefs' in kwargs:
-        tmp_prefs = kwargs.get('prefs')
+    if "prefs" in kwargs:
+        tmp_prefs = kwargs.get("prefs")
         prefs = util.parse_prefs(tmp_prefs)
 
         for item in prefs.items():  # type: ignore[union-attr]
             key, value = item[0], item[1]
-            logger.info('Using prefs: {} = {}'.format(key, value), also_console=True)
+            logger.info("Using prefs: {} = {}".format(key, value), also_console=True)
             if not isinstance(value, int) and value.isdigit():
                 value = int(value)
             options.set_preference(key, value)
     if firefox_args:
-        if any('headless' in _.lower() for _ in firefox_args):
+        if any("headless" in _.lower() for _ in firefox_args):
             CONFIG.set_value("Headless", True)
         for option in firefox_args:
             option = option.strip()
@@ -90,16 +94,16 @@ def open_browser(profile_dir: Optional[str] = None,
             elif option.startswith("-"):
                 options.add_argument(option)
             else:
-                logger.warn(f'Firefox arguments start with "-". '
-                            f'Argument "{option}" has incorrect format and was ignored')
+                logger.warn(
+                    f'Firefox arguments start with "-". '
+                    f'Argument "{option}" has incorrect format and was ignored'
+                )
 
     if binary:
         options.binary_location = binary
     service = Service(driver_path, log_path=log_path) if driver_path else Service(log_path=log_path)
-    driver = webdriver.Firefox(service=service,
-                               options=options
-                               )
-    if os.name == 'nt':  # Maximize window if running on windows, doesn't work on linux
+    driver = webdriver.Firefox(service=service, options=options)
+    if os.name == "nt":  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)
     return driver

@@ -76,10 +76,9 @@ def get_visibility(web_elements: list[WebElement]) -> list[dict]:
     return execute_javascript(js, web_elements)
 
 
-def highlight_element(element: WebElement,
-                      draw_only: bool,
-                      flash_border: bool = False,
-                      color: str = "blue") -> None:
+def highlight_element(
+    element: WebElement, draw_only: bool, flash_border: bool = False, color: str = "blue"
+) -> None:
     """Highlight borders for given web element.
 
     Parameters
@@ -129,8 +128,9 @@ def highlight_element(element: WebElement,
     execute_javascript(js, element, draw_only, flash_border, color)
 
 
-def get_by_attributes(elements: list[WebElement], locator: str,
-                      partial_match: bool) -> dict[str, list[WebElement]]:
+def get_by_attributes(
+    elements: list[WebElement], locator: str, partial_match: bool
+) -> dict[str, list[WebElement]]:
     """Return web element by it's attribute value.
 
     Parameters
@@ -175,7 +175,7 @@ def get_by_attributes(elements: list[WebElement], locator: str,
             return matches;
         }
         return(web_elements(arguments[0], arguments[1], arguments[2]));"""
-    return execute_javascript(js, elements, locator.replace("\'", "\\'"), partial_match)
+    return execute_javascript(js, elements, locator.replace("'", "\\'"), partial_match)
 
 
 def get_all_elements(css: str) -> list[WebElement]:
@@ -192,10 +192,9 @@ def get_all_elements(css: str) -> list[WebElement]:
     return execute_javascript("return document.querySelectorAll('{}')".format(css))
 
 
-def get_childnodes(locator_element: WebElement,
-                   css: str,
-                   level: int = 3,
-                   traverse: bool = True) -> list[WebElement]:
+def get_childnodes(
+    locator_element: WebElement, css: str, level: int = 3, traverse: bool = True
+) -> list[WebElement]:
     """Find matching childs for given locator element.
     Parameters
     ----------
@@ -231,8 +230,9 @@ def get_childnodes(locator_element: WebElement,
     return execute_javascript(js, locator_element, css, level, traverse)
 
 
-def get_by_label(locator_text: str, css: str, level: int,
-                 partial_match: bool) -> dict[str, list[WebElement]]:
+def get_by_label(
+    locator_text: str, css: str, level: int, partial_match: bool
+) -> dict[str, list[WebElement]]:
     """Find element based on it's label.
 
     First we sneak if there is for-attribute available. If so, it's used
@@ -329,11 +329,12 @@ def get_by_label(locator_text: str, css: str, level: int,
         }
         return(web_elements(arguments[0], arguments[1], arguments[2], arguments[3]));
         """
-    return execute_javascript(js, locator_text.replace("\'", "\\'"), css, level, partial_match)
+    return execute_javascript(js, locator_text.replace("'", "\\'"), css, level, partial_match)
 
 
-def get_parent_list(locator_element: Union[WebElement, str], css: str
-                    ) -> Union[WebElement, list[WebElement]]:
+def get_parent_list(
+    locator_element: Union[WebElement, str], css: str
+) -> Union[WebElement, list[WebElement]]:
     """Get parent list for web element.
 
     Parameters
@@ -397,13 +398,14 @@ def find_text_from_textnodes(text: str, **kwargs) -> list[WebElement]:
         }
         return(getTextNodes(arguments[0], arguments[1], arguments[2]))
         """
-    doc = 'html'
-    partial = kwargs.get('partial_match')
+    doc = "html"
+    partial = kwargs.get("partial_match")
     return execute_javascript(js, text, doc, partial)
 
 
 def get_clickable(locator: str) -> list[WebElement]:
-    js = """
+    js = (
+        """
     var web_elements = function(locator){
         var full = [];
         var partial = [];
@@ -429,7 +431,10 @@ def get_clickable(locator: str) -> list[WebElement]:
         candidates = full.concat(partial);
         return candidates;
     }
-    return(web_elements('""" + locator.replace("\'", "\\'") + """'));"""
+    return(web_elements('"""
+        + locator.replace("'", "\\'")
+        + """'));"""
+    )
     return execute_javascript(js)
 
 
@@ -459,7 +464,9 @@ def get_recursive_walk() -> str:
 
 
 def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
-    js = get_recursive_walk() + """
+    js = (
+        get_recursive_walk()
+        + """
     function find_text_from_shadow_dom(text, partial){
         var results = [];
         var unsupported_tags = ["script", "#document-fragment"]
@@ -470,7 +477,7 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
         if (node.textContent.replace(/\u00a0/g, ' ').includes(text) && !unsupported_tags.includes(node.nodeName.toLowerCase())) {
             nodetext = [].reduce.call(node.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent.trim() : ''); }, '');
             // handle non-breaking spaces
-            nodetext = nodetext.replace(/\u00A0/g, ' ')
+            nodetext = nodetext.replace(/\u00a0/g, ' ')
             if (nodetext == text) {
                 results.push(node);
             }
@@ -486,11 +493,14 @@ def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebEl
         return results;
     }
     return(find_text_from_shadow_dom(arguments[0], arguments[1]))"""
+    )
     return execute_javascript(js, locator, partial)
 
 
 def get_clickable_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
-    js = get_recursive_walk() + """
+    js = (
+        get_recursive_walk()
+        + """
     function find_clickable_from_shadow_dom(text, partial){
         var results = [];
         var full = [];
@@ -521,11 +531,14 @@ def get_clickable_from_shadow_dom(locator: str, partial: bool) -> list[WebElemen
         return results;
     }
     return(find_clickable_from_shadow_dom(arguments[0], arguments[1]))"""
+    )
     return execute_javascript(js, locator, partial)
 
 
 def get_all_frames_from_shadow_dom() -> list[WebElement]:
-    js = get_recursive_walk() + """
+    js = (
+        get_recursive_walk()
+        + """
     function find_all_frames_from_shadow_dom(){
         var results = [];
         var elem = recursiveWalk(document.body, function(node) {
@@ -538,11 +551,14 @@ def get_all_frames_from_shadow_dom() -> list[WebElement]:
     }
 
     return(find_all_frames_from_shadow_dom(arguments[0]))"""
+    )
     return execute_javascript(js)
 
 
 def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
-    js = get_recursive_walk() + """
+    js = (
+        get_recursive_walk()
+        + """
     function find_all_input_elements_from_shadow_dom(){
         var results = [];
         var elem = recursiveWalk(document.body, function(node) {
@@ -555,11 +571,14 @@ def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
     }
 
     return(find_all_input_elements_from_shadow_dom(arguments[0]))"""
+    )
     return execute_javascript(js)
 
 
 def get_all_dropdown_elements_from_shadow_dom() -> list[WebElement]:
-    js = get_recursive_walk() + """
+    js = (
+        get_recursive_walk()
+        + """
     function find_all_select_elements_from_shadow_dom(){
         var results = [];
         var elem = recursiveWalk(document.body, function(node) {
@@ -572,11 +591,14 @@ def get_all_dropdown_elements_from_shadow_dom() -> list[WebElement]:
     }
 
     return(find_all_select_elements_from_shadow_dom(arguments[0]))"""
+    )
     return execute_javascript(js)
 
 
 def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
-    js = get_recursive_walk() + """
+    js = (
+        get_recursive_walk()
+        + """
     function find_item_elements_from_shadow_dom(tag){
         var results = [];
         var supported_tags = tag === null ? ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT", "TEXTAREA"] : [tag.toUpperCase()];
@@ -590,4 +612,5 @@ def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
     }
 
     return(find_item_elements_from_shadow_dom(arguments[0], arguments[1]))"""
+    )
     return execute_javascript(js, tag)

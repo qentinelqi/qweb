@@ -22,7 +22,9 @@ import string
 
 
 class SearchStrategies:
-    ALL_INPUT_ELEMENTS: str = '//input[@type="text" or @type="email" or @type="password" or @type="tel"]|//textarea'
+    ALL_INPUT_ELEMENTS: str = (
+        '//input[@type="text" or @type="email" or @type="password" or @type="tel"]|//textarea'
+    )
 
     MATCHING_INPUT_ELEMENT: str = '//*[(self::input or self::textarea) and (normalize-space(@placeholder)="{0}" or normalize-space(@value)="{0}")]'
     CONTAINING_INPUT_ELEMENT: str = '//*[(self::input or self::textarea) and (contains(normalize-space(@placeholder),"{0}") or contains(normalize-space(@value),"{0}"))]'
@@ -140,9 +142,7 @@ class SearchStrategies:
         # Position placeholders are in a set. They must start from zero
         # so that we have {0}'s, {1}'s etc.
         if index_placeholders:
-            continuous = SearchStrategies._continuous_set(
-                index_placeholders, placeholder_num
-            )
+            continuous = SearchStrategies._continuous_set(index_placeholders, placeholder_num)
 
         if placeholder_num != (empty_placeholders + len(index_placeholders)):
             raise ValueError(

@@ -19,6 +19,7 @@
 When Selenium gets cookies from browser, it return them as dictionaries
 in a list. This list can be searched for key - value pairs.
 """
+
 from __future__ import annotations
 from typing import Any
 from robot.api import logger

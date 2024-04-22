@@ -82,8 +82,9 @@ class QIcon:
 
         if device_res_w <= 0 or template_res_w <= 0:
             raise ValueError(
-                "Device resolution {} or template resolution {}"
-                " can't be zero or less".format(device_res_w, template_res_w)
+                "Device resolution {} or template resolution {}" " can't be zero or less".format(
+                    device_res_w, template_res_w
+                )
             )
 
         if round(device_res_w / template_res_w, 2) not in scale_ratios:
@@ -92,9 +93,7 @@ class QIcon:
         return scale_ratios
 
     @staticmethod
-    def _get_image_pyramid(
-        image_obj: ndarray, level: int
-    ) -> list[tuple[ndarray, float]]:
+    def _get_image_pyramid(image_obj: ndarray, level: int) -> list[tuple[ndarray, float]]:
         """
         Returns a list of up- and downsampled images of image_obj.
         Each sampling goes 10% up and down in size
@@ -178,14 +177,8 @@ class QIcon:
         width, height = self._get_image_size(template)
         img_width, img_height = self._get_image_size(image_obj)
 
-        print(
-            "*DEBUG* source haystack (image_obj) image size: {}x{}".format(
-                img_width, img_height
-            )
-        )
-        print(
-            "*DEBUG* original needle (template) image size: {}x{}".format(width, height)
-        )
+        print("*DEBUG* source haystack (image_obj) image size: {}x{}".format(img_width, img_height))
+        print("*DEBUG* original needle (template) image size: {}x{}".format(width, height))
 
         if height > img_height or width > img_width:
             raise ValueError(
@@ -227,9 +220,7 @@ class QIcon:
                 "image size: {}x{}".format(template_level[1], w, h)
             )
             MEAS.start("CV2.MATCHTEMPLATE TIME")
-            res = cv2.matchTemplate(
-                image_levels[0][0], template_level[0], cv2.TM_CCOEFF_NORMED
-            )
+            res = cv2.matchTemplate(image_levels[0][0], template_level[0], cv2.TM_CCOEFF_NORMED)
             MEAS.stop()
             # print("did matchTemplate, res:\n")
             # print(res)
@@ -326,9 +317,7 @@ class QIcon:
 
         print("*DEBUG* Resampling loop Starts")
         for scale_ratio in scale_ratios:
-            interpolation_method = (
-                cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
-            )
+            interpolation_method = cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
 
             print(f"*DEBUG* resize starts: for scale {scale_ratio}")
 
@@ -344,9 +333,7 @@ class QIcon:
                 )
             print("*DEBUG* matchTemplate Starts:")
 
-            res = cv2.matchTemplate(
-                image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED
-            )
+            res = cv2.matchTemplate(image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
 
@@ -495,8 +482,8 @@ class QIcon:
         )
         result = np.zeros((max(h2, h1), w2 + max_left_w, 3), np.uint8)
         result[:h1, :w1, :3] = needle
-        result[h1:h1 + hs, :ws, :3] = scaled_needle
-        result[:h2, max_left_w:max_left_w + w2, :3] = haystack
+        result[h1 : h1 + hs, :ws, :3] = scaled_needle  # noqa: E203
+        result[:h2, max_left_w : max_left_w + w2, :3] = haystack  # noqa: E203
 
         cv2.line(
             result,

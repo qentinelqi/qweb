@@ -53,12 +53,12 @@ def setup_xhr_monitor() -> bool:
 
 def get_ready_state() -> bool:
     ready_state = javascript.execute_javascript('return document.readyState === "complete"')
-    logger.debug('Readystate = {}'.format(ready_state))
+    logger.debug("Readystate = {}".format(ready_state))
     return ready_state
 
 
 def get_jquery_ready() -> bool:
-    jqueries_ready = javascript.execute_javascript('return window.jQuery.active === 0;')
+    jqueries_ready = javascript.execute_javascript("return window.jQuery.active === 0;")
     return jqueries_ready
 
 
@@ -73,7 +73,7 @@ def wait_xhr(timeout: float = 0.0) -> None:
     """
     start = time.time()
     while time.time() < timeout + start:
-        logger.debug('Timeout for xhr:s = {}'.format(timeout))
+        logger.debug("Timeout for xhr:s = {}".format(timeout))
         ready_state = get_ready_state()
         logger.debug("ready_state {}".format(ready_state))
         if ready_state:
@@ -82,12 +82,11 @@ def wait_xhr(timeout: float = 0.0) -> None:
                 jquery_ready = get_jquery_ready()
                 if jquery_ready:
                     return
-                logger.debug('There are still pending AJAX requests..')
+                logger.debug("There are still pending AJAX requests..")
             else:
-                logger.debug('Unable to inject jQuery..')
+                logger.debug("Unable to inject jQuery..")
                 return
         else:
-            logger.debug('Page is not loaded yet..')
+            logger.debug("Page is not loaded yet..")
 
-    logger.debug('Page was not ready after {} seconds.'
-                 'Trying to continue..'.format(timeout))
+    logger.debug("Page was not ready after {} seconds." "Trying to continue..".format(timeout))

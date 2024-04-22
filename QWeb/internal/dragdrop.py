@@ -25,38 +25,45 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError
 
 
 @frame.all_frames
-def get_draggable_element(text: str, index: Union[int, str],
-                          anchor: str) -> Union[WebElement, list[WebElement]]:
-    attribute_match = '[title^="{0}"][draggable="true"],[alt^="{0}"][draggable="true"],' \
-                      '[tooltip^="{0}"][draggable="true"],' \
-                      '[data-tooltip^="{0}"][draggable="true"],' \
-                      '[data-icon^="{0}"][draggable="true"],' \
-                      '[aria-label^="{0}"][draggable="true"],' \
-                      '[title^="{0}"][class*="draggableCell"]'.format(text)
+def get_draggable_element(
+    text: str, index: Union[int, str], anchor: str
+) -> Union[WebElement, list[WebElement]]:
+    attribute_match = (
+        '[title^="{0}"][draggable="true"],[alt^="{0}"][draggable="true"],'
+        '[tooltip^="{0}"][draggable="true"],'
+        '[data-tooltip^="{0}"][draggable="true"],'
+        '[data-icon^="{0}"][draggable="true"],'
+        '[aria-label^="{0}"][draggable="true"],'
+        '[title^="{0}"][class*="draggableCell"]'.format(text)
+    )
     web_elements = []
     matches: Optional[list[WebElement]] = []
     try:
         index = int(index) - 1
     except ValueError as e:
-        raise QWebValueError('Index needs to be number') from e
-    if text.startswith('xpath=') or text.startswith('//'):
+        raise QWebValueError("Index needs to be number") from e
+    if text.startswith("xpath=") or text.startswith("//"):
         web_element = element.get_unique_element_by_xpath(text, index)
         if web_element:
             return web_element
-        raise QWebElementNotFoundError('Draggable element not found by locator {}'.format(text))
+        raise QWebElementNotFoundError("Draggable element not found by locator {}".format(text))
     web_elements = javascript.execute_javascript(
-        'return document.querySelectorAll(\'{}\')'.format(attribute_match))
+        "return document.querySelectorAll('{}')".format(attribute_match)
+    )
     if web_elements:
         return web_elements[index]
     web_elements = javascript.execute_javascript(
-        'return document.querySelectorAll(\'[draggable="true"]\')')
+        "return document.querySelectorAll('[draggable=\"true\"]')"
+    )
     if web_elements:
         matches = _find_matches(web_elements, text)
         if matches:
             return matches[index]
-        if text == 'index':
-            logger.warn('Text is not matching to any draggable element. Found {} '
-                        'draggable elements. Using index..'.format(len(web_elements)))
+        if text == "index":
+            logger.warn(
+                "Text is not matching to any draggable element. Found {} "
+                "draggable elements. Using index..".format(len(web_elements))
+            )
             return web_elements[index]
     return get_text_using_anchor(text, anchor)
 

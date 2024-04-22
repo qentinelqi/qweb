@@ -17,8 +17,12 @@
 from __future__ import annotations
 
 FATAL_MESSAGES: list[str] = [
-    "Failed to decode response", "chrome not reachable", "window was already closed",
-    "Unable to get browser", "session deleted", "0 tabs open"
+    "Failed to decode response",
+    "chrome not reachable",
+    "window was already closed",
+    "Unable to get browser",
+    "session deleted",
+    "0 tabs open",
 ]
 
 
@@ -75,12 +79,12 @@ class QWebInvalidElementStateError(QWebDriverError):
 
 
 class QWebValueMismatchError(QWebValueError):
-    """ Raise if real value is different than
+    """Raise if real value is different than
     expected value."""
 
 
 class QWebFileNotFoundError(QWebValueError):
-    """ Raise if reference file is missing. """
+    """Raise if reference file is missing."""
 
 
 class QWebTextNotFoundError(QWebException):
