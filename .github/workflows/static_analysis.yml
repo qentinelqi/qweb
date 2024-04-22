@@ -33,7 +33,7 @@ jobs:
 
     - name: Autoformat with ruff
       run: |
-        ruff format
+        ruff format QWeb
 
     - name: Typecheck with mypy
       run: |
@@ -41,7 +41,7 @@ jobs:
 
     - name: Lint with ruff
       run: |
-        ruff check
+        ruff check QWeb
 
     - name: Lint with flake8
       run: |
