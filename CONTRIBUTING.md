@@ -60,7 +60,7 @@ pip install -r requirements.txt -r requrements_test.txt
 
 #### Install dependencies
 
-Install pre-commit hook which automatically performs type checking, and linting on each commit by issuing command:
+Install pre-commit hook which automatically performs type checking, linting and autoformatting on each commit by issuing command:
 
 ```bash
 pre-commit install
@@ -74,14 +74,14 @@ Once you have made your changes, please validate the quality of your changes. Ty
 
 #### Local development tasks
 
-We use excellent [duty](https://github.com/pawamoy/duty) python package to run development tasks locally. You can see all defined development tasks with command:
+We use [duty](https://github.com/pawamoy/duty) python package to run development tasks locally. You can see all defined development tasks with command:
 
 ```bash
 duty --list
 ```
 
 ##### Linting
-We use both *pylint* and *flake8* for linting. To run these locally, run:
+We use *ruff*, *pylint* and *flake8* for linting. To run these locally, run:
 
 ```bash
 duty lint

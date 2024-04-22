@@ -23,6 +23,7 @@ def lint(ctx, path="QWeb"):
         ctx: The context instance (passed automatically)
         path: path of folder/file to check
     """
+    ctx.run(f"{python_exe} -m ruff {path}", title="Checking code quality: ruff", capture=False)
     ctx.run(f"{python_exe} -m flake8 {path}", title="Checking code quality: flake8", capture=False)
     ctx.run(f"{python_exe} -m pylint {path}", title="Checking code quality: pylint", capture=False)
 
