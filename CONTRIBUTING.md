@@ -88,7 +88,7 @@ duty format
 ```
 
 ##### Linting
-We use *ruff* *pylint* and *flake8* for linting. To run these locally, run:
+We use *ruff*, *pylint* and *flake8* for linting. To run these locally, run:
 
 ```bash
 duty lint
