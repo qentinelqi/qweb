@@ -17,6 +17,10 @@ pabot_results/
 # doc output
 docs/build
 
+# caches
+.*_cache/
+__pycache__
+
 # unit test artifacts
 .coverage
 unittests.xml
