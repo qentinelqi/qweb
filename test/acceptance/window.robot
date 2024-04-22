@@ -249,7 +249,7 @@ Open New Tab Link Page
     # Open one extra window
     ClickText                   Open new window
     Sleep                       3                           # Firefox needs some time
-    RETURN                    ${driver}
+    [Return]                    ${driver}
 
 Open Two Windows
     ClickText                   Open new window
