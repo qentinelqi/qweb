@@ -2,6 +2,8 @@
 Flask==3.0.0
 flake8
 mock==5.0.2
+pre-commit
+ruff
 pydocstyle
 pylint==2.17.7
 pytest

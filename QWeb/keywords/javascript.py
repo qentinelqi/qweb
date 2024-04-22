@@ -43,7 +43,7 @@ def execute_javascript(script: str, variable_name: Optional[str] = None) -> None
         Robot framework variable name without {}. (Default None)
     """
     output = javascript.execute_javascript(script)
-    logger.info(f'Output of execution:\n{output}')
+    logger.info(f"Output of execution:\n{output}")
     if variable_name:
         try:
             BuiltIn().set_suite_variable(variable_name, output)

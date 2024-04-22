@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------
 """Keywords for controlling debugger."""
+
 import pyautogui
 from DebugLibrary import DebugLibrary
 from robot.api.deco import keyword
@@ -25,7 +26,7 @@ cur_mode = None
 
 
 @keyword(tags=("Debug", "Error handling"))
-def debug_on(mode: str = 'draw') -> None:
+def debug_on(mode: str = "draw") -> None:
     r"""Start debugger with drawing mode and set default timeout down to 2 sec.
 
     Examples
@@ -48,14 +49,15 @@ def debug_on(mode: str = 'draw') -> None:
     dbg = DebugLibrary()
     global cur_mode  # pylint: disable=global-statement
     global cur_timeout  # pylint: disable=global-statement
-    cur_mode = CONFIG.get_value('SearchMode')
+    cur_mode = CONFIG.get_value("SearchMode")
     cur_timeout = CONFIG.get_value(  # type: ignore[assignment]
-        'DefaultTimeout')
-    CONFIG.set_value('SearchMode', mode)
-    CONFIG.set_value('DefaultTimeout', 2)
-    CONFIG.set_value('Debug_Run', True)
+        "DefaultTimeout"
+    )
+    CONFIG.set_value("SearchMode", mode)
+    CONFIG.set_value("DefaultTimeout", 2)
+    CONFIG.set_value("Debug_Run", True)
     dbg.debug()
-    CONFIG.set_value('DefaultTimeout', cur_timeout)
+    CONFIG.set_value("DefaultTimeout", cur_timeout)
 
 
 @keyword(tags=("Debug", "Error handling"))
@@ -72,7 +74,7 @@ def debug_off() -> None:
     ----------------
     \`DebugOn\`
     """
-    CONFIG.set_value('SearchMode', cur_mode)
-    CONFIG.set_value('DefaultTimeout', cur_timeout)
-    CONFIG.set_value('Debug_Run', False)
-    pyautogui.hotkey('ctrl', 'D')
+    CONFIG.set_value("SearchMode", cur_mode)
+    CONFIG.set_value("DefaultTimeout", cur_timeout)
+    CONFIG.set_value("Debug_Run", False)
+    pyautogui.hotkey("ctrl", "D")

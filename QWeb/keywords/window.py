@@ -53,8 +53,7 @@ def go_to(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: dis
     """
     driver = browser.get_current_browser()
     if driver is None:
-        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                              " to open browser first")
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
     driver.get(url)
 
 
@@ -75,10 +74,10 @@ def open_window() -> None:
     \`CloseAllBrowsers\`, \`CloseBrowser\`, \`CloseOthers\`, \`GoTo\`,
     \`OpenBrowser\`, \`SwitchWindow\`
     """
-    script = 'window.open()'
+    script = "window.open()"
     javascript.execute_javascript(script)
     window_handles = window.get_window_handles()
-    logger.debug(f'available handles: {len(window_handles)}')
+    logger.debug(f"available handles: {len(window_handles)}")
 
     current_window_handle = window.get_current_window_handle()
 
@@ -96,7 +95,7 @@ def open_window() -> None:
     try:
         xhr.setup_xhr_monitor()
     except QWebDriverError:
-        logger.debug('XHR monitor threw exception. Bypassing jQuery injection')
+        logger.debug("XHR monitor threw exception. Bypassing jQuery injection")
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
@@ -132,14 +131,13 @@ def close_others() -> None:
             window.switch_to_window(window_handle)
             driver.close()
         except NoSuchWindowException:
-            logger.info('Failed to close window')
-    first_window_handle = window_handles[0] if util.is_safari() \
-        else window_handles.pop()
+            logger.info("Failed to close window")
+    first_window_handle = window_handles[0] if util.is_safari() else window_handles.pop()
     window.switch_to_window(first_window_handle)
 
     number_of_handles = len(window.get_window_handles())
     if number_of_handles != 1:
-        raise ValueError(f'Expected 1 window open, found {number_of_handles}')
+        raise ValueError(f"Expected 1 window open, found {number_of_handles}")
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
@@ -225,22 +223,27 @@ def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # p
     logger.info("Current browser contains {} tabs".format(len(window_handles)))
     if index.isdigit():
         if int(index) == 0:
-            raise QWebValueError('SwitchWindow index starts at 1.')
+            raise QWebValueError("SwitchWindow index starts at 1.")
         i = int(index) - 1
         if i < len(window_handles):
             correct_window_handle = window_handles[i]
             window.switch_to_window(correct_window_handle)
             return
-        logger.debug('Tried to select tab with index {} but there'
-                     ' are only {} tabs open'.format(index, len(window_handles)))
+        logger.debug(
+            "Tried to select tab with index {} but there" " are only {} tabs open".format(
+                index, len(window_handles)
+            )
+        )
     elif index == "NEW":
         window.switch_to_window(window_handles[-1])
         return
     else:
         raise QWebValueError('Given argument "{}" is not a digit or NEW'.format(index))
     raise QWebDriverError(
-        'Tried to select tab with index {} but there are only {} tabs open'.format(
-            index, len(window_handles)))
+        "Tried to select tab with index {} but there are only {} tabs open".format(
+            index, len(window_handles)
+        )
+    )
 
 
 def set_window_size(width: int, height: int) -> None:
@@ -292,10 +295,9 @@ def maximize_window() -> None:
     """
     driver = browser.get_current_browser()
     if driver is None:
-        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                              " to open browser first")
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
 
-    if CONFIG.get_value('Headless') is True:
+    if CONFIG.get_value("Headless") is True:
         logger.debug("Maximizing browser in headless mode")
         screen_width_js = driver.execute_script("return screen.width")
         screen_height_js = driver.execute_script("return screen.height")
@@ -364,8 +366,7 @@ def verify_url(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint
     """
     driver = browser.get_current_browser()
     if driver is None:
-        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                              " to open browser first")
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
     current = driver.current_url
 
     if current.lower() != url.lower():
@@ -394,8 +395,7 @@ def get_title() -> str:
     """
     driver = browser.get_current_browser()
     if driver is None:
-        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                              " to open browser first")
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
     return driver.title
 
 
@@ -431,8 +431,7 @@ def verify_title(title: str, timeout: Union[int, float, str] = 0) -> None:  # py
     """
     driver = browser.get_current_browser()
     if driver is None:
-        raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                              " to open browser first")
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
     actual = driver.title
 
     if actual != title:
@@ -440,7 +439,7 @@ def verify_title(title: str, timeout: Union[int, float, str] = 0) -> None:  # py
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_down(times: str = '1', start: Optional[str] = None) -> None:
+def swipe_down(times: str = "1", start: Optional[str] = None) -> None:
     r"""Swipes down on the screen.
 
     Examples
@@ -468,11 +467,11 @@ def swipe_down(times: str = '1', start: Optional[str] = None) -> None:
     ----------------
     \`SwipeLeft\`, \`SwipeRight\`, \`SwipeUp\`
     """
-    window.swipe('down', times, start)
+    window.swipe("down", times, start)
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_up(times: str = '1', start: Optional[str] = None) -> None:
+def swipe_up(times: str = "1", start: Optional[str] = None) -> None:
     r"""Swipes up on the screen.
 
     Examples
@@ -500,11 +499,11 @@ def swipe_up(times: str = '1', start: Optional[str] = None) -> None:
     ----------------
     \`SwipeDown\`, \`SwipeLeft\`, \`SwipeRight\`
     """
-    window.swipe('up', times, start)
+    window.swipe("up", times, start)
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_left(times: str = '1', start: Optional[str] = None) -> None:
+def swipe_left(times: str = "1", start: Optional[str] = None) -> None:
     r"""Swipes left on the screen.
 
     Examples
@@ -532,11 +531,11 @@ def swipe_left(times: str = '1', start: Optional[str] = None) -> None:
     ----------------
     \`SwipeDown\`, \`SwipeRight\`, \`SwipeUp\`
     """
-    window.swipe('left', times, start)
+    window.swipe("left", times, start)
 
 
 @keyword(tags=("Browser", "Interaction"))
-def swipe_right(times: str = '1', start: Optional[str] = None) -> None:
+def swipe_right(times: str = "1", start: Optional[str] = None) -> None:
     r"""Swipes right on the screen.
 
     Examples
@@ -564,4 +563,4 @@ def swipe_right(times: str = '1', start: Optional[str] = None) -> None:
     ----------------
     \`SwipeDown\`, \`SwipeLeft\`, \`SwipeUp\`
     """
-    window.swipe('right', times, start)
+    window.swipe("right", times, start)

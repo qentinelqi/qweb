@@ -43,30 +43,29 @@ import timeit
 
 
 class Meas(object):  # pylint: disable=bad-option-value, useless-object-inheritance
-
     def __init__(self, enabled: bool = True):
         """When initialized with enabled=False the functions
-           are no-ops"""
+        are no-ops"""
 
         if not enabled:
-            self.start = lambda a='': None  # type:ignore[assignment]
+            self.start = lambda a="": None  # type:ignore[assignment]
             self.stop = lambda a=True: None  # type:ignore[assignment]
             self.log = lambda a, b: None  # type:ignore[assignment, misc]
 
         self.timers: list[tuple[float, str]] = []
 
     # pylint: disable=method-hidden
-    def start(self, comment: str = '') -> None:
+    def start(self, comment: str = "") -> None:
         """Start a timer. Can be called multiple times without
-           a stop in between."""
+        a stop in between."""
         start_t = timeit.default_timer()
         self.timers.append((start_t, comment))
 
     # pylint: disable=method-hidden
     def stop(self, log: bool = True) -> Optional[float]:
         """Returns the calculated time against last started timer.
-           When called multiple times pops always the next available
-           timer."""
+        When called multiple times pops always the next available
+        timer."""
         stop_t = timeit.default_timer()
         start_t, comment = self.timers.pop()
         t = stop_t - start_t

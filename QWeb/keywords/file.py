@@ -19,8 +19,13 @@ from pathlib import Path
 
 from QWeb.internal.file import File
 from QWeb.internal import download
-from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebValueMismatchError, \
-    QWebUnexpectedConditionError, QWebValueError, QWebFileNotFoundError
+from QWeb.internal.exceptions import (
+    QWebInstanceDoesNotExistError,
+    QWebValueMismatchError,
+    QWebUnexpectedConditionError,
+    QWebValueError,
+    QWebFileNotFoundError,
+)
 from zipfile import ZipFile
 from os.path import basename as _basename
 import os
@@ -231,7 +236,7 @@ def verify_no_pdf_text(text: str, normalize: bool = False) -> None:
     _file_exists()
     try:
         if ACTIVE_FILE.verify(text, normalize) is True:
-            raise QWebUnexpectedConditionError('Text {} exists in pdf file'.format(text))
+            raise QWebUnexpectedConditionError("Text {} exists in pdf file".format(text))
     except QWebValueMismatchError:
         return
 
@@ -260,7 +265,7 @@ def verify_no_file_text(text: str, normalize: bool = False) -> None:
     _file_exists()
     try:
         if ACTIVE_FILE.verify(text, normalize) is True:
-            raise QWebUnexpectedConditionError('Text {} exists in file'.format(text))
+            raise QWebUnexpectedConditionError("Text {} exists in file".format(text))
     except QWebValueMismatchError:
         return
 
@@ -314,10 +319,10 @@ def remove_pdf() -> None:
 def _file_exists(file_path: Optional[File] = None) -> bool:
     if not file_path:
         if isinstance(ACTIVE_FILE, File) is False:
-            raise QWebInstanceDoesNotExistError('File has not been defined with UsePdf keyword')
+            raise QWebInstanceDoesNotExistError("File has not been defined with UsePdf keyword")
         return True
     if isinstance(file_path, File) is False:
-        raise QWebInstanceDoesNotExistError('Could not locate file {}'.format(file_path))
+        raise QWebInstanceDoesNotExistError("Could not locate file {}".format(file_path))
     return True
 
 
@@ -342,11 +347,11 @@ def zip_files(name_of_zip: str, files_to_zip: str) -> None:
     files_to_zip : str
         Files to be zipped, separated by "," in case of multiple files.
     """
-    if not name_of_zip.endswith('.zip'):
-        name_of_zip += '.zip'
-    files = files_to_zip.split(',')
+    if not name_of_zip.endswith(".zip"):
+        name_of_zip += ".zip"
+    files = files_to_zip.split(",")
     try:
-        with ZipFile(name_of_zip, 'w') as zipped:
+        with ZipFile(name_of_zip, "w") as zipped:
             for file in files:
                 file = str(download.get_path(file.strip()))
                 if os.path.isdir(file):
@@ -356,10 +361,14 @@ def zip_files(name_of_zip: str, files_to_zip: str) -> None:
                 else:
                     zipped.write(file, _basename(file))
     except OSError as e:
-        raise QWebValueError('\nFile name "{}" contained illegal characters.'
-                             '\nError message: {}'.format(name_of_zip, str(e))) from e
-    logger.info('Zipped files {} into the file {}'.format(str(files), name_of_zip),
-                also_console=True)
+        raise QWebValueError(
+            '\nFile name "{}" contained illegal characters.' "\nError message: {}".format(
+                name_of_zip, str(e)
+            )
+        ) from e
+    logger.info(
+        "Zipped files {} into the file {}".format(str(files), name_of_zip), also_console=True
+    )
 
 
 @keyword(tags=("File", "Interaction"))
@@ -385,8 +394,8 @@ def move_files(files_to_move: str, destination_folder: str) -> None:
     \`RemoveFile\`, \`SaveFile\`, \`UploadFile\`, \`VerifyFile\`
     """
     if not os.path.isdir(destination_folder):
-        raise QWebValueError('Destination folder does not exist.')
-    files = files_to_move.split(',')
+        raise QWebValueError("Destination folder does not exist.")
+    files = files_to_move.split(",")
     for file in files:
         file = str(download.get_path(file.strip()))
         shutil.move(file, destination_folder)
@@ -414,8 +423,9 @@ def verify_file(filename: str) -> Path:
     """
     try:
         path = download.get_path(filename)
-        logger.info('File found. Filepath is {}'.format(path))
+        logger.info("File found. Filepath is {}".format(path))
         return path
     except QWebFileNotFoundError as e:
-        raise QWebFileNotFoundError('File not found from default folders. '
-                                    'It may not exists or you may need a full path.') from e
+        raise QWebFileNotFoundError(
+            "File not found from default folders. It may not exists or you may need a full path."
+        ) from e

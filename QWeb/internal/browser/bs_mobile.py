@@ -10,23 +10,23 @@ from QWeb.internal import browser, exceptions, util
 
 
 def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) -> WebDriver:
-
     desired_cap = {
         "buildName": project_name,
         "projectName": project_name,
         "sessionName": run_id,
         "deviceName": bs_device,
         "realMobile": "true",
-        "local": util.get_rfw_variable_value('${BSLOCAL}') or "false",
-        "localIdentifier": util.get_rfw_variable_value('${BSLOCALID}') or '',
-        **kwargs, }
+        "local": util.get_rfw_variable_value("${BSLOCAL}") or "false",
+        "localIdentifier": util.get_rfw_variable_value("${BSLOCALID}") or "",
+        **kwargs,
+    }
 
-    os_version = util.get_rfw_variable_value('${BSOSVERSION}')
+    os_version = util.get_rfw_variable_value("${BSOSVERSION}")
     if os_version:
         desired_cap["osVersion"] = os_version
 
     # handle issue where any, even empty value in localIdentifier turns local to true
-    if desired_cap["local"] == 'false':
+    if desired_cap["local"] == "false":
         del desired_cap["localIdentifier"]
 
     # create options instance based on selected browser
@@ -36,19 +36,20 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
     else:
         options = chrome_options()
 
-    options.set_capability('bstack:options', desired_cap)
+    options.set_capability("bstack:options", desired_cap)
 
-    bs_key = util.get_rfw_variable_value('${APIKEY}') or os.environ.get('bskey')
-    bs_user = util.get_rfw_variable_value('${USERNAME}') or os.environ.get('bsuser')
+    bs_key = util.get_rfw_variable_value("${APIKEY}") or os.environ.get("bskey")
+    bs_user = util.get_rfw_variable_value("${USERNAME}") or os.environ.get("bsuser")
 
     try:
         driver = webdriver.Remote(
-                 command_executor=f'http://{bs_user}:{bs_key}@hub.browserstack.com:80/wd/hub',
-                 options=options)
+            command_executor=f"http://{bs_user}:{bs_key}@hub.browserstack.com:80/wd/hub",
+            options=options,
+        )
 
-        logger.info(f'BrowserStack session ID: {driver.session_id}', also_console=True)
+        logger.info(f"BrowserStack session ID: {driver.session_id}", also_console=True)
     except WebDriverException as e:
         logger.error(str(e))
-        raise exceptions.QWebException('Incorrect Browserstack capabilities.')
+        raise exceptions.QWebException("Incorrect Browserstack capabilities.")
     browser.cache_browser(driver)
     return driver
