@@ -10,6 +10,9 @@ debug.txt
 *.log
 source_*.html
 screenshots/
+pabot_results/
+.pabotsuitenames
+!test/.pabotsuitenames
 
 # doc output
 docs/build

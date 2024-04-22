@@ -1,0 +1,51 @@
+datasources:ae22fbf5f3d1533d10186a8eae507db0f1136730
+commandlineoptions:97d170e1550eee4afc0af065b78cda302a97674c
+suitesfrom:no-suites-from-option
+file:da4c8d69ffa655b2ce6f7a632351339e082b22f1
+{
+--suite Acceptance.Browser
+--suite Acceptance.Shadow Dom
+--suite Acceptance.Dragdrop
+--suite Acceptance.Screenshot
+--suite Acceptance.Swipe
+}
+--suite Acceptance.Window
+
+--suite Acceptance.Text3
+--suite Acceptance.Text2
+--suite Acceptance.Text
+
+--suite Acceptance.Input
+--suite Acceptance.Browser Headless
+--suite Acceptance.Element
+--suite Acceptance.Download
+--suite Acceptance.Table
+--suite Acceptance.Table2
+--suite Acceptance.Table3
+
+--suite Acceptance.Accordion
+--suite Acceptance.Alert
+--suite Acceptance.Checkbox
+--suite Acceptance.Cli
+--suite Acceptance.ClickItem
+--suite Acceptance.Config
+--suite Acceptance.Cookies
+--suite Acceptance.Dropdown
+--suite Acceptance.Element Corners
+--suite Acceptance.File
+--suite Acceptance.Frame
+--suite Acceptance.Icon
+--suite Acceptance.Javascript
+--suite Acceptance.Lists
+--suite Acceptance.No Body
+--suite Acceptance.Paceblock
+--suite Acceptance.Requests
+--suite Acceptance.Searchingorder
+--suite Acceptance.Searchorder Config
+--suite Acceptance.Selectors
+--suite Acceptance.Self Repairing Input
+--suite Acceptance.Text Multi
+--suite Acceptance.Upload
+--suite Acceptance.Verifylinks
+--suite Acceptance.Xhr
+

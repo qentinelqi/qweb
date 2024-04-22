@@ -4,7 +4,7 @@ Library           Collections
 Library           Process
 Library           OperatingSystem
 Library           QWeb
-Suite Setup       OpenBrowser    about:blank    ${BROWSER}
+Suite Setup       OpenBrowser    about:blank    ${BROWSER}    --headless
 Suite Teardown    CloseBrowser
 Test Setup        Start Flask Server
 Test Teardown     Terminate All Processes

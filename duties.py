@@ -80,14 +80,15 @@ def acceptance_tests(ctx,
 
 
     cmd_str = remove_extra_whitespaces(
-               f" {python_exe} -m robot"
+               f" {python_exe} -m pabot.pabot"
+               f" --ordering test/.pabotsuitenames"
                f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
                f" {cmd_excludes}"
-               f" test/Acceptance"
+               f" test/acceptance"
             )
-
+    print(cmd_str)
     ctx.run(cmd_str, title="Acceptance tests", capture=False)
 
 @duty

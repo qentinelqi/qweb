@@ -1,10 +1,7 @@
 *** Settings ***
 Library        QWeb
 Documentation  Regression test for self repairing input, this Fails if input field loses focus right after clear
-Suite Setup  Run Keyword If    '${BROWSER}'=='chrome'
-...  OpenBrowser  file://${CURDIR}/../resources/self_repairing_example.html  ${BROWSER}  --headless
-...  ELSE  OpenBrowser  file://${CURDIR}/../resources/self_repairing_example.html  ${BROWSER}
-...  --headless
+Suite Setup    OpenBrowser  file://${CURDIR}/../resources/self_repairing_example.html  ${BROWSER}  --headless
 Suite Teardown  CloseBrowser
 Test Timeout        60 seconds
 

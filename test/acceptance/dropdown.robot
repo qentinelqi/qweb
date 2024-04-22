@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for Dropdown keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/dropdown.html            ${BROWSER}
+Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/dropdown.html            ${BROWSER}    --headless
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 

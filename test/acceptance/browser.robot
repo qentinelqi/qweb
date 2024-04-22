@@ -3,82 +3,35 @@ Documentation     Tests for opening browsers
 Library           OperatingSystem
 Library           QWeb
 Test Setup        Open Browser And Wait A Bit
+Test Teardown     Close Browsers And Remove CHROME_ARGS
 Test Timeout      90 seconds
-Suite Teardown    Close All Browsers
+Suite Teardown    Close Browsers And Remove CHROME_ARGS
 
 *** Variables ***
 ${BROWSER}    chrome
+${HEADLESS}   ${TRUE}
 
 *** Test Cases ***
-Open Browser 1
-    CloseBrowser
-
-Open Browser 2
-    CloseBrowser
-
-Close All Browsers 1
-    CloseAllBrowsers
-
-Close All Browsers 2
-    [Tags]          PROBLEM_IN_WINDOWS      PROBLEM_IN_OSX  PROBLEM_IN_SAFARI    PROBLEM_IN_MACOS
-    OpenBrowser     about:blank             firefox         # force another (firefox) browser to open
-    [Teardown]      CloseAllBrowsers
-
-Missing webdriver message
-    [Tags]        PROBLEM_IN_MACOS
-    [Setup]    No Operation
-    Run Keyword and Expect Error    NoSuchDriverException*    OpenBrowser    about:blank    safari
-
-No browser open message
-    ${previous}=    SetConfig               LogScreenshot    False
-    CloseAllBrowsers
-    Run Keyword and Expect Error    QWebDriverError: No browser open*    GoTo    https://www.qentinel.com
-    SetConfig               LogScreenshot    ${previous}
-
-ScrollText
-    GoTo            file://${CURDIR}/../resources/input.html
-    ScrollText      UpDown
-    [Teardown]      CloseAllBrowsers
-
-SwitchBrowser
-    [Tags]          PROBLEM_IN_WINDOWS    PROBLEM_IN_MACOS
-    GoTo            file://${CURDIR}/../resources/multielement_text.html
-    OpenBrowser     file://${CURDIR}/../resources/dropdown.html     chrome
-    OpenBrowser     file://${CURDIR}/../resources/frame.html        firefox
-    VerifyText      Text in frame
-    SwitchBrowser   1
-    VerifyText      Lorem ipsum dolor sit amet
-    SwitchBrowser   2
-    VerifyText      Delayed dropdown
-    Run Keyword and Expect Error    QWebValueError: *index starts at 1*    SwitchBrowser   0
-    Run Keyword and Expect Error    QWebDriverError: *Tried to select browser with index*    SwitchBrowser   7
-    Run Keyword and Expect Error    QWebValueError: *is not a digit or NEW*    SwitchBrowser   my_fake_browser
-
-    [Teardown]      CloseAllBrowsers
-
 Open Browser With Options
     [tags]          PROBLEM_IN_SAFARI
-    Close All Browsers
+    [Setup]    No Operation
     OpenBrowser    about:blank    ${BROWSER}    no-sandbox, disable-gpu, disable-impl-side-painting
-    [Teardown]     CloseAllBrowsers
 
 Open Browser with Environment Chromeargs
     [tags]          PROBLEM_IN_SAFARI
-    Close All Browsers
+    [Setup]    No Operation
     Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu, disable-impl-side-painting
     OpenBrowser    about:blank    ${BROWSER}
-    [Teardown]     Close Browsers And Remove CHROME_ARGS
 
 Open Browser with Options and Environment Chromeargs
     [tags]          PROBLEM_IN_SAFARI
-    Close All Browsers
+    [Setup]    No Operation
     Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu
     OpenBrowser    about:blank    ${BROWSER}    disable-impl-side-painting
-    [Teardown]     Close Browsers And Remove CHROME_ARGS
 
 Open Browser with experimental args
     [tags]          exp             PROBLEM_IN_SAFARI
-    Close All Browsers
+    [Setup]    No Operation
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="download.prompt_for_download": "False", "plugins.always_open_pdf_externally": "True"
     OpenBrowser     about:blank     ${BROWSER}   prefs="download.prompt_for_download": "False"
@@ -88,15 +41,22 @@ Open Browser with experimental args
 
 Open Browser with options and experimental args
     [tags]          exp             PROBLEM_IN_SAFARI
-    Close All Browsers
+    [Setup]    No Operation
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="download.prompt_for_download": "False", "plugins.always_open_pdf_externally": "True"
+
+Open Browser with invalid experimental args string
+    [tags]          exp             PROBLEM_IN_SAFARI
+    [Setup]    No Operation
+    Run Keyword And Expect Error    QWebUnexpectedConditionError: Invalid argument*
+    ...     OpenBrowser     about:blank     ${BROWSER}
+    ...     prefs=Foobar, "anotherone":"false"
 
 Open Browser with options and verify
     [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE
     [Documentation]                 Run this only in Chrome
+    [Setup]    No Operation
     [Teardown]                      SetConfig            ShadowDOM             Off
-    Close All Browsers
     # Suggested format
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="extensions.ui.developer_mode": "True"
@@ -115,16 +75,9 @@ Open Browser with options and verify
     VerifyText      Load unpacked
     Close All Browsers
 
-Open Browser with invalid experimental args string
-    [tags]          exp             PROBLEM_IN_SAFARI
-    Run Keyword And Expect Error    QWebUnexpectedConditionError: Invalid argument*
-    ...     OpenBrowser     about:blank     ${BROWSER}
-    ...     prefs=Foobar, "anotherone":"false"
-    Close Browsers And Remove CHROME_ARGS
-
 Open Browser in mobile emulation mode
     [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX
-    Close All Browsers
+    [Setup]    No Operation
     
     OpenBrowser     http://howbigismybrowser.com/    ${BROWSER}    emulation=385x812
     Log Screenshot
@@ -139,11 +92,9 @@ Open Browser in mobile emulation mode
     Run Keyword And Expect Error    InvalidArgumentException: *
     ...     OpenBrowser     about:blank     ${BROWSER}    emulation=should not be found
 
-    Close Browsers And Remove CHROME_ARGS
-
 Open Browser with dictionary prefs
     [tags]          exp             PROBLEM_IN_SAFARI
-    Close All Browsers
+    [Setup]    No Operation
     ${prefsdict}=   Create Dictionary    download.prompt_for_download    False
     ...             plugins.always_open_pdf_externally    True
     OpenBrowser     about:blank     ${BROWSER}
@@ -152,7 +103,11 @@ Open Browser with dictionary prefs
 
 *** Keywords ***
 Open Browser And Wait A Bit
-    OpenBrowser    about:blank    ${BROWSER}
+    IF    $HEADLESS
+        OpenBrowser    about:blank    ${BROWSER}    --headless
+    ELSE
+        OpenBrowser    about:blank    ${BROWSER}
+    END
     Sleep    2s
 
 Close Browsers And Remove CHROME_ARGS

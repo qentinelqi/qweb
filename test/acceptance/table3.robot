@@ -2,7 +2,7 @@
 Documentation    Tests for table keywords
 Library          QWeb
 Library          Collections
-Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table3.html  ${BROWSER}  #--headless      
+Suite Setup      OpenBrowser    file://${CURDIR}/../resources/table3.html  ${BROWSER}  --headless      
 Suite Teardown   CloseBrowser
 #Test Timeout     60 seconds
 

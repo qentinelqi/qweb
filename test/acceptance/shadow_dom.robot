@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for text keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/shadow_dom.html           ${BROWSER}
+Suite Setup                     OpenBrowser                 file://${CURDIR}/../resources/shadow_dom.html           ${BROWSER}    #--headless
 Suite Teardown                  Shadow Teardown
 Test Timeout                    60 seconds
 
