@@ -1,52 +1,52 @@
 # RESOLUTION_DEPENDENCY / not headless
 {
---suite Acceptance.Browser
---suite Acceptance.Dragdrop
---suite Acceptance.Icon
---suite Acceptance.Input
---suite Acceptance.Screenshot
---suite Acceptance.Shadow Dom
---suite Acceptance.Swipe
+--suite Browser
+--suite Dragdrop
+--suite Icon
+--suite Input
+--suite Screenshot
+--suite Shadow Dom
+--suite Swipe
 }
 # FLASK
 {
---suite Acceptance.Cookies
---suite Acceptance.Download
---suite Acceptance.Requests
---suite Acceptance.Xhr
+--suite Cookies
+--suite Download
+--suite Requests
+--suite Xhr
 }
 # Long duration suites in order of longest to shortest
---suite Acceptance.Window
---suite Acceptance.Text3
---suite Acceptance.Text2
---suite Acceptance.Text
---suite Acceptance.Browser Headless
---suite Acceptance.Element
---suite Acceptance.Table
---suite Acceptance.Table2
---suite Acceptance.Table3
+--suite Window
+--suite Text3
+--suite Text2
+--suite Text
+--suite Browser Headless
+--suite Element
+--suite Table
+--suite Table2
+--suite Table3
 
 # Short duration suites (under 1 min)
---suite Acceptance.Accordion
---suite Acceptance.Alert
---suite Acceptance.Checkbox
---suite Acceptance.Cli
---suite Acceptance.ClickItem
---suite Acceptance.Config
---suite Acceptance.Dropdown
---suite Acceptance.Element Corners
---suite Acceptance.File
---suite Acceptance.Frame
---suite Acceptance.Javascript
---suite Acceptance.Lists
---suite Acceptance.No Body
---suite Acceptance.Paceblock
---suite Acceptance.Searchingorder
---suite Acceptance.Searchorder Config
---suite Acceptance.Selectors
---suite Acceptance.Self Repairing Input
---suite Acceptance.Text Multi
---suite Acceptance.Upload
---suite Acceptance.Verifylinks
+--suite Accordion
+--suite Alert
+--suite Checkbox
+--suite Cli
+--suite ClickItem
+--suite Config
+--suite Dropdown
+--suite Element Corners
+--suite File
+--suite Frame
+--suite Javascript
+--suite Lists
+--suite No Body
+--suite Paceblock
+--suite Searchingorder
+--suite Searchorder Config
+--suite Selectors
+--suite Self Repairing Input
+--suite Text Multi
+--suite Upload
+--suite Verifylinks
 
 
