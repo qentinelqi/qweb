@@ -1,9 +1,11 @@
-# RESOLUTION_DEPENDENCY / not headless
+# RESOLUTION_DEPENDENCY / not headless FLASK
 {
 --suite Browser
+--suite Download
 --suite Dragdrop
 --suite Icon
 --suite Input
+--suite Requests
 --suite Screenshot
 --suite Shadow Dom
 --suite Swipe
@@ -11,8 +13,6 @@
 # FLASK
 {
 --suite Cookies
---suite Download
---suite Requests
 --suite Xhr
 }
 # Long duration suites in order of longest to shortest

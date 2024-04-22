@@ -55,7 +55,7 @@ Two Files Are Downloaded Without ExpectFileDownload Keyword
     Sleep    2
 
 Download Suite Setup
-    OpenBrowser    about:blank    ${BROWSER}    --headless
+    OpenBrowser    about:blank    ${BROWSER}
     Set Environment Variable    FLASK_APP    download_app.py
     ${path_to_app}=   Evaluate    os.path.realpath(r"${CURDIR}${/}..${/}resources${/}download")    modules=os
     ${flask_handle}=    Start Process   flask run    shell=True   cwd=${path_to_app}
