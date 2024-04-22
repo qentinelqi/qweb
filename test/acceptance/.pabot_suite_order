@@ -1,41 +1,46 @@
+# RESOLUTION_DEPENDENCY / not headless
 {
 --suite Acceptance.Browser
---suite Acceptance.Shadow Dom
 --suite Acceptance.Dragdrop
+--suite Acceptance.Icon
+--suite Acceptance.Input
 --suite Acceptance.Screenshot
+--suite Acceptance.Shadow Dom
 --suite Acceptance.Swipe
 }
+# FLASK
+{
+--suite Acceptance.Cookies
+--suite Acceptance.Download
+--suite Acceptance.Requests
+--suite Acceptance.Xhr
+}
+# Long duration suites in order of longest to shortest
 --suite Acceptance.Window
-
 --suite Acceptance.Text3
 --suite Acceptance.Text2
 --suite Acceptance.Text
-
---suite Acceptance.Input
 --suite Acceptance.Browser Headless
 --suite Acceptance.Element
---suite Acceptance.Download
 --suite Acceptance.Table
 --suite Acceptance.Table2
 --suite Acceptance.Table3
 
+# Short duration suites (under 1 min)
 --suite Acceptance.Accordion
 --suite Acceptance.Alert
 --suite Acceptance.Checkbox
 --suite Acceptance.Cli
 --suite Acceptance.ClickItem
 --suite Acceptance.Config
---suite Acceptance.Cookies
 --suite Acceptance.Dropdown
 --suite Acceptance.Element Corners
 --suite Acceptance.File
 --suite Acceptance.Frame
---suite Acceptance.Icon
 --suite Acceptance.Javascript
 --suite Acceptance.Lists
 --suite Acceptance.No Body
 --suite Acceptance.Paceblock
---suite Acceptance.Requests
 --suite Acceptance.Searchingorder
 --suite Acceptance.Searchorder Config
 --suite Acceptance.Selectors
@@ -43,5 +48,5 @@
 --suite Acceptance.Text Multi
 --suite Acceptance.Upload
 --suite Acceptance.Verifylinks
---suite Acceptance.Xhr
+
 
