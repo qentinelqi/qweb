@@ -47,7 +47,7 @@ Modify Xhr and unknown type
 *** Keywords ***
 Start Flask Server And Open Browser
     Set Environment Variable    FLASK_APP    xhr_app.py
-    ${flask_handle}=    Start Process   flask run    shell=True   cwd=${CURDIR}${/}..${/}resources${/}xhr
+    ${flask_handle}=    Start Process   flask run    shell=True   cwd=${CURDIR}${/}..${/}..${/}resources${/}xhr
     Sleep           5    # Required for the server to start
     Process Should Be Running    ${flask_handle}    Flask server was not running
     OpenBrowser    about:blank    ${BROWSER}  --headless

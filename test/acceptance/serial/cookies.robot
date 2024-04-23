@@ -46,7 +46,7 @@ Verify That Cookies Are Deleted
 *** Keywords ***
 Start Flask Server
     Set Environment Variable    FLASK_APP    cookies_app.py
-    ${path_to_app}=   Evaluate    os.path.realpath(r"${CURDIR}${/}..${/}resources${/}cookies")    modules=os
+    ${path_to_app}=   Evaluate    os.path.realpath(r"${CURDIR}${/}..${/}..${/}resources${/}cookies")    modules=os
     ${flask_handle}=    Start Process   flask run    shell=True   cwd=${path_to_app}
     Sleep           5    # Required for the server to start
     Process Should Be Running    ${flask_handle}    Flask server was not running

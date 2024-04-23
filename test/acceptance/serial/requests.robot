@@ -37,7 +37,7 @@ Save file using text as a locator and rename to testpdf
 *** Keywords ***
 Start Flask Server
     Set Environment Variable    FLASK_APP    requests_app.py
-    ${path_to_app}=   Evaluate    os.path.realpath(r"${CURDIR}${/}..${/}resources${/}requests")  modules=os
+    ${path_to_app}=   Evaluate    os.path.realpath(r"${CURDIR}${/}..${/}..${/}resources${/}requests")  modules=os
     ${flask_handle}=    Start Process   flask run    shell=True   cwd=${path_to_app}
     Sleep           5    # Required for the server to start
     Process Should Be Running    ${flask_handle}    Flask server was not running
