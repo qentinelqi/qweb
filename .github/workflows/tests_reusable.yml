@@ -152,26 +152,29 @@ jobs:
         --consolecolors ansi
         test/acceptance
 
+    - name: Generate suite order file
+      if: matrix.browser != 'safari'
+      run: python test/acceptance/pabot_suite_ordering.py --github
+     
     - name: Acceptance tests
       id: acceptance-tests
       if: matrix.browser != 'safari'
       continue-on-error: true
       timeout-minutes: 15
-      run: |
-        python test/acceptance/pabot_suite_ordering.py --github
-        python -m pabot.pabot \
-          --ordering test/acceptance/.pabot_order \
-          ${{ inputs.additional-rfw-parameters }} \
-          ${{ inputs.rfw-exclude-tags }} \
-          -e jailed \
-          -e PROBLEM_IN_${{ runner.os }} \
-          -e PROBLEM_IN_${{ matrix.browser }} \
-          -v BROWSER:${{ matrix.browser }} \
-          -d result \
-          --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} \
-          -b debug.txt \
-          --consolecolors ansi \
-          test/acceptance
+      run: >
+        python -m pabot.pabot
+        --ordering test/acceptance/.pabot_order
+        ${{ inputs.additional-rfw-parameters }}
+        ${{ inputs.rfw-exclude-tags }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
+        -e PROBLEM_IN_${{ matrix.browser }}
+        -v BROWSER:${{ matrix.browser }}
+        -d result
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        -b debug.txt
+        --consolecolors ansi
+        test/acceptance
     
     - name: Rerun failed acceptance tests
       if: steps.acceptance-tests.outcome == 'failure'
