@@ -181,7 +181,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 15
       run: >
-        pabot.pabot
+        python -m pabot.pabot
         --ordering test/acceptance/.pabot_order
         --rerunfailedsuites result/output.xml
         -o rerun.xml
