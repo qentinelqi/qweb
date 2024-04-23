@@ -6,6 +6,8 @@ Test Setup          GoTo    file://${CURDIR}/../resources/swipe.html
 Suite Teardown      CloseBrowser
 Test Timeout        60 seconds
 
+Force Tags    windowed
+
 *** Variables ***
 ${BROWSER}    chrome
 ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}pics_and_icons${/}icons

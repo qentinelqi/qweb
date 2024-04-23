@@ -6,6 +6,8 @@ Suite Setup         OpenBrowser    file://${CURDIR}/../resources/text.html    ${
 Suite Teardown      CloseBrowser
 Test Timeout        60 seconds
 
+Force Tags    windowed
+
 *** Variables ***
 ${SCREENSHOT_NAME}    test_screen_shot.png
 ${BROWSER}    chrome

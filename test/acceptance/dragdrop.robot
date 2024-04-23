@@ -7,6 +7,8 @@ Test Setup        SetConfig       WindowSize    1920x1080
 Test Timeout      60 seconds
 Test Teardown     Refresh Page
 
+Force Tags    windowed
+
 *** Variables ***
 ${BROWSER}    chrome
 

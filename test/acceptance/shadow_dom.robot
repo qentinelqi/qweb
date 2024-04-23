@@ -5,6 +5,8 @@ Suite Setup                     OpenBrowser                 file://${CURDIR}/../
 Suite Teardown                  Shadow Teardown
 Test Timeout                    60 seconds
 
+Force Tags    windowed
+
 *** Variables ***
 ${BROWSER}                      chrome
 
