@@ -67,18 +67,19 @@ def acceptance_tests(ctx,
     def remove_extra_whitespaces(string: str) -> str:
         return " ".join(string.split())
 
-    cmd_exit_on_failure = ""
-    if exitonfailure.lower() == "true":
-        cmd_exit_on_failure = "--exitonfailure"
-
     listener_cmd = ""
     if listener:
         listener_cmd = f" --listener {listener}"
 
+
+    cmd_exit_on_failure = ""
+    if exitonfailure.lower() == "true":
+        cmd_exit_on_failure = "--exitonfailure"
     os = system().upper()
     if os == "DARWIN":
         os = "MACOS"
- 
+        
+    
     excludes = [
         f"PROBLEM_IN_{os}",
         f"PROBLEM_IN_{browser.upper()}",
@@ -89,23 +90,26 @@ def acceptance_tests(ctx,
     ]
     cmd_excludes = f'-e {" -e ".join(excludes)}'
 
+    
     if os == "MACOS": 
         # need to run tests in single process
         # https://developer.apple.com/documentation/webkit/about_webdriver_for_safari#2957226
         cmd_str = remove_extra_whitespaces(f" {python_exe} -m robot")
     else:
-        # run in parallel
+        ctx.run(f"{python_exe} test/acceptance/pabot_suite_ordering.py", nofail=True)
         cmd_str = remove_extra_whitespaces(
                 f" {python_exe} -m pabot.pabot"
-                f" --ordering test/acceptance/.pabot_all"
+                f" --ordering test/acceptance/.pabot_order"
                 f" --name Acceptance"
-                )
-    cmd_str += remove_extra_whitespaces(f" {listener_cmd}"
+            )
+        
+    cmd_str += " " + remove_extra_whitespaces(
+               f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
                f" {cmd_excludes}"
                f" test/acceptance")
-    print(cmd_str)
+        
     ctx.run(cmd_str, title="Acceptance tests", capture=False)
 
 @duty

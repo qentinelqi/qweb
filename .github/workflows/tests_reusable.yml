@@ -104,6 +104,7 @@ jobs:
       if: matrix.browser == 'safari'
       run: >
         python -m robot
+        -o safari_smoke.xml
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -115,13 +116,12 @@ jobs:
     # There can be only a single instance of Safari + webdriver so parallel exec is impossible
     # https://developer.apple.com/documentation/webkit/about_webdriver_for_safari#2957226
     - name: Acceptance tests safari
-      id: initial-acceptance-tests-safari
+      id: acceptance-tests-safari
       if: matrix.browser == 'safari'
       continue-on-error: true
       timeout-minutes: 30
       run: >
         python -m robot
-        -o windowed.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
@@ -136,13 +136,13 @@ jobs:
         test/acceptance
 
     - name: Rerun failed acceptance tests safari
-      if: steps.initial-acceptance-tests-safari.outcome == 'failure'
+      if: steps.acceptance-tests-safari.outcome == 'failure'
       continue-on-error: true
       timeout-minutes: 30
       run: >
         python -m robot
-        --rerunfailedsuites result/windowed.xml
-        -o rerun-windowed.xml
+        --rerunfailedsuites result/output.xml
+        -o rerun.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         -v BROWSER:${{ matrix.browser }}
@@ -152,63 +152,36 @@ jobs:
         --consolecolors ansi
         test/acceptance
 
-    - name: Acceptance tests windowed
-      id: initial-acceptance-tests-windowed
+    - name: Acceptance tests
+      id: acceptance-tests
       if: matrix.browser != 'safari'
       continue-on-error: true
       timeout-minutes: 15
-      run: >
-        python -m robot
-        -i windowed
-        -i FLASK
-        -o windowed.xml
-        --exitonfailure 
-        ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed
-        -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }}
-        -v BROWSER:${{ matrix.browser }}
-        -d result
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
-        -b debug.txt
-        --consolecolors ansi
+      run: |
+        python test/acceptance/pabot_suite_ordering.py test/acceptance --github
+        python -m pabot.pabot \
+        --ordering test/acceptance/.pabot_order \
+        ${{ inputs.additional-rfw-parameters }} \
+        ${{ inputs.rfw-exclude-tags }} \
+        -e jailed \
+        -e PROBLEM_IN_${{ runner.os }} \
+        -e PROBLEM_IN_${{ matrix.browser }} \
+        -v BROWSER:${{ matrix.browser }} \
+        -d result \
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} \
+        -b debug.txt \
+        --consolecolors ansi \
         test/acceptance
     
-    - name: Acceptance tests headless
-      id: initial-acceptance-tests-headless
-      if: matrix.browser != 'safari'
-      continue-on-error: true
-      timeout-minutes: 10
-      run: >
-        python -m pabot.pabot
-        -e windowed
-        -e FLASK
-        -o headless.xml
-        --exitonfailure 
-        ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed
-        -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }}
-        -v BROWSER:${{ matrix.browser }}
-        -d result
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
-        -b debug.txt
-        --consolecolors ansi
-        test/acceptance
-    
-    - name: Rerun failed acceptance tests windowed
-      if: steps.initial-acceptance-tests-windowed.outcome == 'failure'
+    - name: Rerun failed acceptance tests
+      if: steps.acceptance-tests.outcome == 'failure'
       continue-on-error: true
       timeout-minutes: 15
       run: >
-        python -m robot
-        -i windowed
-        -i FLASK
-        --rerunfailedsuites result/windowed.xml
-        -o rerun-windowed.xml
-        --exitonfailure 
+        pabot.pabot
+        --ordering test/acceptance/.pabot_order
+        --rerunfailedsuites result/output.xml
+        -o rerun.xml
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
         -e jailed 
@@ -221,65 +194,18 @@ jobs:
         --consolecolors ansi
         test/acceptance
 
-    - name: Rerun failed acceptance tests headless
-      if: steps.initial-acceptance-tests-headless.outcome == 'failure'
-      continue-on-error: true
-      timeout-minutes: 10
-      run: >
-        python -m pabot.pabot
-        -e windowed
-        -e FLASK
-        --rerunfailedsuites result/headless.xml
-        -o rerun-headless.xml
-        --exitonfailure 
-        ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed
-        -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }}
-        -v BROWSER:${{ matrix.browser }}
-        -d result
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
-        -b debug.txt
-        --consolecolors ansi
-        test/acceptance
-
     # robot returns amount of failed tests, github considers it as a failure and stops step execution
     # -> result merging needs a separate step
-    - name: Merge initial windowed and headless test results
-      if: matrix.browser != 'safari'
-      continue-on-error: true
+    - name: Merge rerun test results
+      if: steps.acceptance-tests.outcome == 'failure' || steps.acceptance-tests-safari.outcome == 'failure'
       run: >
         python -m robot.rebot
         --merge
         -d result
-        -o output.xml
-        result/windowed.xml
-        result/headless.xml
-    
-    # Also merges Safari reruns
-    - name: Merge rerun windowed test results  
-      if: steps.initial-acceptance-tests-windowed.outcome == 'failure' || steps.initial-acceptance-tests-safari.outcome == 'failure'
-      continue-on-error: true
-      run: >
-        python -m robot.rebot
-        --merge
-        -d result
-        -o output.xml
+        -o merged.xml
         result/output.xml
-        result/rerun-windowed.xml
-
-    - name: Merge rerun headless test results  
-      if: steps.initial-acceptance-tests-headless.outcome == 'failure'
-      continue-on-error: true
-      run: >
-        python -m robot.rebot
-        --merge
-        -d result
-        -o output.xml
-        result/output.xml
-        result/rerun-headless.xml
-    
+        result/rerun.xml
+      
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v4
