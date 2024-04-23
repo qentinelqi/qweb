@@ -160,7 +160,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 15
       run: >
-        python -m pabot.pabot
+        python -m robot
         -i windowed
         -i FLASK
         -o windowed.xml
@@ -203,7 +203,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 15
       run: >
-        python -m pabot.pabot
+        python -m robot
         --rerunfailedsuites result/windowed.xml
         -o rerun-windowed.xml
         --exitonfailure 
