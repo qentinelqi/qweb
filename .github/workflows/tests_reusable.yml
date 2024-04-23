@@ -101,7 +101,7 @@ jobs:
 
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
-      timeout-minutes: 2
+      timeout-minutes: 1
       if: matrix.browser == 'safari'
       run: >
         python -m robot
@@ -161,7 +161,7 @@ jobs:
       id: acceptance-tests
       if: matrix.browser != 'safari'
       continue-on-error: true
-      timeout-minutes: 15
+      timeout-minutes: 20
       run: >
         python -m pabot.pabot
         --ordering test/acceptance/.pabot_order
@@ -180,7 +180,7 @@ jobs:
     - name: Rerun failed acceptance tests
       if: steps.acceptance-tests.outcome == 'failure'
       continue-on-error: true
-      timeout-minutes: 15
+      timeout-minutes: 20
       run: >
         python -m pabot.pabot
         --ordering test/acceptance/.pabot_order

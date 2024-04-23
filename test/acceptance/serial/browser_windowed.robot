@@ -6,8 +6,6 @@ Test Setup        Open Browser And Wait A Bit
 Test Teardown     Close Browsers And Remove CHROME_ARGS
 Test Timeout      90 seconds
 Suite Teardown    Close Browsers And Remove CHROME_ARGS
-
-Force Tags    windowed
 *** Variables ***
 ${BROWSER}    chrome
 ${HEADLESS}   ${TRUE}

@@ -19,8 +19,8 @@ PressKey Paste
     VerifyInputValue        The Brave               Test Automation rules
 
 Global hotkeys
-    [Tags]    PressKey    RESOLUTION_DEPENDENCY    windowed
-    GoTo           file://${CURDIR}/../../resources/text.html    ${BROWSER}
+    [Tags]    PressKey    RESOLUTION_DEPENDENCY
+    GoTo           file://${CURDIR}/../../resources/text.html
     Set Config            WindowSize    1920x1080
     ${scroll_text}=       GetText       Current scroll
     Should Be Equal As Strings    ${scroll_text}                     Current scroll = scroll the window
