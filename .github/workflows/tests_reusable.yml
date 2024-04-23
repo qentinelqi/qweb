@@ -101,6 +101,7 @@ jobs:
 
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
+      timeout-minutes: 2
       if: matrix.browser == 'safari'
       run: >
         python -m robot
