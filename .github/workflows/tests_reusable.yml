@@ -141,7 +141,7 @@ jobs:
       timeout-minutes: 30
       run: >
         python -m robot
-        --rerunfailedsuites result/output.xml
+        --rerunfailedsuites result/windowed.xml
         -o rerun-windowed.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
