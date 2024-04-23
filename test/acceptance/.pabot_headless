@@ -16,16 +16,15 @@
 --suite Cli
 --suite ClickItem
 --suite Config
---suite Cookies
 --suite Dropdown
 --suite Element Corners
 --suite File
 --suite Frame
+--suite Input
 --suite Javascript
 --suite Lists
 --suite No Body
 --suite Paceblock
---suite Requests
 --suite Searchingorder
 --suite Searchorder Config
 --suite Selectors

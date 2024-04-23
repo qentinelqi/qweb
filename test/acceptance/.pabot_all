@@ -1,10 +1,11 @@
-# RESOLUTION_DEPENDENCY & FLASK suites which require screen
+# RESOLUTION_DEPENDENCY & FLASK suites
 {
 --suite Browser
+--suite Cookies
 --suite Download
 --suite Dragdrop
 --suite Icon
---suite Input
+--suite Requests
 --suite Screenshot
 --suite Shadow Dom
 --suite Swipe
@@ -15,6 +16,7 @@
 --suite Text3
 --suite Text2
 --suite Text
+--suite Input
 --suite Browser Headless
 --suite Element
 --suite Table
@@ -28,7 +30,6 @@
 --suite Cli
 --suite ClickItem
 --suite Config
---suite Cookies
 --suite Dropdown
 --suite Element Corners
 --suite File
@@ -37,7 +38,6 @@
 --suite Lists
 --suite No Body
 --suite Paceblock
---suite Requests
 --suite Searchingorder
 --suite Searchorder Config
 --suite Selectors
