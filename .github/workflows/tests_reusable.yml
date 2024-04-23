@@ -125,7 +125,8 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
-        -e jailed -e PROBLEM_IN_${{ runner.os }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
@@ -144,9 +145,6 @@ jobs:
         -o rerun-windowed.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -167,7 +165,8 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
-        -e jailed -e PROBLEM_IN_${{ runner.os }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
@@ -189,7 +188,8 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
-        -e jailed -e PROBLEM_IN_${{ runner.os }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
@@ -204,10 +204,16 @@ jobs:
       timeout-minutes: 15
       run: >
         python -m robot
+        -i windowed
+        -i FLASK
         --rerunfailedsuites result/windowed.xml
         -o rerun-windowed.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
+        ${{ inputs.rfw-exclude-tags }}
+        -e jailed 
+        -e PROBLEM_IN_${{ runner.os }}
+        -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -221,10 +227,16 @@ jobs:
       timeout-minutes: 10
       run: >
         python -m pabot.pabot
+        -e windowed
+        -e FLASK
         --rerunfailedsuites result/headless.xml
         -o rerun-headless.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
+        ${{ inputs.rfw-exclude-tags }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
+        -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
