@@ -3,7 +3,7 @@ Documentation    Tests for input keywords
 Library          QWeb
 Library          OperatingSystem
 Suite Setup      OpenBrowser    file://${CURDIR}/../resources/input.html    ${BROWSER}  --headless
-Suite Teardown   CloseBrowser
+Suite Teardown   CloseAllBrowsers
 Test Timeout     60 seconds
 
 *** Variables ***
@@ -415,7 +415,7 @@ TextArea and line breks with check on
     TypeText     textarea1   This is just a sample text${\n}Just another text    check=True
 
 Global hotkeys
-    [Tags]    PressKey    RESOLUTION_DEPENDENCY
+    [Tags]    PressKey    RESOLUTION_DEPENDENCY    windowed
     CloseAllBrowsers
     OpenBrowser           file://${CURDIR}/../resources/text.html    ${BROWSER}
     Set Config            WindowSize    1920x1080
