@@ -158,20 +158,20 @@ jobs:
       continue-on-error: true
       timeout-minutes: 15
       run: |
-        python test/acceptance/pabot_suite_ordering.py test/acceptance --github
+        python test/acceptance/pabot_suite_ordering.py --github
         python -m pabot.pabot \
-        --ordering test/acceptance/.pabot_order \
-        ${{ inputs.additional-rfw-parameters }} \
-        ${{ inputs.rfw-exclude-tags }} \
-        -e jailed \
-        -e PROBLEM_IN_${{ runner.os }} \
-        -e PROBLEM_IN_${{ matrix.browser }} \
-        -v BROWSER:${{ matrix.browser }} \
-        -d result \
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} \
-        -b debug.txt \
-        --consolecolors ansi \
-        test/acceptance
+          --ordering test/acceptance/.pabot_order \
+          ${{ inputs.additional-rfw-parameters }} \
+          ${{ inputs.rfw-exclude-tags }} \
+          -e jailed \
+          -e PROBLEM_IN_${{ runner.os }} \
+          -e PROBLEM_IN_${{ matrix.browser }} \
+          -v BROWSER:${{ matrix.browser }} \
+          -d result \
+          --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} \
+          -b debug.txt \
+          --consolecolors ansi \
+          test/acceptance
     
     - name: Rerun failed acceptance tests
       if: steps.acceptance-tests.outcome == 'failure'
