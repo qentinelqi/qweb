@@ -161,7 +161,8 @@ jobs:
       timeout-minutes: 15
       run: >
         python -m pabot.pabot
-        --ordering test/acceptance/.pabot_windowed
+        -i windowed
+        -i FLASK
         -o windowed.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
@@ -182,7 +183,8 @@ jobs:
       timeout-minutes: 10
       run: >
         python -m pabot.pabot
-        --ordering test/acceptance/.pabot_headless
+        -e windowed
+        -e FLASK
         -o headless.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
@@ -202,14 +204,10 @@ jobs:
       timeout-minutes: 15
       run: >
         python -m pabot.pabot
-        --ordering test/acceptance/.pabot_windowed
         --rerunfailedsuites result/windowed.xml
         -o rerun-windowed.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -223,14 +221,10 @@ jobs:
       timeout-minutes: 10
       run: >
         python -m pabot.pabot
-        --ordering test/acceptance/.pabot_headless
         --rerunfailedsuites result/headless.xml
         -o rerun-headless.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
