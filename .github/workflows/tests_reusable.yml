@@ -248,6 +248,7 @@ jobs:
     # -> result merging needs a separate step
     - name: Merge initial windowed and headless test results
       if: matrix.browser != 'safari'
+      continue-on-error: true
       run: >
         python -m robot.rebot
         --merge
@@ -259,6 +260,7 @@ jobs:
     # Also merges Safari reruns
     - name: Merge rerun windowed test results  
       if: steps.initial-acceptance-tests-windowed.outcome == 'failure' || steps.initial-acceptance-tests-safari.outcome == 'failure'
+      continue-on-error: true
       run: >
         python -m robot.rebot
         --merge
@@ -269,6 +271,7 @@ jobs:
 
     - name: Merge rerun headless test results  
       if: steps.initial-acceptance-tests-headless.outcome == 'failure'
+      continue-on-error: true
       run: >
         python -m robot.rebot
         --merge
