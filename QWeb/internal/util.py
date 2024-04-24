@@ -55,7 +55,6 @@ def kwarg_check():
     koargs = []
     for value in caller_signature.parameters.values():
         if value == Parameter.KEYWORD_ONLY:
-            logger.console(value)
             koargs.append(value)
     for koa in koargs:
         caller_koarg_value = caller_locals.get(koa.name, None)
