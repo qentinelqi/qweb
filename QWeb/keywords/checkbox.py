@@ -20,10 +20,10 @@ Checkboxes are those that can be checked/selected and unchecked/unselected.
 """
 
 from __future__ import annotations
-from typing import Union
+from typing import Union, Optional
 
 from robot.api.deco import keyword
-from QWeb.internal import checkbox, actions, decorators
+from QWeb.internal import checkbox, actions, decorators, util
 import QWeb.internal.element
 from QWeb.internal.exceptions import QWebValueError
 
@@ -36,6 +36,9 @@ def click_checkbox(
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
+    *,
+    limit_traverse: Optional[bool] = None,
+    partial_match: Optional[bool] = None,
     **kwargs,
 ) -> None:
     r"""Check or uncheck a checkbox.
@@ -96,6 +99,7 @@ def click_checkbox(
     ----------------
     \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`, \`VerifyCheckboxValue\`
     """
+    util.kwarg_check()
     checkbox_element, locator_element = checkbox.get_checkbox_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs
     )
@@ -252,6 +256,7 @@ def verify_checkbox_value(
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`
     """
+    util.kwarg_check()
     checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
         locator, anchor=anchor, index=index, **kwargs
     )

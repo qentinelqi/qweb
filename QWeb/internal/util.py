@@ -16,6 +16,9 @@
 # ---------------------------
 from __future__ import annotations
 from typing import Union, Any, Callable, Optional, List
+from inspect import signature, Parameter
+import sys
+from copy import deepcopy
 
 from QWeb.internal import browser, javascript
 from QWeb.internal.browser.safari import NAMES as SAFARINAMES
@@ -29,6 +32,45 @@ import json
 import platform
 import re
 import subprocess
+
+
+def kwarg_check():
+    """checks calling functions kwargs"""
+    caller = sys._getframe(1)
+    parent_caller = sys._getframe(2)
+
+    caller_name = caller.f_code.co_name
+    caller_locals = caller.f_locals
+    caller_kwargs = caller_locals.get("kwargs", None)
+    if caller_kwargs is None:
+        msg = f"Function 'kwarg_check' was called from function '{caller_name}' which has no '**kwargs'"
+        raise AttributeError(msg)
+
+    parent_locals = parent_caller.f_locals
+    caller_function = parent_locals.get(caller_name, parent_locals.get("fn"))
+    caller_signature = signature(caller_function)
+
+    new_kwargs = {}
+
+    koargs = []
+    for value in caller_signature.parameters.values():
+        if value == Parameter.KEYWORD_ONLY:
+            logger.console(value)
+            koargs.append(value)
+    for koa in koargs:
+        caller_koarg_value = caller_locals.get(koa.name, None)
+        if caller_koarg_value is not None:
+            new_kwargs[koa.name] = caller_koarg_value
+
+    tmp_kwargs = deepcopy(caller_kwargs)
+    tmp_kwargs.pop("kwargs")
+    if len(tmp_kwargs) > 0:
+        msg = (
+            f"Unknown '**kwargs' were provided: '{tmp_kwargs}'\n"
+            f"Use of '**kwargs' will be deprecated for keyword '{caller_name}'"
+        )
+        logger.warn(msg)
+    return new_kwargs
 
 
 def par2bool(s: Union[bool, int, str]) -> bool:

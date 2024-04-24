@@ -29,6 +29,12 @@ def save_file(
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
     path: Optional[str] = None,
+    *,
+    tag: Optional[str] = None,
+    parent: Optional[str] = None,
+    child: Optional[str] = None,
+    index: Optional[str] = None,
+    headers: Optional[str] = None,
     **kwargs,
 ) -> None:
     r"""Save file using http-request.
@@ -96,6 +102,8 @@ def save_file(
     \`ExpectFileDownload\`, \`UploadFile\`, \`UseFile\`,
     \`VerifyFile\`, \`VerifyFileDownload\`
     """
+    kwargs = util.kwarg_check()
+
     if locator.startswith("http"):
         url = locator
     else:
