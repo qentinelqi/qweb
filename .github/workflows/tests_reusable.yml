@@ -107,6 +107,7 @@ jobs:
         python -m robot
         -o safari_smoke.xml
         -v BROWSER:${{ matrix.browser }}
+        -L TRACE
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
