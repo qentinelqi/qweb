@@ -52,7 +52,7 @@ def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs
         if not input_elements:  # Find input element using locator
             locator_element = text.get_text_using_anchor(locator, str(anchor), **kwargs)
             # search for only file type inputs if upload is set
-            if kwargs.get('upload', False):
+            if kwargs.get("upload", False):
                 input_elements = _get_all_input_elements('//input[@type="file"]')
             else:
                 input_elements = _get_all_input_elements(CONFIG["AllInputElements"])
@@ -72,9 +72,7 @@ def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs
 
 
 def _get_all_input_elements(xpath: str) -> list[WebElement]:
-    return element.get_webelements_in_active_area(
-        xpath, stay_in_current_frame=True
-    )
+    return element.get_webelements_in_active_area(xpath, stay_in_current_frame=True)
 
 
 def get_input_elements_from_all_documents(

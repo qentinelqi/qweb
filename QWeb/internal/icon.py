@@ -302,11 +302,15 @@ class QIcon:
         needle_path = Path(needle)
         if not needle_path.exists():
             raise FileNotFoundError(f"Needle file does not exist. Tried: {needle_path}")
-        template = cv2.imread(str(needle_path.resolve()), 0) if grayscale else cv2.imread(str(needle_path.resolve()), cv2.IMREAD_COLOR)  # Read in color
+        template = (
+            cv2.imread(str(needle_path.resolve()), 0)
+            if grayscale
+            else cv2.imread(str(needle_path.resolve()), cv2.IMREAD_COLOR)
+        )  # Read in color
 
         if template is None:
             raise FileNotFoundError(f"Cannot read template image. Tried: {needle}")
-        
+
         height, width = template.shape[:2]
 
         scale_ratios = self._get_scale_ratios(template_res_w, device_res_w)
@@ -464,7 +468,7 @@ class QIcon:
         scaled_needle: ndarray,
         loc: tuple[int, int],
         best_scale: float,
-        grayscale: bool = True
+        grayscale: bool = True,
     ) -> None:
         """Draw a composite image with the needle image, the haystack image,
         the scaled needle that matches the best and show where in haystack
@@ -514,7 +518,12 @@ class QIcon:
 
 
 def image_recognition(
-    image_path: str, template_res_w: int, browser_res_w: int, pyautog: bool, tolerance: float = 0.95, grayscale: bool = True
+    image_path: str,
+    template_res_w: int,
+    browser_res_w: int,
+    pyautog: bool,
+    tolerance: float = 0.95,
+    grayscale: bool = True,
 ) -> tuple[int, int]:
     """Return icon's coordinates."""
     image_rec = QIcon()
@@ -526,7 +535,7 @@ def image_recognition(
         tolerance=tolerance,
         template_res_w=template_res_w,
         device_res_w=browser_res_w,
-        grayscale=grayscale
+        grayscale=grayscale,
     )
     return x, y
 

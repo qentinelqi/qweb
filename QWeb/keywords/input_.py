@@ -589,12 +589,14 @@ def verify_input_element(
 
 @keyword(tags=("Input", "Getters"))
 @decorators.timeout_decorator
-def get_input_value(locator: str,
-                    anchor: str = "1",
-                    timeout: Union[int, float, str] = 0,
-                    index: int = 1,
-                    strip_newlines: bool = True,
-                    **kwargs) -> Union[int, float, str]:
+def get_input_value(
+    locator: str,
+    anchor: str = "1",
+    timeout: Union[int, float, str] = 0,
+    index: int = 1,
+    strip_newlines: bool = True,
+    **kwargs,
+) -> Union[int, float, str]:
     r"""Get input value from input field.
 
     Examples

@@ -127,10 +127,10 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     ----------------
 
     Selenium Manager's automatic browser and driver management is available for Chrome, Firefox
-    and Edge. To use specific browser version, add `browser_version` keyword argument. 
+    and Edge. To use specific browser version, add `browser_version` keyword argument.
     If matching browser & driver(s) can be found in path, they will be used. If not, Selenium
     Manager tries to download and install them. With Chrome also specific version of
-    browser ("Chrome for Testing") can be used. 
+    browser ("Chrome for Testing") can be used.
     Note that for Edge in Windows local admin rights are required!
 
     More info:

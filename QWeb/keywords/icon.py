@@ -36,12 +36,12 @@ def click_icon(
     browser_res_w: Optional[int] = None,
     timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
     tolerance: float = 0.95,
-    grayscale: bool = True
+    grayscale: bool = True,
 ) -> None:
     r"""Click the icon/bitmap on the screen.
 
     This keyword is designed to locate and interact with graphical icons/bitmpas on a screen
-    by comparing them to a reference image. The function searches the current screen content 
+    by comparing them to a reference image. The function searches the current screen content
     for the image specified in the 'image' parameter.
 
     If reference picture is not stored in default folders (images, files, downloads) then
@@ -98,7 +98,14 @@ def click_icon(
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=True, tolerance=tolerance, grayscale=grayscale)
+    x, y = icon.image_recognition(
+        str(image_path),
+        template_res_w,
+        browser_res_w,
+        pyautog=True,
+        tolerance=tolerance,
+        grayscale=grayscale,
+    )
     if x == -1:
         raise QWebElementNotFoundError("Couldn't find the icon from the screen")
     if CONFIG.get_value("RetinaDisplay"):
@@ -114,7 +121,7 @@ def is_icon(
     template_res_w: Optional[int] = None,
     browser_res_w: Optional[int] = None,
     tolerance: float = 0.95,
-    grayscale: bool = True
+    grayscale: bool = True,
 ) -> bool:
     r"""Check is the icon on the screen.
 
@@ -133,9 +140,9 @@ def is_icon(
 
     .. code-block:: robotframework
 
-        ${status}                   IsIcon                   plane
+        ${status}    IsIcon    plane
         # Verify image with stricter tolerance and comparing colors
-        ${status}                   IsIcon                   plane_red      tolerance=0.99     grayscale=False
+        ${status}    IsIcon    plane_red    tolerance=0.99    grayscale=False
 
     ${status} will be True or False.
 
@@ -170,7 +177,14 @@ def is_icon(
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False, tolerance=tolerance, grayscale=grayscale)
+    x, _y = icon.image_recognition(
+        str(image_path),
+        template_res_w,
+        browser_res_w,
+        pyautog=False,
+        tolerance=tolerance,
+        grayscale=grayscale,
+    )
 
     if x == -1:
         return False
@@ -185,12 +199,12 @@ def verify_icon(
     browser_res_w: Optional[int] = None,
     timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
     tolerance: float = 0.95,
-    grayscale: bool = True
+    grayscale: bool = True,
 ) -> bool:
     r"""Verify page contains icon/bitmpa.
 
     This keyword is designed to locate graphical icons/bitmpas on a screen
-    by comparing them to a reference image. The function searches the current screen content 
+    by comparing them to a reference image. The function searches the current screen content
     for the image specified in the 'image' parameter.
 
     If reference picture is not stored in default folders (images, files, downloads) then
@@ -250,7 +264,14 @@ def verify_icon(
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
 
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False, tolerance=tolerance, grayscale=grayscale)
+    x, _y = icon.image_recognition(
+        str(image_path),
+        template_res_w,
+        browser_res_w,
+        pyautog=False,
+        tolerance=tolerance,
+        grayscale=grayscale,
+    )
     if x == -1:
         raise QWebIconNotFoundError("Couldn't find the icon from the screen")
     return True

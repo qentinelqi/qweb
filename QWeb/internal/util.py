@@ -161,24 +161,24 @@ def highlight_validation(color: str) -> str:
 
 
 def get_substring(text: str, strip_newlines: bool = True, **kwargs) -> Union[int, float, str]:
-    if '\xa0' in text:
-        text = text.replace('\xa0', ' ')
-    start, end = kwargs.get('between', '{}???{}').format(0, len(text)).split('???')
-    include_start = kwargs.get('include_locator', False)
-    exclude_end = kwargs.get('exclude_post', True)
+    if "\xa0" in text:
+        text = text.replace("\xa0", " ")
+    start, end = kwargs.get("between", "{}???{}").format(0, len(text)).split("???")
+    include_start = kwargs.get("include_locator", False)
+    exclude_end = kwargs.get("exclude_post", True)
     start = get_index_of(text, start, include_start)
     end = get_index_of(text, end, exclude_end)
     if end == 0:
         end = len(text)
-    if 'from_start' in kwargs:
-        end = start + int(kwargs.get('from_start'))  # type: ignore[arg-type]
-    if 'from_end' in kwargs:
-        start = end - int(kwargs.get('from_end'))  # type: ignore[arg-type]
-    logger.debug('substring start: {}'.format(start))
-    logger.debug('substring end: {}'.format(end))
+    if "from_start" in kwargs:
+        end = start + int(kwargs.get("from_start"))  # type: ignore[arg-type]
+    if "from_end" in kwargs:
+        start = end - int(kwargs.get("from_end"))  # type: ignore[arg-type]
+    logger.debug("substring start: {}".format(start))
+    logger.debug("substring end: {}".format(end))
     if strip_newlines:
-        text = str(text[start:end]).strip().replace('\n', "")
-        text = text.replace('\r', "")
+        text = str(text[start:end]).strip().replace("\n", "")
+        text = text.replace("\r", "")
     try:
         if "int" in kwargs:
             num = float(text.replace(" ", "").replace(",", "."))
