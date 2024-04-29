@@ -33,6 +33,35 @@ Verify icons
     VerifyIcon              screen                template_res_w=1920
     SetConfig               LogMatchedIcons       False
 
+Verify matching color
+    [Tags]                  ICON
+    SetConfig               LogMatchedIcons       True
+    # colored image with default grayscale setting, should be found 
+    VerifyIcon              infinity_red          template_res_w=1920
+    # colored image compared with colors, should not be found 
+    Run Keyword And Expect Error   QWebElementNotFoundError*
+    ...                            VerifyIcon    infinity_red          
+    ...                                          template_res_w=1920    
+    ...                                          tolerance=0.99    
+    ...                                          grayscale=False
+    ...                                          timeout=3
+
+    SetConfig               LogMatchedIcons       False
+
+IsIcon matching color
+    [Tags]                  ICON
+    SetConfig               LogMatchedIcons       True
+    #DebugOn
+    # colored image with default grayscale setting, should be found 
+    ${result}               isIcon                  infinity_red
+    Should Be True          ${result}
+    # colored image compared with colors, should not be found 
+    ${result_color}         isIcon                  infinity_red
+    ...                                             tolerance=0.99
+    ...                                             grayscale=False
+    Should Not Be True      ${result_color}
+    
+    SetConfig               LogMatchedIcons       False
 
 Click icons new screenshot
     [Tags]                  ICON    PROBLEM_IN_MACOS    RESOLUTION_DEPENDENCY
@@ -42,6 +71,22 @@ Click icons new screenshot
     ClickText               Hide                  template_res_w=1920
     Run Keyword And Expect Error    QWebElementNotFoundError:*   ClickIcon      person   timeout=3
 
+Click icon color
+    [Tags]                  ICON    PROBLEM_IN_MACOS    RESOLUTION_DEPENDENCY
+    Set Config              WindowSize   1920x1080
+    # colored image compared with colors, should not be found 
+    Run Keyword And Expect Error   QWebElementNotFoundError*
+    ...                            ClickIcon    infinity_red          
+    ...                                          template_res_w=1920    
+    ...                                          tolerance=0.99    
+    ...                                          grayscale=False
+    ...                                          timeout=3
+    # colored image with default grayscale setting, should be found 
+    ClickIcon              infinity_red          template_res_w=1920
+    VerifyText             Infinity is my alt value!
+    ClickText              Show Red Infinity
+    ClickIcon              infinity_red          grayscale=False
+    VerifyText             Infinity_red is my alt value!
 
 Capture icons and verify them
     [Tags]                  ICON
