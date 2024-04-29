@@ -20,8 +20,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 import os
-import pkg_resources
 import requests
+from importlib.metadata import version, PackageNotFoundError
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
@@ -301,11 +301,9 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     \`SwitchWindow\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
     try:
-        logger.info(
-            "\nQWeb version number: {}".format(pkg_resources.get_distribution("QWeb").version),
-            also_console=True,
-        )
-    except pkg_resources.DistributionNotFound:
+        qweb_version = version("QWeb")
+        logger.info(f"QWeb version number: {qweb_version}", also_console=True)
+    except PackageNotFoundError:
         logger.info("Could not find QWeb version number.")
     number_of_open_sessions = _sessions_open()
     if number_of_open_sessions > 0:
