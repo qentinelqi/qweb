@@ -158,7 +158,7 @@ def verify_table(
 
     table_cell = table.ACTIVE_TABLE.get_table_cell(coordinates, anchor, **kwargs)
     partial_match = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
-    # expected = f"{expected}*" if partial_match else expected
+
     actions.get_element_text(
         table_cell, expected=expected, timeout=timeout, partial_match=partial_match
     )
