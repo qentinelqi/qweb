@@ -126,18 +126,26 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     Selenium Manager
     ----------------
 
-    If browser driver(s) can be found in path, they will be used. If not, Selenium
+    Selenium Manager's automatic browser and driver management is available for Chrome, Firefox
+    and Edge. To use specific browser version, add `browser_version` keyword argument. 
+    If matching browser & driver(s) can be found in path, they will be used. If not, Selenium
     Manager tries to download and install them. With Chrome also specific version of
-    browser ("Chrome for Testing") can be used.
+    browser ("Chrome for Testing") can be used. 
+    Note that for Edge in Windows local admin rights are required!
+
+    More info:
+    https://www.selenium.dev/documentation/selenium_manager/#automated-browser-management
 
     **NOTE**: if you are using QWeb in some cloud service,
     it's best to use their method of setting browser version.
 
     .. code-block:: robotframework
 
-        # If Chrome 117 is already installed, it will be used.
-        # If not, Chrome for Testing v117 will be downloaded and used.
-        OpenBrowser   https://www.google.com    chrome    browser_version=117
+        # If Chrome 124 is already installed, it will be used.
+        # If not, Chrome for Testing v124 will be downloaded and used.
+        OpenBrowser   https://www.google.com    chrome    browser_version=124
+        OpenBrowser   https://www.google.com    firefox   browser_version=124
+        OpenBrowser   https://www.google.com    edge      browser_version=124
 
     BrowserStack usage
     ------------------

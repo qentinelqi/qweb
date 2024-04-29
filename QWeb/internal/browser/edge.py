@@ -55,6 +55,12 @@ def open_browser(
     if edge_path:
         options.binary_location = edge_path  # pylint: disable=no-member
 
+    edge_version_kwarg = kwargs.get('browser_version', None)
+    edge_version = edge_version_kwarg or util.get_rfw_variable_value('${BROWSER_VERSION}')
+
+    if edge_version:
+        options.browser_version = edge_version
+
     if user.is_root() or user.is_docker():
         options.add_argument("no-sandbox")  # pylint: disable=no-member
     if edge_args:

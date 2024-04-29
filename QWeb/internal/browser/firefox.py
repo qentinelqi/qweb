@@ -64,7 +64,10 @@ def open_browser(
     #                 'Profile directory can be selected like any other firefox option:\n'
     #                 '"OpenBrowser   https://site.com   ${BROWSER}  -profile /path/to/profile"')
     #     # options.add_argument('-profile {}'.format(profile_dir))
-
+    ff_version_kwarg = kwargs.get('browser_version', None)
+    ff_version = ff_version_kwarg or util.get_rfw_variable_value('${BROWSER_VERSION}')
+    if ff_version:
+        options.browser_version = ff_version
     options.set_preference("browser.helperApps.neverAsk.saveToDisk", browser.MIME_TYPES)
     options.set_preference("extensions.update.enabled", False)
     options.set_preference("app.update.enabled", False)
