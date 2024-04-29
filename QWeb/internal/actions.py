@@ -404,7 +404,9 @@ def text_appearance(text: str, **kwargs: Any) -> bool:
 
 
 @decorators.timeout_decorator_for_actions
-def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -> Union[bool, str]:  # pylint: disable=unused-argument
+def get_element_text(
+    web_element: WebElement, expected=None, timeout: int = 0, partial_match: bool = False  # pylint: disable=unused-argument
+) -> Union[bool, str]:
     # if both text and innerText are missing, innerText would return None instead of ""
     # This needs to be handled here.
     real_text = (web_element.text or "").strip() or (
@@ -413,7 +415,7 @@ def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -
 
     if expected is not None:
         try:
-            return _compare_texts(real_text, expected.strip(), timeout)
+            return _compare_texts(real_text, expected.strip(), partial_match)
         except QWebValueMismatchError as e:
             raise QWebValueError(f"Expected {expected}, found {real_text}") from e
     if real_text is not None:
@@ -421,10 +423,12 @@ def get_element_text(web_element: WebElement, expected=None, timeout: int = 0) -
     raise QWebValueMismatchError("Text not found")
 
 
-def _compare_texts(text_to_compare: str, expected: str, timeout: int) -> bool:  # pylint: disable=unused-argument
-    if fnmatch.fnmatch(text_to_compare, expected) is False:
-        raise QWebValueMismatchError(f"Expected {expected}, found {text_to_compare}")
-    return True
+def _compare_texts(text_to_compare: str, expected: str, partial_match: bool = True) -> bool:
+    if (partial_match and expected in text_to_compare) or (
+        not partial_match and text_to_compare == expected
+    ):
+        return True
+    raise QWebValueMismatchError(f"Expected {expected}, found {text_to_compare}")
 
 
 def _ends_with_line_break(input_text: str) -> bool:

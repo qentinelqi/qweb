@@ -15,8 +15,13 @@ Verify Value by coordinates
     UseTable                Sample
     VerifyTable             r2c1                    Jill
     VerifyTable             r2c3                    ${EMPTY}
-    VerifyTable             r2c4                    2017*
-    VerifyTable             r2c4                    2017-??-12
+    VerifyTable             r2c4                    2017            partial_match=True
+    VerifyTable             r2c4                    2017-03-12      partial_match=False
+    Run Keyword And Expect Error                    QWebValueError*
+    ...                                             VerifyTable             r2c4                    2017-03-
+    ...                                             partial_match=False
+    ...                                             timeout=2
+    VerifyTable             r2c4                    2017-03-        partial_match=True    
     TypeText                r4c1                    Qentiro
 
 Verify Value Negative Cases
@@ -59,7 +64,7 @@ Get Cell Value to variable
     VerifyText              checkbox
     SetConfig               CSSSelectors            On
     UseTable                Jackson
-    VerifyTable             r3c2                    Jack*
+    VerifyTable             r3c2                    Jack    partial_match=True
     # jailed due to Chrome 123 bug
     # Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find element*
     # ...   GetInputValue     r2c1   timeout=1
