@@ -19,12 +19,12 @@ from QWeb.internal import util
 class TestConfig:
 
     @staticmethod
-    def setup():
+    def setup_method():
         """ Use test specific configs. """
         pass  # pylint: disable=unnecessary-pass
 
     @staticmethod
-    def teardown():
+    def teardown_method():
         """ Return original configs. """
         config.reset_config()
 
