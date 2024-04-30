@@ -51,7 +51,6 @@ Verify matching color
 IsIcon matching color
     [Tags]                  ICON
     SetConfig               LogMatchedIcons       True
-    #DebugOn
     # colored image with default grayscale setting, should be found 
     ${result}               isIcon                  infinity_red
     Should Be True          ${result}
@@ -72,7 +71,7 @@ Click icons new screenshot
     Run Keyword And Expect Error    QWebElementNotFoundError:*   ClickIcon      person   timeout=3
 
 Click icon color
-    [Tags]                  ICON    PROBLEM_IN_MACOS    RESOLUTION_DEPENDENCY
+    [Tags]                  ICON    PROBLEM_IN_MACOS
     Set Config              WindowSize   1920x1080
     # colored image compared with colors, should not be found 
     Run Keyword And Expect Error   QWebElementNotFoundError*
