@@ -201,7 +201,7 @@ def verify_icon(
     tolerance: float = 0.95,
     grayscale: bool = True,
 ) -> bool:
-    r"""Verify page contains icon/bitmpa.
+    r"""Verify page contains icon/bitmap.
 
     This keyword is designed to locate graphical icons/bitmpas on a screen
     by comparing them to a reference image. The function searches the current screen content
