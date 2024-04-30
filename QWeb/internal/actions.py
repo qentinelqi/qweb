@@ -403,9 +403,10 @@ def text_appearance(text: str, **kwargs: Any) -> bool:
     raise QWebValueMismatchError("return value should be true")
 
 
+# pylint: disable=unused-argument
 @decorators.timeout_decorator_for_actions
 def get_element_text(
-    web_element: WebElement, expected=None, timeout: int = 0, partial_match: bool = False  # pylint: disable=unused-argument
+    web_element: WebElement, expected=None, timeout: int = 0, partial_match: bool = False
 ) -> Union[bool, str]:
     # if both text and innerText are missing, innerText would return None instead of ""
     # This needs to be handled here.

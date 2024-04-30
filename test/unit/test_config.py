@@ -59,7 +59,7 @@ class TestConfig:
         assert CONFIG["DefaultDocument"] is False
 
         old_val = config.set_config("RunBefore", "text.verify_no_text('Loading')")
-        assert old_val == None
+        assert old_val is None
         new_kw = ["VerifyText", "Test", "timeout=10"]
         old_val = config.set_config("RunBefore", new_kw)
         assert old_val == "text.verify_no_text('Loading')"
@@ -68,7 +68,7 @@ class TestConfig:
         assert old_val == ["VerifyText", "Test", "timeout=10"]
         assert CONFIG["RunBefore"] == "Verify Something"
         config.reset_config("RunBefore")
-        assert CONFIG["RunBefore"] == None
+        assert CONFIG["RunBefore"] is None
 
         old_val = config.set_config("ShadowDOM", True)
         assert old_val is False
