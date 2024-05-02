@@ -413,6 +413,10 @@ TextArea and line breks with check on
     TypeText     textarea1   This is just a sample text    check=True
     TypeText     textarea1   This is just a sample text\nJust another text       check=True
     TypeText     textarea1   This is just a sample text${\n}Just another text    check=True
+    ${text1}=    GetInputValue    textarea1
+    ${text2}=    GetInputValue    textarea1    remove_newlines=False
+    Should Be Equal               ${text1}     This is just a sample textJust another text
+    Should Be Equal               ${text2}     This is just a sample text\nJust another text
 
 Global hotkeys
     [Tags]    PressKey    RESOLUTION_DEPENDENCY

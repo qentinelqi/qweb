@@ -160,7 +160,7 @@ def highlight_validation(color: str) -> str:
     return color
 
 
-def get_substring(text: str, strip_newlines: bool = True, **kwargs) -> Union[int, float, str]:
+def get_substring(text: str, remove_newlines: bool = True, **kwargs) -> Union[int, float, str]:
     if "\xa0" in text:
         text = text.replace("\xa0", " ")
     start, end = kwargs.get("between", "{}???{}").format(0, len(text)).split("???")
@@ -176,7 +176,7 @@ def get_substring(text: str, strip_newlines: bool = True, **kwargs) -> Union[int
         start = end - int(kwargs.get("from_end"))  # type: ignore[arg-type]
     logger.debug("substring start: {}".format(start))
     logger.debug("substring end: {}".format(end))
-    if strip_newlines:
+    if remove_newlines:
         text = str(text[start:end]).strip().replace("\n", "")
         text = text.replace("\r", "")
     try:

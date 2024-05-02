@@ -283,7 +283,7 @@ class QIcon:
         draw: int = 1,
         template_res_w: int = 1440,
         device_res_w: int = 1080,
-        grayscale: bool = False,
+        grayscale: bool = True,
     ) -> tuple[int, int]:
         """Locate an image (needle) within an bigger image (haystack). Tolarance
         is pixel tolerance, i.e. 1.0 = all pixels are correct, 0.5 = 50% of the pixels
@@ -296,8 +296,8 @@ class QIcon:
         print("*INFO* _image_location Starts")
 
         image = cv2.imread(haystack)
-        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if grayscale else image
-        _hay_h, hay_w = image_gray.shape[:2]
+        image_haystack = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if grayscale else image
+        _hay_h, hay_w = image_haystack.shape[:2]
 
         needle_path = Path(needle)
         if not needle_path.exists():
@@ -339,7 +339,7 @@ class QIcon:
                 )
             print("*DEBUG* matchTemplate Starts:")
 
-            res = cv2.matchTemplate(image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED)
+            res = cv2.matchTemplate(image_haystack, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
 

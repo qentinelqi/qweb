@@ -425,9 +425,7 @@ def get_element_text(
 
 
 def _compare_texts(text_to_compare: str, expected: str, partial_match: bool = True) -> bool:
-    if (partial_match and expected in text_to_compare) or (
-        not partial_match and text_to_compare == expected
-    ):
+    if text_to_compare == expected or (partial_match and expected in text_to_compare):
         return True
     raise QWebValueMismatchError(f"Expected {expected}, found {text_to_compare}")
 

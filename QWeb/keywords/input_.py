@@ -594,7 +594,7 @@ def get_input_value(
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
-    strip_newlines: bool = True,
+    remove_newlines: bool = True,
     **kwargs,
 ) -> Union[int, float, str]:
     r"""Get input value from input field.
@@ -634,8 +634,8 @@ def get_input_value(
     index : int
         If table cell contains more than one input elements or if there is some kind of
         nested structure inside of given input index may needed. Default = 1 (first)
-    strip_newlines : bool
-        Strip new lines (\n)from string, especially from multirow text areas. Default = True
+    remove_newlines : bool
+        Removes new lines (\n)from string, especially from multirow text areas. Default = True
     kwargs :
         |  Accepted kwargs:
         |       limit_traverse : False. If limit traverse is set to false we are heading up to
@@ -659,7 +659,7 @@ def get_input_value(
         locator, anchor, timeout=timeout, index=index, **kwargs
     )
     val = actions.input_value(input_element, timeout=timeout, **kwargs)
-    return util.get_substring(val, strip_newlines=strip_newlines, **kwargs)
+    return util.get_substring(val, remove_newlines=remove_newlines, **kwargs)
 
 
 @keyword(tags=("File", "Input", "Interaction"))
