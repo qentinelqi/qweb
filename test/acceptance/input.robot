@@ -413,10 +413,15 @@ TextArea and line breks with check on
     TypeText     textarea1   This is just a sample text    check=True
     TypeText     textarea1   This is just a sample text\nJust another text       check=True
     TypeText     textarea1   This is just a sample text${\n}Just another text    check=True
+
+TextArea and ignoring newlines
+    [Tags]        Textarea    GetInputValue
+    HoverItem    textarea1   tag=textarea
+    TypeText     textarea1   123 Main Street\nApt. 4B\nSpringfield, IL 62704
     ${text1}=    GetInputValue    textarea1
     ${text2}=    GetInputValue    textarea1    remove_newlines=False
-    Should Be Equal               ${text1}     This is just a sample textJust another text
-    Should Be Equal               ${text2}     This is just a sample text\nJust another text
+    Should Be Equal As Strings    ${text1}     123 Main StreetApt. 4BSpringfield, IL 62704
+    Should Be Equal As Strings    ${text2}     123 Main Street\nApt. 4B\nSpringfield, IL 62704
 
 Global hotkeys
     [Tags]    PressKey    RESOLUTION_DEPENDENCY
