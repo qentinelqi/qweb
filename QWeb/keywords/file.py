@@ -99,14 +99,25 @@ def get_pdf_text(**kwargs) -> str:
     --------
     .. code-block:: robotframework
 
-        UsePdf     dummy.pdf   
-        ${text}    GetPdfText    # returns whole PDF content
-        ${text}    GetPdfText    remove_newlines=True    # returns whole PDF content, but remove newlines (\n)
-        ${text}    GetPdfText    from_start=6            # returns 6 characters from the beginning
-        ${text}    GetPdfText    from_end=6              # returns 6 characters from the end
-        ${text}    GetPdfText    between=Simple???File   # returns all chars between Simple and File
-        # matches to text between Simple and end of file. Returns 6 characters from the beginning of match.
-        ${text}    GetPdfText    between=Simple???       from_start=6   
+        UsePdf     dummy.pdf
+        # returns whole PDF content
+        ${text}    GetPdfText
+
+        # returns whole PDF content, but remove newlines (\n)
+        ${text}    GetPdfText    remove_newlines=True
+
+        # returns 6 characters from the beginning
+        ${text}    GetPdfText    from_start=6
+
+        # returns 6 characters from the end
+        ${text}    GetPdfText    from_end=6
+
+        # returns all chars between Simple and File
+        ${text}    GetPdfText    between=Simple???File
+
+        # matches to text between Simple and end of file.
+        # Returns 6 characters from the beginning of match.
+        ${text}    GetPdfText    between=Simple???       from_start=6
 
     Parameters
     ----------
@@ -134,20 +145,31 @@ def get_pdf_text(**kwargs) -> str:
 
 @keyword(tags=("File", "Getters"))
 def get_file_text(**kwargs) -> str:
-    r"""Get text from pdf file.
+    r"""Get text content from a plain text file.
 
     Examples
     --------
     .. code-block:: robotframework
 
         UseFile    text.txt
-        ${text}    GetFileText   # returns whole text content
-        ${text}    GetFileText   remove_newlines=True    # returns whole text content, but remove newlines (\n)
-        ${text}    GetFileText   from_start=6            # returns 6 characters from the beginning
-        ${text}    GetFileText   from_end=6              # returns 6 characters from the end
-        ${text}    GetFileText   between=Simple???File   # returns all chars between Simple and File
-        # matches to text between Simple and end of file. Returns 6 characters from the beginning of match.
-        ${text}    GetFileText   between=Simple???       from_start=6   
+        # returns whole text content
+        ${text}    GetFileText
+
+        # returns whole text content, but remove newlines (\n)
+        ${text}    GetFileText   remove_newlines=True
+
+        # returns 6 characters from the beginning
+        ${text}    GetFileText   from_start=6
+
+        # returns 6 characters from the end
+        ${text}    GetFileText   from_end=6
+
+        # returns all chars between Simple and File
+        ${text}    GetFileText   between=Simple???File
+
+        # matches to text between Simple and end of file.
+        # Returns 6 characters from the beginning of match.
+        ${text}    GetFileText   between=Simple???       from_start=6
 
     Parameters
     ----------
