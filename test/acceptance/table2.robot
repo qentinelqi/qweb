@@ -69,10 +69,10 @@ Use table kw:s with xpath locators
 Verify Multiple
     UseTable                Sample
     VerifyTable             r2c1                    Jill
-    VerifyTable             r2c4                    2017*
+    VerifyTable             r2c4                    2017    partial_match=True
     UseTable                Stars
     VerifyTable             r2c1                    Jimi
-    VerifyTable             r2c4                    1970*
+    VerifyTable             r2c4                    1970    partial_match=True
 
 Use general kw:s with Table using cell coordinates as an locator
     [Tags]

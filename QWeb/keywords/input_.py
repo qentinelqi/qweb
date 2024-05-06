@@ -590,7 +590,12 @@ def verify_input_element(
 @keyword(tags=("Input", "Getters"))
 @decorators.timeout_decorator
 def get_input_value(
-    locator: str, anchor: str = "1", timeout: Union[int, float, str] = 0, index: int = 1, **kwargs
+    locator: str,
+    anchor: str = "1",
+    timeout: Union[int, float, str] = 0,
+    index: int = 1,
+    remove_newlines: bool = True,
+    **kwargs,
 ) -> Union[int, float, str]:
     r"""Get input value from input field.
 
@@ -629,6 +634,8 @@ def get_input_value(
     index : int
         If table cell contains more than one input elements or if there is some kind of
         nested structure inside of given input index may needed. Default = 1 (first)
+    remove_newlines : bool
+        Removes new lines (\n)from string, especially from multirow text areas. Default = True
     kwargs :
         |  Accepted kwargs:
         |       limit_traverse : False. If limit traverse is set to false we are heading up to
@@ -652,7 +659,7 @@ def get_input_value(
         locator, anchor, timeout=timeout, index=index, **kwargs
     )
     val = actions.input_value(input_element, timeout=timeout, **kwargs)
-    return util.get_substring(val, **kwargs)
+    return util.get_substring(val, remove_newlines=remove_newlines, **kwargs)
 
 
 @keyword(tags=("File", "Input", "Interaction"))
