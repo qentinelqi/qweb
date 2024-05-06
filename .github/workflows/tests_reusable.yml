@@ -101,7 +101,8 @@ jobs:
 
     - name: Start Python http server in background
       run: |
-        python -m http.server -b 127.0.0.1 -d test/resources 8000 > \dev\null 2>&1 &
+        python -m http.server -b 127.0.0.1 -d test/resources 8000 &
+      # > \dev\null 2>&1 &
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
       timeout-minutes: 1
@@ -151,7 +152,7 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         -v BROWSER:${{ matrix.browser }}
-        -d result
+        -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
         --consolecolors ansi
@@ -175,7 +176,7 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -d result
+        -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
         --consolecolors ansi
@@ -212,7 +213,7 @@ jobs:
         -d result
         -o merged.xml
         result/output.xml
-        result/rerun.xml
+        rerunresult/rerun.xml
       
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
