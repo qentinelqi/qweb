@@ -101,8 +101,7 @@ jobs:
 
     - name: Start Python http server in background
       run: |
-        python -m http.server -b 127.0.0.1 -d test/acceptance 8000 &
-    # python -m http.server -b 127.0.0.1 -d test/acceptance 8000 > \dev\null 2>&1 &
+        python -m http.server -b 127.0.0.1 -d test/resources 8000 > \dev\null 2>&1 &
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
       timeout-minutes: 1
