@@ -1390,12 +1390,12 @@ def verify_all(texts_to_verify: Union[list[str], str], timeout: Union[int, float
     --------
     .. code-block:: robotframework
 
-        VerifyTexts      Cat, Mouse, Dog, Lion, iddqd66402
-        VerifyTexts      list_of_cats.txt
-        VerifyTexts      C:/Users/pace/Desktop/textfile.txt
+        VerifyAll      Cat, Mouse, Dog, Lion, iddqd66402
+        VerifyAll      list_of_cats.txt
+        VerifyAll      C:/Users/pace/Desktop/textfile.txt
 
         ${cool_list}=    Create List    Cat    Mouse    Dog    Lion    iddqd66402
-        VerifyTexts      ${cool_list}
+        VerifyAll      ${cool_list}
 
     Related keywords
     ----------------

@@ -93,27 +93,44 @@ def use_file(filename: str) -> None:
 
 @keyword(tags=("File", "Getters"))
 def get_pdf_text(**kwargs) -> str:
-    r"""Get text from pdf file.
+    r"""Get text content from pdf file.
 
     Examples
     --------
     .. code-block:: robotframework
 
-        ${text}    GetPdfText    #returns whole content
-        ${text}    GetPdfText    locator=xyz   chars=10  #returns 10 chars, starting from text xyz.
+        UsePdf     dummy.pdf
+        # returns whole PDF content
+        ${text}    GetPdfText
+
+        # returns whole PDF content, but remove newlines (\n)
+        ${text}    GetPdfText    remove_newlines=True
+
+        # returns 6 characters from the beginning
+        ${text}    GetPdfText    from_start=6
+
+        # returns 6 characters from the end
+        ${text}    GetPdfText    from_end=6
+
+        # returns all chars between Simple and File
+        ${text}    GetPdfText    between=Simple???File
+
+        # matches to text between Simple and end of file.
+        # Returns 6 characters from the beginning of match.
+        ${text}    GetPdfText    between=Simple???       from_start=6
 
     Parameters
     ----------
-    locator : str
-        Starting point for substring (Locator text is returned by default)
-    post_text : str
-        Ending point for substring (post_text is not returned by default)
-    chars : int
-        length of wanted string
-    include_locator : bool
-        if set to False returns chars after locator text.
-    exclude_post : bool
-        if set to False returned string includes post_text
+    kwargs :
+        |  Accepted kwargs:
+        |       between : str/int - Start???End - Return all chars between texts Start and End.
+        |       from_start : int - Return x amount of chars. Starting from first char
+        |       from_end : int - Return x amount of chars. Starting from last char
+        |       include_locator : True - Starting text is part of returned string
+        |       exclude_post : False - Ending text is part of returned string
+        |       int : True - Return integer instead of string
+        |       float : int - Return float instead of string
+        |       remove_newlines : bool - Remove newlines (\\n) from returned text (True/False)
 
     Note that you must use named arguments with this keyword, i.e. use
     ``argument_name=value`` format!
@@ -128,27 +145,44 @@ def get_pdf_text(**kwargs) -> str:
 
 @keyword(tags=("File", "Getters"))
 def get_file_text(**kwargs) -> str:
-    r"""Get text from pdf file.
+    r"""Get text content from a plain text file.
 
     Examples
     --------
     .. code-block:: robotframework
 
-        ${text}    GetFileText    #returns whole content
-        ${text}    GetFileText    xyz   10  #returns 10 chars, starting from text xyz.
+        UseFile    text.txt
+        # returns whole text content
+        ${text}    GetFileText
+
+        # returns whole text content, but remove newlines (\n)
+        ${text}    GetFileText   remove_newlines=True
+
+        # returns 6 characters from the beginning
+        ${text}    GetFileText   from_start=6
+
+        # returns 6 characters from the end
+        ${text}    GetFileText   from_end=6
+
+        # returns all chars between Simple and File
+        ${text}    GetFileText   between=Simple???File
+
+        # matches to text between Simple and end of file.
+        # Returns 6 characters from the beginning of match.
+        ${text}    GetFileText   between=Simple???       from_start=6
 
     Parameters
     ----------
-    locator : str
-        Starting point for substring (Locator text is returned by default)
-    post_text : str
-        Ending point for substring (post_text is not returned by default)
-    chars : int
-        length of wanted string
-    include_locator : bool
-        if set to False returns chars after locator text.
-    exclude_post : bool
-        if set to False returned string includes post_text
+    kwargs :
+        |  Accepted kwargs:
+        |       between : str/int - Start???End - Return all chars between texts Start and End.
+        |       from_start : int - Return x amount of chars. Starting from first char
+        |       from_end : int - Return x amount of chars. Starting from last char
+        |       include_locator : True - Starting text is part of returned string
+        |       exclude_post : False - Ending text is part of returned string
+        |       int : True - Return integer instead of string
+        |       float : int - Return float instead of string
+        |       remove_newlines : bool - Remove newlines (\\n) from returned text (True/False)
 
     Note that you must use named arguments with this keyword, i.e. use
     ``argument_name=value`` format!
