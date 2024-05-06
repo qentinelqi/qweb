@@ -100,16 +100,15 @@ jobs:
         pytest -v --junit-xml=unittests.xml --cov=QWeb
 
 
-    - name: Start http server windows
-      if: runner.os == 'Windows'
-      run: |
-        $env:RUNNER_TRACKING_ID=""
-        python -m http.server -b 127.0.0.1 -d test/resources 8000 > \dev\null 2>&1 &
-    - name: Start http server *nix
-      if: runner.os != 'Windows'
-      run: |
-        RUNNER_TRACKING_ID=""
-        python -m http.server -b 127.0.0.1 -d test/resources 8000 > \dev\null 2>&1 &
+    - name: Start http server
+      uses: Eun/http-server-action@v1
+      with:
+        directory: test/resources
+        port: 8000
+        
+      #run: |
+      #  python -m http.server -b 127.0.0.1 -d test/resources 8000 &
+  
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
       timeout-minutes: 1
