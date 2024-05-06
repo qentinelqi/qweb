@@ -3,6 +3,7 @@
 --suite Swipe
 --suite Shadow Dom
 --suite Screenshot
+--suite Requests
 --suite Input Windowed
 --suite Icon
 --suite Dragdrop
@@ -24,8 +25,6 @@
 --suite Selectors
 --suite Searchorder Config
 --suite Searchingorder
---suite Safari Smoke
---suite Requests
 --suite Paceblock
 --suite No Body
 --suite Lists
