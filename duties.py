@@ -1,5 +1,6 @@
 """Run dev tasks locally"""
 import sys
+import subprocess
 from platform import system
 from duty import duty
 
@@ -33,7 +34,7 @@ def lint(ctx, path="QWeb"):
         ctx: The context instance (passed automatically)
         path: path of folder/file to check
     """
-    ctx.run(f"{python_exe} -m ruff check {path}", title="Checking code quality: ruff", capture=False)
+    ctx.run(f"{python_exe} -m ruff {path}", title="Checking code quality: ruff", capture=False)
     ctx.run(f"{python_exe} -m flake8 {path}", title="Checking code quality: flake8", capture=False)
     ctx.run(f"{python_exe} -m pylint {path}", title="Checking code quality: pylint", capture=False)
 
@@ -110,7 +111,10 @@ def acceptance_tests(ctx,
                f" {cmd_excludes}"
                f" test/acceptance")
         
+    proc = subprocess.Popen([python_exe, '-m', 'http.server', '-b', '127.0.0.1', '-d', 'test/resources', '8000'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
     ctx.run(cmd_str, title="Acceptance tests", capture=False)
+    proc.terminate()
+
 
 @duty
 def kw_docs(ctx):

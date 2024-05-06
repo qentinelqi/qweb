@@ -2,7 +2,7 @@
 Documentation       Tests for icon keywords
 Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}
-Test Setup          GoTo    file://${CURDIR}/../../resources/items.html
+Test Setup          GoTo    http://127.0.0.1:8000/items.html
 Suite Teardown      CloseBrowser
 Library             Dialogs
 Test Timeout        60 seconds
@@ -69,7 +69,7 @@ IsIcon False
 WriteText
     [Tags]                  jailed	PROBLEM_IN_FIREFOX      RESOLUTION_DEPENDENCY    PROBLEM_IN_MACOS
     CloseAllBrowsers
-    OpenBrowser             file://${CURDIR}/../../resources/input.html    chrome
+    OpenBrowser             http://127.0.0.1:8000/input.html    chrome
     ClickIcon               leftright
     WriteText               FooBar
     VerifyInputValue        odjdq               Foobar     selector=id

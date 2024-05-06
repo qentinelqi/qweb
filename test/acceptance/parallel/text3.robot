@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for text keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 file://${CURDIR}/../../resources/text.html                 ${BROWSER}                  --HEADLESS
+Suite Setup                     OpenBrowser                 http://127.0.0.1:8000/text.html                 ${BROWSER}                  --HEADLESS
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 

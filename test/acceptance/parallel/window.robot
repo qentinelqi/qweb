@@ -14,7 +14,7 @@ Go To
     [Tags]                      Window    GoTo
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Should Be Equal             ${driver.current_url}       about:blank
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     Should Be Equal             ${driver.title}             Window Acceptance Tests
 
 Open Window
@@ -28,7 +28,7 @@ Open Window Changed To New Window
     [Tags]                      Window    OpenWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     OpenWindow
     Should Be Equal             ${driver.current_url}       about:blank
 
@@ -45,7 +45,7 @@ Switch Window
     [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     OpenWindow
     Length Should Be            ${driver.window_handles}    2
     Should Be Equal             ${driver.current_url}       about:blank
@@ -56,7 +56,7 @@ Switch window, check context
     [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     OpenWindow
     Length Should Be            ${driver.window_handles}    2
     Should Be Equal             ${driver.current_url}       about:blank
@@ -100,7 +100,7 @@ Switch window, multiple closings, check context
     [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     OpenWindow
     Length Should Be            ${driver.window_handles}    2
     Should Be Equal             ${driver.current_url}       about:blank
@@ -137,14 +137,14 @@ Close window, no tabs open
     [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     Close window
 
 Switch window, open multiple, close index
     [Tags]                      Window    SwitchWindow
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     OpenWindow
     Length Should Be            ${driver.window_handles}    2
     ${url}=                     GetUrl
@@ -152,7 +152,7 @@ Switch window, open multiple, close index
     Should Be Equal             ${url}                      about:blank
     OpenWindow
     Length Should Be            ${driver.window_handles}    3
-    GoTO                        file://${CURDIR}/../../resources/window.html
+    GoTO                        http://127.0.0.1:8000/window.html
     Should Be Equal             ${driver.title}             Window Acceptance Tests
     OpenWindow
     Length Should Be            ${driver.window_handles}    4
@@ -166,9 +166,9 @@ Switch window, open multiple, close index
 Title and url
     [Tags]                      Window    Title    Url
     [Documentation]             Tests for -title and -url keywords
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     ${url}=                     GetUrl
-    Should Contain              ${url}                      file://
+    Should Contain              ${url}                      http://
     Should Contain              ${url}                      window.html
     VerifyTitle                 Window Acceptance Tests
     ${title}=                   GetTitle
@@ -208,16 +208,16 @@ Close Other Windows
     [Tags]                      Window
     [Documentation]             Close other windows
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     VerifyText                  Liirum
     Close Others
     OpenWindow
-    GoTo                        file://${CURDIR}/../../resources/text.html
+    GoTo                        http://127.0.0.1:8000/text.html
     VerifyText                  HoverDropdown
     SwitchWindow                1
     VerifyText                  Liirum
     OpenWindow
-    GoTo                        file://${CURDIR}/../../resources/table.html
+    GoTo                        http://127.0.0.1:8000/table.html
     VerifyText                  Table acceptance
     CloseOthers
     Length Should Be            ${driver.window_handles}    1
@@ -226,7 +226,7 @@ Close Other Windows
 Self Closing PopUp
     [Tags]                      Window
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
-    GoTo                        file://${CURDIR}/../../resources/window.html
+    GoTo                        http://127.0.0.1:8000/window.html
     Close Others
     ClickText                   Open
     SwitchWindow                NEW
@@ -245,7 +245,7 @@ SwitchWindow 0
 Open New Tab Link Page
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     Length Should Be            ${driver.window_handles}    1
-    GoTo                        file://${CURDIR}/../../resources/newtablink.html
+    GoTo                        http://127.0.0.1:8000/newtablink.html
     # Open one extra window
     ClickText                   Open new window
     Sleep                       3                           # Firefox needs some time

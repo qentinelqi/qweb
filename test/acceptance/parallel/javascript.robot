@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for Javascript keyword
 Library           QWeb
-Suite Setup       OpenBrowser  file://${CURDIR}/../../resources/javascript.html  ${BROWSER}  --headless
+Suite Setup       OpenBrowser  http://127.0.0.1:8000/javascript.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 

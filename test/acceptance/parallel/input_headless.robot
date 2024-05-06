@@ -2,7 +2,7 @@
 Documentation    Tests for input keywords
 Library          QWeb
 Library          OperatingSystem
-Suite Setup      OpenBrowser    file://${CURDIR}/../../resources/input.html    ${BROWSER}  --headless
+Suite Setup      OpenBrowser    http://127.0.0.1:8000/input.html    ${BROWSER}  --headless
 Suite Teardown   CloseAllBrowsers
 Test Timeout     60 seconds
 
@@ -247,21 +247,21 @@ Search Direction All Directions
 No Textbox found
     [Tags]                  jailed
     # jailed due to Chrome 123 bug
-    GoTo                    file://${CURDIR}/../../resources/input.html
+    GoTo                    http://127.0.0.1:8000/input.html
     Run Keyword And Expect Error       QWebElementNotFoundError: Unable to find*
     ...   TypeText   Lorem   foo   1   3
 
 No Textboxes on page
     [Tags]                  jailed
     # jailed due to Chrome 123 bug
-    GoTo                    file://${CURDIR}/../../resources/text.html
+    GoTo                    http://127.0.0.1:8000/text.html
     Run Keyword And Expect Error    QWebElementNotFoundError: Unable to find*
     ...   TypeText                  HoverDropdown    Qwerty     timeout=2
 
 Secret
     [documentation]         Test secrets handling. It is recommended to provide any secrets
     ...                     as variables outside the script.
-    GoTo                    file://${CURDIR}/../../resources/input.html
+    GoTo                    http://127.0.0.1:8000/input.html
     # Testing purposes only
     ${SECRET}               Set Variable            sdfpv98xddv097vsdxv97
     # Recommended, secret is provided as variable OUTSIDE of the test script and version control.
@@ -274,7 +274,7 @@ Secret
 Secret Without Debug Logs When Debugfile Option Used
     [documentation]         Test secrets when -b/--debugfile option is used.
     [Tags]                  WITH_DEBUGFILE
-    GoTo                    file://${CURDIR}/../../resources/input.html
+    GoTo                    http://127.0.0.1:8000/input.html
     TypeSecret              First input           fdfsdf98723fdkjc9vsdv222
     TypeSecret3             First input           223423423423423432
     TypeText                Second input          View this text in debug file

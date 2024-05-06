@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for text keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 file://${CURDIR}/../../resources/text.html                 ${BROWSER}                  --HEADLESS
+Suite Setup                     OpenBrowser                 http://127.0.0.1:8000/text.html                 ${BROWSER}                  --HEADLESS
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 
@@ -67,7 +67,7 @@ Verify No Text Text Found Fail
     ...                         VerifyNoText                Lorem ipsum                 1s
 
 VerifyText Change Default Timeout
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyNoText                Delayed hidden text
     SetConfig                   DefaultTimeout              2s
     ClickText                   Show hidden
@@ -78,31 +78,31 @@ VerifyText Change Default Timeout
 
 VerifyTextCountOK
     [Tags]                      VerifyTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyTextCount             Counttextyjku               3                           timeout=1s
 
 VerifyTextCountIsZero
     [Tags]                      VerifyTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyTextCount             Foobarbaz                   0                           timeout=1s
 
 VerifyTextCountIsZeroWithExpected
     [Tags]                      VerifyTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     ${error}=                   Run Keyword And Expect Error
     ...                         QWebValueError: Page contained 0 texts instead of 4 after timeout
     ...                         VerifyTextCount             Foobarbaz                   4                           timeout=1s
 
 VerifyTextCountFail
     [Tags]                      VerifyTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     ${error}=                   Run Keyword And Expect Error
     ...                         QWebValueError: Page contained 3 texts instead of 4 after timeout
     ...                         VerifyTextCount             Counttextyjku               4                           timeout=1s
 
 VerifyTextCountDelay
     [Tags]                      VerifyTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyTextCount             Counttextyjku               3
     ClickText                   Counttextyjku               anchorcount
     VerifyTextCount             Counttextyjku               4                           timeout=5s
@@ -136,13 +136,13 @@ VerifyElementText Errors
 
 GetTextCountOK
     [Tags]                      GetTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     ${count}                    GetTextCount                Counttextyjku
     should be equal             ${count}                    ${3}
 
 GetTextCountisZero
     [Tags]                      GetTextCount
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     ${count}                    GetTextCount                FooBarBaz                   timeout=2
     should be equal             ${count}                    ${0}
 
@@ -238,17 +238,17 @@ IsText Xpath False
 
 IsText Timeout
     [Tags]                      IsText
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyNoText                Delayed hidden text
     ClickText                   Show hidden
     ${ret}=                     IsText                      Delayed hidden text         5s
     Should Be True              ${ret}
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyNoText                Delayed hidden text
 
 IsText Timeout False
     [Tags]                      IsText
-    Go To                       file://${CURDIR}/../../resources/text.html
+    Go To                       http://127.0.0.1:8000/text.html
     VerifyNoText                Delayed hidden text
     ClickText                   Show hidden
     ${ret}=                     IsText                      Not there                   0.5s
@@ -325,14 +325,14 @@ Click Third Button where three with identical value
 
 Multiple Anchors Fail
     [tags]                      dev
-    GoTo                        file://${CURDIR}/../../resources/text.html
+    GoTo                        http://127.0.0.1:8000/text.html
     VerifyNoText                The first Signup was clicked
     RunKeywordAndExpectError    QWebValueError*             ClickText                   Signup                      Anchor                      1s
     VerifyNoText                The first Signup was clicked
 
 Multiple Anchors Enabled
     [tags]                      dev
-    GoTo                        file://${CURDIR}/../../resources/text.html
+    GoTo                        http://127.0.0.1:8000/text.html
     SetConfig                   MultipleAnchors             True
     VerifyNoText                The first Signup was clicked
     ClickText                   Signup                      Anchor

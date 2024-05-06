@@ -10,7 +10,7 @@ debug.txt
 *.log
 source_*.html
 screenshots/
-pabot_results/
+**/pabot_results/
 .pabot*
 
 # doc output

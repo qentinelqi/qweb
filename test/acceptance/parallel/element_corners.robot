@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for corner
 Library           QWeb
-Suite Setup       OpenBrowser    file://${CURDIR}/../../resources/corners.html  ${BROWSER}  --headless
+Suite Setup       OpenBrowser    http://127.0.0.1:8000/corners.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 

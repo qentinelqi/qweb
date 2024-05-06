@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Test for selecting active xpath
 Library           QWeb
-Suite Setup       OpenBrowser    file://${CURDIR}/../../resources/no_body.html  ${BROWSER}  --headless
+Suite Setup       OpenBrowser    http://127.0.0.1:8000/no_body.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
 Test Timeout      20 seconds
 

@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation    Test for text in multiple elements
 Library          QWeb
-Suite Setup      OpenBrowser  file://${CURDIR}/../../resources/multielement_text.html  ${BROWSER}
+Suite Setup      OpenBrowser  http://127.0.0.1:8000/multielement_text.html  ${BROWSER}
 ...              --headless
 Suite Teardown   CloseBrowser
 Test Timeout     60 seconds
@@ -31,7 +31,7 @@ Hover multi
     VerifyText      Hover Link1
 
 Numeric anchors as text
-    GoTo            file://${CURDIR}/../../resources/num_anchor.html
+    GoTo            http://127.0.0.1:8000/num_anchor.html
     Run Keyword and Expect Error
     ...     QWebInstanceDoesNotExistError: Found 2 elements. Given anchor was 456
     ...     ClickText       LINK        456

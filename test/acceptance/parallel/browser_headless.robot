@@ -43,18 +43,18 @@ No browser open message
 
 ScrollText
     [Teardown]    CloseAllBrowsers
-    GoTo            file://${CURDIR}/../../resources/input.html
+    GoTo            http://127.0.0.1:8000/input.html
     ScrollText      UpDown
 
 SwitchBrowser
     [Tags]          PROBLEM_IN_WINDOWS    PROBLEM_IN_MACOS
-    GoTo            file://${CURDIR}/../../resources/multielement_text.html
+    GoTo            http://127.0.0.1:8000/multielement_text.html
     IF    $HEADLESS
-        OpenBrowser     file://${CURDIR}/../../resources/dropdown.html     chrome    --headless
-        OpenBrowser     file://${CURDIR}/../../resources/frame.html        firefox   --headless
+        OpenBrowser     http://127.0.0.1:8000/dropdown.html     chrome    --headless
+        OpenBrowser     http://127.0.0.1:8000/frame.html        firefox   --headless
     ELSE
-        OpenBrowser     file://${CURDIR}/../../resources/dropdown.html     chrome
-        OpenBrowser     file://${CURDIR}/../../resources/frame.html        firefox
+        OpenBrowser     http://127.0.0.1:8000/dropdown.html     chrome
+        OpenBrowser     http://127.0.0.1:8000/frame.html        firefox
     END
     VerifyText      Text in frame
     SwitchBrowser   1

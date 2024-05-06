@@ -2,7 +2,7 @@
 Documentation       Test for ClickItem keyword
 Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}    --headless
-Test Setup          GoTo    file://${CURDIR}/../../resources/items.html
+Test Setup          GoTo    http://127.0.0.1:8000/items.html
 Suite Teardown      CloseBrowser
 Test Timeout        60 seconds
 

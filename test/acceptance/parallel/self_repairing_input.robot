@@ -1,7 +1,7 @@
 *** Settings ***
 Library        QWeb
 Documentation  Regression test for self repairing input, this Fails if input field loses focus right after clear
-Suite Setup    OpenBrowser  file://${CURDIR}/../../resources/self_repairing_example.html  ${BROWSER}  --headless
+Suite Setup    OpenBrowser  http://127.0.0.1:8000/self_repairing_example.html  ${BROWSER}  --headless
 Suite Teardown  CloseBrowser
 Test Timeout        60 seconds
 

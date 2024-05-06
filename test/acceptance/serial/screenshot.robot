@@ -2,7 +2,7 @@
 Documentation       Test for screenshot functionality
 Library             QWeb
 Library             OperatingSystem
-Suite Setup         OpenBrowser    file://${CURDIR}/../../resources/text.html    ${BROWSER}  #--headless
+Suite Setup         OpenBrowser    http://127.0.0.1:8000/text.html    ${BROWSER}  #--headless
 Suite Teardown      CloseBrowser
 Test Timeout        60 seconds
 
@@ -63,16 +63,16 @@ Test VerifyApp
     Directory Should exist         ${OUTPUT_DIR}/verifyapp
     File Should Exist              ${OUTPUT_DIR}/verifyapp/Test_VerifyApp_verifyapp_ref.png
     VerifyApp                      verifyapp
-    Go To                          file://${CURDIR}/../../resources/dropdown.html
+    Go To                          http://127.0.0.1:8000/dropdown.html
     Run keyword and expect error   *Images differ    VerifyApp      verifyapp
     Remove File                    ${OUTPUT_DIR}/verifyapp/Test_VerifyApp_verifyapp_ref.png
 
 Test VerifyApp Accuracy
     [Tags]         RESOLUTION_DEPENDENCY
-    Go To          file://${CURDIR}/../../resources/text.html
+    Go To          http://127.0.0.1:8000/text.html
     SetConfig      VerifyAppAccuracy        0.0001
     VerifyApp      acctest
-    Go To          file://${CURDIR}/../../resources/dropdown.html
+    Go To          http://127.0.0.1:8000/dropdown.html
     VerifyApp      acctest
     SetConfig      VerifyAppAccuracy        0.9999
     Run keyword and expect error            *Images differ    VerifyApp      acctest
