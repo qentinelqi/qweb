@@ -183,7 +183,7 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -d rerunresult
+        -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
         --consolecolors ansi
@@ -204,7 +204,7 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -d result
+        -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
         --consolecolors ansi
