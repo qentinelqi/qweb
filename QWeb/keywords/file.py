@@ -36,7 +36,7 @@ from robot.api.deco import keyword
 ACTIVE_FILE: File = None  # type: ignore[assignment]
 
 
-@keyword(tags=["File"])
+@keyword(tags=["PDF", "File"])
 def use_pdf(filename: str) -> None:
     r"""Define pdf file for all other pdf keywords.
 
@@ -91,7 +91,7 @@ def use_file(filename: str) -> None:
     ACTIVE_FILE = File.create_text_file_instance(filename)
 
 
-@keyword(tags=("File", "Getters"))
+@keyword(tags=("PDF", "File", "Getters"))
 def get_pdf_text(**kwargs) -> str:
     r"""Get text content from pdf file.
 
@@ -116,6 +116,8 @@ def get_pdf_text(**kwargs) -> str:
         ${text}    GetPdfText    between=Simple???File
 
         # matches to text between Simple and end of file.
+        ${text}    GetPdfText    between=Simple???
+
         # Returns 6 characters from the beginning of match.
         ${text}    GetPdfText    between=Simple???       from_start=6
 
@@ -168,6 +170,8 @@ def get_file_text(**kwargs) -> str:
         ${text}    GetFileText   between=Simple???File
 
         # matches to text between Simple and end of file.
+        ${text}    GetFileText   between=Simple???File
+
         # Returns 6 characters from the beginning of match.
         ${text}    GetFileText   between=Simple???       from_start=6
 
@@ -195,7 +199,7 @@ def get_file_text(**kwargs) -> str:
     return str(ACTIVE_FILE.get(**kwargs))
 
 
-@keyword(tags=("File", "Verification"))
+@keyword(tags=("PDF", "File", "Verification"))
 def verify_pdf_text(text: str, normalize: bool = False) -> None:
     r"""Verify text from pdf file.
 
@@ -223,7 +227,7 @@ def verify_pdf_text(text: str, normalize: bool = False) -> None:
 
 @keyword(tags=("File", "Verification"))
 def verify_file_text(text: str, normalize: bool = False) -> None:
-    r"""Verify text from pdf file.
+    r"""Verify text from plain text file.
 
     Examples
     --------
@@ -246,9 +250,9 @@ def verify_file_text(text: str, normalize: bool = False) -> None:
     ACTIVE_FILE.verify(text, normalize)
 
 
-@keyword(tags=("File", "Verification"))
+@keyword(tags=("PDF", "File", "Verification"))
 def verify_no_pdf_text(text: str, normalize: bool = False) -> None:
-    r"""Verify text not exists in pdf-file.
+    r"""Check that the text does not exist in the PDF file.
 
     Examples
     --------
@@ -277,7 +281,7 @@ def verify_no_pdf_text(text: str, normalize: bool = False) -> None:
 
 @keyword(tags=("File", "Verification"))
 def verify_no_file_text(text: str, normalize: bool = False) -> None:
-    r"""Verify text not exists in pdf-file.
+    r"""Check that the text does not exist in the plain text file.
 
     Examples
     --------
@@ -329,7 +333,7 @@ def remove_file(file: Optional[str] = None) -> None:
             os.remove(file)
 
 
-@keyword(tags=("File", "Interaction"))
+@keyword(tags=("PDF", "File", "Interaction"))
 def remove_pdf() -> None:
     r"""Remove a file.
 
