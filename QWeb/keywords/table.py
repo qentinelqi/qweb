@@ -20,13 +20,18 @@ Table elements are used to show many kinds of data. Tables have cells in
 contain rows and columns. Cells can contain all kinds of elements. Cells
 are usually refenced by coordinates or unique neighbouring values.
 """
+
 from typing import Union, List, Optional
 
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api.deco import keyword
 from QWeb.internal import decorators, actions, util
-from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, \
-    QWebTimeoutError, QWebValueError, QWebElementNotFoundError
+from QWeb.internal.exceptions import (
+    QWebInstanceDoesNotExistError,
+    QWebTimeoutError,
+    QWebValueError,
+    QWebElementNotFoundError,
+)
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
 
@@ -36,13 +41,14 @@ ACTIVE_TABLE: Table = None  # type: ignore[assignment]
 @keyword(tags=["Tables"])
 @decorators.timeout_decorator
 def use_table(
-        locator: str,
-        anchor: str = "1",
-        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        parent: bool = False,
-        child: bool = False,
-        level: int = 1,
-        index: int = 1) -> None:
+    locator: str,
+    anchor: str = "1",
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    parent: bool = False,
+    child: bool = False,
+    level: int = 1,
+    index: int = 1,
+) -> None:
     r"""Define table for all other table keywords.
 
     Sets active table for other keywords.
@@ -91,11 +97,13 @@ def use_table(
 
 @keyword(tags=("Tables", "Verification"))
 @decorators.timeout_decorator
-def verify_table(coordinates: str,
-                 expected: str,
-                 anchor: str = "1",
-                 timeout: Union[int, float, str] = 0,
-                 **kwargs) -> None:
+def verify_table(
+    coordinates: str,
+    expected: str,
+    anchor: str = "1",
+    timeout: Union[int, float, str] = 0,
+    **kwargs,
+) -> None:
     r"""Verify text in table coordinates.
 
     Reads cell value from coordinates in active table and verifies it
@@ -145,21 +153,22 @@ def verify_table(coordinates: str,
     \`ClickCell\`, \`GetCellText\`, \`GetTableRow\`, \`UseTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
 
     table_cell = table.ACTIVE_TABLE.get_table_cell(coordinates, anchor, **kwargs)
-    partial_match = util.par2bool(kwargs.get('partial_match', CONFIG['PartialMatch']))
-    expected = f"{expected}*" if partial_match else expected
-    actions.get_element_text(table_cell, expected=expected, timeout=timeout)
+    partial_match = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
+
+    actions.get_element_text(
+        table_cell, expected=expected, timeout=timeout, partial_match=partial_match
+    )
 
 
 @keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
-def get_cell_text(coordinates: str,
-                  anchor: str = "1",
-                  timeout: Union[int, float, str] = 0,
-                  **kwargs) -> Union[str, int, float]:
+def get_cell_text(
+    coordinates: str, anchor: str = "1", timeout: Union[int, float, str] = 0, **kwargs
+) -> Union[str, int, float]:
     r"""Get cell text to variable.
 
     Locates cell by coordinates from active table and return value
@@ -203,7 +212,7 @@ def get_cell_text(coordinates: str,
     \`ClickCell\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
 
     table_cell = table.get_table_cell(coordinates, anchor)
@@ -217,11 +226,12 @@ def get_cell_text(coordinates: str,
 @keyword(tags=("Tables", "Interaction"))
 @decorators.timeout_decorator
 def click_cell(
-        coordinates: str,
-        anchor: str = "1",
-        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        index: int = 1,
-        **kwargs) -> None:
+    coordinates: str,
+    anchor: str = "1",
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    index: int = 1,
+    **kwargs,
+) -> None:
     r"""Click table cell.
 
     Locates cell by coordinates or text from active table and clicks it
@@ -272,7 +282,7 @@ def click_cell(
     \`GetCellText\`, \`GetTableRow\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
 
     table_cell = table.get_clickable_cell(coordinates, anchor, index, **kwargs)
@@ -282,10 +292,11 @@ def click_cell(
 @keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
 def get_table_row(
-        locator: str,
-        anchor: str = "1",
-        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        **kwargs) -> Union[WebElement, int]:
+    locator: str,
+    anchor: str = "1",
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    **kwargs,
+) -> Union[WebElement, int]:
     r"""Get row (index) from current table.
 
     Get table row by some visible text or value.
@@ -320,7 +331,7 @@ def get_table_row(
     \`ClickCell\`, \`GetCellText\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
 
     return table.get_row(locator, anchor, row_index=True, **kwargs)
@@ -349,7 +360,7 @@ def get_col_header_count() -> int:
     \`GetColHeader\`, \`VerifyColHeader\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
     return len(table.get_columns())
 
@@ -399,7 +410,7 @@ def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
     \`GetColHeaderCount\`, \`VerifyColHeader\`, \`GetColHeader\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
     columns = table.get_columns()
 
@@ -409,18 +420,16 @@ def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
         return column_texts
 
     if not str(index).isdigit():
-        raise QWebValueError('Column index should be a positive integer')
+        raise QWebValueError("Column index should be a positive integer")
 
     if len(columns) < index:
-        raise QWebValueError(f'Column index out of range: {index=}, {len(columns)=}')
+        raise QWebValueError(f"Column index out of range: {index=}, {len(columns)=}")
 
     return column_texts[index - 1]
 
 
 @keyword(tags=("Tables", "Verification"))
-def verify_col_header(expected: str,
-                      index: Optional[int] = None,
-                      **kwargs) -> bool:
+def verify_col_header(expected: str, index: Optional[int] = None, **kwargs) -> bool:
     r"""Verifies that a column header with given index matches the expected text.
 
     Note: only visible columns may be counted in some dynamic tables.
@@ -473,11 +482,11 @@ def verify_col_header(expected: str,
     \`GetColHeaderCount\`, \`GetColHeader\`, \`UseTable\`, \`VerifyTable\`
     """
     if not isinstance(ACTIVE_TABLE, Table):
-        raise QWebInstanceDoesNotExistError('Table has not been defined with UseTable keyword')
+        raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
     columns = table.get_columns()
     column_texts = _get_column_header_texts(columns)
-    partial = kwargs.get('partial_match', CONFIG['PartialMatch'])
+    partial = kwargs.get("partial_match", CONFIG["PartialMatch"])
 
     # If index is not specified, verify that the expected text is in any column
     if not index:
@@ -493,10 +502,10 @@ def verify_col_header(expected: str,
         raise QWebElementNotFoundError(f'Column text "{expected}" does not exist.')
 
     if not str(index).isdigit():
-        raise QWebValueError('Column index should be a positive integer')
+        raise QWebValueError("Column index should be a positive integer")
 
     if len(columns) < index:
-        raise QWebValueError(f'Column index out of range: {index=}, {len(columns)=}')
+        raise QWebValueError(f"Column index out of range: {index=}, {len(columns)=}")
 
     actual = column_texts[index - 1]
     # accept partial match
@@ -513,10 +522,7 @@ def verify_col_header(expected: str,
 def _get_column_header_texts(columns: List[WebElement]) -> List[str]:
     # prefer using title, then aria-label, then text
     column_texts = [
-        c.get_attribute("aria-label")
-        or c.get_attribute("title")
-        or c.text
-        for c in columns
+        c.get_attribute("aria-label") or c.get_attribute("title") or c.text for c in columns
     ]
 
     return column_texts

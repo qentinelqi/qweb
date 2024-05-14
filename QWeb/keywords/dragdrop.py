@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------
 """Keywords for draggable elements."""
+
 from __future__ import annotations
 from typing import Union
 from selenium.webdriver.remote.webelement import WebElement
@@ -30,21 +31,23 @@ from QWeb.internal import javascript
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
-def drag_drop(locator: str,
-              target_locator: str,
-              index: int = 1,
-              anchor: str = "1",
-              target_anchor: str = "1",
-              timeout: Union[int, float, str] = 0,
-              dragtime: Union[int, str] = '0.5s',
-              left: int = 0,
-              right: int = 0,
-              above: int = 0,
-              below: int = 0,
-              loc_left: int = 0,
-              loc_right: int = 0,
-              loc_above: int = 0,
-              loc_below: int = 0) -> None:
+def drag_drop(
+    locator: str,
+    target_locator: str,
+    index: int = 1,
+    anchor: str = "1",
+    target_anchor: str = "1",
+    timeout: Union[int, float, str] = 0,
+    dragtime: Union[int, str] = "0.5s",
+    left: int = 0,
+    right: int = 0,
+    above: int = 0,
+    below: int = 0,
+    loc_left: int = 0,
+    loc_right: int = 0,
+    loc_above: int = 0,
+    loc_below: int = 0,
+) -> None:
     # pylint: disable=unused-argument
     r"""Drag and drop element.
 
@@ -118,33 +121,35 @@ def drag_drop(locator: str,
     """
     pyautogui.FAILSAFE = False
     draggable = dragdrop.get_draggable_element(locator, index, anchor)
-    if target_locator.startswith('xpath=') or target_locator.startswith('//'):
+    if target_locator.startswith("xpath=") or target_locator.startswith("//"):
         target_elem = element.get_unique_element_by_xpath(target_locator, index=int(index - 1))
     else:
         target_elem = internal_text.get_text_using_anchor(target_locator, target_anchor)
     x, y = _get_coordinates(draggable)
     x = x + int(loc_right) - int(loc_left)
     y = y - int(loc_above) + int(loc_below)
-    logger.debug('draggable x is {} and y is {}'.format(x, y))
+    logger.debug("draggable x is {} and y is {}".format(x, y))
     pyautogui.moveTo(x, y)
     x, y = _get_coordinates(target_elem)
     x = x + int(right) - int(left)
     y = y - int(above) + int(below)
-    logger.debug('target x is {} and y is {}'.format(x, y))
+    logger.debug("target x is {} and y is {}".format(x, y))
     dragtime = _timestr_to_secs(dragtime)
-    pyautogui.dragTo(x, y, dragtime, button='left')
+    pyautogui.dragTo(x, y, dragtime, button="left")
     pyautogui.FAILSAFE = True
 
 
 def _get_coordinates(web_element: WebElement) -> tuple[int, int]:
     x_diff = javascript.execute_javascript(
-        'return window.outerWidth-window.innerWidth+screen.availLeft')
+        "return window.outerWidth-window.innerWidth+screen.availLeft"
+    )
     y_diff = javascript.execute_javascript(
-        'return window.outerHeight-window.innerHeight+screen.availTop')
+        "return window.outerHeight-window.innerHeight+screen.availTop"
+    )
     elem = javascript.execute_javascript("return arguments[0].getBoundingClientRect()", web_element)
     logger.debug("coords: {0}".format(elem))
-    y = elem['y']
+    y = elem["y"]
 
-    x_coord = web_element.location['x'] + x_diff + web_element.size['width'] / 2
-    y_coord = y + y_diff + web_element.size['height'] / 2
+    x_coord = web_element.location["x"] + x_diff + web_element.size["width"] / 2
+    y_coord = y + y_diff + web_element.size["height"] / 2
     return int(x_coord), int(y_coord)

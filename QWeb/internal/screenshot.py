@@ -25,8 +25,11 @@ from uuid import uuid4
 
 import cv2
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.common.exceptions import UnexpectedAlertPresentException, \
-                                       WebDriverException, InvalidSessionIdException
+from selenium.common.exceptions import (
+    UnexpectedAlertPresentException,
+    WebDriverException,
+    InvalidSessionIdException,
+)
 from QWeb.internal.browser import firefox, chrome, edge
 from QWeb.internal.exceptions import QWebDriverError
 from QWeb.internal import browser
@@ -38,15 +41,15 @@ from robot.utils import get_link_path
 from pyautogui import screenshot as pyscreenshot
 from tempfile import gettempdir
 
-SCREEN_SHOT_DIR_NAME = 'screenshots'
-VERIFYAPP_DIR_NAME = 'verifyapp'
-VALID_FILENAME_CHARS = '-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+SCREEN_SHOT_DIR_NAME = "screenshots"
+VERIFYAPP_DIR_NAME = "verifyapp"
+VALID_FILENAME_CHARS = "-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 MAX_LENGTH = 100  # filenames longer than 255 are not allowed by os
 
 
 def _create_screenshot_folder(foldername: str) -> str:
     try:
-        robot_output = BuiltIn().get_variable_value('${OUTPUT DIR}')
+        robot_output = BuiltIn().get_variable_value("${OUTPUT DIR}")
         screen_shot_dir = os.path.join(robot_output, foldername)
     except RobotNotRunningError:
         screen_shot_dir = os.path.join(os.getcwd(), foldername)
@@ -67,7 +70,7 @@ def _remove_invalid_chars(text_to_check: str) -> str:
     :return:
     """
     valid = "".join(c for c in text_to_check if c in VALID_FILENAME_CHARS)
-    return valid if len(valid) <= MAX_LENGTH else valid[:MAX_LENGTH - 1]
+    return valid if len(valid) <= MAX_LENGTH else valid[: MAX_LENGTH - 1]
 
 
 def compare_screenshots(filename: str, accuracy: Union[str, float]) -> bool:
@@ -79,22 +82,22 @@ def compare_screenshots(filename: str, accuracy: Union[str, float]) -> bool:
     """
     screenshot_dir = _create_screenshot_folder(SCREEN_SHOT_DIR_NAME)
     verifyapp_dir = _create_screenshot_folder(VERIFYAPP_DIR_NAME)
-    test_name = BuiltIn().get_variable_value('${TEST NAME}')
-    filename = _remove_invalid_chars('{0}_{1}'.format(test_name, filename))
+    test_name = BuiltIn().get_variable_value("${TEST NAME}")
+    filename = _remove_invalid_chars("{0}_{1}".format(test_name, filename))
     filename = filename.replace(" ", "_")
-    filename_ref = '{}_ref.png'.format(filename)
-    filename_cmp = '{}.png'.format(filename)
-    filename_dif = '{}_dif.png'.format(filename)
+    filename_ref = "{}_ref.png".format(filename)
+    filename_cmp = "{}.png".format(filename)
+    filename_dif = "{}_dif.png".format(filename)
     try:
         accuracy = float(accuracy)
     except ValueError as e:
-        raise ValueError('Invalid accuracy: {}'.format(accuracy)) from e
+        raise ValueError("Invalid accuracy: {}".format(accuracy)) from e
     # Save reference screenshot if it does not exist
     if not os.path.isfile(os.path.join(verifyapp_dir, filename_ref)):
         filepath_ref = save_screenshot(filename_ref, VERIFYAPP_DIR_NAME)
 
-        logger.info('Reference screenshot missing, saving.')
-        logger.info('Image path: {}'.format(filename_ref))
+        logger.info("Reference screenshot missing, saving.")
+        logger.info("Image path: {}".format(filename_ref))
         log_screenshot_file(filepath_ref)
         status = True
     # Compare screenshots if reference exists
@@ -107,22 +110,22 @@ def compare_screenshots(filename: str, accuracy: Union[str, float]) -> bool:
 
         (score, diff) = structural_similarity(ref_image, new_image, full=True)
         if score > accuracy:
-            logger.info('Images match with score: {}'.format(score))
+            logger.info("Images match with score: {}".format(score))
             log_screenshot_file(filepath_cmp)
-            logger.info('Image path: {}'.format(filename_cmp))
+            logger.info("Image path: {}".format(filename_cmp))
             status = True
         else:
-            logger.error('Images differ with score: {}'.format(score))
-            logger.info('Reference image: {}'.format(filename_ref))
+            logger.error("Images differ with score: {}".format(score))
+            logger.info("Reference image: {}".format(filename_ref))
             log_screenshot_file(filepath_ref)
-            logger.info('Comparison image: {}'.format(filename_cmp))
+            logger.info("Comparison image: {}".format(filename_cmp))
             ref_image_c = _draw_contours(diff, ref_image_c)
 
             log_screenshot_file(filepath_cmp)
 
             filepath_dif = os.path.join(screenshot_dir, filename_dif)
             cv2.imwrite(filepath_dif, ref_image_c)
-            logger.info('Difference image: {}'.format(filename_dif))
+            logger.info("Difference image: {}".format(filename_dif))
             log_screenshot_file(filepath_dif)
             status = False
     return status
@@ -150,10 +153,12 @@ def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
 
 
 # pylint: disable=too-many-branches
-def save_screenshot(filename: str = 'screenshot_{}.png',
-                    folder: str = SCREEN_SHOT_DIR_NAME,
-                    pyautog: bool = False,
-                    fullpage: bool = False) -> str:
+def save_screenshot(
+    filename: str = "screenshot_{}.png",
+    folder: str = SCREEN_SHOT_DIR_NAME,
+    pyautog: bool = False,
+    fullpage: bool = False,
+) -> str:
     """Save screenshot of web page to a file.
 
     If robot framework is running then screenshots are saved to
@@ -179,8 +184,8 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
     """
     test_name = None
     try:
-        robot_output = BuiltIn().get_variable_value('${OUTPUT DIR}')
-        test_name = BuiltIn().get_variable_value('${TEST NAME}')
+        robot_output = BuiltIn().get_variable_value("${OUTPUT DIR}")
+        test_name = BuiltIn().get_variable_value("${TEST NAME}")
         screen_shot_dir = os.path.join(robot_output, folder)
 
     except RobotNotRunningError:
@@ -192,13 +197,13 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
     if not os.path.isdir(screen_shot_dir):
         os.makedirs(screen_shot_dir)
 
-    if filename == 'screenshot_{}.png' and test_name is None:
+    if filename == "screenshot_{}.png" and test_name is None:
         filename = filename.format(uuid4())
 
-    elif filename == 'screenshot_{}.png':
+    elif filename == "screenshot_{}.png":
         name_with_underscores = str(test_name).replace(" ", "_")
         valid_name = _remove_invalid_chars(name_with_underscores)
-        filename = "screenshot-" + valid_name + "-{}".format(uuid4()) + '.png'
+        filename = "screenshot-" + valid_name + "-{}".format(uuid4()) + ".png"
 
     filepath = os.path.join(screen_shot_dir, filename)
 
@@ -216,25 +221,29 @@ def save_screenshot(filename: str = 'screenshot_{}.png',
             pass
 
         pyscreenshot(filepath)
-        logger.info('Saved screenshot to {}'.format(filepath))
+        logger.info("Saved screenshot to {}".format(filepath))
         return filepath
 
     if driver:
         saved: Union[str, bool]
         try:
-            browser_name = driver.capabilities['browserName']
+            browser_name = driver.capabilities["browserName"]
             if not fullpage:
                 saved = driver.save_screenshot(filepath)
             else:
                 saved = full_page_screenshot(driver, filepath, browser_name)
 
-        except (UnexpectedAlertPresentException, WebDriverException, QWebDriverError,
-                InvalidSessionIdException):
+        except (
+            UnexpectedAlertPresentException,
+            WebDriverException,
+            QWebDriverError,
+            InvalidSessionIdException,
+        ):
             saved = pyscreenshot(filepath)
         if not saved:
-            raise ValueError(f'Saving screenshot to {filepath} did not succeed.')
+            raise ValueError(f"Saving screenshot to {filepath} did not succeed.")
 
-    logger.info('Saved screenshot to {}'.format(filepath))
+    logger.info("Saved screenshot to {}".format(filepath))
     return filepath
 
 
@@ -250,9 +259,9 @@ def log_screenshot_file(filepath: str) -> None:
         Filepath to the screenshot file.
     """
     try:
-        robot_output = BuiltIn().get_variable_value('${OUTPUT DIR}')
+        robot_output = BuiltIn().get_variable_value("${OUTPUT DIR}")
         if not config.get_config("OSScreenshots"):
-            logger.info('Current url is: {}'.format(get_url()))
+            logger.info("Current url is: {}".format(get_url()))
         link = get_link_path(filepath, robot_output)
         logger.info('<a href="{0}"><img src="{0}" width="800px"></a>'.format(link), html=True)
 
@@ -263,22 +272,25 @@ def log_screenshot_file(filepath: str) -> None:
 def log_html() -> None:
     source_html_counter = 1
     url = get_url()
-    logger.info('Current url: {}'.format(url))
+    logger.info("Current url: {}".format(url))
     raw_html = get_source()
-    log_dir = BuiltIn().get_variable_value('${OUTPUT DIR}')
+    log_dir = BuiltIn().get_variable_value("${OUTPUT DIR}")
     filename = "source_{}.html".format(uuid4())
-    filepath = os.path.join(log_dir, 'screenshots', filename)
-    with open(filepath, 'w', encoding="utf-8") as htmlfile:
+    filepath = os.path.join(log_dir, "screenshots", filename)
+    with open(filepath, "w", encoding="utf-8") as htmlfile:
         htmlfile.write(raw_html)
-    logger.info(r'''<a id="source_link_{0}">{1}</a></br>
+    logger.info(
+        r"""<a id="source_link_{0}">{1}</a></br>
     <iframe id="source_{0}" width="1220px", height="650px"></iframe>
     <script type="text/javascript">
     element = document.getElementById("source_link_{0}");
     element.setAttribute("href", "{2}");
     document.getElementById("source_{0}").setAttribute("src", "{1}");
-    </script>'''.format(source_html_counter, 'screenshots/' + filename,
-                        filepath.replace("\\", "\\\\")),
-                html=True)
+    </script>""".format(
+            source_html_counter, "screenshots/" + filename, filepath.replace("\\", "\\\\")
+        ),
+        html=True,
+    )
     source_html_counter += 1
 
 
@@ -287,7 +299,7 @@ def get_url() -> Optional[str]:
         driver = browser.get_current_browser()
         return driver.current_url
     except QWebDriverError:
-        logger.warn('Could not take a screenshot of browser because it is not open.')
+        logger.warn("Could not take a screenshot of browser because it is not open.")
         return None
 
 
@@ -297,35 +309,36 @@ def get_source() -> str:
 
 
 def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
-
     def send(cmd, params):
         resource = f"/session/{driver.session_id}/chromium/send_command_and_get_result"
 
         # pylint:disable=W0212
         url = driver.command_executor._url + resource
-        body = json.dumps({'cmd': cmd, 'params': params})
-        response = driver.command_executor._request('POST', url, body)
-        return response.get('value')
+        body = json.dumps({"cmd": cmd, "params": params})
+        response = driver.command_executor._request("POST", url, body)
+        return response.get("value")
 
     def evaluate(script):
-        response = send('Runtime.evaluate', {'returnByValue': True, 'expression': script})
-        return response['result']['value']
+        response = send("Runtime.evaluate", {"returnByValue": True, "expression": script})
+        return response["result"]["value"]
 
-    metrics = evaluate("({"
-                       "width: Math.max(window.innerWidth, "
-                       "document.body.scrollWidth, "
-                       "document.documentElement.scrollWidth)|0,"
-                       "height: Math.max(window.innerHeight, document.body.scrollHeight, "
-                       "document.documentElement.scrollHeight)|0,"
-                       "deviceScaleFactor: window.devicePixelRatio || 1,"
-                       "mobile: typeof window.orientation !== 'undefined'"
-                       "})")
-    send('Emulation.setDeviceMetricsOverride', metrics)
-    screenshot = send('Page.captureScreenshot', {'format': 'png', 'fromSurface': True})
-    send('Emulation.clearDeviceMetricsOverride', {})
+    metrics = evaluate(
+        "({"
+        "width: Math.max(window.innerWidth, "
+        "document.body.scrollWidth, "
+        "document.documentElement.scrollWidth)|0,"
+        "height: Math.max(window.innerHeight, document.body.scrollHeight, "
+        "document.documentElement.scrollHeight)|0,"
+        "deviceScaleFactor: window.devicePixelRatio || 1,"
+        "mobile: typeof window.orientation !== 'undefined'"
+        "})"
+    )
+    send("Emulation.setDeviceMetricsOverride", metrics)
+    screenshot = send("Page.captureScreenshot", {"format": "png", "fromSurface": True})
+    send("Emulation.clearDeviceMetricsOverride", {})
 
-    image = base64.b64decode(screenshot['data'])
-    with open(filepath, 'wb') as f:
+    image = base64.b64decode(screenshot["data"])
+    with open(filepath, "wb") as f:
         f.write(image)
 
     return filepath

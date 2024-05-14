@@ -30,16 +30,23 @@ import os
 
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
-def click_icon(image: str,
-               template_res_w: Optional[int] = None,
-               browser_res_w: Optional[int] = None,
-               timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
-    r"""Click the icon on the screen.
+def click_icon(
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    tolerance: float = 0.95,
+    grayscale: bool = True,
+) -> None:
+    r"""Click the icon/bitmap on the screen.
 
-    In case you want to click icons you always have to have reference images.
+    This keyword is designed to locate and interact with graphical icons/bitmpas on a screen
+    by comparing them to a reference image. The function searches the current screen content
+    for the image specified in the 'image' parameter.
 
-    If reference picture are not in default folders (images, files, downloads) then
-    BASE_IMAGE_PATH should be defined in a robot file before using this keyword
+    If reference picture is not stored in default folders (images, files, downloads) then
+    either full path to image should be used or variable BASE_IMAGE_PATH should be defined
+    before using this keyword.
 
     Examples
     --------
@@ -53,6 +60,28 @@ def click_icon(image: str,
     .. code-block:: robotframework
 
         ClickIcon                   plane
+        # Click icon with stricter tolerance and comparing colors
+        ClickIcon                   plane      tolerance=0.99     grayscale=False
+
+    Parameters
+    ----------
+    image : str
+        Image name with or without extension
+    template_res_w : int
+        Reference image resolution / width. 1920 by default and
+        image will be scaled to most common resolutions.
+    browser_res_w : int
+        Browser resolution / width. None (default) indicates
+        that QWeb will figure out current browser width.
+    timeout : int
+        How long we try to find the element for.
+    tolerance : float
+        Tolerance level for image comparison. Default is 0.95, where 1.0 is exact match.
+    grayscale : bool
+        When set to True, the image comparison is done in grayscale, which tends to be quicker
+        and more reliable.
+        When set to False, the comparison is done in color, which provides a stricter assessment.
+        The default setting is True.
 
     Related keywords
     ----------------
@@ -69,7 +98,14 @@ def click_icon(image: str,
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=True)
+    x, y = icon.image_recognition(
+        str(image_path),
+        template_res_w,
+        browser_res_w,
+        pyautog=True,
+        tolerance=tolerance,
+        grayscale=grayscale,
+    )
     if x == -1:
         raise QWebElementNotFoundError("Couldn't find the icon from the screen")
     if CONFIG.get_value("RetinaDisplay"):
@@ -84,6 +120,8 @@ def is_icon(
     image: str,
     template_res_w: Optional[int] = None,
     browser_res_w: Optional[int] = None,
+    tolerance: float = 0.95,
+    grayscale: bool = True,
 ) -> bool:
     r"""Check is the icon on the screen.
 
@@ -102,9 +140,29 @@ def is_icon(
 
     .. code-block:: robotframework
 
-        ${status}                   IsIcon                   plane
+        ${status}    IsIcon    plane
+        # Verify image with stricter tolerance and comparing colors
+        ${status}    IsIcon    plane_red    tolerance=0.99    grayscale=False
 
     ${status} will be True or False.
+
+    Parameters
+    ----------
+    image : str
+        Image name with or without extension
+    template_res_w : int
+        Reference image resolution / width. 1920 by default and
+        image will be scaled to most common resolutions.
+    browser_res_w : int
+        Browser resolution / width. None (default) indicates
+        that QWeb will figure out current browser width.
+    tolerance : float
+        Tolerance level for image comparison. Default is 0.95, where 1.0 is exact match.
+    grayscale : bool
+        When set to True, the image comparison is done in grayscale, which tends to be quicker
+        and more reliable.
+        When set to False, the comparison is done in color, which provides a stricter assessment.
+        The default setting is True.
 
     Related keywords
     ----------------
@@ -119,7 +177,14 @@ def is_icon(
 
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False)
+    x, _y = icon.image_recognition(
+        str(image_path),
+        template_res_w,
+        browser_res_w,
+        pyautog=False,
+        tolerance=tolerance,
+        grayscale=grayscale,
+    )
 
     if x == -1:
         return False
@@ -129,17 +194,24 @@ def is_icon(
 @keyword(tags=("Icon", "Verification"))
 @decorators.timeout_decorator
 def verify_icon(
-        image: str,
-        template_res_w: Optional[int] = None,
-        browser_res_w: Optional[int] = None,
-        timeout: Union[int, float, str] = 0  # pylint: disable=unused-argument
+    image: str,
+    template_res_w: Optional[int] = None,
+    browser_res_w: Optional[int] = None,
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    tolerance: float = 0.95,
+    grayscale: bool = True,
 ) -> bool:
-    r"""Verify page contains icon.
+    r"""Verify page contains icon/bitmap.
 
-    In case you want to use this keyword you always have to have reference images.
-    If reference image are not in default folders (images, files, downloads) then
-    BASE_IMAGE_PATH should be defined in a robot file before using this keyword.
-    LogMatchedIcons configuration is used to log screenshots of matched images
+    This keyword is designed to locate graphical icons/bitmpas on a screen
+    by comparing them to a reference image. The function searches the current screen content
+    for the image specified in the 'image' parameter.
+
+    If reference picture is not stored in default folders (images, files, downloads) then
+    either full path to image should be used or variable BASE_IMAGE_PATH should be defined
+    before using this keyword.
+
+    LogMatchedIcons configuration can be used to log screenshots of matched images
     to logs. By default matched images are not logged.
 
     Examples
@@ -155,6 +227,8 @@ def verify_icon(
 
         SetConfig                    LogMatchedIcons    True  # Log matched image to logsß
         VerifyIcon                   plane
+        # Verify image with stricter tolerance and comparing colors
+        VerifyIcon                   plane_red      tolerance=0.99     grayscale=False
 
     Parameters
     ----------
@@ -168,6 +242,13 @@ def verify_icon(
         that QWeb will figure out current browser width.
     timeout : int
         How long we try to find the element for.
+    tolerance : float
+        Tolerance level for image comparison. Default is 0.95, where 1.0 is exact match.
+    grayscale : bool
+        When set to True, the image comparison is done in grayscale, which tends to be quicker
+        and more reliable.
+        When set to False, the comparison is done in color, which provides a stricter assessment.
+        The default setting is True.
 
     Related keywords
     ----------------
@@ -183,7 +264,14 @@ def verify_icon(
     template_res_w, browser_res_w = int(template_res_w), int(browser_res_w)
 
     image_path = icon.get_full_image_path(image)
-    x, _y = icon.image_recognition(str(image_path), template_res_w, browser_res_w, pyautog=False)
+    x, _y = icon.image_recognition(
+        str(image_path),
+        template_res_w,
+        browser_res_w,
+        pyautog=False,
+        tolerance=tolerance,
+        grayscale=grayscale,
+    )
     if x == -1:
         raise QWebIconNotFoundError("Couldn't find the icon from the screen")
     return True
@@ -192,11 +280,12 @@ def verify_icon(
 @keyword(tags=("Icon", "Interaction"))
 @decorators.timeout_decorator
 def capture_icon(
-        locator: str,
-        folder: str = 'screenshots',
-        filename: str = 'screenshot_{}.png',
-        timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
-        **kwargs) -> Optional[str]:  # pylint: disable=unused-argument
+    locator: str,
+    folder: str = "screenshots",
+    filename: str = "screenshot_{}.png",
+    timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    **kwargs,
+) -> Optional[str]:  # pylint: disable=unused-argument
     r"""Take a screenshot of an element.
 
     Examples
@@ -234,12 +323,12 @@ def capture_icon(
     if util.xpath_validator(locator):
         web_element = element.get_unique_element_by_xpath(locator)
     else:
-        web_element = text.get_item_using_anchor(locator, anchor='1', **kwargs)
+        web_element = text.get_item_using_anchor(locator, anchor="1", **kwargs)
 
     if web_element is not None:
         img = Image.open(io.BytesIO(web_element.screenshot_as_png))
         filepath = os.path.join(screenshot.save_screenshot(filename, folder))
-        logger.info('Screenshot path: {}'.format(filepath.replace('\\', '/')), also_console=True)
+        logger.info("Screenshot path: {}".format(filepath.replace("\\", "/")), also_console=True)
         img.save(filepath)
         screenshot.log_screenshot_file(filepath)
 

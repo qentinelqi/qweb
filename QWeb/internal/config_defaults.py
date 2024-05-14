@@ -32,6 +32,7 @@ Usage from code:
 from QWeb.internal.config_defaults import CONFIG
 val = CONFIG["ScreenshotType"]
 """
+
 from __future__ import annotations
 from typing import Any, Union
 
@@ -52,15 +53,23 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "DefaultDocument": (True, util.par2bool),
     "InputHandler": ("selenium", util.set_input_handler),
     "CaseInsensitive": (False, util.par2bool),
-    "AllInputElements":
-    (SearchStrategies.ALL_INPUT_ELEMENTS, SearchStrategies.all_input_elements_validation),
-    "MatchingInputElement":
-    (SearchStrategies.MATCHING_INPUT_ELEMENT, SearchStrategies.matching_input_element_validation),
-    "ActiveAreaXpath":
-    (SearchStrategies.ACTIVE_AREA_XPATH, SearchStrategies.active_area_xpath_validation),
+    "AllInputElements": (
+        SearchStrategies.ALL_INPUT_ELEMENTS,
+        SearchStrategies.all_input_elements_validation,
+    ),
+    "MatchingInputElement": (
+        SearchStrategies.MATCHING_INPUT_ELEMENT,
+        SearchStrategies.matching_input_element_validation,
+    ),
+    "ActiveAreaXpath": (
+        SearchStrategies.ACTIVE_AREA_XPATH,
+        SearchStrategies.active_area_xpath_validation,
+    ),
     "TextMatch": (SearchStrategies.TEXT_MATCH, SearchStrategies.text_match_validation),
-    "ContainingTextMatch": (SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
-                            SearchStrategies.containing_text_match_validation),
+    "ContainingTextMatch": (
+        SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE,
+        SearchStrategies.containing_text_match_validation,
+    ),
     "IsModalXpath": (SearchStrategies.IS_MODAL_XPATH, SearchStrategies.clear_xpath),
     "VerifyAppAccuracy": (0.9999, None),
     "OffsetCheck": (True, util.par2bool),
@@ -78,9 +87,9 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "HandleAlerts": (True, util.par2bool),
     "BlindReturn": (False, util.par2bool),
     "Headless": (False, util.par2bool),
-    "Delay": ('0s', SearchStrategies.default_timeout_validation),
+    "Delay": ("0s", SearchStrategies.default_timeout_validation),
     "RunBefore": (None, util.validate_run_before),
-    "RetryInterval": ('5s', SearchStrategies.default_timeout_validation),
+    "RetryInterval": ("5s", SearchStrategies.default_timeout_validation),
     "RetryError": (None, None),
     "StayInCurrentFrame": (False, util.par2bool),
     "FrameTimeout": ("10s", SearchStrategies.default_timeout_validation),
@@ -89,7 +98,7 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "RetinaDisplay": (util.is_retina(), util.par2bool),
     "LogMatchedIcons": (False, util.par2bool),
     "ShadowDOM": (False, util.par2bool),
-    "HighlightColor": ("blue", util.highlight_validation)
+    "HighlightColor": ("blue", util.highlight_validation),
 }
 
 CONFIG: Config = Config(CONFIG_DEFAULTS)

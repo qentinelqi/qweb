@@ -33,21 +33,21 @@ def set_robot_args(*args: Any, **kwargs: Any) -> list[Any]:
             key = BuiltIn().get_variable_value(key)
         if _contains_var(val):
             val = BuiltIn().get_variable_value(val)
-        new_args.append('{}={}'.format(key, val))
+        new_args.append("{}={}".format(key, val))
     return new_args
 
 
 def get_steps(name: str, caller_fn: str, **kwargs: Any) -> Optional[list[dict[str, Any]]]:
-    file = Path(BuiltIn().get_variable_value('${SUITE SOURCE}'))
-    test_case = BuiltIn().get_variable_value('${TEST_NAME}')
+    file = Path(BuiltIn().get_variable_value("${SUITE SOURCE}"))
+    test_case = BuiltIn().get_variable_value("${TEST_NAME}")
     with open(file, "r+") as fo:
         data = fo.readlines()
     idx = 0
     while data:
         if data[idx].strip() == test_case:
-            data = data[idx:len(data)]
+            data = data[idx : len(data)]  # noqa: E203
             for i, line in enumerate(data):
-                if caller_fn in line.replace(' ', '').strip().lower() and name in line.strip():
+                if caller_fn in line.replace(" ", "").strip().lower() and name in line.strip():
                     steps = _parse_steps(data, i + 1, **kwargs)
                     return steps
         idx += 1
@@ -56,10 +56,10 @@ def get_steps(name: str, caller_fn: str, **kwargs: Any) -> Optional[list[dict[st
 
 def _parse_steps(data: list[str], iterator: int, **kwargs: Any) -> list[dict[str, Any]]:
     steps = []
-    while not data[iterator].replace(' ', '').lower().strip().startswith('endblock'):
+    while not data[iterator].replace(" ", "").lower().strip().startswith("endblock"):
         varname = None
-        line = re.split(r'\s{2,}', data[iterator].strip())
-        if line[0].startswith('#'):
+        line = re.split(r"\s{2,}", data[iterator].strip())
+        if line[0].startswith("#"):
             iterator += 1
             continue
         if _contains_var(line[0]):
@@ -75,23 +75,24 @@ def _parse_steps(data: list[str], iterator: int, **kwargs: Any) -> list[dict[str
     return steps
 
 
-def _parse_arguments(line: list[str], starting_point: int,
-                     **kwargs: Any) -> tuple[list[str], dict[Any, Any]]:
+def _parse_arguments(
+    line: list[str], starting_point: int, **kwargs: Any
+) -> tuple[list[str], dict[Any, Any]]:
     args = []
     for a in range(starting_point, len(line)):
-        if line[a].strip() != '':
-            if '=' not in line[a]:
+        if line[a].strip() != "":
+            if "=" not in line[a]:
                 args.append(line[a].strip())
-            elif '\\=' in line[a]:
+            elif "\\=" in line[a]:
                 args.append(line[a].strip())
             else:
-                key, value = line[a].strip().split('=', 1)
+                key, value = line[a].strip().split("=", 1)
                 kwargs.update({key: value})
     return args, kwargs
 
 
 def _contains_var(arg: str, from_start: bool = True) -> bool:
-    var_types = ['${', '@{', '&{']
+    var_types = ["${", "@{", "&{"]
     if from_start:
         return any(arg.strip().startswith(v) for v in var_types)
-    return any(v in arg and '}' in arg for v in var_types)
+    return any(v in arg and "}" in arg for v in var_types)

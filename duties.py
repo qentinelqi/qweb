@@ -1,9 +1,20 @@
 """Run dev tasks locally"""
 import sys
+import subprocess
 from platform import system
 from duty import duty
 
 python_exe = sys.executable
+
+@duty
+def format(ctx, path="QWeb"):
+    """
+    Automatic formatting of files
+    Arguments:
+        ctx: The context instance (passed automatically)
+        path: path of folder/file to check
+    """
+    ctx.run(f"{python_exe} -m ruff format {path}", title="Autoformatting files: ruff", capture=False)
 
 @duty
 def typing(ctx, path="QWeb"):
@@ -23,6 +34,7 @@ def lint(ctx, path="QWeb"):
         ctx: The context instance (passed automatically)
         path: path of folder/file to check
     """
+    ctx.run(f"{python_exe} -m ruff check {path}", title="Checking code quality: ruff", capture=False)
     ctx.run(f"{python_exe} -m flake8 {path}", title="Checking code quality: flake8", capture=False)
     ctx.run(f"{python_exe} -m pylint {path}", title="Checking code quality: pylint", capture=False)
 
@@ -56,18 +68,19 @@ def acceptance_tests(ctx,
     def remove_extra_whitespaces(string: str) -> str:
         return " ".join(string.split())
 
-    cmd_exit_on_failure = ""
-    if exitonfailure.lower() == "true":
-        cmd_exit_on_failure = "--exitonfailure"
-
     listener_cmd = ""
     if listener:
         listener_cmd = f" --listener {listener}"
 
+
+    cmd_exit_on_failure = ""
+    if exitonfailure.lower() == "true":
+        cmd_exit_on_failure = "--exitonfailure"
     os = system().upper()
     if os == "DARWIN":
         os = "MACOS"
- 
+        
+    
     excludes = [
         f"PROBLEM_IN_{os}",
         f"PROBLEM_IN_{browser.upper()}",
@@ -78,17 +91,30 @@ def acceptance_tests(ctx,
     ]
     cmd_excludes = f'-e {" -e ".join(excludes)}'
 
-
-    cmd_str = remove_extra_whitespaces(
-               f" {python_exe} -m robot"
+    
+    if os == "MACOS": 
+        # need to run tests in single process
+        # https://developer.apple.com/documentation/webkit/about_webdriver_for_safari#2957226
+        cmd_str = remove_extra_whitespaces(f" {python_exe} -m robot")
+    else:
+        ctx.run(f"{python_exe} test/acceptance/pabot_suite_ordering.py", nofail=True)
+        cmd_str = remove_extra_whitespaces(
+                f" {python_exe} -m pabot.pabot"
+                f" --ordering test/acceptance/.pabot_order"
+                f" --name Acceptance"
+            )
+        
+    cmd_str += " " + remove_extra_whitespaces(
                f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
                f" {cmd_excludes}"
-               f" test/Acceptance"
-            )
-
+               f" test/acceptance")
+        
+    proc = subprocess.Popen([python_exe, '-m', 'http.server', '-b', '127.0.0.1', '-d', 'test/resources', '8000'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
     ctx.run(cmd_str, title="Acceptance tests", capture=False)
+    proc.terminate()
+
 
 @duty
 def kw_docs(ctx):

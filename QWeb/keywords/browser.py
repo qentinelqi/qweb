@@ -20,8 +20,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 import os
-import pkg_resources
 import requests
+from importlib.metadata import version, PackageNotFoundError
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
@@ -126,18 +126,26 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     Selenium Manager
     ----------------
 
-    If browser driver(s) can be found in path, they will be used. If not, Selenium
+    Selenium Manager's automatic browser and driver management is available for Chrome, Firefox
+    and Edge. To use specific browser version, add `browser_version` keyword argument.
+    If matching browser & driver(s) can be found in path, they will be used. If not, Selenium
     Manager tries to download and install them. With Chrome also specific version of
     browser ("Chrome for Testing") can be used.
+    Note that for Edge in Windows local admin rights are required!
+
+    More info:
+    https://www.selenium.dev/documentation/selenium_manager/#automated-browser-management
 
     **NOTE**: if you are using QWeb in some cloud service,
     it's best to use their method of setting browser version.
 
     .. code-block:: robotframework
 
-        # If Chrome 117 is already installed, it will be used.
-        # If not, Chrome for Testing v117 will be downloaded and used.
-        OpenBrowser   https://www.google.com    chrome    browser_version=117
+        # If Chrome 124 is already installed, it will be used.
+        # If not, Chrome for Testing v124 will be downloaded and used.
+        OpenBrowser   https://www.google.com    chrome    browser_version=124
+        OpenBrowser   https://www.google.com    firefox   browser_version=124
+        OpenBrowser   https://www.google.com    edge      browser_version=124
 
     BrowserStack usage
     ------------------
@@ -293,19 +301,13 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     \`SwitchWindow\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
     try:
-        logger.info(
-            "\nQWeb version number: {}".format(
-                pkg_resources.get_distribution("QWeb").version
-            ),
-            also_console=True,
-        )
-    except pkg_resources.DistributionNotFound:
+        qweb_version = version("QWeb")
+        logger.info(f"QWeb version number: {qweb_version}", also_console=True)
+    except PackageNotFoundError:
         logger.info("Could not find QWeb version number.")
     number_of_open_sessions = _sessions_open()
     if number_of_open_sessions > 0:
-        logger.warn(
-            "You have {} browser sessions already open".format(number_of_open_sessions)
-        )
+        logger.warn("You have {} browser sessions already open".format(number_of_open_sessions))
     option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
 
@@ -325,17 +327,11 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     if provider in ("bs", "browserstack"):
         bs_device = util.get_rfw_variable_value("${DEVICE}")
         if not bs_device and b_lower in bs_desktop.NAMES:
-            driver = bs_desktop.open_browser(
-                b_lower, bs_project_name, bs_run_id, **kwargs
-            )
+            driver = bs_desktop.open_browser(b_lower, bs_project_name, bs_run_id, **kwargs)
         elif bs_device:
-            driver = bs_mobile.open_browser(
-                bs_device, bs_project_name, bs_run_id, **kwargs
-            )
+            driver = bs_mobile.open_browser(bs_device, bs_project_name, bs_run_id, **kwargs)
         else:
-            raise exceptions.QWebException(
-                "Unknown browserstack browser {}".format(browser_alias)
-            )
+            raise exceptions.QWebException("Unknown browserstack browser {}".format(browser_alias))
     else:
         driver = _browser_checker(b_lower, option_list, **kwargs)
     util.initial_logging(driver.capabilities)
@@ -343,9 +339,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     # If user wants to re-use Chrome browser then he/she has to give
     # variable BROWSER_REUSE=True. In that case no URL loaded needed as
     # user wants to continue with the existing browser session
-    is_browser_reused = (
-        util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE}")) or False
-    )
+    is_browser_reused = util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE}")) or False
     if not (is_browser_reused and b_lower == "chrome"):
         driver.get(url)
     xhr.setup_xhr_monitor()

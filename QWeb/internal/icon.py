@@ -82,19 +82,18 @@ class QIcon:
 
         if device_res_w <= 0 or template_res_w <= 0:
             raise ValueError(
-                "Device resolution {} or template resolution {}"
-                " can't be zero or less".format(device_res_w, template_res_w)
+                "Device resolution {} or template resolution {}" " can't be zero or less".format(
+                    device_res_w, template_res_w
+                )
             )
 
-        if not round(device_res_w / template_res_w, 2) in scale_ratios:
+        if round(device_res_w / template_res_w, 2) not in scale_ratios:
             scale_ratios.insert(0, round(device_res_w / template_res_w, 2))
 
         return scale_ratios
 
     @staticmethod
-    def _get_image_pyramid(
-        image_obj: ndarray, level: int
-    ) -> list[tuple[ndarray, float]]:
+    def _get_image_pyramid(image_obj: ndarray, level: int) -> list[tuple[ndarray, float]]:
         """
         Returns a list of up- and downsampled images of image_obj.
         Each sampling goes 10% up and down in size
@@ -178,14 +177,8 @@ class QIcon:
         width, height = self._get_image_size(template)
         img_width, img_height = self._get_image_size(image_obj)
 
-        print(
-            "*DEBUG* source haystack (image_obj) image size: {}x{}".format(
-                img_width, img_height
-            )
-        )
-        print(
-            "*DEBUG* original needle (template) image size: {}x{}".format(width, height)
-        )
+        print("*DEBUG* source haystack (image_obj) image size: {}x{}".format(img_width, img_height))
+        print("*DEBUG* original needle (template) image size: {}x{}".format(width, height))
 
         if height > img_height or width > img_width:
             raise ValueError(
@@ -227,9 +220,7 @@ class QIcon:
                 "image size: {}x{}".format(template_level[1], w, h)
             )
             MEAS.start("CV2.MATCHTEMPLATE TIME")
-            res = cv2.matchTemplate(
-                image_levels[0][0], template_level[0], cv2.TM_CCOEFF_NORMED
-            )
+            res = cv2.matchTemplate(image_levels[0][0], template_level[0], cv2.TM_CCOEFF_NORMED)
             MEAS.stop()
             # print("did matchTemplate, res:\n")
             # print(res)
@@ -292,6 +283,7 @@ class QIcon:
         draw: int = 1,
         template_res_w: int = 1440,
         device_res_w: int = 1080,
+        grayscale: bool = True,
     ) -> tuple[int, int]:
         """Locate an image (needle) within an bigger image (haystack). Tolarance
         is pixel tolerance, i.e. 1.0 = all pixels are correct, 0.5 = 50% of the pixels
@@ -304,16 +296,21 @@ class QIcon:
         print("*INFO* _image_location Starts")
 
         image = cv2.imread(haystack)
-        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        _hay_h, hay_w = image_gray.shape[:2]
+        image_haystack = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if grayscale else image
+        _hay_h, hay_w = image_haystack.shape[:2]
 
         needle_path = Path(needle)
         if not needle_path.exists():
             raise FileNotFoundError(f"Needle file does not exist. Tried: {needle_path}")
-        template = cv2.imread(str(needle_path.resolve()), 0)
+        template = (
+            cv2.imread(str(needle_path.resolve()), 0)
+            if grayscale
+            else cv2.imread(str(needle_path.resolve()), cv2.IMREAD_COLOR)
+        )  # Read in color
 
         if template is None:
             raise FileNotFoundError(f"Cannot read template image. Tried: {needle}")
+
         height, width = template.shape[:2]
 
         scale_ratios = self._get_scale_ratios(template_res_w, device_res_w)
@@ -326,9 +323,7 @@ class QIcon:
 
         print("*DEBUG* Resampling loop Starts")
         for scale_ratio in scale_ratios:
-            interpolation_method = (
-                cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
-            )
+            interpolation_method = cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
 
             print(f"*DEBUG* resize starts: for scale {scale_ratio}")
 
@@ -344,9 +339,7 @@ class QIcon:
                 )
             print("*DEBUG* matchTemplate Starts:")
 
-            res = cv2.matchTemplate(
-                image_gray, scaled_img_template, cv2.TM_CCOEFF_NORMED
-            )
+            res = cv2.matchTemplate(image_haystack, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
             ratio = device_res_w / hay_w
 
@@ -402,6 +395,7 @@ class QIcon:
             best_matched_image,
             best_highest_max_val_loc,
             best_scale_ratio,
+            grayscale=grayscale,
         )
 
         if best_highest_max_val >= tolerance:
@@ -474,14 +468,16 @@ class QIcon:
         scaled_needle: ndarray,
         loc: tuple[int, int],
         best_scale: float,
+        grayscale: bool = True,
     ) -> None:
         """Draw a composite image with the needle image, the haystack image,
         the scaled needle that matches the best and show where in haystack
         the best match is. This is best used in debugging, but it could be
         modified to add the image to the Robot log as well.
         """
-        needle = cv2.cvtColor(needle, cv2.COLOR_GRAY2BGR)
-        scaled_needle = cv2.cvtColor(scaled_needle, cv2.COLOR_GRAY2BGR)
+        if grayscale:
+            needle = cv2.cvtColor(needle, cv2.COLOR_GRAY2BGR)
+            scaled_needle = cv2.cvtColor(scaled_needle, cv2.COLOR_GRAY2BGR)
         h1, w1 = needle.shape[:2]
         hs, ws = scaled_needle.shape[:2]
         h2, w2 = haystack.shape[:2]
@@ -495,8 +491,8 @@ class QIcon:
         )
         result = np.zeros((max(h2, h1), w2 + max_left_w, 3), np.uint8)
         result[:h1, :w1, :3] = needle
-        result[h1:h1 + hs, :ws, :3] = scaled_needle
-        result[:h2, max_left_w:max_left_w + w2, :3] = haystack
+        result[h1 : h1 + hs, :ws, :3] = scaled_needle  # noqa: E203
+        result[:h2, max_left_w : max_left_w + w2, :3] = haystack  # noqa: E203
 
         cv2.line(
             result,
@@ -522,7 +518,12 @@ class QIcon:
 
 
 def image_recognition(
-    image_path: str, template_res_w: int, browser_res_w: int, pyautog: bool
+    image_path: str,
+    template_res_w: int,
+    browser_res_w: int,
+    pyautog: bool,
+    tolerance: float = 0.95,
+    grayscale: bool = True,
 ) -> tuple[int, int]:
     """Return icon's coordinates."""
     image_rec = QIcon()
@@ -531,8 +532,10 @@ def image_recognition(
     x, y = image_rec.image_location(
         needle=image_path,
         haystack=screenshot_path,
+        tolerance=tolerance,
         template_res_w=template_res_w,
         device_res_w=browser_res_w,
+        grayscale=grayscale,
     )
     return x, y
 

@@ -41,8 +41,8 @@ def get_downloads_dir() -> str:
         Downloads directory's path.
     """
     home_dir = platform.get_home_dir()
-    download_dir = Path(home_dir) / 'Downloads'
-    logger.debug('Downloads directory is {}'.format(download_dir))
+    download_dir = Path(home_dir) / "Downloads"
+    logger.debug("Downloads directory is {}".format(download_dir))
     return str(download_dir)
 
 
@@ -72,18 +72,17 @@ def get_modified_files(directory: str, epoch: float) -> list[str]:
             modification_epoch = os.path.getmtime(filepath)
             if modification_epoch > epoch:
                 modified_files.append(filepath)
-    epoch_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(epoch))
-    logger.debug('Files that were altered after {} were {}'.format(epoch_str, modified_files))
+    epoch_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(epoch))
+    logger.debug("Files that were altered after {} were {}".format(epoch_str, modified_files))
     return modified_files
 
 
 def remove_win_temp(modified_files: list[str]) -> list[str]:
-    """Remove Windows temporary files from modified files list
-    """
-    exp = '.{8}-.{4}-.{4}-.{4}-.{12}\\.tmp'
+    """Remove Windows temporary files from modified files list"""
+    exp = ".{8}-.{4}-.{4}-.{4}-.{12}\\.tmp"
     for f in modified_files:
         if len(re.findall(exp, f)) == 1:
-            logger.debug('Removing Windows temp file: {}'.format(f))
+            logger.debug("Removing Windows temp file: {}".format(f))
             modified_files.remove(f)
     return modified_files
 
@@ -105,24 +104,25 @@ def is_tmp_file(filepath: str) -> bool:
     """
     driver = browser.get_current_browser()
     if isinstance(driver, webdriver.Chrome):
-        partial_download_suffix = 'crdownload'
+        partial_download_suffix = "crdownload"
     elif isinstance(driver, webdriver.Firefox):
-        partial_download_suffix = '.part'
+        partial_download_suffix = ".part"
     elif isinstance(driver, webdriver.Edge):
-        partial_download_suffix = 'crdownload'
+        partial_download_suffix = "crdownload"
     else:
-        raise ValueError('Unknown browser {}'.format(driver.name))
+        raise ValueError("Unknown browser {}".format(driver.name))
     return filepath.endswith(partial_download_suffix)
 
 
 def get_path(filename: str) -> Path:
     if Path(filename).exists():
         return Path(filename)
-    files = Path(BuiltIn().get_variable_value('${SUITE SOURCE}')).parent.parent / 'files' / filename
-    images = Path(
-        BuiltIn().get_variable_value('${SUITE SOURCE}')).parent.parent / 'images' / filename
+    files = Path(BuiltIn().get_variable_value("${SUITE SOURCE}")).parent.parent / "files" / filename
+    images = (
+        Path(BuiltIn().get_variable_value("${SUITE SOURCE}")).parent.parent / "images" / filename
+    )
     downloads = Path(get_downloads_dir()) / filename
-    exec_dir = BuiltIn().get_variable_value('${EXECDIR}')
+    exec_dir = BuiltIn().get_variable_value("${EXECDIR}")
     files_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'files')}/{filename}")
     images_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'images')}/{filename}")
     paths = [downloads, files, images, files_exec_dir, images_exec_dir]
@@ -133,14 +133,15 @@ def get_path(filename: str) -> Path:
             logger.debug(f"Path exists: {path}")
             return path
     try:
-        base_path = BuiltIn().get_variable_value('${base_image_path}')
+        base_path = BuiltIn().get_variable_value("${base_image_path}")
         full_path = os.path.join(base_path, "{}".format(filename.lower()))
         if not Path(full_path).exists():
             raise QWebFileNotFoundError("File not found from base image path")
         return Path(full_path)
     except (TypeError, QWebFileNotFoundError) as e:
         raise QWebFileNotFoundError(
-            'File not found from default folders. Set variable for base image path') from e
+            "File not found from default folders. Set variable for base image path"
+        ) from e
 
 
 def get_exec_subdir(base_path: str, target_dir: str) -> str:

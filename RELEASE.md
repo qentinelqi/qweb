@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.1] - 2024-04-08
+
+### Fixed
+
+- RunBlock fails with uninformative error message
+- GetCellText and GetText not able to get text directly under `<slot>`
+- #141 
+  -   Anchor coordinates were in some cases taken from parent, not from the element actually containing anchor text
+- New typing issue in selenium 4.19
+- Bumped Pillow to a version having latest security fixes
 
 ## [3.2.0] - 2024-03-11
 

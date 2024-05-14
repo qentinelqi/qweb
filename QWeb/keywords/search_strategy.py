@@ -89,11 +89,11 @@ def set_search_strategy(strategy_type: str, xpath: str) -> str:
         previous = config.set_config("AllInputElements", xpath)
     elif strategy_type == "matching input element":
         previous = config.set_config("MatchingInputElement", xpath)
-    elif strategy_type == 'active area xpath':
+    elif strategy_type == "active area xpath":
         previous = config.set_config("ActiveAreaXpath", xpath)
-    elif strategy_type == 'text':
+    elif strategy_type == "text":
         previous = config.set_config("TextMatch", xpath)
-    elif strategy_type == 'containing text':
+    elif strategy_type == "containing text":
         previous = config.set_config("ContainingTextMatch", xpath)
     else:
         raise ValueError("Wrong strategy type")
@@ -254,9 +254,11 @@ def case_insensitive(state: Union[str, bool]) -> Union[str, bool]:
     """
     case_state = config.set_config("CaseInsensitive", state)
     if case_state:
-        config.set_config("ContainingTextMatch",
-                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE)
+        config.set_config(
+            "ContainingTextMatch", SearchStrategies.CONTAINING_TEXT_MATCH_CASE_INSENSITIVE
+        )
     else:
-        config.set_config("ContainingTextMatch",
-                          SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE)
+        config.set_config(
+            "ContainingTextMatch", SearchStrategies.CONTAINING_TEXT_MATCH_CASE_SENSITIVE
+        )
     return case_state

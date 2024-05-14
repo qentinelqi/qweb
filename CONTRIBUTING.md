@@ -2,7 +2,7 @@
 
 ## Introduction
 
-First off, thank you for considering contributing to **QWeb**. We appreciate all kinds of contributions (reporting bugs/feature ideas, improving documentation, creating examples, fixing bugs). 
+First off, thank you for considering contributing to **QWeb**. We appreciate all kinds of contributions (reporting bugs/feature ideas, improving documentation, creating examples, fixing bugs).
 
 If you discover new issues or have ideas for improvements, please report them to the issue tracker of the repository. Follow the guidelines in [Issue reporting section](#Issue-reporting)
 
@@ -21,7 +21,7 @@ Following these guidelines helps to make sure your contributions can be accepted
     * Selenium webdriver version used (`chromedriver --version` or `geckodriver --version` etc.)
     * QWeb version you are using to reproduce the problem
 
-In case of new feature/enhancement request, please open an issue using **Feature request** template. 
+In case of new feature/enhancement request, please open an issue using **Feature request** template.
 
 ## Other contributions
 
@@ -53,27 +53,42 @@ New to GitHub or making open source contributions? There's an excellent [contrib
 Install dependencies by issuing command:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt -r requrements_test.txt
 ```
 
 ...on repository root.
+
+#### Install dependencies
+
+Install pre-commit hook which automatically performs type checking, linting and autoformatting on each commit by issuing command:
+
+```bash
+pre-commit install
+```
 
 You should be all set up for making your changes now.
 
 #### Before opening PR
 
-Once you have made your changes, please validate the quality of your changes. Linting, unit tests and acceptance tests will be automatically run when you issue a new Pull Request, but to save everyone's time it is best to run these locally on your platform prior to issuing a PR.
+Once you have made your changes, please validate the quality of your changes. Type checking, linting, unit tests and acceptance tests will be automatically run when you issue a new Pull Request, but to save everyone's time it is best to run these locally on your platform prior to issuing a PR.
 
 #### Local development tasks
 
-We use excellent [duty](https://github.com/pawamoy/duty) python package to run development tasks locally. You can see all defined development tasks with command:
+We use [duty](https://github.com/pawamoy/duty) python package to run development tasks locally. You can see all defined development tasks with command:
 
 ```bash
 duty --list
 ```
 
+##### Autoformatting
+We use *ruff* for automatic formatting of files. To run automatic formatting locally, run:
+
+```bash
+duty format
+```
+
 ##### Linting
-We use both *pylint* and *flake8* for linting. To run these locally, run:
+We use *ruff*, *pylint* and *flake8* for linting. To run these locally, run:
 
 ```bash
 duty lint
@@ -109,4 +124,3 @@ Once your contribution is final, commit your code and push it to your own reposi
 ### License
 
 All contributions are under the same license as the rest of this project. See [LICENSE](./LICENSE)
-

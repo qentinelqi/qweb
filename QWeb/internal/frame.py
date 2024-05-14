@@ -24,14 +24,22 @@ from robot.utils import timestr_to_secs
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import NoSuchWindowException, \
-                                       StaleElementReferenceException, \
-                                       UnexpectedAlertPresentException, \
-                                       WebDriverException, InvalidSessionIdException
+from selenium.common.exceptions import (
+    NoSuchWindowException,
+    StaleElementReferenceException,
+    UnexpectedAlertPresentException,
+    WebDriverException,
+    InvalidSessionIdException,
+)
 from QWeb.keywords import config
 import QWeb.internal.frame_checker as fc
-from QWeb.internal.exceptions import QWebDriverError, QWebElementNotFoundError, \
-                                     QWebTimeoutError, QWebBrowserError, FATAL_MESSAGES
+from QWeb.internal.exceptions import (
+    QWebDriverError,
+    QWebElementNotFoundError,
+    QWebTimeoutError,
+    QWebBrowserError,
+    FATAL_MESSAGES,
+)
 from QWeb.internal import xhr, browser, util
 from QWeb.internal.config_defaults import CONFIG
 
@@ -53,8 +61,7 @@ def wait_page_loaded() -> None:
     if CONFIG["DefaultDocument"]:
         driver = browser.get_current_browser()
         if driver is None:
-            raise QWebDriverError("No browser open. Use OpenBrowser keyword"
-                                  " to open browser first")
+            raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
         try:
             driver.switch_to.default_content()
         except InvalidSessionIdException as ie:
@@ -64,18 +71,19 @@ def wait_page_loaded() -> None:
             raise uea
         except (NoSuchWindowException, WebDriverException) as e:
             logger.warn(
-                'Cannot switch to default context, maybe window is closed. Err: {}'.format(e))
+                "Cannot switch to default context, maybe window is closed. Err: {}".format(e)
+            )
             if any(s in str(e) for s in FATAL_MESSAGES):
                 CONFIG.set_value("OSScreenshots", True)
                 raise QWebBrowserError(e) from e
             driver.switch_to.default_content()
-    timeout = CONFIG['XHRTimeout']
+    timeout = CONFIG["XHRTimeout"]
     if timeout.lower() == "none":
         return
     try:
         xhr.wait_xhr(timestr_to_secs(timeout))
     except (WebDriverException, QWebDriverError) as e:
-        logger.debug(f'Unable to check AJAX requests due error: {e}')
+        logger.debug(f"Unable to check AJAX requests due error: {e}")
 
 
 def get_raw_html() -> str:
@@ -135,7 +143,8 @@ def link_source_to_log(count: int, filepath: str) -> None:
     javascript.
     """
     filename = os.path.basename(filepath)
-    logger.info('''<tbody>
+    logger.info(
+        """<tbody>
 <a id="sourceLink{0}">{1}</a>
 <br />
 <iframe id="source{0}" width="1220px" height="650px"></iframe>
@@ -145,8 +154,9 @@ var url = window.location.href;
 document.getElementById("sourceLink{0}").setAttribute("href", "{2}")
 document.getElementById("source{0}").setAttribute("src", "{1}")
 </script>
-</tbody>'''.format(count, filename, filepath.replace("\\", "\\\\")),
-                html=True)
+</tbody>""".format(count, filename, filepath.replace("\\", "\\\\")),
+        html=True,
+    )
 
 
 def get_output_dir() -> str:
@@ -172,10 +182,10 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
 
     @wraps(fn)
     def wrapped(*args, **kwargs) -> Callable[..., Any]:
-
-        def search_from_frames(driver: Optional[WebDriver] = None,
-                               current_frame: Optional[WebElement] = None) -> Callable[..., Any]:
-            keep_frame = kwargs.get('stay_in_current_frame', CONFIG['StayInCurrentFrame'])
+        def search_from_frames(
+            driver: Optional[WebDriver] = None, current_frame: Optional[WebElement] = None
+        ) -> Callable[..., Any]:
+            keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
             if keep_frame:
                 return fn(*args, **kwargs)
             err = None
@@ -185,7 +195,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if current_frame:
                 try:
                     driver.switch_to.frame(current_frame)
-                    logger.debug('switching to childframe {}'.format(str(fn)))
+                    logger.debug("switching to childframe {}".format(str(fn)))
                 except (StaleElementReferenceException, WebDriverException) as e:
                     logger.debug(str(e))
                     driver.switch_to.default_content()
@@ -198,32 +208,34 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if is_valid(web_element):
                 return web_element
             start = time.time()
-            timeout = CONFIG['FrameTimeout']
+            timeout = CONFIG["FrameTimeout"]
             while time.time() < timeout + start:
                 frames = fc.check_frames(driver)
                 for frame in frames:
                     web_element = search_from_frames(driver=driver, current_frame=frame)
                     if is_valid(web_element):
-                        logger.debug('Found webelement = {}'.format(web_element))
+                        logger.debug("Found webelement = {}".format(web_element))
                         return web_element
                     try:
                         driver.switch_to.parent_frame()
                     except WebDriverException as e:
                         driver.switch_to.default_content()
                         raise e
-                    config.set_config('FrameTimeout', float(timeout + start - time.time()))
-                    logger.trace('Frame timeout: {}'.format(timeout))
+                    config.set_config("FrameTimeout", float(timeout + start - time.time()))
+                    logger.trace("Frame timeout: {}".format(timeout))
                 if err:
                     raise err
                 return web_element
             driver.switch_to.default_content()
-            raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
+            raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
 
         # pylint: disable=W0102
-        def search_from_frames_safari(driver: Optional[WebDriver] = None,
-                                      current_frame: Union[Optional[WebElement], int] = None,
-                                      parent_tree: list[Union[WebElement, int]] = []):
-            keep_frame = kwargs.get('stay_in_current_frame', CONFIG['StayInCurrentFrame'])
+        def search_from_frames_safari(
+            driver: Optional[WebDriver] = None,
+            current_frame: Union[Optional[WebElement], int] = None,
+            parent_tree: list[Union[WebElement, int]] = [],
+        ):
+            keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
             if keep_frame:
                 return fn(*args, **kwargs)
             err = None
@@ -233,7 +245,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if current_frame is not None:
                 try:
                     driver.switch_to.frame(current_frame)
-                    logger.debug('switching to childframe {}'.format(str(fn)))
+                    logger.debug("switching to childframe {}".format(str(fn)))
                 except (StaleElementReferenceException, WebDriverException) as e:
                     logger.debug(str(e))
                     driver.switch_to.default_content()
@@ -246,17 +258,17 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if is_valid(web_element):
                 return web_element
             start = time.time()
-            timeout = CONFIG['FrameTimeout']
+            timeout = CONFIG["FrameTimeout"]
             while time.time() < timeout + start:
                 frames = fc.check_frames(driver)
                 for count, frame in enumerate(frames):  # pylint: disable=W0612
                     parent_tree.append(count)
                     # using count instead of frame reference due to Safari bug
-                    web_element = search_from_frames_safari(driver=driver,
-                                                            current_frame=count,
-                                                            parent_tree=parent_tree)
+                    web_element = search_from_frames_safari(
+                        driver=driver, current_frame=count, parent_tree=parent_tree
+                    )
                     if is_valid(web_element):
-                        logger.debug('Found webelement = {}'.format(web_element))
+                        logger.debug("Found webelement = {}".format(web_element))
                         return web_element
                     try:
                         # switch_to.parent_frame not working in Safari
@@ -268,17 +280,17 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                     except WebDriverException as e:
                         driver.switch_to.default_content()
                         raise e
-                    config.set_config('FrameTimeout', float(timeout + start - time.time()))
-                    logger.trace('Frame timeout: {}'.format(timeout))
+                    config.set_config("FrameTimeout", float(timeout + start - time.time()))
+                    logger.trace("Frame timeout: {}".format(timeout))
                 if err:
                     raise err
                 return web_element
             driver.switch_to.default_content()
-            raise QWebTimeoutError('From frame decorator: Unable to locate element in given time')
+            raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
 
         return search_from_frames_safari() if util.is_safari() else search_from_frames()
 
-    logger.debug('wrapped = {}'.format(wrapped))
+    logger.debug("wrapped = {}".format(wrapped))
     return wrapped
 
 

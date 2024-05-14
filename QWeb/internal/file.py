@@ -25,7 +25,6 @@ from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueMismatchErr
 
 
 class File:
-
     ACTIVE_FILE: Any = None
 
     def __init__(self, content: Any, file: Union[str, Path]):
@@ -35,33 +34,33 @@ class File:
 
     @staticmethod
     def create_pdf_instance(filename: str) -> File:
-        all_text = ''
+        all_text = ""
         filepath = download.get_path(filename)
         try:
-            with open(filepath, 'rb') as pdf_obj:
+            with open(filepath, "rb") as pdf_obj:
                 pdf = slate_pdf_reader.PDF(pdf_obj)
                 for page in pdf:
                     all_text += page.strip()
-                if all_text != '':
+                if all_text != "":
                     return File(all_text, filepath)
-                raise QWebValueMismatchError('Text not found. Seems that the pdf is empty.')
+                raise QWebValueMismatchError("Text not found. Seems that the pdf is empty.")
         except TypeError as e:
-            raise QWebFileNotFoundError(f'File not found. Got {e} instead.') from e
+            raise QWebFileNotFoundError(f"File not found. Got {e} instead.") from e
         except PSEOF as e:
-            raise QWebFileNotFoundError(f'File found, but it\'s not valid pdf-file: {e}') from e
+            raise QWebFileNotFoundError(f"File found, but it's not valid pdf-file: {e}") from e
 
     @staticmethod
     def create_text_file_instance(filename: str) -> File:
         filepath = download.get_path(filename)
         try:
-            with open(filepath, 'rb') as txt_file:
+            with open(filepath, "rb") as txt_file:
                 filebytes = txt_file.read()
                 data = filebytes.decode("utf-8")
-                if data != '':
+                if data != "":
                     return File(data, filepath)
-                raise QWebValueMismatchError('Text not found. Seems that the file is empty.')
+                raise QWebValueMismatchError("Text not found. Seems that the file is empty.")
         except TypeError as e:
-            raise QWebFileNotFoundError('File not found. Got {} instead.'.format(e)) from e
+            raise QWebFileNotFoundError("File not found. Got {} instead.".format(e)) from e
 
     def get(self, **kwargs) -> Any:
         if kwargs:

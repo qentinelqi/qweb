@@ -42,26 +42,25 @@ def par2bool(s: Union[bool, int, str]) -> bool:
 
 
 def xpath_validator(locator: str) -> bool:
-    """Checks if given locator is an xpath and returns boolean (True, False)
-    """
+    """Checks if given locator is an xpath and returns boolean (True, False)"""
     # TODO: Make this more reliable
-    if locator.lower().startswith(('xpath=', '/html', '//')):
+    if locator.lower().startswith(("xpath=", "/html", "//")):
         return True
     return False
 
 
 def url_validator(url: str) -> bool:
-    """Checks if given url is valid and returns boolean (True, False)
-    """
+    """Checks if given url is valid and returns boolean (True, False)"""
     regex = re.compile(
         # Django url validation regex
-        r'^(?:http|ftp)s?://'
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
-        r'localhost|'
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
-        r'(?::\d+)?'
-        r'(?:/?|[/?]\S+)$',
-        re.IGNORECASE)
+        r"^(?:http|ftp)s?://"
+        r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"
+        r"localhost|"
+        r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+        r"(?::\d+)?"
+        r"(?:/?|[/?]\S+)$",
+        re.IGNORECASE,
+    )
     return re.match(regex, url) is not None
 
 
@@ -89,7 +88,7 @@ def set_window_size(pixels: str) -> tuple[int, int]:
     return width, height
 
 
-def _parse_pixels(pixels: str, split: str = 'x') -> tuple[str, str]:
+def _parse_pixels(pixels: str, split: str = "x") -> tuple[str, str]:
     pixel_list = pixels.lower().split(split)
     if len(pixel_list) == 1:
         raise ValueError("Pixels needs to be given with '1920x1080' syntax")
@@ -103,7 +102,7 @@ def set_input_handler(input_method: str) -> str:
 
 def get_emulation_pref(device_or_dimension: str) -> dict[str, Any]:
     """Sets correct mobile emulation option string based on given input
-     (existing device profile name or screen dimensions).
+    (existing device profile name or screen dimensions).
     """
     try:
         width_str, height_str = _parse_pixels(device_or_dimension)
@@ -113,17 +112,19 @@ def get_emulation_pref(device_or_dimension: str) -> dict[str, Any]:
 
 
 def set_line_break(key: str) -> str:
-    if key == '\ue000':
-        current_browser = browser.get_current_browser().capabilities['browserName']
-        if current_browser == 'firefox':
-            key = ''
+    if key == "\ue000":
+        current_browser = browser.get_current_browser().capabilities["browserName"]
+        if current_browser == "firefox":
+            key = ""
             input_handler.line_break_key = key
-            logger.info('\n\\ue000 line break does not work with Firefox, using empty string'
-                        ' instead. It is recommended to use None instead of \\ue000.')
+            logger.info(
+                "\n\\ue000 line break does not work with Firefox, using empty string"
+                " instead. It is recommended to use None instead of \\ue000."
+            )
         else:
             input_handler.line_break_key = key
-    elif key.lower() in ('none', 'empty', 'null'):
-        key = ''
+    elif key.lower() in ("none", "empty", "null"):
+        key = ""
         input_handler.line_break_key = key
     else:
         input_handler.line_break_key = key
@@ -131,7 +132,7 @@ def set_line_break(key: str) -> str:
 
 
 def set_clear_key(key: str) -> Optional[str]:
-    if key.lower() == 'none':
+    if key.lower() == "none":
         input_handler.clear_key = None
     else:
         input_handler.clear_key = key
@@ -139,41 +140,53 @@ def set_clear_key(key: str) -> Optional[str]:
 
 
 def highlight_validation(color: str) -> str:
-    """ Validates the given highligh color is among supported basic colors """
-    if not color.lower() in [
-            "red", "green", "blue", "black", "orange", "yellow", "fuchsia", "lime", "olive", "teal",
-            "purple", "navy", "aqua"
+    """Validates the given highligh color is among supported basic colors"""
+    if color.lower() not in [
+        "red",
+        "green",
+        "blue",
+        "black",
+        "orange",
+        "yellow",
+        "fuchsia",
+        "lime",
+        "olive",
+        "teal",
+        "purple",
+        "navy",
+        "aqua",
     ]:
-        raise ValueError("Not a supported highligt color")
+        raise ValueError("Not a supported highlight color")
     return color
 
 
-def get_substring(text: str, **kwargs) -> Union[int, float, str]:
-    if '\xa0' in text:
-        text = text.replace('\xa0', ' ')
-    start, end = kwargs.get('between', '{}???{}').format(0, len(text)).split('???')
-    include_start = kwargs.get('include_locator', False)
-    exclude_end = kwargs.get('exclude_post', True)
+def get_substring(text: str, remove_newlines: bool = True, **kwargs) -> Union[int, float, str]:
+    if "\xa0" in text:
+        text = text.replace("\xa0", " ")
+    start, end = kwargs.get("between", "{}???{}").format(0, len(text)).split("???")
+    include_start = kwargs.get("include_locator", False)
+    exclude_end = kwargs.get("exclude_post", True)
     start = get_index_of(text, start, include_start)
     end = get_index_of(text, end, exclude_end)
     if end == 0:
         end = len(text)
-    if 'from_start' in kwargs:
-        end = start + int(kwargs.get('from_start'))  # type: ignore[arg-type]
-    if 'from_end' in kwargs:
-        start = end - int(kwargs.get('from_end'))  # type: ignore[arg-type]
-    logger.debug('substring start: {}'.format(start))
-    logger.debug('substring end: {}'.format(end))
-    text = str(text[start:end]).strip().replace('\n', "")
-    text = text.replace('\r', "")
+    if "from_start" in kwargs:
+        end = start + int(kwargs.get("from_start"))  # type: ignore[arg-type]
+    if "from_end" in kwargs:
+        start = end - int(kwargs.get("from_end"))  # type: ignore[arg-type]
+    logger.debug("substring start: {}".format(start))
+    logger.debug("substring end: {}".format(end))
+    if remove_newlines:
+        text = str(text[start:end]).strip().replace("\n", "")
+        text = text.replace("\r", "")
     try:
-        if 'int' in kwargs:
-            num = float(text.replace(' ', '').replace(',', '.'))
+        if "int" in kwargs:
+            num = float(text.replace(" ", "").replace(",", "."))
             return int(num)
-        if 'float' in kwargs:
-            return float(text.replace(' ', '').replace(',', '.'))
+        if "float" in kwargs:
+            return float(text.replace(" ", "").replace(",", "."))
     except ValueError as e:
-        raise QWebValueMismatchError('Unable to convert. Got exception: {}'.format(e)) from e
+        raise QWebValueMismatchError("Unable to convert. Got exception: {}".format(e)) from e
     return text
 
 
@@ -181,8 +194,8 @@ def get_index_of(text: str, locator: str, condition: Union[bool, int, str]) -> i
     try:
         return int(locator.strip())
     except ValueError:
-        if locator.startswith('\\'):
-            locator.replace('\\', "")
+        if locator.startswith("\\"):
+            locator.replace("\\", "")
     index = text.find(locator.strip())
     if index > -1:
         if par2bool(condition) is False:
@@ -200,17 +213,22 @@ def is_retina() -> bool:
         if "arm" in platform.machine().lower():
             return True
 
-        if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'",
-                           shell=True,
-                           stdout=subprocess.DEVNULL,
-                           stderr=subprocess.DEVNULL) == 0:
+        if (
+            subprocess.call(
+                "system_profiler SPDisplaysDataType | grep -i 'retina'",
+                shell=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            == 0
+        ):
             return True
     return False
 
 
 def is_safari() -> bool:
     driver = browser.get_current_browser()
-    return driver.capabilities['browserName'].lower() in SAFARINAMES
+    return driver.capabilities["browserName"].lower() in SAFARINAMES
 
 
 def get_browser_width() -> int:
@@ -235,8 +253,9 @@ def prefs_to_dict(prefs: Union[dict, str]) -> dict[str, Any]:
                 d = _handle_old_style_prefs(prefs)
             except QWebUnexpectedConditionError as e:
                 raise QWebUnexpectedConditionError(
-                    'Invalid argument! Experimental opts should given in robot dict '
-                    'or string in format: key1:value1, key2:value2') from e
+                    "Invalid argument! Experimental opts should given in robot dict "
+                    "or string in format: key1:value1, key2:value2"
+                ) from e
     # handle booleans in string format
     for key, value in list(d.items()):
         if isinstance(value, str):  # Check if the value is a string
@@ -251,13 +270,13 @@ def prefs_to_dict(prefs: Union[dict, str]) -> dict[str, Any]:
 def _handle_old_style_prefs(prefs: str) -> dict:
     d = {}
     val: Union[bool, str]
-    separated = prefs.split(',')
+    separated = prefs.split(",")
     for s in separated:
-        splitted = s.split(':', maxsplit=1)
+        splitted = s.split(":", maxsplit=1)
         if len(splitted) == 2:
-            logger.warn('Prefs keys and values without quotes is deprecated.')
+            logger.warn("Prefs keys and values without quotes is deprecated.")
             key = splitted[0].strip()
-            if 'true' in splitted[1].lower() or 'false' in splitted[1].lower():
+            if "true" in splitted[1].lower() or "false" in splitted[1].lower():
                 val = par2bool(splitted[1].strip())
             else:
                 val = splitted[1].strip()
@@ -279,12 +298,12 @@ def validate_run_before(value: Union[list[str], str]) -> Optional[Union[list[str
         if value[0].lower().startswith("verify"):
             return value
     elif is_py_func(value):
-        valid = ['verify_', 'verify_no']
+        valid = ["verify_", "verify_no"]
         if any(x in value for x in valid):
             return value
     elif value.lower().startswith("verify"):
         return value
-    logger.warn('Invalid value. Only Verify* keywords are accepted.')
+    logger.warn("Invalid value. Only Verify* keywords are accepted.")
     return None
 
 
@@ -292,38 +311,42 @@ def initial_logging(capabilities: dict[str, Any]) -> None:
     """Log version numbers at the start of test runs."""
     logger.debug(f"{capabilities}")
     try:
-        b_n, b_v = capabilities['browserName'], capabilities['browserVersion']
-        logger.info('Browser: {}'.format(b_n), also_console=True)
-        logger.info('Browser version: {}'.format(b_v), also_console=True)
-        if b_n == 'firefox':
-            logger.info('Geckodriver version: {}'.format(capabilities['moz:geckodriverVersion']),
-                        also_console=True)
-        if b_n == 'chrome':
-            logger.info('Chromedriver version: {}'.format(
-                capabilities['chrome']['chromedriverVersion']),
-                        also_console=True)
-        if b_n == 'msedge':
-            logger.info('Edgedriver version: {}'.format(
-                capabilities['msedge']['msedgedriverVersion']),
-                        also_console=True)
+        b_n, b_v = capabilities["browserName"], capabilities["browserVersion"]
+        logger.info("Browser: {}".format(b_n), also_console=True)
+        logger.info("Browser version: {}".format(b_v), also_console=True)
+        if b_n == "firefox":
+            logger.info(
+                "Geckodriver version: {}".format(capabilities["moz:geckodriverVersion"]),
+                also_console=True,
+            )
+        if b_n == "chrome":
+            logger.info(
+                "Chromedriver version: {}".format(capabilities["chrome"]["chromedriverVersion"]),
+                also_console=True,
+            )
+        if b_n == "msedge":
+            logger.info(
+                "Edgedriver version: {}".format(capabilities["msedge"]["msedgedriverVersion"]),
+                also_console=True,
+            )
     except KeyError:
-        logger.debug('Could not get browser/driver version data.')
+        logger.debug("Could not get browser/driver version data.")
 
 
 def option_handler(options: Optional[str]) -> list[str]:
     options2 = []
     if options:
-        options2 += options.split(',')
+        options2 += options.split(",")
 
-    if get_rfw_variable_value('${BROWSER_OPTIONS}'):
-        options2 += get_rfw_variable_value('${BROWSER_OPTIONS}').split(',')
+    if get_rfw_variable_value("${BROWSER_OPTIONS}"):
+        options2 += get_rfw_variable_value("${BROWSER_OPTIONS}").split(",")
 
     return options2
 
 
 def get_rfw_variable_value(key: str, default_value=None) -> Any:
-    """ Return robot fw variable value if robot is running.
-        Returns default value if robot is not running."""
+    """Return robot fw variable value if robot is running.
+    Returns default value if robot is not running."""
     try:
         return BuiltIn().get_variable_value(key)
     except RobotNotRunningError:
@@ -332,21 +355,21 @@ def get_rfw_variable_value(key: str, default_value=None) -> Any:
 
 def get_callable(pw: str) -> Callable[..., Any]:
     """Return function by Paceword name if exists."""
-    lib = BuiltIn().get_library_instance('QWeb')
+    lib = BuiltIn().get_library_instance("QWeb")
     pacewords = dir(lib)
     for paceword in pacewords:
-        if not paceword.startswith('__'):
-            if str(pw).replace(' ', '').lower() == paceword.replace('_', ''):
+        if not paceword.startswith("__"):
+            if str(pw).replace(" ", "").lower() == paceword.replace("_", ""):
                 fn = getattr(lib, paceword)
                 return fn
-    raise QWebUnexpectedConditionError('Paceword {} not found'.format(pw))
+    raise QWebUnexpectedConditionError("Paceword {} not found".format(pw))
 
 
 def escape_xpath_quotes(text: str) -> str:
     """Return xpath text with proper quotes"""
     # both single and double quotes in text
     if '"' in text and "'" in text:
-        return 'concat(%s)' % ", '\"',".join('"%s"' % x for x in text.split('"'))
+        return "concat(%s)" % ", '\"',".join('"%s"' % x for x in text.split('"'))
     # only double
     if '"' in text:
         return f"'{text}'"

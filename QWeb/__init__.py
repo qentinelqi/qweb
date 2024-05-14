@@ -23,9 +23,31 @@ from functools import wraps
 from QWeb import custom_config
 
 try:
-    from QWeb.keywords import (alert, browser, window, frame, element, text, checkbox, input_,
-                               javascript, screenshot, download, table, search_strategy, dropdown,
-                               cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks)
+    from QWeb.keywords import (
+        alert,
+        browser,
+        window,
+        frame,
+        element,
+        text,
+        checkbox,
+        input_,
+        javascript,
+        screenshot,
+        download,
+        table,
+        search_strategy,
+        dropdown,
+        cookies,
+        config,
+        icon,
+        dragdrop,
+        lists,
+        file,
+        debug,
+        ajax,
+        blocks,
+    )
 
     from QWeb.internal import util
     from QWeb.internal.config_defaults import CONFIG
@@ -271,19 +293,43 @@ class QWeb:
          then continue.
 
     """
-    ROBOT_LIBRARY_SCOPE = 'Global'
+
+    ROBOT_LIBRARY_SCOPE = "Global"
 
     def __init__(self, run_on_failure_keyword: str = "Log Screenshot") -> None:
-        '''Initializes the QWeb library and adds all the keywords to the instance.
+        """Initializes the QWeb library and adds all the keywords to the instance.
 
         - ``run_on_failure_keyword``:
           The keyword to run when a failure occurs. Default is "Log Screenshot".
 
-        '''
+        """
         self._run_on_failure_keyword = run_on_failure_keyword
-        for module in (alert, browser, window, frame, element, text, checkbox, input_, javascript,
-                       screenshot, custom_config, download, search_strategy, table, dropdown,
-                       cookies, config, icon, dragdrop, lists, file, debug, ajax, blocks):
+        for module in (
+            alert,
+            browser,
+            window,
+            frame,
+            element,
+            text,
+            checkbox,
+            input_,
+            javascript,
+            screenshot,
+            custom_config,
+            download,
+            search_strategy,
+            table,
+            dropdown,
+            cookies,
+            config,
+            icon,
+            dragdrop,
+            lists,
+            file,
+            debug,
+            ajax,
+            blocks,
+        ):
             for name in dir(module):
                 if not name.startswith("_"):
                     attr = getattr(module, name)
@@ -301,14 +347,14 @@ class QWeb:
         @wraps(keyword_method)  # Preserves docstring of the original method.
         def inner(*args: Any, **kwargs: Any) -> None:  # pylint: disable=R1710
             kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
-            if 'type_secret' not in str(keyword_method):
-                logger.debug('args: {}, kwargs: {}'.format(args, kwargs))
+            if "type_secret" not in str(keyword_method):
+                logger.debug("args: {}, kwargs: {}".format(args, kwargs))
             try:
-                time.sleep(_timestr_to_secs(kwargs.get('delay', CONFIG['Delay'])))
-                run_before = CONFIG['RunBefore']
-                valid_pw = ['click', 'get_text', 'drop_down']
+                time.sleep(_timestr_to_secs(kwargs.get("delay", CONFIG["Delay"])))
+                run_before = CONFIG["RunBefore"]
+                valid_pw = ["click", "get_text", "drop_down"]
                 if run_before and any(pw in str(keyword_method) for pw in valid_pw):
-                    logger.info('executing run before kw {}'.format(run_before))
+                    logger.info("executing run before kw {}".format(run_before))
                     # robot fw or python syntax
                     if isinstance(run_before, list):
                         BuiltIn().run_keyword(run_before[0], *run_before[1:])
@@ -322,17 +368,18 @@ class QWeb:
             except Exception as e:  # pylint: disable=W0703
                 logger.debug(traceback.format_exc())
                 if not self._is_run_on_failure_keyword(keyword_method):
-                    if not util.par2bool(kwargs.get('skip_screenshot', False)):
+                    if not util.par2bool(kwargs.get("skip_screenshot", False)):
                         try:
                             BuiltIn().run_keyword(self._run_on_failure_keyword)
                         except RobotNotRunningError:
                             logger.debug("Robot not running")
-                devmode = util.par2bool(util.get_rfw_variable_value('${DEV_MODE}', False))
-                if devmode and not config.get_config('Debug_Run'):
-                    Dialogs.pause_execution('Keyword {} {} {} failed. \n'
-                                            'Got {}'.format(
-                                                str(keyword_method).split(' ')[1].upper(),
-                                                str(args), str(kwargs), e))
+                devmode = util.par2bool(util.get_rfw_variable_value("${DEV_MODE}", False))
+                if devmode and not config.get_config("Debug_Run"):
+                    Dialogs.pause_execution(
+                        "Keyword {} {} {} failed. \n" "Got {}".format(
+                            str(keyword_method).split(" ")[1].upper(), str(args), str(kwargs), e
+                        )
+                    )
                     debug.debug_on()
                 else:
                     raise
@@ -348,13 +395,12 @@ class QWeb:
 
         @wraps(keyword_method)  # Preserves docstring of the original method.
         def create_xpath(*args: Any, **kwargs: Any) -> Callable[..., Any]:
-            """Handle xpath before passing it to keyword.
-            """
+            """Handle xpath before passing it to keyword."""
             args_list = list(args)
-            if 'selector' in kwargs:
+            if "selector" in kwargs:
                 attr_value = str(args_list[0])
-                args_list[0] = '//*[@{}="{}"]'.format(kwargs['selector'], attr_value)
-                del kwargs['selector']
+                args_list[0] = '//*[@{}="{}"]'.format(kwargs["selector"], attr_value)
+                del kwargs["selector"]
                 args = tuple(args_list)
             return keyword_method(*args, **kwargs)
 
@@ -362,12 +408,12 @@ class QWeb:
 
     def _is_run_on_failure_keyword(self, method: Callable[..., Any]) -> bool:
         """Helper function to find out if method name is the
-         one registered as kw to run on failure"""
+        one registered as kw to run on failure"""
         return self._run_on_failure_keyword.replace(" ", "_").lower() == method.__name__
 
 
 # pylint: disable=wrong-import-position
 from ._version import get_versions  # noqa: E402
 
-__version__ = get_versions()['version']
+__version__ = get_versions()["version"]
 del get_versions

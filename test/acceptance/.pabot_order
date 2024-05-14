@@ -1,0 +1,44 @@
+{
+--suite Xhr
+--suite Swipe
+--suite Shadow Dom
+--suite Screenshot
+--suite Requests
+--suite Input Windowed
+--suite Icon
+--suite Dragdrop
+--suite Download
+--suite Cookies
+--suite Browser Windowed
+}
+--suite Window
+--suite Verifylinks
+--suite Upload
+--suite Text Multi
+--suite Text3
+--suite Text2
+--suite Text
+--suite Table3
+--suite Table2
+--suite Table
+--suite Self Repairing Input
+--suite Selectors
+--suite Searchorder Config
+--suite Searchingorder
+--suite Paceblock
+--suite No Body
+--suite Lists
+--suite Javascript
+--suite Input Headless
+--suite Frame
+--suite File
+--suite Element Corners
+--suite Element
+--suite Dropdown
+--suite Config
+--suite Clickitem
+--suite Cli
+--suite Checkbox
+--suite Browser Headless
+--suite Alert
+--suite Accordion

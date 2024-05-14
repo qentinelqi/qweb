@@ -32,7 +32,7 @@ def set_wait_function(function: Callable[..., Any]) -> Callable[..., Any]:
     if callable(function):
         frame.wait_page_loaded = function
     else:
-        raise ValueError('Argument needs to be callable: {}'.format(function))
+        raise ValueError("Argument needs to be callable: {}".format(function))
     return previous
 
 

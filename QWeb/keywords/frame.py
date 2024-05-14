@@ -19,6 +19,7 @@
 Frame is considered to be an element in a webapage which can contain another
 webpage. Usually these elements have iframe -tag.
 """
+
 from __future__ import print_function
 
 from selenium.common.exceptions import NoSuchFrameException
@@ -52,14 +53,15 @@ def use_frame(locator: str) -> None:
     try:
         index = int(locator) - 1
         webelement = javascript.execute_javascript(
-            'document.querySelectorAll("iframe, frame")[{}]'.format(index))
+            'document.querySelectorAll("iframe, frame")[{}]'.format(index)
+        )
     except ValueError:
         webelement = element.get_unique_element_by_xpath(locator)
     driver = browser.get_current_browser()
     try:
         driver.switch_to.frame(webelement)
     except NoSuchFrameException as e:
-        raise NoSuchFrameException('No frame wound with xpath: {0}'.format(locator)) from e
+        raise NoSuchFrameException("No frame wound with xpath: {0}".format(locator)) from e
 
 
 @keyword(tags=["Config"])

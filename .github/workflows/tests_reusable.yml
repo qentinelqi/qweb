@@ -81,6 +81,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_test.txt
+        pip install -e .
 
     - name: Display Python version
       run: |
@@ -96,29 +97,130 @@ jobs:
 
     - name: Unit tests
       run: |
-       pytest -v --junit-xml=unittests.xml --cov=QWeb
+        pytest -v --junit-xml=unittests.xml --cov=QWeb
 
-    - name: Acceptance tests
-      id: initial-acceptance-tests
+
+    - name: Start http server
+      uses: Eun/http-server-action@v1
+      with:
+        directory: test/resources
+        port: 8000
+        
+      #run: |
+      #  python -m http.server -b 127.0.0.1 -d test/resources 8000 &
+  
+    # if this test suite fails then a proper test run won't be attempted
+    - name: Safari smoke test
+      timeout-minutes: 1
+      if: matrix.browser == 'safari'
+      run: >
+        python -m robot
+        -o safari_smoke.xml
+        -v BROWSER:${{ matrix.browser }}
+        -L TRACE
+        -d result
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        -b debug.txt
+        --consolecolors
+        ansi
+        test/acceptance/safari_smoke.robot
+
+    # There can be only a single instance of Safari + webdriver so parallel exec is impossible
+    # https://developer.apple.com/documentation/webkit/about_webdriver_for_safari#2957226
+    - name: Acceptance tests safari
+      id: acceptance-tests-safari
+      if: matrix.browser == 'safari'
       continue-on-error: true
       timeout-minutes: 30
-      run: |
-        python -m robot --exitonfailure ${{ inputs.additional-rfw-parameters }} ${{ inputs.rfw-exclude-tags }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+      run: >
+        python -m robot
+        --exitonfailure 
+        ${{ inputs.additional-rfw-parameters }}
+        ${{ inputs.rfw-exclude-tags }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
+        -e PROBLEM_IN_${{ matrix.browser }}
+        -v BROWSER:${{ matrix.browser }}
+        -d result
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        -b debug.txt
+        --consolecolors ansi
+        test/acceptance
+
+    - name: Rerun failed acceptance tests safari
+      if: steps.acceptance-tests-safari.outcome == 'failure'
+      continue-on-error: true
+      timeout-minutes: 30
+      run: >
+        python -m robot
+        --rerunfailedsuites result/output.xml
+        -o rerun.xml
+        --exitonfailure 
+        ${{ inputs.additional-rfw-parameters }}
+        -v BROWSER:${{ matrix.browser }}
+        -d rerunresult
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        -b debug.txt
+        --consolecolors ansi
+        test/acceptance
+
+    - name: Generate suite order file
+      if: matrix.browser != 'safari'
+      run: python test/acceptance/pabot_suite_ordering.py --github
+     
+    - name: Acceptance tests
+      id: acceptance-tests
+      if: matrix.browser != 'safari'
+      continue-on-error: true
+      timeout-minutes: 20
+      run: >
+        python -m pabot.pabot
+        --ordering test/acceptance/.pabot_order
+        ${{ inputs.additional-rfw-parameters }}
+        ${{ inputs.rfw-exclude-tags }}
+        -e jailed
+        -e PROBLEM_IN_${{ runner.os }}
+        -e PROBLEM_IN_${{ matrix.browser }}
+        -v BROWSER:${{ matrix.browser }}
+        -d result
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        -b debug.txt
+        --consolecolors ansi
+        test/acceptance
     
     - name: Rerun failed acceptance tests
-      if: steps.initial-acceptance-tests.outcome == 'failure'
+      if: steps.acceptance-tests.outcome == 'failure'
       continue-on-error: true
-      timeout-minutes: 30
-      run: |
-        python -m robot --rerunfailedsuites result/output.xml -o rerun.xml --exitonfailure ${{ inputs.additional-rfw-parameters }} -e jailed -e PROBLEM_IN_${{ runner.os }} -e PROBLEM_IN_${{ matrix.browser }} -v BROWSER:${{ matrix.browser }} -d result --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }} -b debug.txt --consolecolors ansi test/acceptance
+      timeout-minutes: 20
+      run: >
+        python -m pabot.pabot
+        --ordering test/acceptance/.pabot_order
+        --rerunfailedsuites result/output.xml
+        -o rerun.xml
+        ${{ inputs.additional-rfw-parameters }}
+        ${{ inputs.rfw-exclude-tags }}
+        -e jailed 
+        -e PROBLEM_IN_${{ runner.os }}
+        -e PROBLEM_IN_${{ matrix.browser }}
+        -v BROWSER:${{ matrix.browser }}
+        -d rerunresult
+        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        -b debug.txt
+        --consolecolors ansi
+        test/acceptance
 
     # robot returns amount of failed tests, github considers it as a failure and stops step execution
     # -> result merging needs a separate step
-    - name: Merge rerun test results  
-      if: steps.initial-acceptance-tests.outcome == 'failure'
-      run: |
-        python -m robot.rebot --merge -d result result/output.xml result/rerun.xml
-    
+    - name: Merge rerun test results
+      if: steps.acceptance-tests.outcome == 'failure' || steps.acceptance-tests-safari.outcome == 'failure'
+      run: >
+        python -m robot.rebot
+        --merge
+        -d result
+        -o merged.xml
+        result/output.xml
+        rerunresult/rerun.xml
+      
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
       uses: actions/upload-artifact@v4
