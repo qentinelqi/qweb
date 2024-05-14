@@ -504,7 +504,7 @@ def get_webelement(
             web_elements = checkbox.get_checkbox_elements_from_all_documents(
                 locator, anchor, **kwargs
             )[0]
-        if element_type.lower() == "css":
+        elif element_type.lower() == "css":
             web_elements = element.get_webelement_by_css(locator, **kwargs)
         else:
             msg = (
