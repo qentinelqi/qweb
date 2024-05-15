@@ -105,9 +105,7 @@ jobs:
       with:
         directory: test/resources
         port: 8000
-        
-      #run: |
-      #  python -m http.server -b 127.0.0.1 -d test/resources 8000 &
+
   
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
@@ -117,6 +115,7 @@ jobs:
         python -m robot
         -o safari_smoke.xml
         -v BROWSER:${{ matrix.browser }}
+        -v ON_HTTP_SERVER:True
         -L TRACE
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
