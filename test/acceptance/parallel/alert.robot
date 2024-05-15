@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for handling of alerts
 Library           QWeb
-Suite Setup       OpenBrowser    http://127.0.0.1:8000/alert.html    ${BROWSER}   --headless
+Suite Setup       OpenBrowser    ${BASE_URI}/alert.html    ${BROWSER}   --headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 

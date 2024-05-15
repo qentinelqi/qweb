@@ -2,7 +2,7 @@
 Documentation       Tests for text in html5 accordion elements
 Library             QWeb
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}    --headless
-Test Setup          GoTo    http://127.0.0.1:8000/accordions_and_modals.html
+Test Setup          GoTo    ${BASE_URI}/accordions_and_modals.html
 Suite Teardown      CloseBrowser
 Test Timeout        120 seconds
 

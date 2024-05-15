@@ -31,4 +31,4 @@ Upload with xpath
 
 *** Keywords ***
 SuiteStart
-     OpenBrowser    http://127.0.0.1:8000/upload.html    ${BROWSER}  --headless
+     OpenBrowser    ${BASE_URI}/upload.html    ${BROWSER}  --headless

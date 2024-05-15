@@ -2,7 +2,7 @@
 Documentation     Tests for handling of checkboxes
 Library           QWeb
 Library           Dialogs
-Suite Setup       OpenBrowser  http://127.0.0.1:8000/checkbox.html  ${BROWSER}  --headless
+Suite Setup       OpenBrowser  ${BASE_URI}/checkbox.html  ${BROWSER}  --headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 
@@ -101,5 +101,5 @@ No Text Found
     Should Contain  ${msg}  QWebElementNotFoundError: Unable to find element for locator
 
 No Checkbox found
-    GoTo                    http://127.0.0.1:8000/text.html
+    GoTo                    ${BASE_URI}/text.html
     Run Keyword And Expect Error       QWebElementNotFoundError: Unable*   ClickCheckbox   Lorem   On       1       2

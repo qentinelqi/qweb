@@ -2,7 +2,7 @@
 Documentation    Tests for table keywords
 Library          QWeb
 Library          Collections
-Suite Setup      OpenBrowser  http://127.0.0.1:8000/lists.html  ${BROWSER}  --headless
+Suite Setup      OpenBrowser  ${BASE_URI}/lists.html  ${BROWSER}  --headless
 Suite Teardown   CloseBrowser
 Test Timeout     60 seconds
 

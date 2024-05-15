@@ -5,7 +5,7 @@ Test Timeout      60 seconds
 
 *** Variables ***
 ${BROWSER}    chrome
-${URL}        http://127.0.0.1:8000/checkbox.html
+${URL}        ${BASE_URI}/checkbox.html
 
 *** Test Cases ***
 Test ScreenshotType Config

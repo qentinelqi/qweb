@@ -2,7 +2,7 @@
 Documentation    Tests for input keywords
 Library          QWeb
 Library          OperatingSystem
-Suite Setup      OpenBrowser    http://127.0.0.1:8000/input.html    ${BROWSER}  --headless
+Suite Setup      OpenBrowser    ${BASE_URI}/input.html    ${BROWSER}  --headless
 Suite Teardown   CloseBrowser
 Test Timeout     60 seconds
 
@@ -19,12 +19,12 @@ Run Block basic robot kw without arguments used as PaceBlock
 
 Run Block basic robot kw with arguments used as PaceBlock
     [tags]                  PROBLEM_IN_FIREFOX
-    Goto                    http://127.0.0.1:8000/text.html
+    Goto                    ${BASE_URI}/text.html
     RunBlock                Clicks      Clicks: 5      timeout=15
 
 RunBlock For loop in robot kw
     [tags]                  PROBLEM_IN_FIREFOX
-    Goto                    http://127.0.0.1:8000/input.html
+    Goto                    ${BASE_URI}/input.html
     RefreshPage
     RunBlock                TypeThreeTimes    timeout=5
 
@@ -35,7 +35,7 @@ Appstate without argument
 
 Appstate with argument
     [tags]              Appstate
-    Goto                  http://127.0.0.1:8000/text.html
+    Goto                  ${BASE_URI}/text.html
     RefreshPage
     Appstate            Clicks              Clicks: 1
     VerifyText          Clicks: 1
@@ -60,7 +60,7 @@ FooBarBaz
     VerifyInputValue      The Brave          TestTestTest    timeout=0.5s
 
 Clickbutton
-    Goto                  http://127.0.0.1:8000/text.html
+    Goto                  ${BASE_URI}/text.html
     RefreshPage
     ClickText             Click me      #Every click = + 1 to counter
 

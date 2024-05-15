@@ -3,7 +3,6 @@ Documentation             Tests for QWeb command line interface
 Library                   QWeb
 Library                   Process
 Suite Setup               Get Python executable
-Suite Teardown            Terminate All Processes
 Test Timeout              60 seconds
 
 *** Variables ***
