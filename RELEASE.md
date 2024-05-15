@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [3.3.0] - 2024-05-15
+
+### Added
+- Added support for treating color differences as meaningful in *Icon keywords (with **grayscale** argument).
+- *Icon keywords support new argument **tolerance**
+- Browser version management with **browser_version** added to Firefox and Edge in addition to previously existing Chrome.
+  - Note that with Edge on Windows local admin rights are needed for install to succeed
+- Option to remove newlines from returned value added to GetInputValue (by argument **remove_newlines) 
+
+### Fixed
+- VerifyTable to not break on "special characters" like "[", "]", "*" or "?" 
+- fix: UploadFile to find inputs of type file when searching with xpath locator
+- GetPdfText and GetFileText documentation fixed to match how they actually work
+- Fixed examples in VerifyAll docs
+
+### Changed
+- Refactor: changed version check from deprecated pkg_resources to importlib.metadata
+- Pipeline: tests are run in parallel with Pabot
+- Pipeline: Test files are served using http server instead of opening static files
+- Ruff taken into use as one of pipeline checks / duty
+- Removed deprecated methods from unit tests
+- CONTRIBUTING.md updated
+
+
 ## [3.2.1] - 2024-04-08
 
 ### Fixed
