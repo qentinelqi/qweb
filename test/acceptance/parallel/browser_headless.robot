@@ -73,3 +73,8 @@ Open Browser And Wait A Bit
         OpenBrowser    about:blank    ${BROWSER}
     END
     Sleep    2s
+
+Teardown Actions
+    ResetConfig    LogScreenshot
+    CloseAllBrowsers
+

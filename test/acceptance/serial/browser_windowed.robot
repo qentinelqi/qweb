@@ -112,3 +112,5 @@ Open Browser And Wait A Bit
 Close Browsers And Remove CHROME_ARGS
     Close All Browsers
     Remove Environment Variable   CHROME_ARGS
+
+    ResetConfig    LogScreenshot

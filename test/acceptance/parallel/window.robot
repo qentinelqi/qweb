@@ -168,7 +168,7 @@ Title and url
     [Documentation]             Tests for -title and -url keywords
     GoTo                        ${BASE_URI}/window.html
     ${url}=                     GetUrl
-    Should Contain              ${url}                      http://
+    Should Contain              ${url}                      ${BASE_URI}
     Should Contain              ${url}                      window.html
     VerifyTitle                 Window Acceptance Tests
     ${title}=                   GetTitle
