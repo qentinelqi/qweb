@@ -40,6 +40,9 @@ def drop_down(
 ) -> None:
     r"""Select an option from dropdown menu/list.
 
+    **NOTE:** This keyword is designed to function exclusively with actual dropdowns
+    that contain **<select>** and **<option>** tags.
+
     Examples
     --------
     .. code-block:: robotframework
@@ -136,6 +139,9 @@ def verify_selected_option(
     r"""Verify that an option is selected from dropdown menu/list.
     Note: with multiselection dropdown verify each option individually.
 
+    **NOTE:** This keyword is designed to function exclusively with actual dropdowns
+    that contain **<select>** and **<option>** tags.
+
     Examples
     --------
     .. code-block:: robotframework
@@ -187,6 +193,9 @@ def get_selected(
     locator: str, anchor: str = "1", timeout: Union[int, float, str] = 0, index: int = 1, **kwargs
 ) -> None:
     r"""Get selected option to variable from dropdown menu/list.
+
+    **NOTE:** This keyword is designed to function exclusively with actual dropdowns
+    that contain **<select>** and **<option>** tags.
 
     Examples
     --------
@@ -248,6 +257,9 @@ def verify_option(
 ) -> None:
     r"""Verify that option exist in dropdown menu/list.
 
+    **NOTE:** This keyword is designed to function exclusively with actual dropdowns
+    that contain **<select>** and **<option>** tags.
+
     Examples
     --------
     .. code-block:: robotframework
@@ -299,6 +311,9 @@ def get_drop_down_values(
 ) -> None:
     r"""Return all options from a dropdown menu/list.
 
+    **NOTE:** This keyword is designed to function exclusively with actual dropdowns
+    that contain **<select>** and **<option>** tags.
+
     Examples
     --------
     .. code-block:: robotframework
@@ -348,6 +363,9 @@ def verify_no_option(
     **kwargs,
 ) -> None:
     r"""Verify that a given option is not in a dropdown menu/list.
+
+    **NOTE:** This keyword is designed to function exclusively with actual dropdowns
+    that contain **<select>** and **<option>** tags.
 
     Examples
     --------
