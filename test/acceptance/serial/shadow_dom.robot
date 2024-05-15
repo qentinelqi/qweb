@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for text keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 http://127.0.0.1:8000/shadow_dom.html           ${BROWSER}    #--headless
+Suite Setup                     OpenBrowser                 ${BASE_URI}/shadow_dom.html           ${BROWSER}    #--headless
 Suite Teardown                  Shadow Teardown
 Test Timeout                    60 seconds
 
@@ -43,7 +43,7 @@ Basic interactions with Shadow DOM
 
 Shadow DOM with attributes
     [Setup]                     SetConfig                   ShadowDOM                   True
-    GoTo                        http://127.0.0.1:8000/shadow_dom.html
+    GoTo                        ${BASE_URI}/shadow_dom.html
     # using attribute values
     VerifyItem                  myButton                    # id
     VerifyItem                  Click this                  # tooltip
@@ -61,7 +61,7 @@ Shadow DOM with attributes
 
 Shadow DOM on, normal DOM elements
     [Setup]                     SetConfig                   ShadowDOM                   True
-    GoTo                        http://127.0.0.1:8000/shadow_dom.html
+    GoTo                        ${BASE_URI}/shadow_dom.html
     # verifying items that are in normal dom
     VerifyText                  In both DOM
     VerifyText                  Level 1
@@ -77,7 +77,7 @@ Shadow DOM on, normal DOM elements
 
 VerifyAll & VerifyAny with shadow DOM
     [Setup]                     SetConfig                   ShadowDOM                   False
-    GoTo                        http://127.0.0.1:8000/shadow_dom.html
+    GoTo                        ${BASE_URI}/shadow_dom.html
     # verify using normal dom only
     ${error}=                   Run Keyword and Expect Error                            *
     ...                         VerifyAll                   In both DOM,Input2          timeout=2
@@ -90,7 +90,7 @@ VerifyAll & VerifyAny with shadow DOM
 
 Input keywords with shadow DOM
     [Setup]                     SetConfig                   ShadowDOM                   False
-    GoTo                        http://127.0.0.1:8000/shadow_dom.html
+    GoTo                        ${BASE_URI}/shadow_dom.html
     # verify inputs using normal dom only
     TypeText                    username                    John Doe                    # in normal/light dom
     ${error}=                   Run Keyword and Expect Error                            *
@@ -120,7 +120,7 @@ Input keywords with shadow DOM
 
 Text Counts with shadow DOM
     [Setup]                     SetConfig                   ShadowDOM                   False
-    GoTo                        http://127.0.0.1:8000/shadow_dom.html
+    GoTo                        ${BASE_URI}/shadow_dom.html
     # verify count using normal dom only
     VerifyTextCount             In both DOM                 1
 

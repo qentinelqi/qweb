@@ -2,7 +2,7 @@
 Documentation                   Tests from element keywords
 Library                         QWeb
 Library                         OperatingSystem
-Suite Setup                     OpenBrowser                 http://127.0.0.1:8000/text.html                 ${BROWSER}           --headless
+Suite Setup                     OpenBrowser                 ${BASE_URI}/text.html                 ${BROWSER}           --headless
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 
@@ -50,26 +50,26 @@ Click Element by xpath 2
     VerifyText                  Button4 was clicked
 
 Click Element by xpath 3
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     Verify No Text              Button4 was clicked
     ClickElement                xpath=//*[@value\="Button4"]
     VerifyText                  Button4 was clicked
 
 Click Element by xpath 4
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     Verify No Text              Button4 was clicked
     ClickElement                xpath=//*[@value="Button4"]
     VerifyText                  Button4 was clicked
 
 Click Element by xpath and index
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     Verify No Text              Signup near Random text was clicked
     ClickElement                //input[@value\="Signup"]    index=2
     VerifyText                  Signup near Random text was clicked
 
 Click Element by WebElement instance
     [Tags]                      WebElement
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     ${elem}=                    GetWebElement               Button4                        element_type=text
     ClickElement                ${elem}
     VerifyText                  Button4 was clicked
@@ -131,7 +131,7 @@ Use attributes without xpath to get element
 
 GetElementCountOK
     [Tags]                      GetElementCount
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     ${count}                    GetElementCount             button                      tag=input
     should be equal             ${count}                    ${5}
     ${count}                    GetElementCount             //img
@@ -139,7 +139,7 @@ GetElementCountOK
 
 GetAttributeOK
     [Tags]                      GetAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     ${attribute}                GetAttribute                SkimClick disable button    id                          element_type=Text
     should be equal             ${attribute}                skimclick
     ${attribute}                GetAttribute                //img                       data-icon
@@ -156,7 +156,7 @@ GetAttributeOK
 
 GetAttributeNOK
     [Tags]                      GetAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     Run Keyword And Expect Error    QWebElementNotFoundError:*    GetAttribute         //button[@name\="somethingthatdoesnotexist"]    id    timeout=2
     Run Keyword And Expect Error    QWebValueError:*              GetAttribute         //button                                        id    timeout=2
     # jailed, Chrome 123
@@ -164,7 +164,7 @@ GetAttributeNOK
 
 VerifyAttributeOK
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     VerifyAttribute             SkimClick disable button    id                          skimclick                   element_type=Text
     VerifyAttribute             //img                       data-icon                   screen
     VerifyAttribute             reset                       value                       Button4                     element_type=item
@@ -175,14 +175,14 @@ VerifyAttributeOK
 
 VerifyAttributeNotEquals
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     VerifyAttribute             SkimClick disable button    id                          skimclick123                element_type=Text    operator=not equal
     VerifyAttribute             SkimClick disable button    id                          skimclick123                element_type=Text    operator=!=
     VerifyAttribute             //img                       data-icon                   screen123                   operator=not equal  
 
 VerifyAttributeGreater
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # greater, should pass
     VerifyAttribute             Button3    data-id                          7                   element_type=Text    operator=greater than
     VerifyAttribute             Button3    data-id                          5                   element_type=Text    operator=>
@@ -193,7 +193,7 @@ VerifyAttributeGreater
 
 VerifyAttributeGreaterOrEqual
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # greater or equal, should pass
     VerifyAttribute             Button3    data-id                          7                   element_type=Text    operator=greater than or equal
     VerifyAttribute             Button3    data-id                          12345               element_type=Text    operator=>=
@@ -202,7 +202,7 @@ VerifyAttributeGreaterOrEqual
 
 VerifyAttributeLessThan
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # lower, should pass
     VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=less than
     VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=<
@@ -213,7 +213,7 @@ VerifyAttributeLessThan
 
 VerifyAttributeLessThanOrEqual
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # lower or equal, should pass
     VerifyAttribute             input[value\="Button3"]     data-id                     12347                   element_type=css        operator=less than or equal
     VerifyAttribute             input[value\="Button3"]     data-id                     12345                   element_type=css        operator=<=
@@ -222,7 +222,7 @@ VerifyAttributeLessThanOrEqual
 
 VerifyAttributeContains
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # contains, should pass
     VerifyAttribute             SkimClick disable button    id                          skim      element_type=Text   operator=contains
     VerifyAttribute             input[value\="Button3"]     data-id                     123                     element_type=css        operator=contains
@@ -231,7 +231,7 @@ VerifyAttributeContains
 
 VerifyAttributeNotContains
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # contains, should pass
     VerifyAttribute             SkimClick disable button    id                          skjm      element_type=Text   operator=not contains
     VerifyAttribute             input[value\="Button3"]     data-id                     3245                     element_type=css        operator=not contains
@@ -240,7 +240,7 @@ VerifyAttributeNotContains
 
 VerifyAttributeIncorrectOperator
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     # default operator
     VerifyAttribute             SkimClick disable button    id                          skimclick                   element_type=Text 
     # incorrect operator
@@ -250,7 +250,7 @@ VerifyAttributeIncorrectOperator
 
 VerifyAttributeCheckbox
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/checkbox.html
+    Go To                       ${BASE_URI}/checkbox.html
     ClickText                   Blue
     VerifyAttribute             //*[@id\="ch_1_1"]          checked                     true
     ClickText                   Blue
@@ -258,7 +258,7 @@ VerifyAttributeCheckbox
 
 VerifyAttributeNOK
     [Tags]                      VerifyAttribute
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     Run Keyword And Expect Error      QWebElementNotFoundError:*    VerifyAttribute      //button[@name\="somethingthatdoesnotexist"]    id    something    timeout=2
     Run Keyword And Expect Error      QWebValueError:*              VerifyAttribute      //button             value                Button2              element_type=Text    timeout=2
     # not valid css
@@ -269,7 +269,7 @@ VerifyAttributeNOK
 
 VerifyElementTextBorders
     [Tags]                      VerifyElementText    DrawBorders
-    Go To                       http://127.0.0.1:8000/text.html
+    Go To                       ${BASE_URI}/text.html
     
     ${no_border_file}           SetVariable            ${CURDIR}/no_border.png
     ${with_border_file}         SetVariable            ${CURDIR}/with_border.png

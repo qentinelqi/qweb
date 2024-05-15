@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for handling of alerts
 Library           QWeb
-Suite Setup       OpenBrowser  http://127.0.0.1:8000/verifylinks.html  ${BROWSER}
+Suite Setup       OpenBrowser  ${BASE_URI}/verifylinks.html  ${BROWSER}
 ...               --headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
@@ -17,4 +17,4 @@ VerifyLinks
 VerifyLinksError
     [Tags]          VerifyLinks      Error    jailed
     Run Keyword And Expect Error    QWebException: Found 2 broken link(s):*
-    ...             VerifyLinks     http://127.0.0.1:8000/verifybrokenlinks.html    timeout=5
+    ...             VerifyLinks     ${BASE_URI}/verifybrokenlinks.html    timeout=5

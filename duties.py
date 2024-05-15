@@ -108,6 +108,7 @@ def acceptance_tests(ctx,
                f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
+               f" -v ON_HTTP_SERVER:True"
                f" {cmd_excludes}"
                f" test/acceptance")
         

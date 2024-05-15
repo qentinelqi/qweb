@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Tests for Drag and Drop keyword
 Library           QWeb
-Suite Setup       OpenBrowser    http://127.0.0.1:8000/drag.html    ${BROWSER}
+Suite Setup       OpenBrowser    ${BASE_URI}/drag.html    ${BROWSER}
 Suite Teardown    CloseBrowser
 Test Setup        SetConfig       WindowSize    1920x1080
 Test Timeout      60 seconds

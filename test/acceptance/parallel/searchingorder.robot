@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     Full matches should always be first if text-attr is not used
 Library           QWeb
-Suite Setup       OpenBrowser  http://127.0.0.1:8000/frame.html  ${BROWSER}    --headless
+Suite Setup       OpenBrowser  ${BASE_URI}/frame.html  ${BROWSER}    --headless
 Suite Teardown    CloseBrowser
 Test Timeout      60 seconds
 

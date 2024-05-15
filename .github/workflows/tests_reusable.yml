@@ -30,7 +30,7 @@ on:
       additional-rfw-parameters:
         description: Execution parameters which will be added to RFW execution. For example "-v customvar:somevalue"
         required: false
-        default: ""
+        default: "-v ON_HTTP_SERVER:True"
         type: string
 
 jobs:
