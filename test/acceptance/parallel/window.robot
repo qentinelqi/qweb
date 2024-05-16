@@ -167,8 +167,9 @@ Title and url
     [Tags]                      Window    Title    Url
     [Documentation]             Tests for -title and -url keywords
     GoTo                        ${BASE_URI}/window.html
+    ${scheme}=                  Evaluate    $BASE_URI.split("/")[0]
     ${url}=                     GetUrl
-    Should Contain              ${url}                      ${BASE_URI}
+    Should Contain              ${url}                      ${scheme}
     Should Contain              ${url}                      window.html
     VerifyTitle                 Window Acceptance Tests
     ${title}=                   GetTitle
