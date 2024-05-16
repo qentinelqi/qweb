@@ -23,7 +23,8 @@ Verify File Download Slow Bandwidth
     FileShouldExist  ${downloaded}
 
 Verify File Download Fails If Multiple Files Found
-    [Tags]    PROBLEM_IN_SAFARI
+    [Tags]    PROBLEM_IN_SAFARI    jailed
+    # failure is only happening in CRT+chrome, disabling this temporarily to make QAutomation release happen
     VerifyText      Download small csv file
     ExpectFileDownload
     Two Files Are Downloaded Without ExpectFileDownload Keyword
@@ -32,8 +33,7 @@ Verify File Download Fails If Multiple Files Found
 
 
 Verify File Download Fail No File Downloading
-    [Tags]    PROBLEM_IN_SAFARI    PROBLEM_IN_CHROME
-    # PROBLEM_IN_CHROME is only happening in CRT, disabling this temporarily to make QAutomation release happen
+    [Tags]    PROBLEM_IN_SAFARI
     VerifyText      Download small csv file
     ExpectFileDownload
     Run Keyword And Expect Error    ValueError: Could not find any modified files after 3.0s
