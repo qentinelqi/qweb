@@ -3,7 +3,7 @@ Documentation     Tests for opening browsers
 Library           OperatingSystem
 Library           QWeb
 Test Setup        Open Browser And Wait A Bit
-Suite Teardown    CloseAllBrowsers
+Suite Teardown    Teardown Actions
 Test Timeout      90 seconds
 
 *** Variables ***
@@ -73,3 +73,9 @@ Open Browser And Wait A Bit
         OpenBrowser    about:blank    ${BROWSER}
     END
     Sleep    2s
+
+Teardown Actions
+    ResetConfig    OSScreenshots
+    ResetConfig    LogScreenshot
+    CloseAllBrowsers
+

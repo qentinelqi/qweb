@@ -110,5 +110,7 @@ Open Browser And Wait A Bit
     Sleep    2s
 
 Close Browsers And Remove CHROME_ARGS
+    ResetConfig    OSScreenshots
+    ResetConfig    LogScreenshot
     Close All Browsers
     Remove Environment Variable   CHROME_ARGS
