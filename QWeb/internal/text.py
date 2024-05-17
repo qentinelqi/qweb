@@ -176,7 +176,7 @@ def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
 
     if "css" not in kwargs:
         try:
-            web_elements = get_clickable_element_by_js(text, shadow_dom=shadow_dom, **kwargs)
+            web_elements = get_clickable_elements(text, shadow_dom=shadow_dom, **kwargs)
         except (
             JavascriptException,
             WebDriverException,
@@ -427,6 +427,18 @@ def _get_anchor_with_inner_text(
     return None
 
 
+
+def get_clickable_elements(
+    locator: str, shadow_dom: bool = False, **kwargs
+) -> Optional[list[WebElement]]:
+    xpath_elements = get_clickable_from_slot_text(locator, **kwargs)
+    js_elements = get_clickable_element_by_js(locator, shadow_dom=shadow_dom, **kwargs)
+    
+    if js_elements:
+        util.remove_duplicates_from_list(js_elements, xpath_elements)
+    return xpath_elements
+
+
 @frame.all_frames
 def get_clickable_element_by_js(
     locator: str, shadow_dom: bool = False, **kwargs
@@ -444,6 +456,36 @@ def get_clickable_element_by_js(
         logger.debug("Found elements by js: {}".format(web_elements))
         return web_elements
     return None
+
+
+def get_clickable_from_slot_text(
+    locator: str, **kwargs
+) -> Optional[list[WebElement]]:
+    """ Find clickable parent from <slot> with direct text.
+        Slots do not have offset etc. and thus are considered invisible
+        by our visibility check.
+
+        It's not that common to have text directly in a <slot>. But in these
+        cases we can still use it to find the clickable parent.
+
+        Currently matches only <a> tags with a child <slot> having directly the text
+        that matches the locator. More elements types can be added if needed.
+
+    """
+    partial = kwargs["partial_match"]
+
+    if partial:
+        xpath = f"//a[descendant::slot[text()='{locator}']]"
+    else:
+        xpath = f"//a[descendant::slot[contains(., '{locator}')]]"
+
+    # note: get_webelements already goes through all frames and returns only visible elements
+    web_elements = element.get_webelements(xpath)
+
+    if web_elements:
+        logger.debug(f"Found elements by xpath: {web_elements}")
+    return web_elements
+
 
 
 @frame.all_frames
