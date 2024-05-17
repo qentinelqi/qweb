@@ -52,6 +52,9 @@ def unit_tests(ctx):
 def acceptance_tests(ctx,
                      browser="chrome",
                      exitonfailure="True",
+                     parallel="True",
+                     on_http_server="False",
+                     suite=None,
                      listener=None):
     """
     Runs robot Acceptance tests
@@ -65,9 +68,6 @@ def acceptance_tests(ctx,
                     Default: None
                           
     """
-    def remove_extra_whitespaces(string: str) -> str:
-        return " ".join(string.split())
-
     listener_cmd = ""
     if listener:
         listener_cmd = f" --listener {listener}"
@@ -92,29 +92,35 @@ def acceptance_tests(ctx,
     cmd_excludes = f'-e {" -e ".join(excludes)}'
 
     
-    if os == "MACOS": 
-        # need to run tests in single process
+    if os == "MACOS" or parallel.capitalize() == "False": 
+        # on MACOS we always need to run tests in a single process
         # https://developer.apple.com/documentation/webkit/about_webdriver_for_safari#2957226
-        cmd_str = remove_extra_whitespaces(f" {python_exe} -m robot")
+        cmd_str = f"{python_exe} -m robot"
     else:
         ctx.run(f"{python_exe} test/acceptance/pabot_suite_ordering.py", nofail=True)
-        cmd_str = remove_extra_whitespaces(
-                f" {python_exe} -m pabot.pabot"
+        cmd_str = (
+                f"{python_exe} -m pabot.pabot"
                 f" --ordering test/acceptance/.pabot_order"
                 f" --name Acceptance"
             )
         
-    cmd_str += " " + remove_extra_whitespaces(
+    if suite is not None:
+        cmd_str += f" -s {suite}"
+
+    cmd_str += (
                f" {listener_cmd}"
                f" {cmd_exit_on_failure}"
                f" -v BROWSER:{browser}"
-               f" -v ON_HTTP_SERVER:True"
+               f" -v ON_HTTP_SERVER:{on_http_server}"
                f" {cmd_excludes}"
                f" test/acceptance")
-        
-    proc = subprocess.Popen([python_exe, '-m', 'http.server', '-b', '127.0.0.1', '-d', 'test/resources', '8000'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-    ctx.run(cmd_str, title="Acceptance tests", capture=False)
-    proc.terminate()
+    print(f"Running cmd:\n{cmd_str}\n")
+    if on_http_server.capitalize() == "True":
+        proc = subprocess.Popen([python_exe, '-m', 'http.server', '-b', '127.0.0.1', '-d', 'test/resources', '8000'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        ctx.run(cmd_str, title="Acceptance tests", capture=False)
+        proc.terminate()
+    else:
+        ctx.run(cmd_str, title="Acceptance tests", capture=False)
 
 
 @duty
