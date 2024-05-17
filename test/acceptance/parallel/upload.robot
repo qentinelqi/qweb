@@ -2,7 +2,7 @@
 Documentation     Tests for UploadFile keyword
 Library           QWeb
 Suite Setup       SuiteStart
-Suite Teardown    CloseBrowser
+Suite Teardown    SuiteEnd
 Test Timeout      60 seconds
 
 *** Variables ***
@@ -32,3 +32,7 @@ Upload with xpath
 *** Keywords ***
 SuiteStart
      OpenBrowser    ${BASE_URI}/upload.html    ${BROWSER}  --headless
+
+SuiteEnd
+    ResetConfig    DefaultTimeout
+    CloseAllBrowsers
