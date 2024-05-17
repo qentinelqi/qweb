@@ -24,7 +24,6 @@ Verify File Download Slow Bandwidth
 
 Verify File Download Fails If Multiple Files Found
     [Tags]    PROBLEM_IN_SAFARI
-    RefreshPage
     VerifyText      Download small csv file
     ExpectFileDownload
     Two Files Are Downloaded Without ExpectFileDownload Keyword
