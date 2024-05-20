@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for text keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 ${BASE_URI}/shadow_dom.html           ${BROWSER}    #--headless
+Suite Setup                     OpenBrowser                 ${BASE_URI}/shadow_dom.html           ${BROWSER}  #--headless
 Suite Teardown                  Shadow Teardown
 Test Timeout                    60 seconds
 
@@ -164,11 +164,11 @@ Chrome shadow DOM
 
     SetConfig                   ShadowDOM                   False
     GoTo                        chrome://downloads
-    ${error}=                   Run Keyword and Expect Error                            *                           VerifyText           Downloads    timeout=2
+    ${error}=                   Run Keyword and Expect Error                            *                           VerifyText           Files you download appear here    timeout=2
 
     SetConfig                   ShadowDOM                   True
-    VerifyText                  Downloads                   timeout=3
-    TypeText                    Search downloads            Test
+    VerifyText                  Files you download appear here                   timeout=3
+    TypeText                    Search download            Test
     LogScreenshot
 
 
