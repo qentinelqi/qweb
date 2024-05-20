@@ -23,8 +23,7 @@ Verify File Download Slow Bandwidth
     FileShouldExist  ${downloaded}
 
 Verify File Download Fails If Multiple Files Found
-    [Tags]    PROBLEM_IN_SAFARI    jailed
-    # failure is only happening in CRT+chrome, disabling this temporarily to make QAutomation release happen
+    [Tags]    PROBLEM_IN_SAFARI
     VerifyText      Download small csv file
     ExpectFileDownload
     Two Files Are Downloaded Without ExpectFileDownload Keyword
