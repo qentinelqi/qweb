@@ -176,7 +176,7 @@ def get_all_text_elements(text: str, **kwargs) -> list[WebElement]:
 
     if "css" not in kwargs:
         try:
-            web_elements = get_clickable_element_by_js(text, shadow_dom=shadow_dom, **kwargs)
+            web_elements = get_clickable_elements(text, shadow_dom=shadow_dom, **kwargs)
         except (
             JavascriptException,
             WebDriverException,
@@ -428,21 +428,51 @@ def _get_anchor_with_inner_text(
 
 
 @frame.all_frames
-def get_clickable_element_by_js(
+def get_clickable_elements(
     locator: str, shadow_dom: bool = False, **kwargs
 ) -> Optional[list[WebElement]]:
+    """
+    Retrieve clickable elements based on a locator string.
+
+    Args:
+        locator (str): The string to locate elements by.
+        shadow_dom (bool): Whether to search within shadow DOM.
+        partial_match (bool): Whether to use partial matching.
+        **kwargs: Additional keyword arguments.
+
+    Returns:
+        Optional[List[WebElement]]: List of clickable WebElement objects, or None if none found.
+    """
     partial = kwargs["partial_match"]
-    if shadow_dom:
-        web_elements = element.get_visible_elements_from_elements(
-            javascript.get_clickable_from_shadow_dom(locator, partial)
-        )
+
+    # find parent <a> from slots with direct text
+    if partial:
+        xpath = f"//a[descendant::slot[contains(., '{locator}')]]"
     else:
-        web_elements = element.get_visible_elements_from_elements(
-            javascript.get_clickable(locator), **kwargs
-        )
-    if web_elements:
-        logger.debug("Found elements by js: {}".format(web_elements))
-        return web_elements
+        xpath = f"//a[descendant::slot[text()='{locator}']]"
+
+    # Find slots with text and get their parent link
+    driver = browser.get_current_browser()
+    xpath_elements = driver.find_elements(By.XPATH, xpath)
+    # Find normal elements via javascript
+    if shadow_dom:
+        js_elements = javascript.get_clickable_from_shadow_dom(locator, partial)
+    else:
+        js_elements = javascript.get_clickable(locator)
+
+    if js_elements:
+        logger.debug(f"Found elements by js: {js_elements}")
+
+    # merge found elements and check visibility
+    if not xpath_elements:
+        xpath_elements = []
+    else:
+        logger.debug(f"Found elements by xpath: {xpath_elements}")
+    if js_elements:
+        util.remove_duplicates_from_list(js_elements, xpath_elements)
+        # util.remove_stale_elements(xpath_elements)
+    if xpath_elements:
+        return element.get_visible_elements_from_elements(xpath_elements, **kwargs)
     return None
 
 
