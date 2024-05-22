@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [3.3.1] - 2024-05-22
+
+### Added
+- Added support for clicking elements by **ClickText** on the uncommon situation where text is directly on `<slot>` tag and not it's parent or child. By default slots without clickable parent/child are otherwise considered invsible by our visibility check as they have not offsets etc.
+
+### Changed
+- Changed tests & duty file to support both parallel and serial execution locally and with or without http server.
+- Changed Chrome shadow dom case so that it will work with Chrome 125 and lower versions.
+
 ## [3.3.0] - 2024-05-15
 
 ### Added
