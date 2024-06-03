@@ -230,10 +230,8 @@ class Table:
     ) -> Union[WebElement, int]:
         skip_header = util.par2bool(kwargs.get("skip_header", False))
         rows = self.get_all_rows()
-        if locator.startswith("//last"):
-            if skip_header:
-                return len(rows) - 1
-            return len(rows)
+        if locator.lower() == "//last":
+            return len(rows) - 1 if skip_header else len(rows)
         matches, index = self._get_row_by_locator_text(rows, locator, anchor)
         if row_index:
             if skip_header:
