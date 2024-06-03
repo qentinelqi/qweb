@@ -447,9 +447,13 @@ def get_clickable_elements(
 
     # find parent <a> from slots with direct text
     if partial:
-        xpath = f"//a[descendant::slot[contains(., '{locator}')]]"
+        xpath = (
+            "//a[descendant::slot[contains("
+            "normalize-space(translate(., '\u00a0', ' ')), "
+            f"'{locator}')]]"
+        )
     else:
-        xpath = f"//a[descendant::slot[text()='{locator}']]"
+        xpath = f"//a[descendant::slot[normalize-space(translate(., '\u00a0', ' '))='{locator}']]"
 
     # Find slots with text and get their parent link
     driver = browser.get_current_browser()
