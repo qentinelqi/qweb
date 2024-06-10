@@ -443,7 +443,7 @@ def get_clickable_elements(
     Returns:
         Optional[List[WebElement]]: List of clickable WebElement objects, or None if none found.
     """
-    partial = kwargs["partial_match"]
+    partial = util.par2bool(kwargs.get("partial_match", False))
 
     # find parent <a> from slots with direct text
     if partial:
