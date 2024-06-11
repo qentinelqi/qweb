@@ -106,14 +106,40 @@ def verify_table(
 ) -> None:
     r"""Verify text in table coordinates.
 
-    Reads cell value from coordinates in active table and verifies it
+    Reads cell value from **coordinates** in active table and verifies it
     against expected value.
+
+
+
+    **Coordinate format**:
+
+    The coordinate format has two modes:
+
+    - Index based search
+
+      - For example **r2c3** -> find cell in row 2 and column 3
+      - In the above format, r = row, c = column
+      - First/Header row is omitted
+
+    - Text based search (marked with "/").
+
+      - Example (row): **r?John/c3** -> find cell from row which contains "John" and column 3.
+      - Example (column): **r2/Email** -> find cell from column which contains "Email" in row 2.
+      - "/" is a marker for using the text based search.
+      - First/header row is included.
+
+    **NOTE:** Index based search omits first row (column headers). Text based search
+    (marked with "/") does not.
 
     Examples
     --------
     .. code-block:: robotframework
 
-         VerifyTable            r2c3    Qentinel
+         # Verify that row 2 column 3 contains "jane.doe@example.com"
+         # Header row is omitted
+         VerifyTable            r2c3         jane.doe@example.com
+         # Verify that row which contains John contains "jane.doe@example.com" in column 2
+         VerifyTable            r?John/c2    Doe
 
 
     Parameters
@@ -171,7 +197,27 @@ def get_cell_text(
 ) -> Union[str, int, float]:
     r"""Get cell text to variable.
 
-    Locates cell by coordinates from active table and return value
+    Locates cell by coordinates from active table and return value.
+
+    **Coordinate format**:
+
+    The coordinate format has two modes:
+
+    - Index based search
+
+      - For example **r2c3** -> find cell in row 2 and column 3
+      - In the above format, r = row, c = column
+      - First/Header row is omitted
+
+    - Text based search (marked with "/").
+
+      - Example (row): **r?John/c3** -> find cell from row which contains "John" and column 3.
+      - Example (column): **r2/Email** -> find cell from column which contains "Email" in row 2.
+      - "/" is a marker for using the text based search.
+      - First/header row is included.
+
+    **NOTE:** Index based search omits first row (column headers). Text based search
+    (marked with "/") does not.
 
     Examples
     --------
@@ -234,7 +280,30 @@ def click_cell(
 ) -> None:
     r"""Click table cell.
 
-    Locates cell by coordinates or text from active table and clicks it
+    Locates cell by coordinates or text from active table and clicks it.
+    Note that by default click is sent to the cell element itself, so if you want
+    to specify which child element is clicked, add tag argument.
+
+
+    **Coordinate format**:
+
+    The coordinate format has two modes:
+
+    - Index based search
+
+      - For example **r2c3** -> find cell in row 2 and column 3
+      - In the above format, r = row, c = column
+      - First/Header row is omitted
+
+    - Text based search (marked with "/").
+
+      - Example (row): **r?John/c3** -> find cell from row which contains "John" and column 3.
+      - Example (column): **r2/Email** -> find cell from column which contains "Email" in row 2.
+      - "/" is a marker for using the text based search.
+      - First/header row is included.
+
+    **NOTE:** Index based search omits first row (column headers). Text based search
+    (marked with "/") does not.
 
     Examples
     --------
@@ -295,11 +364,13 @@ def get_table_row(
     locator: str,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,  # pylint: disable=unused-argument
+    skip_header: bool = False,
     **kwargs,
 ) -> Union[WebElement, int]:
     r"""Get row (index) from current table.
 
-    Get table row by some visible text or value.
+    Get table row number by some visible text or value. Returned value is index of row
+    including first header row, unless argument **skip_header=True** is used.
 
     Examples
     --------
@@ -309,7 +380,7 @@ def get_table_row(
        ${row}       GetTableRow     Qentinel        #return first row which contain text Qentinel
        ${row}       GetTableRow     Qentinel    2     #second row with text Qentinel
        ${row}       GetTableRow     Qentinel    Sepi  #row contains texts Qentinel & Sepi
-       ${row}       GetTableRow     Qentinel    skip_header=True  #start counting from first tc row
+       ${row}       GetTableRow     Qentinel    skip_header=True  #start counting from first td row
 
     Parameters
     ----------
@@ -334,7 +405,7 @@ def get_table_row(
         raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
 
-    return table.get_row(locator, anchor, row_index=True, **kwargs)
+    return table.get_row(locator, anchor, row_index=True, skip_header=skip_header, **kwargs)
 
 
 @keyword(tags=("Tables", "Getters"))

@@ -169,12 +169,15 @@ class Table:
         locator = coordinates.split("/")
         if locator[0].startswith("r?"):
             row_elem = self.get_row(locator[0][2:], anchor)
+            # take last row as "row" if row_elem is not None
+            # this is only needed for column cell search
+            row = -1 if row_elem else None
         else:
             row, _ = self._convert_coordinates(locator[0])
         if locator[1].startswith("c?"):
             column = self.get_cell_by_locator(locator[1][2:], **kwargs)
         else:
-            _, column = self._convert_coordinates(locator[1])
+            _, column = self._convert_coordinates(f"r{row}{locator[1]}")
         if row_elem:
             cell = javascript.execute_javascript(
                 "return arguments[0].cells[{}]".format(column - 1),  # type:ignore[operator]
@@ -375,8 +378,8 @@ class Table:
                         // If the table doesn't have a header, count the columns in the first body row
                         var firstBodyRow = tableRef.querySelector('tbody tr');
                         if (firstBodyRow) {
-                            headers = firstBodyRow.querySelectorAll('th');
                         }
+                            headers = firstBodyRow.querySelectorAll('th');
                     }
 
                     return headers;
