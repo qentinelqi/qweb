@@ -119,16 +119,16 @@ def verify_table(
 
       - For example **r2c3** -> find cell in row 2 and column 3
       - In the above format, r = row, c = column
-      - First/Header row is omitted
+      - Column header row (*<thead>*) is omitted
 
     - Text based search (marked with "/").
 
       - Example (row): **r?John/c3** -> find cell from row which contains "John" and column 3.
       - Example (column): **r2/Email** -> find cell from column which contains "Email" in row 2.
       - "/" is a marker for using the text based search.
-      - First/header row is included.
+      - Column header row (*<thead>*) is included.
 
-    **NOTE:** Index based search omits first row (column headers). Text based search
+    **NOTE:** Index based search omits column headers (*<thead>*). Text based search
     (marked with "/") does not.
 
     Examples
@@ -207,16 +207,16 @@ def get_cell_text(
 
       - For example **r2c3** -> find cell in row 2 and column 3
       - In the above format, r = row, c = column
-      - First/Header row is omitted
+      - Column header row (*<thead>*) is omitted
 
     - Text based search (marked with "/").
 
       - Example (row): **r?John/c3** -> find cell from row which contains "John" and column 3.
       - Example (column): **r2/Email** -> find cell from column which contains "Email" in row 2.
       - "/" is a marker for using the text based search.
-      - First/header row is included.
+      - Column header row (*<thead>*) is included.
 
-    **NOTE:** Index based search omits first row (column headers). Text based search
+    **NOTE:** Index based search omits column headers (*<thead>*). Text based search
     (marked with "/") does not.
 
     Examples
@@ -293,16 +293,16 @@ def click_cell(
 
       - For example **r2c3** -> find cell in row 2 and column 3
       - In the above format, r = row, c = column
-      - First/Header row is omitted
+      - Column header row (*<thead>*) is omitted
 
     - Text based search (marked with "/").
 
       - Example (row): **r?John/c3** -> find cell from row which contains "John" and column 3.
       - Example (column): **r2/Email** -> find cell from column which contains "Email" in row 2.
       - "/" is a marker for using the text based search.
-      - First/header row is included.
+      - Column header row (*<thead>*) is included.
 
-    **NOTE:** Index based search omits first row (column headers). Text based search
+    **NOTE:** Index based search omits column headers (*<thead>*). Text based search
     (marked with "/") does not.
 
     Examples
