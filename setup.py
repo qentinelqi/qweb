@@ -56,6 +56,7 @@ setup(
                       "scipy>=1.7.3",
                       "scikit-image==0.21",
                       "ply",
+                      "numpy>=1.23.5,<2",
                       "opencv-python==4.8.1.78",
                       "slate3k>=0.5.3"],
 
