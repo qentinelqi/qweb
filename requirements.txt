@@ -11,7 +11,7 @@ setuptools>=65.5.1
 # v2.0+ not supported yet
 numpy>=1.23.5,<2
 opencv-python==4.8.1.78
-requests==2.31.0
+requests==2.32.0
 slate3k==0.5.3
 scipy>=1.7.3
 scikit-image==0.21
