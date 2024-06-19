@@ -378,8 +378,8 @@ class Table:
                         // If the table doesn't have a header, count the columns in the first body row
                         var firstBodyRow = tableRef.querySelector('tbody tr');
                         if (firstBodyRow) {
-                        }
                             headers = firstBodyRow.querySelectorAll('th');
+                        }
                     }
 
                     return headers;
