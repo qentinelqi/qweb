@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.2] - 2024-06-20
+
+### Fixed
+- Added support for non-breakable spaces when searching for text directly inside `<slot>`
+- partial_match=False was not correctly handled as boolean in few places
+- partial_match was not taken into account at all on ClickCheckbox even if it should have
+- Improved **table** keywords documentation regarding the coordinate format
+
+### Changed
+- Made **//last** argument in GetTableRow case insensitive
+- Deps: Made numpy a direct dependency and locked version since opencv does not yet have a release with numpy 2.0 support
+- Deps: Bumped minimum allowed version of requests due to security alert
+- Deps: Allows more recent versions of pyobjc on Mac
 
 ## [3.3.1] - 2024-05-22
 
