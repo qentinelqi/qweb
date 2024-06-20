@@ -48,7 +48,7 @@ setup(
                       "pyscreeze==0.1.28",
                       "pyautogui>=0.9.53",
                       "pynput>=1.7.6",
-                      'requests>=2.31.0',
+                      'requests>=2.32.0',
                       "robotframework>=4.1.3,<8",
                       "robotframework-debuglibrary==2.3.0",
                       "selenium>=4.10.0,<5",
@@ -56,9 +56,10 @@ setup(
                       "scipy>=1.7.3",
                       "scikit-image==0.21",
                       "ply",
+                      "numpy>=1.23.5,<2",
                       "opencv-python==4.8.1.78",
                       "slate3k>=0.5.3"],
 
     extras_require={':"linux" in sys_platform': ['xlib'],
-                    ':"darwin" in sys_platform': ['pyobjc-core==9.2', 'pyobjc==9.2']}
+                    ':"darwin" in sys_platform': ['pyobjc-core>=9.2', 'pyobjc>=9.2']}
 )

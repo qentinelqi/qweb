@@ -443,13 +443,17 @@ def get_clickable_elements(
     Returns:
         Optional[List[WebElement]]: List of clickable WebElement objects, or None if none found.
     """
-    partial = kwargs["partial_match"]
+    partial = util.par2bool(kwargs.get("partial_match", False))
 
     # find parent <a> from slots with direct text
     if partial:
-        xpath = f"//a[descendant::slot[contains(., '{locator}')]]"
+        xpath = (
+            "//a[descendant::slot[contains("
+            "normalize-space(translate(., '\u00a0', ' ')), "
+            f"'{locator}')]]"
+        )
     else:
-        xpath = f"//a[descendant::slot[text()='{locator}']]"
+        xpath = f"//a[descendant::slot[normalize-space(translate(., '\u00a0', ' '))='{locator}']]"
 
     # Find slots with text and get their parent link
     driver = browser.get_current_browser()
