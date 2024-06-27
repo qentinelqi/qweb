@@ -119,7 +119,7 @@ def get_checkbox_elements_from_all_documents(
             locator, anchor=anchor, index=index, **kwargs
         )
         if not checkbox_element:
-            checkbox_element, locator_element = get_checkbox_by_locator(locator, anchor, **kwargs)
+            checkbox_element, locator_element = get_checkbox_by_locator(locator, anchor)
     if checkbox_element:
         return checkbox_element, locator_element
     raise QWebElementNotFoundError("No matching element found")
