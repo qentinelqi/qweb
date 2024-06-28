@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.3] - 2024-06-28
+
+### Fixed
+- Fixes regression in v3.3.2 which caused *Checkbox keywords to fail if checkbox element is not fully loaded and visible
+
 ## [3.3.2] - 2024-06-20
 
 ### Fixed
