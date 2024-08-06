@@ -40,8 +40,8 @@ setup(
     ],
 
     keywords='test automation robot framework',
-    author='Qentinel Group',
-    author_email='libraries@qentinel.com',
+    author='Copado Inc.',
+    author_email='copadorobotictesting@copado.com',
     python_requires= ">3.7,<4.0",
     license= "Apache License 2.0",
     install_requires=["setuptools>=65.5.1",
