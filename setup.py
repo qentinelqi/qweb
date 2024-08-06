@@ -47,7 +47,7 @@ setup(
     install_requires=["setuptools>=65.5.1",
                       "pyscreeze==0.1.28",
                       "pyautogui>=0.9.53",
-                      "pynput>=1.7.6",
+                      "pynput>=1.7.7",
                       'requests>=2.32.0',
                       "robotframework>=4.1.3,<8",
                       "robotframework-debuglibrary==2.3.0",
