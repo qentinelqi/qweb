@@ -19,7 +19,7 @@ jobs:
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
       os: '["windows-latest"]'
       browser: '["chrome", "edge", "firefox"]'
-      python-version: '["3.10", "3.11"]'
-      rfw-4x-python: "3.10"
+      python-version: '["3.11", "3.12"]'
+      rfw-4x-python: "3.11"
       rfw-exclude-tags: "-e FLASK"
       

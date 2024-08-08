@@ -106,6 +106,7 @@ def open_browser(
                 options.add_argument(item.lstrip())
         options.add_argument("start-maximized")
         options.add_argument("--disable-notifications")
+        options.add_argument("--disable-search-engine-choice-screen")
         if "headless" in kwargs:
             CONFIG.set_value("Headless", True)
             options.add_argument("headless")

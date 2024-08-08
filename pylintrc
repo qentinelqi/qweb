@@ -4,6 +4,9 @@
 # paths.
 ignore=.git,libs,vendor,versioneer.py, _version.py, remake_pyconly_wheel.py
 
+# Ignore the following third party modules.
+ignored-modules=skimage.metrics  # due to lazy-loading
+
 # List of plugins (as comma separated values of python modules names) to load,
 # usually to register additional checkers.
 load-plugins=
