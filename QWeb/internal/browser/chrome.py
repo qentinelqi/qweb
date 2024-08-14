@@ -60,79 +60,102 @@ def open_browser(
         "proxy" or "loggingPref".
     chrome_args : Optional arguments to modify browser settings
     """
-    options = Options()
+    options = create_chrome_options(chrome_args, **kwargs)
+    logger.debug(f"opt: {options}")
+    chromedriver_path = resolve_chromedriver_path(executable_path)
 
-    logger.debug("opt: {}".format(options))
-    # Gets rid of Devtools listening .... printing
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-
-    # If user wants to re-use existing browser session then
-    # he/she has to set variable BROWSER_REUSE_ENABLED to True.
-    # If enabled, then web driver connection details are written
-    # to an argument file. This file enables re-use of the current
-    # chrome session.
-    #
-    # When variables BROWSER_DEBUGGER_ADDRESS and BROWSER_EXECUTOR_URL are
-    # set from argument file, then OpenBrowser will use those
-    # parameters instead of opening new chrome session.
-    # New Remote Web Driver is created in headless mode.
-    chromedriver_path = util.get_rfw_variable_value("${CHROMEDRIVER_PATH}") or executable_path
-    chrome_path = kwargs.get("chrome_path", None) or util.get_rfw_variable_value("${CHROME_PATH}")
-    chrome_version_kwarg = kwargs.get("browser_version", None)
-    chrome_version = chrome_version_kwarg or util.get_rfw_variable_value("${BROWSER_VERSION}")
-    if chrome_path:
-        options.binary_location = chrome_path
-    if chrome_version:
-        options.browser_version = chrome_version
     browser_reuse, debugger_address, executor_url = check_browser_reuse(**kwargs)
     logger.debug(
         f"browser_reuse: {browser_reuse}, "
         f"executor_url: {executor_url}, "
         f"debugger_address: {debugger_address}"
     )
+
     if browser_reuse and executor_url and debugger_address:
-        options_new = Options()
-        options_new.add_argument("headless")
-        options_new.debugger_address = debugger_address
-        service = Service()
-        driver = Chrome(service=service, options=options_new)
-    else:
-        if user.is_root():
-            options.add_argument("no-sandbox")
-        if chrome_args:
-            if any("headless" in _.lower() for _ in chrome_args):
-                CONFIG.set_value("Headless", True)
-            for item in chrome_args:
-                options.add_argument(item.lstrip())
-        options.add_argument("start-maximized")
-        options.add_argument("--disable-notifications")
-        options.add_argument("--disable-search-engine-choice-screen")
-        if "headless" in kwargs:
-            CONFIG.set_value("Headless", True)
-            options.add_argument("headless")
-        if "prefs" in kwargs:
-            tmp_prefs = kwargs.get("prefs")
-            prefs = util.parse_prefs(tmp_prefs)
-            options.add_experimental_option("prefs", prefs)
-        if "emulation" in kwargs:
-            emulation = kwargs["emulation"]
-            emulate_device = util.get_emulation_pref(emulation)
-            options.add_experimental_option("mobileEmulation", emulate_device)
+        return create_reused_browser(debugger_address)
 
-        service = Service(chromedriver_path) if chromedriver_path else Service()
-        driver = Chrome(service=service, options=options)
-
-        browser_reuse_enabled = (
-            util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE_ENABLED}")) or False
-        )
-        if browser_reuse_enabled:
-            # Write WebDriver session info to RF arguments file for re-use
-            dbg_address = driver.capabilities["goog:chromeOptions"]["debuggerAddress"]
-            write_browser_session_argsfile(dbg_address, driver.command_executor._url)  # type: ignore # pylint: disable=protected-access,line-too-long
-
-            # Clear possible existing global values
-            BuiltIn().set_global_variable("${BROWSER_EXECUTOR_URL}", None)
-            BuiltIn().set_global_variable("${BROWSER_DEBUGGER_ADDRESS}", None)
+    driver = create_new_browser(chromedriver_path, options, **kwargs)
+    cache_browser_session(driver)
 
     browser.cache_browser(driver)
     return driver
+
+
+def create_chrome_options(chrome_args: Optional[list[str]], **kwargs: Any) -> Options:
+    """Create Chrome options based on arguments and keyword arguments."""
+    options = Options()
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
+
+    if chrome_args:
+        if any("headless" in arg.lower() for arg in chrome_args):
+            CONFIG.set_value("Headless", True)
+        for arg in chrome_args:
+            options.add_argument(arg.lstrip())
+
+    options.add_argument("start-maximized")
+    options.add_argument("--disable-notifications")
+    options.add_argument("--disable-search-engine-choice-screen")
+
+    if "headless" in kwargs:
+        CONFIG.set_value("Headless", True)
+        options.add_argument("headless")
+
+    if "prefs" in kwargs:
+        prefs = util.parse_prefs(kwargs.get("prefs"))
+        options.add_experimental_option("prefs", prefs)
+
+    if "emulation" in kwargs:
+        emulate_device = util.get_emulation_pref(kwargs["emulation"])
+        options.add_experimental_option("mobileEmulation", emulate_device)
+
+    chrome_path = kwargs.get("chrome_path", None) or util.get_rfw_variable_value("${CHROME_PATH}")
+    if chrome_path:
+        options.binary_location = chrome_path
+
+    chrome_version = (
+        kwargs.get("browser_version", None)
+        or util.get_rfw_variable_value("${BROWSER_VERSION}")
+    )
+    if chrome_version:
+        options.browser_version = chrome_version
+
+    if user.is_root():
+        options.add_argument("no-sandbox")
+
+    return options
+
+
+def resolve_chromedriver_path(executable_path: str) -> str:
+    """Resolve the path to the ChromeDriver executable."""
+    return util.get_rfw_variable_value("${CHROMEDRIVER_PATH}") or executable_path
+
+
+def create_reused_browser(debugger_address: str) -> WebDriver:
+    """Create a browser instance reusing an existing session."""
+    options = Options()
+    options.add_argument("headless")
+    options.debugger_address = debugger_address
+    service = Service()
+    return Chrome(service=service, options=options)
+
+
+def create_new_browser(chromedriver_path: str, options: Options, **kwargs: Any) -> WebDriver:
+    """Create a new browser instance."""
+    remote_url = kwargs.get("remote_url", None)
+    if remote_url:
+        return WebDriver(command_executor=remote_url, options=options)
+
+    service = Service(chromedriver_path) if chromedriver_path else Service()
+    return Chrome(service=service, options=options)
+
+
+def cache_browser_session(driver: WebDriver) -> None:
+    """Cache the WebDriver session info for reuse."""
+    browser_reuse_enabled = (
+        util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE_ENABLED}")) or False
+    )
+    if browser_reuse_enabled:
+        dbg_address = driver.capabilities["goog:chromeOptions"]["debuggerAddress"]
+        write_browser_session_argsfile(dbg_address, driver.command_executor._url)  # type: ignore # pylint: disable=protected-access
+        BuiltIn().set_global_variable("${BROWSER_EXECUTOR_URL}", None)
+        BuiltIn().set_global_variable("${BROWSER_DEBUGGER_ADDRESS}", None)
