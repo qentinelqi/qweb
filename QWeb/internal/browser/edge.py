@@ -84,8 +84,12 @@ def open_browser(
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
 
-    service = Service(edgedriver_path) if edgedriver_path else Service()
-    driver = Edge(service=service, options=options)
+    remote_url = kwargs.get("remote_url", None)
+    if remote_url:
+        driver = WebDriver(command_executor=remote_url, options=options)
+    else:
+        service = Service(edgedriver_path) if edgedriver_path else Service()
+        driver = Edge(service=service, options=options)
 
     # driver = Edge(
     #     util.get_rfw_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
