@@ -51,6 +51,8 @@ def open_browser(
     # parameters instead of opening new chrome session.
     # New Remote Web Driver is created in headless mode.
     edgedriver_path = util.get_rfw_variable_value("${EDGEDRIVER_PATH}") or executable_path
+    if edgedriver_path:
+        logger.debug(f"Edgedriver path: {edgedriver_path}")
     edge_path = kwargs.get("edge_path", None) or util.get_rfw_variable_value("${EDGE_PATH}")
     if edge_path:
         options.binary_location = edge_path  # pylint: disable=no-member
