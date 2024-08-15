@@ -104,8 +104,17 @@ def open_browser(
 
     if binary:
         options.binary_location = binary
-    service = Service(driver_path, log_path=log_path) if driver_path else Service(log_path=log_path)
-    driver = webdriver.Firefox(service=service, options=options)
+
+    remote_url = kwargs.get("remote_url", None)
+    if remote_url:
+        driver = WebDriver(command_executor=remote_url, options=options)
+    else:
+        service = (
+            Service(driver_path, log_path=log_path)
+            if driver_path
+            else Service(log_path=log_path)
+        )
+        driver = webdriver.Firefox(service=service, options=options)
     if os.name == "nt":  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)

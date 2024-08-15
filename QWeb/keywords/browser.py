@@ -123,6 +123,11 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     chrome    emulation=iPhone SE
         OpenBrowser    http://google.com     chrome    emulation=375x812
 
+        # Selenium Grid usage
+        OpenBrowser    http://google.com     chrome    remote_url=http://127.0.0.1:4444/wd/hub
+        OpenBrowser    http://google.com     safari    remote_url=http://127.0.0.1:4444/wd/hub
+        CloseAllBrowsers
+
     Selenium Manager
     ----------------
 
@@ -288,6 +293,8 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
             Existing device profile name (i.e. "iPhone SE", must exist)
             OR device dimensions in format:
             WIDTHxHEIGHT (i.e. 385x812)
+        remote_url:
+            URL of the Selenium Grid server.
 
     Raises
     ------
