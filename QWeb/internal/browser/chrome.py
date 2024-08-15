@@ -61,7 +61,6 @@ def open_browser(
     chrome_args : Optional arguments to modify browser settings
     """
     options = create_chrome_options(chrome_args, **kwargs)
-    logger.debug(f"opt: {options}")
     chromedriver_path = resolve_chromedriver_path(executable_path)
 
     browser_reuse, debugger_address, executor_url = check_browser_reuse(**kwargs)
@@ -127,7 +126,10 @@ def create_chrome_options(chrome_args: Optional[list[str]], **kwargs: Any) -> Op
 
 def resolve_chromedriver_path(executable_path: str) -> str:
     """Resolve the path to the ChromeDriver executable."""
-    return util.get_rfw_variable_value("${CHROMEDRIVER_PATH}") or executable_path
+    driver_path = util.get_rfw_variable_value("${CHROMEDRIVER_PATH}") or executable_path
+    if driver_path:
+        logger.debug(f"Chromedriver path: {driver_path}")
+    return driver_path
 
 
 def create_reused_browser(debugger_address: str) -> WebDriver:
