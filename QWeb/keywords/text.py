@@ -280,6 +280,8 @@ def verify_text_count(
     """
     expected_count = int(expected_count)
     kwargs["css"] = False
+    # make frame search continue and not stop on first frame with matching items
+    kwargs["continue_search"] = True
     try:
         webelements = internal_text.get_all_text_elements(text, **kwargs)
         element_count = len(webelements)
@@ -337,6 +339,8 @@ def get_text_count(text: str, timeout: Union[int, float, str] = 0, **kwargs) -> 
     \`GetElementCount\`, \`VerifyTextCount\`
     """
     kwargs["css"] = False
+    # make frame search continue and not stop on first frame with matching items
+    kwargs["continue_search"] = True
     web_elements = internal_text.get_all_text_elements(text, **kwargs)
     return len(web_elements)
 

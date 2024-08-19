@@ -154,3 +154,9 @@ Upload with xpath
     UploadFile                  //*[@id\='myFile3']         test2.txt
     ExecuteJavaScript           return document.querySelector('#myFile3').value         $value
     ShouldBeEqual               ${value}                    C:\fakepath\test2.txt
+
+GetTextCount and VerifyTextCount from multiple frames
+    [Tags]                      Frame    Upload
+    ${count}=                   GetTextCount    text
+    Should Be Equal As Numbers  ${count}        15
+    VerifyTextCount             Text            7
