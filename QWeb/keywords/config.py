@@ -120,6 +120,10 @@ def set_config(par: str, val: Any) -> Any:
     +---------------------+-----------------------------------------+----------------+
     | ShadowDOM_          | Extend element searches to shadow DOM.  |   False        |
     +---------------------+-----------------------------------------+----------------+
+    | StayInCurrentFrame_ | Only search from current frame, do not  |   False        |
+    |                     | automatically find elements from all    |                |
+    |                     | frames. Useful with \`UseFrame\`.       |                |
+    +---------------------+-----------------------------------------+----------------+
     | XHRTimeout_         | Maximum wait for page to be loaded      | 30s            |
     +---------------------+-----------------------------------------+----------------+
     | VerifyAppAccuracy_  | Threshold for needed similarity in      | 0.9999         |
@@ -475,6 +479,8 @@ def set_config(par: str, val: Any) -> Any:
     Default = True
     Use False only when there is need to use and move
     between frames and page manually for some reason.
+
+    Related setting: StayInCurrentFrame_
 
 
     Examples
@@ -992,6 +998,32 @@ def set_config(par: str, val: Any) -> Any:
         VerifyText      This is under shadow root
         ClickText       As is this
         SetConfig       ShadowDOM       False
+
+
+    .. _stayincurrentframe:
+
+    ----
+
+    Parameter: StayInCurrentFrame
+    -----------------------------
+
+    Disables default automatic frame traverse when searching elements.
+
+    Use True only when there is need to use a specific frame and
+    find elements from that specific frame only.
+
+    Default = False (Automatic frame traverse in on).
+
+    Related setting: DefaultDocument_
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        UseFrame               //iframe
+        SetConfig              StayInCurrentFrame   True
+        # Sets focus to first nested frame in current frame
+        UseFrame               //iframe
 
     ---
 
