@@ -218,6 +218,8 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if is_valid(web_element):
                 if not continue_search:
                     return web_element
+                if not isinstance(web_element, tuple):
+                    web_element = list(web_element)
                 # Accumulate elements if continuing search
                 all_elements.extend(web_element)
 
@@ -231,6 +233,8 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                         logger.debug(f"Found web element = {web_element}")
                         if not continue_search:
                             return web_element
+                        if not isinstance(web_element, tuple):
+                            web_element = list(web_element)
                         all_elements.extend(web_element)  # Accumulate elements if continuing search
 
                     try:
@@ -286,6 +290,8 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 if not continue_search:
                     return web_element
 
+                if not isinstance(web_element, tuple):
+                    web_element = list(web_element)
                 all_elements.extend(web_element)  # Accumulate elements if continuing search
 
             start = time.time()
@@ -301,6 +307,8 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                         logger.debug("Found web element = {}".format(web_element))
                         if not continue_search:
                             return web_element
+                        if not isinstance(web_element, tuple):
+                            web_element = list(web_element)
                         all_elements.extend(web_element)  # Accumulate elements if continuing search
 
                     try:
