@@ -318,10 +318,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 if err:
                     raise err
 
-                if continue_search:
-                    return all_elements
-
-                return web_element
+                return all_elements if continue_search else web_element
 
             driver.switch_to.default_content()
             raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
