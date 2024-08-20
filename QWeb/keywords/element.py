@@ -421,8 +421,8 @@ def get_webelement(
     locator: str,
     anchor: str = "1",
     element_type: Optional[str] = None,
-    all_frames: bool = True,
     timeout: Union[int, float, str] = 0,
+    all_frames: bool = True,
     **kwargs,
 ) -> Union[Select, Optional[WebElement], list[WebElement]]:
     # pylint: disable=too-many-branches
@@ -620,7 +620,7 @@ def get_attribute(
     ----------------
     \`VerifyAttribute\`, \`VerifyElement\`
     """
-    webelement = get_webelement(locator, anchor, element_type, timeout, **kwargs)
+    webelement = get_webelement(locator, anchor, element_type, timeout, all_frames=False, **kwargs)
 
     if not webelement:
         raise QWebElementNotFoundError(
