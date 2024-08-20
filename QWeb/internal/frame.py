@@ -185,6 +185,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
         # Default behavior is not to continue searching
         continue_search = kwargs.get("continue_search", False)
 
+        # pylint: disable=too-many-branches
         def search_from_frames(
             driver: Optional[WebDriver] = None, current_frame: Optional[WebElement] = None
         ) -> Callable[..., Any]:
@@ -202,7 +203,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if current_frame:
                 try:
                     driver.switch_to.frame(current_frame)
-                    logger.debug("Switching to child frame {}".format(str(fn)))
+                    logger.debug(f"Switching to child frame {str(fn)}")
                 except (StaleElementReferenceException, WebDriverException) as e:
                     logger.debug(str(e))
                     driver.switch_to.default_content()
@@ -217,8 +218,8 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             if is_valid(web_element):
                 if not continue_search:
                     return web_element
-
-                all_elements.extend(web_element)  # Accumulate elements if continuing search
+                # Accumulate elements if continuing search
+                all_elements.extend(web_element)
 
             start = time.time()
             timeout = CONFIG["FrameTimeout"]
@@ -239,7 +240,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                         raise e
 
                     config.set_config("FrameTimeout", float(timeout + start - time.time()))
-                    logger.trace("Frame timeout: {}".format(timeout))
+                    logger.trace(f"Frame timeout: {timeout}")
 
                 if err:
                     raise err
@@ -249,7 +250,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             driver.switch_to.default_content()
             raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
 
-        # pylint: disable=W0102
+        # pylint: disable=W0102, too-many-branches
         def search_from_frames_safari(
             driver: Optional[WebDriver] = None,
             current_frame: Union[Optional[WebElement], int] = None,
