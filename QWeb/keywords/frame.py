@@ -33,6 +33,9 @@ from QWeb.internal import browser, element, frame, javascript
 def use_frame(locator: str) -> None:
     """Make following keywords to use frame on a page.
 
+    Note: See SetConfig settings "DefaultDocument" and "StayInCurrentFrame", which
+    affect this keyword.
+
     Examples
     --------
     .. code-block:: robotframework

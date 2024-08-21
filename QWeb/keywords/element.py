@@ -422,6 +422,7 @@ def get_webelement(
     anchor: str = "1",
     element_type: Optional[str] = None,
     timeout: Union[int, float, str] = 0,
+    all_frames: bool = True,
     **kwargs,
 ) -> Union[Select, Optional[WebElement], list[WebElement]]:
     # pylint: disable=too-many-branches
@@ -437,6 +438,8 @@ def get_webelement(
         ${list of elems}    GetWebelement          click_me      tag=button
         ${list of elems}    GetWebelement          //*[@id\="click_me"]
         ${list of elems}    GetWebelement          xpath\=//*[@id\="click_me"]
+        # return elements only from the first frame with matching elements
+        ${list of elems}    GetWebelement          xpath\=//*[@id\="click_me"]   all_frames=False
 
     Get element using element_type attribute to locate element.
     Text elements works as ClickText, VerifyText, GetText etc.:
@@ -475,6 +478,11 @@ def get_webelement(
     element_type : string
         Define element type/preferred searching method
         (available types: text, input, checkbox, item, dropdown or css).
+    all_frames : bool
+        In cases where list is expected to be returned, traverse through all frames
+        (True) or stop on the first frame which contains matching elements (False).
+        Doesn't have any effect if there are no iframes or if element_type etc. are used.
+        Default=True.
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :
@@ -491,6 +499,7 @@ def get_webelement(
     elem_index = kwargs.get("index", None)
     kwargs["index"] = kwargs.get("index", 1)
     kwargs["timeout"] = timeout
+    kwargs["continue_search"] = all_frames
     if element_type:
         if element_type.lower() == "text":
             web_elements = text.get_element_by_locator_text(locator, anchor, **kwargs)
@@ -611,7 +620,7 @@ def get_attribute(
     ----------------
     \`VerifyAttribute\`, \`VerifyElement\`
     """
-    webelement = get_webelement(locator, anchor, element_type, timeout, **kwargs)
+    webelement = get_webelement(locator, anchor, element_type, timeout, all_frames=False, **kwargs)
 
     if not webelement:
         raise QWebElementNotFoundError(

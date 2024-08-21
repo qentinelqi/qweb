@@ -8,10 +8,12 @@ on:
     branches: [ master, main ]
     paths-ignore:
       - '**.md'
+      - 'docs/**'
   pull_request:
     branches: [ master, main ]
     paths-ignore:
       - '**.md'
+      - 'docs/**'
 
 jobs:
   StaticAnalysis:

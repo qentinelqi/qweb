@@ -175,38 +175,54 @@ def set_html_source_count(value: Union[int, str]):
 def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that takes any func as a parameter.
 
-    search_from_frames is recursive function which goes through
-    all found frames until we find our element if that's not in
-    main html's dom tree.
+    search_from_frames is a recursive function that goes through
+    all found frames until we find our element if it's not in
+    the main HTML's DOM tree.
     """
 
     @wraps(fn)
     def wrapped(*args, **kwargs) -> Callable[..., Any]:
+        # Default behavior is not to continue searching
+        continue_search = kwargs.get("continue_search", False)
+
+        # pylint: disable=too-many-branches
         def search_from_frames(
             driver: Optional[WebDriver] = None, current_frame: Optional[WebElement] = None
         ) -> Callable[..., Any]:
+            # Initialize the list to store found elements if continue_search is True
+            all_elements = []
             keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
             if keep_frame:
                 return fn(*args, **kwargs)
+
             err = None
             if not driver:
                 driver = browser.get_current_browser()
                 driver.switch_to.default_content()
+
             if current_frame:
                 try:
                     driver.switch_to.frame(current_frame)
-                    logger.debug("switching to childframe {}".format(str(fn)))
+                    logger.debug(f"Switching to child frame {str(fn)}")
                 except (StaleElementReferenceException, WebDriverException) as e:
                     logger.debug(str(e))
                     driver.switch_to.default_content()
                     raise e
+
             try:
                 web_element = fn(*args, **kwargs)
             except QWebElementNotFoundError as e:
                 err = e
                 web_element = None
+
             if is_valid(web_element):
-                return web_element
+                if not continue_search:
+                    return web_element
+                if not isinstance(web_element, tuple):
+                    web_element = list(web_element)
+                # Accumulate elements if continuing search
+                all_elements.extend(web_element)
+
             start = time.time()
             timeout = CONFIG["FrameTimeout"]
             while time.time() < timeout + start:
@@ -214,65 +230,88 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 for frame in frames:
                     web_element = search_from_frames(driver=driver, current_frame=frame)
                     if is_valid(web_element):
-                        logger.debug("Found webelement = {}".format(web_element))
-                        return web_element
+                        logger.debug(f"Found web element = {web_element}")
+                        if not continue_search:
+                            return web_element
+                        if not isinstance(web_element, tuple):
+                            web_element = list(web_element)
+                        all_elements.extend(web_element)  # Accumulate elements if continuing search
+
                     try:
                         driver.switch_to.parent_frame()
                     except WebDriverException as e:
                         driver.switch_to.default_content()
                         raise e
+
                     config.set_config("FrameTimeout", float(timeout + start - time.time()))
-                    logger.trace("Frame timeout: {}".format(timeout))
+                    logger.trace(f"Frame timeout: {timeout}")
+
                 if err:
                     raise err
-                return web_element
+
+                return all_elements if continue_search else web_element
+
             driver.switch_to.default_content()
             raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
 
-        # pylint: disable=W0102
+        # pylint: disable=W0102, too-many-branches
         def search_from_frames_safari(
             driver: Optional[WebDriver] = None,
             current_frame: Union[Optional[WebElement], int] = None,
             parent_tree: list[Union[WebElement, int]] = [],
-        ):
+        ) -> Callable[..., Any]:
+            # Initialize the list to store found elements if continue_search is True
+            all_elements = []
             keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
             if keep_frame:
                 return fn(*args, **kwargs)
+
             err = None
             if not driver:
                 driver = browser.get_current_browser()
                 driver.switch_to.default_content()
+
             if current_frame is not None:
                 try:
                     driver.switch_to.frame(current_frame)
-                    logger.debug("switching to childframe {}".format(str(fn)))
+                    logger.debug("Switching to child frame {}".format(str(fn)))
                 except (StaleElementReferenceException, WebDriverException) as e:
                     logger.debug(str(e))
                     driver.switch_to.default_content()
                     raise e
+
             try:
                 web_element = fn(*args, **kwargs)
             except QWebElementNotFoundError as e:
                 err = e
                 web_element = None
+
             if is_valid(web_element):
-                return web_element
+                if not continue_search:
+                    return web_element
+
+                if not isinstance(web_element, tuple):
+                    web_element = list(web_element)
+                all_elements.extend(web_element)  # Accumulate elements if continuing search
+
             start = time.time()
             timeout = CONFIG["FrameTimeout"]
             while time.time() < timeout + start:
                 frames = fc.check_frames(driver)
                 for count, frame in enumerate(frames):  # pylint: disable=W0612
                     parent_tree.append(count)
-                    # using count instead of frame reference due to Safari bug
                     web_element = search_from_frames_safari(
                         driver=driver, current_frame=count, parent_tree=parent_tree
                     )
                     if is_valid(web_element):
-                        logger.debug("Found webelement = {}".format(web_element))
-                        return web_element
+                        logger.debug("Found web element = {}".format(web_element))
+                        if not continue_search:
+                            return web_element
+                        if not isinstance(web_element, tuple):
+                            web_element = list(web_element)
+                        all_elements.extend(web_element)  # Accumulate elements if continuing search
+
                     try:
-                        # switch_to.parent_frame not working in Safari
-                        # doing moving to previuos frame "manually"
                         parent_tree.pop()
                         driver.switch_to.default_content()
                         for f in parent_tree:
@@ -280,15 +319,21 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                     except WebDriverException as e:
                         driver.switch_to.default_content()
                         raise e
+
                     config.set_config("FrameTimeout", float(timeout + start - time.time()))
                     logger.trace("Frame timeout: {}".format(timeout))
+
                 if err:
                     raise err
-                return web_element
+
+                return all_elements if continue_search else web_element
+
             driver.switch_to.default_content()
             raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
 
-        return search_from_frames_safari() if util.is_safari() else search_from_frames()
+        if util.is_safari():
+            return search_from_frames_safari()
+        return search_from_frames()
 
     logger.debug("wrapped = {}".format(wrapped))
     return wrapped
