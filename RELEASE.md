@@ -5,10 +5,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [3.4.0] - 2024-08-22
+### Added
+- Python 3.12 support
+   - Bumped scikit-image to a version supporting Python 3.12
+   - Modified local versioneer.py to support Python 3.12 (for editable installations)
+   - Added Python 3.12 to pipeline
+- Selenium grid / remote browser support (via **remote_url** argument)
+- New attribute **all_frames** to GetWebelement. In cases where we return a list of elements, controls if one wants to traverse all frames (True, default) or stop searching to first frame where matching elements are found (False).
 - Suppress "Choose search engine" dialog in Chrome
+  
+### Fixed
+- GetTextCount / VerifyTextCount did not traverse through all frames, but stop searching to the frame where first instance of text is found
+
+
+### Changed
+- Refactored OpenBrowser to reduce complexity
+- VerifyAttribute to internally provide the new argument needed by GetWebElement
 - Bumped scikit-image to a version supporting Python 3.12
 - Bumped pynput to version 1.7.7
-- Modified local versioneer.py to support Python 3.12 (for editable installations)
+- Bumped lowest allowed version of selenium, requests and setuptools due to security warnings
+- Documentation updates for frame related keywords and settings (UseFrame, DefaultDocument, StayInCurrentFrame)
+- Documentation updates to OpenBrowser on how to use QWeb with selenium grid
+
+
 
 ## [3.3.3] - 2024-06-28
 
