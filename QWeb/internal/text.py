@@ -106,7 +106,8 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
             logger.debug("Got no such frame from contains text")
     # find text directly from slots with supported parent elements
     slot_elements = get_slot_elements(text, partial)
-    xpath_elements = element.get_visible_elements_from_elements(slot_elements, **kwargs)
+    if slot_elements:
+        xpath_elements = element.get_visible_elements_from_elements(slot_elements, **kwargs)
     if xpath_elements:
         if web_elements is None:
             web_elements = []  # Initialize web_elements to an empty list if it's None
