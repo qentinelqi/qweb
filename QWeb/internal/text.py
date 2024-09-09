@@ -454,18 +454,30 @@ def get_slot_elements(locator: str,
         Optional[List[WebElement]]: List of clickable WebElement objects, or None if none found.
     """
     # slots with matching direct text with parent <a> are currently supported
+
+    # Escape quotes in locator if needed
+    #locator = util.escape_xpath_quotes(locator)
     if partial_match:
         xpath = (
-            "//a[descendant::slot[contains("
-            "normalize-space(translate(., '\u00a0', ' ')), "
-            f"'{locator}')]]"
+            '//a[descendant::slot[contains('
+            'normalize-space(translate(., "\u00a0", " ")), '
+            f'"{locator}")]]'
         )
     else:
-        xpath = f"//a[descendant::slot[normalize-space(translate(., '\u00a0', ' '))='{locator}']]"
+        xpath = f'//a[descendant::slot[normalize-space(translate(., "\u00a0", " "))="{locator}"]]'
+
+    # handle quotes
+    xpath = xpath.replace(f'"{locator}"', util.escape_xpath_quotes(locator))
 
     # Find slots with text and get/return their parent link
     driver = browser.get_current_browser()
-    xpath_elements = driver.find_elements(By.XPATH, xpath)
+
+    # if any other weird characters or combinations that might break xpath,
+    # return None instead of throwing an exception
+    try:
+        xpath_elements = driver.find_elements(By.XPATH, xpath)
+    except InvalidSelectorException:
+        return None
     return xpath_elements
 
 
