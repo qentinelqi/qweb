@@ -104,6 +104,13 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
             web_elements = _get_contains_text_element(text, **kwargs)
         except NoSuchFrameException:
             logger.debug("Got no such frame from contains text")
+    # find text directly from slots with supported parent elements
+    slot_elements = get_slot_elements(text, partial)
+    xpath_elements = element.get_visible_elements_from_elements(slot_elements, **kwargs)
+    if xpath_elements:
+        if web_elements is None:
+            web_elements = []  # Initialize web_elements to an empty list if it's None
+        web_elements = web_elements + xpath_elements
     shadow_dom = CONFIG["ShadowDOM"]
     if shadow_dom:
         shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
@@ -111,6 +118,7 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
         web_elements = util.remove_stale_elements(web_elements)  # type: ignore
         # remove duplicates
         web_elements = util.remove_duplicates_from_list(shadow_elements, web_elements)  # type: ignore # pylint: disable=C0301
+
     return web_elements
 
 
@@ -428,6 +436,38 @@ def _get_anchor_with_inner_text(
 
 
 @frame.all_frames
+def get_slot_elements(locator: str,
+                      partial_match: bool = False) -> Optional[list[WebElement]]:
+    """
+    Retrieve text from supported slot elements based on a locator string. Slots are by default
+    not visible (no offset), but some systems like Salesforce put texts directly in slots.
+    This function allows to retrieve these elements, if text is directly in a slot which is
+    a child element to a visible <a> element. The returned element is the parent element.
+
+    Args:
+        locator (str): The string to locate elements by.
+        partial_match (bool): Whether to use partial matching.
+
+    Returns:
+        Optional[List[WebElement]]: List of clickable WebElement objects, or None if none found.
+    """
+    # slots with matching direct text with parent <a> are currently supported
+    if partial_match:
+        xpath = (
+            "//a[descendant::slot[contains("
+            "normalize-space(translate(., '\u00a0', ' ')), "
+            f"'{locator}')]]"
+        )
+    else:
+        xpath = f"//a[descendant::slot[normalize-space(translate(., '\u00a0', ' '))='{locator}']]"
+
+    # Find slots with text and get/return their parent link
+    driver = browser.get_current_browser()
+    xpath_elements = driver.find_elements(By.XPATH, xpath)
+    return xpath_elements
+
+
+@frame.all_frames
 def get_clickable_elements(
     locator: str, shadow_dom: bool = False, **kwargs
 ) -> Optional[list[WebElement]]:
@@ -445,19 +485,9 @@ def get_clickable_elements(
     """
     partial = util.par2bool(kwargs.get("partial_match", False))
 
-    # find parent <a> from slots with direct text
-    if partial:
-        xpath = (
-            "//a[descendant::slot[contains("
-            "normalize-space(translate(., '\u00a0', ' ')), "
-            f"'{locator}')]]"
-        )
-    else:
-        xpath = f"//a[descendant::slot[normalize-space(translate(., '\u00a0', ' '))='{locator}']]"
+    # Find text directly in slots with supported parent elements
+    xpath_elements = get_slot_elements(locator, partial)
 
-    # Find slots with text and get their parent link
-    driver = browser.get_current_browser()
-    xpath_elements = driver.find_elements(By.XPATH, xpath)
     # Find normal elements via javascript
     if shadow_dom:
         js_elements = javascript.get_clickable_from_shadow_dom(locator, partial)
