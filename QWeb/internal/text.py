@@ -435,7 +435,6 @@ def _get_anchor_with_inner_text(
     return None
 
 
-@frame.all_frames
 def get_slot_elements(locator: str,
                       partial_match: bool = False) -> Optional[list[WebElement]]:
     """
