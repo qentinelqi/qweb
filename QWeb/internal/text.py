@@ -94,6 +94,7 @@ def find_text(text: str) -> bool:
 
 def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
     web_elements: Optional[list[WebElement]]
+    xpath_elements: Optional[list[WebElement]]
     try:
         web_elements = _get_exact_text_element(text, **kwargs)
     except NoSuchFrameException:
@@ -105,9 +106,10 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
         except NoSuchFrameException:
             logger.debug("Got no such frame from contains text")
     # find text directly from slots with supported parent elements
+    xpath_elements = None
     slot_elements = get_slot_elements(text, partial)
     if slot_elements:
-        xpath_elements = element.get_visible_elements_from_elements(slot_elements, **kwargs)
+        xpath_elements = element.get_visible_elements_from_elements(slot_elements, **kwargs) or None
     if xpath_elements:
         if web_elements is None:
             web_elements = []  # Initialize web_elements to an empty list if it's None
