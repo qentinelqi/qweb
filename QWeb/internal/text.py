@@ -454,9 +454,6 @@ def get_slot_elements(locator: str,
         Optional[List[WebElement]]: List of clickable WebElement objects, or None if none found.
     """
     # slots with matching direct text with parent <a> are currently supported
-
-    # Escape quotes in locator if needed
-    #locator = util.escape_xpath_quotes(locator)
     if partial_match:
         xpath = (
             '//a[descendant::slot[contains('
