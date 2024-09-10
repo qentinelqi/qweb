@@ -171,10 +171,9 @@ jobs:
       id: acceptance-tests
       if: matrix.browser != 'safari'
       continue-on-error: true
-      timeout-minutes: 20
+      timeout-minutes: 30
       run: >
-        python -m pabot.pabot
-        --ordering test/acceptance/.pabot_order
+        python -m robot
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
         -e jailed
@@ -191,10 +190,9 @@ jobs:
     - name: Rerun failed acceptance tests
       if: steps.acceptance-tests.outcome == 'failure'
       continue-on-error: true
-      timeout-minutes: 20
+      timeout-minutes: 30
       run: >
-        python -m pabot.pabot
-        --ordering test/acceptance/.pabot_order
+        python -m robot
         --rerunfailedsuites result/output.xml
         -o rerun.xml
         ${{ inputs.additional-rfw-parameters }}
