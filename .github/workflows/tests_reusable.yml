@@ -180,7 +180,7 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -v BROWSER_VERSION:128.0.6613.119
+        -v BROWSER_VERSION:129
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
@@ -201,7 +201,7 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -v BROWSER_VERSION:128.0.6613.119
+        -v BROWSER_VERSION:129
         -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
