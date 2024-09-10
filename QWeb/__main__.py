@@ -26,9 +26,9 @@ def cli() -> None:
         usage="python %(prog)s [options] INPUT"
         "\n\nEXAMPLES:\n"
         "%(prog)s --all (lists all keywords)\n"
-        '%(prog)s --list Get (lists all keywords startin with "Get")\n'
+        '%(prog)s --list Get (lists all keywords starting with "Get")\n'
         '%(prog)s --show TypeText (displays documentation for keyword "TypeText")',
-        description="Note: This module is meant to be used as a robot famework library."
+        description="Note: This module is meant to be used as a robot framework library."
         "Command line interface only provides access to keyword documentation.",
     )
     parser.add_argument(
