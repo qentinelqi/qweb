@@ -384,6 +384,9 @@ class QIcon:
                         cv2.imwrite("temp_matched_area.png", image)
                     break
 
+        # No match found, set to a default scale ratio
+        if best_highest_max_val == 0.0:
+            best_scale_ratio = 1.00
         print("*DEBUG* Ready to return points:")
         print(
             f"*DEBUG* Best match location: {best_highest_max_val_loc}, "
