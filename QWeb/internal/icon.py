@@ -275,6 +275,7 @@ class QIcon:
         print("*DEBUG {}".format(points))
         return points
 
+    # pylint: disable=too-many-branches, too-many-statements
     def image_location(
         self,
         needle: str,
