@@ -93,8 +93,9 @@ def find_text(text: str) -> bool:
 
 
 def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
-    web_elements: Optional[list[WebElement]]
+    web_elements: Optional[list[WebElement]] = None
     xpath_elements: Optional[list[WebElement]] = None
+    slot_elements: Optional[list[WebElement]] = None
     try:
         web_elements = _get_exact_text_element(text, **kwargs)
     except NoSuchFrameException:
