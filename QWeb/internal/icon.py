@@ -101,7 +101,7 @@ class QIcon:
         image_obj = Image as uint8 NumPy array in RGB color space.
         level = Image pyramid size - how many times the image is up- and downsampled.
         """
-        logger.info("*INFO* Start _get_image_pyramid")
+        logger.info("Start _get_image_pyramid")
         image_levels = []
         if level == 0:
             image_levels.append((image_obj, 1.0))
@@ -118,7 +118,7 @@ class QIcon:
                 # scales.append(1.0 + 0.03 * i)
             # scales.append(1.0)
             # scales.sort()
-            logger.debug(f"*DEBUG* Scales: {scales}")
+            logger.debug(f"Scales: {scales}")
             for scale in scales:
                 if scale <= 0:
                     continue
@@ -178,8 +178,8 @@ class QIcon:
         width, height = self._get_image_size(template)
         img_width, img_height = self._get_image_size(image_obj)
 
-        logger.debug(f"*DEBUG* source haystack (image_obj) image size: {img_width}x{img_height}")
-        logger.debug(f"*DEBUG* original needle (template) image size: {width}x{height}")
+        logger.debug(f"source haystack (image_obj) image size: {img_width}x{img_height}")
+        logger.debug(f"original needle (template) image size: {width}x{height}")
 
         if height > img_height or width > img_width:
             raise ValueError(
@@ -188,7 +188,7 @@ class QIcon:
                     width, height, img_width, img_height
                 )
             )
-        logger.debug("*DEBUG* Resampling by 16 levels for needle, 0 levels for haystack")
+        logger.debug("Resampling by 16 levels for needle, 0 levels for haystack")
 
         # temp = image_obj
         # image_obj = template
@@ -207,13 +207,13 @@ class QIcon:
         best_scale = 0.0
         best_matched_image: ndarray  # = None
 
-        logger.debug(f"*DEBUG* Different resamplings used: {str(len(template_levels))} ")
+        logger.debug(f"Different resamplings used: {str(len(template_levels))} ")
 
         MEAS.start("WHOLE TEMPLATE MATCHING AND POINT EXTRACTION TIME")
         for template_level in template_levels:
             w, h = self._get_image_size(template_level[0])
             logger.debug(
-                f"*DEBUG* Resampled needle (template_level) with scale {template_level[1]},"
+                f"Resampled needle (template_level) with scale {template_level[1]},"
                 "image size: {w}x{h}"
             )
             MEAS.start("CV2.MATCHTEMPLATE TIME")
@@ -239,14 +239,14 @@ class QIcon:
             points.sort(key=lambda coord: (coord[1], coord[0]))
         else:
             logger.info(
-                "*INFO* Template image not found. "
+                "Template image not found. "
                 f"Closest match threshold value {best_highest_max_val} found at "
                 f"{best_highest_max_val_loc[0]}, {best_highest_max_val_loc[1]}. "
                 f"Threshold used: {threshold}"
             )
 
         logger.info(
-            f"*INFO* Closest match threshold value {best_highest_max_val} "
+            f"Closest match threshold value {best_highest_max_val} "
             f"found at {best_highest_max_val_loc[0]}, {best_highest_max_val_loc[1]}.\n"
             f"Threshold used: {threshold}\n"
             f"Scale with best result: {best_scale}"
@@ -281,7 +281,7 @@ class QIcon:
         Draw function will plot red lines where needle image is found.
         """
 
-        logger.info("*INFO* _image_location Starts")
+        logger.info("_image_location Starts")
 
         image = cv2.imread(haystack)
         image_haystack = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if grayscale else image
@@ -302,18 +302,18 @@ class QIcon:
         height, width = template.shape[:2]
 
         scale_ratios = self._get_scale_ratios(template_res_w, device_res_w)
-        logger.debug(f"*DEBUG* Scale ratios to be used in order: {scale_ratios}")
+        logger.debug(f"Scale ratios to be used in order: {scale_ratios}")
 
         best_highest_max_val = 0.0
         best_highest_max_val_loc = (-1, -1)
         best_scale_ratio: float  # = None
         best_matched_image: ndarray  # = None
 
-        logger.debug("*DEBUG* Resampling loop Starts")
+        logger.debug("Resampling loop Starts")
         for scale_ratio in scale_ratios:
             interpolation_method = cv2.INTER_LINEAR if scale_ratio > 1.0 else cv2.INTER_AREA
 
-            logger.debug(f"*DEBUG* resize starts: for scale {scale_ratio}")
+            logger.debug(f"resize starts: for scale {scale_ratio}")
 
             if math.isclose(scale_ratio, 1.0, rel_tol=0.03):
                 scaled_img_template = template
@@ -325,7 +325,7 @@ class QIcon:
                     fy=scale_ratio,
                     interpolation=interpolation_method,
                 )
-            logger.debug("*DEBUG* matchTemplate Starts:")
+            logger.debug("matchTemplate Starts:")
 
             res = cv2.matchTemplate(image_haystack, scaled_img_template, cv2.TM_CCOEFF_NORMED)
 
@@ -336,7 +336,7 @@ class QIcon:
             elif ratio < 1.1:
                 ratio = 1.0
 
-            logger.debug("*DEBUG* _extract_points Starts:")
+            logger.debug("_extract_points Starts:")
             (
                 _current_points,
                 highest_max_val,
@@ -352,7 +352,7 @@ class QIcon:
                 best_scale_ratio = scale_ratio
                 best_matched_image = scaled_img_template
                 logger.debug(
-                    f"*DEBUG* Current best match location: {best_highest_max_val_loc},\n"
+                    f"Current best match location: {best_highest_max_val_loc},\n"
                     f"max_value: {best_highest_max_val},\n"
                     f"scale_ratio: {best_scale_ratio}"
                 )
@@ -376,11 +376,11 @@ class QIcon:
         if best_highest_max_val == 0.0:
             best_scale_ratio = 1.00
             best_matched_image = template
-            logger.debug("*DEBUG* No matching found, returning original image")
+            logger.debug("No matching found, returning original image")
 
-        logger.debug("*DEBUG* Ready to return points:")
+        logger.debug("Ready to return points:")
         logger.debug(
-            f"*DEBUG* Best match location: {best_highest_max_val_loc}, "
+            f"Best match location: {best_highest_max_val_loc}, "
             f"best correlation value: {best_highest_max_val}, best scale ratio: {best_scale_ratio}"
         )
         self._log_matched_image(
@@ -448,7 +448,7 @@ class QIcon:
                 break
 
         logger.debug(
-            f"*DEBUG* Extracted points.\nCoordinate ratio was {coordinate_ratio}"
+            f"Extracted points.\nCoordinate ratio was {coordinate_ratio}"
             f"\nHighest max value was {highest_max_val}"
             f"\nHighest max value location was {highest_max_val_loc}"
             f"\nAll points: {points}"
