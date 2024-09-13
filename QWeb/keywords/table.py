@@ -131,6 +131,9 @@ def verify_table(
     **NOTE:** Index based search omits column headers (*<thead>*). Text based search
     (marked with "/") does not.
 
+    **NOTE2:** Since "/" is used as a separator in coordinate format, locator inside textual search
+    coordinates can't contain character "/". Use partial text in locator instead.
+
     Examples
     --------
     .. code-block:: robotframework
@@ -219,6 +222,9 @@ def get_cell_text(
     **NOTE:** Index based search omits column headers (*<thead>*). Text based search
     (marked with "/") does not.
 
+    **NOTE2:** Since "/" is used as a separator in coordinate format, locator inside textual search
+    coordinates can't contain character "/". Use partial text in locator instead.
+
     Examples
     --------
     .. code-block:: robotframework
@@ -304,6 +310,9 @@ def click_cell(
 
     **NOTE:** Index based search omits column headers (*<thead>*). Text based search
     (marked with "/") does not.
+
+    **NOTE2:** Since "/" is used as a separator in coordinate format, locator inside textual search
+    coordinates can't contain character "/". Use partial text in locator instead.
 
     Examples
     --------

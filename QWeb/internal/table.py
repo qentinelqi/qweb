@@ -166,7 +166,7 @@ class Table:
         column: Optional[int]
         row_elem = None
         cell = None
-        locator = coordinates.rsplit("/", 1)
+        locator = coordinates.split("/")
         if locator[0].startswith("r?"):
             row_elem = self.get_row(locator[0][2:], anchor)
             # take last row as "row" if row_elem is not None
