@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.1] - 2024-09-14
+### Added
+- Consider texts directly in `<slot>` visible in VerifyText too if they have a visible `<a>` parent.
+  - We already had this for ClickText. Now both ClickText and VerifyText behave the same way
+  - This change allows finding texts directly in slot (`<a><slot>Something</slot></a>`) withouth changing visibility settings.
+
+### Fixed
+- Fixed issue with Icon* keywords where variables could have been left uninitialized in certain cases
+- Refactored icon.py: removed all old print statements and replaced them with robot logger
+
+### Changed
+- Updated table keyword documentation. "/" in coordinate format (text search) is not supported.
 
 ## [3.4.0] - 2024-08-22
 ### Added
