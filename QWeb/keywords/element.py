@@ -24,6 +24,7 @@ from selenium.webdriver.support.select import Select
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
 from QWeb.internal import element, decorators, actions, text, input_, dropdown, checkbox
+from QWeb.internal.config_defaults import CONFIG
 
 
 @keyword(tags=["Interaction"])
@@ -351,6 +352,8 @@ def verify_element(xpath: str, timeout: Union[int, float, str] = 0, **kwargs) ->
     else:
         web_elements = element.get_webelements(xpath, **kwargs)
     if web_elements:
+        if CONFIG["SearchMode"]:
+            element.draw_borders(web_elements)
         return
     raise QWebElementNotFoundError("No matching element found")
 
