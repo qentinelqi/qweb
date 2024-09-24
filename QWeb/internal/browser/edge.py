@@ -64,6 +64,7 @@ def open_browser(
         options.browser_version = edge_version
 
     if user.is_root() or user.is_docker():
+        logger.info(f"***** no-sandbox: ({user.is_root()}) {user.is_docker()}*****")
         options.add_argument("no-sandbox")  # pylint: disable=no-member
     if edge_args:
         if any("--headless" in _.lower() for _ in edge_args):
