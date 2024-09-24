@@ -26,6 +26,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import (
     NoSuchWindowException,
+    NoSuchFrameException,
     StaleElementReferenceException,
     UnexpectedAlertPresentException,
     WebDriverException,
@@ -204,7 +205,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 try:
                     driver.switch_to.frame(current_frame)
                     logger.debug(f"Switching to child frame {str(fn)}")
-                except (StaleElementReferenceException, WebDriverException) as e:
+                except (StaleElementReferenceException, NoSuchFrameException, WebDriverException) as e:
                     logger.debug(str(e))
                     driver.switch_to.default_content()
                     raise e
