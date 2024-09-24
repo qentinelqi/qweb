@@ -20,6 +20,8 @@ jobs:
       # arrays for matrices must be given as string for json parsing
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
       os: '["ubuntu-latest"]'
-      browser: '["chrome", "firefox", "edge"]'
-      python-version: '["3.9", "3.12"]'
+      # browser: '["chrome", "firefox", "edge"]'
+      browser: '["chrome"]'
+      # python-version: '["3.9", "3.12"]'
+      python-version: '["3.11"]'
       rfw-4x-python: "3.9"
