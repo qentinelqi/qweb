@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for frame keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 ${BASE_URI}/frame.html                ${BROWSER}    --headless
+Suite Setup                     OpenBrowser                 ${BASE_URI}/frame.html                ${BROWSER}    #--headless
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 
@@ -33,6 +33,7 @@ Back & Forward
     ${url}=                     GetUrl
     Should Be Equal             ${url}                      about:blank
     Back
+    RefreshPage
 
 Use Frame And Use Page
     [Tags]                      Frame
