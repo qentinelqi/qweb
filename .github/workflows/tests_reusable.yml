@@ -180,6 +180,8 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
+        -s Frame
+        -L DEBUG
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
@@ -200,6 +202,8 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
+        -s Frame
+        -L DEBUG
         -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
