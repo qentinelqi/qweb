@@ -21,7 +21,7 @@ jobs:
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
       os: '["macos-latest"]'
       # browser: '["chrome", "edge", "safari"]'
-      browser: '["edge]'
+      browser: '["edge"]'
       # python-version: '["3.10", "3.11"]'
       python-version: '["3.10"]'
       rfw-4x-python: "3.10"
