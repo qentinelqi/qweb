@@ -66,7 +66,7 @@ def click_element(
     ----------
     xpath : str | selenium.webdriver.remote.webelement.WebElement
         Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
-        with a "\".
+        with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     timeout : int
         How long we wait before failing.
@@ -124,7 +124,7 @@ def right_click(
     ----------
     xpath : str
         Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
-        with a "\".
+        with a "\\".
     timeout : int
         How long we wait before failing.
     index : int
@@ -171,7 +171,7 @@ def hover_element(
     ----------
     xpath : str | selenium.webdriver.remote.webelement.WebElement
         Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
-        with a "\".
+        with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     timeout : int
         How long we wait before failing.
@@ -230,7 +230,7 @@ def get_element_count(
     ----------
     locator : str
         Xpath or some attribute value of element. When using XPaths, the equal sign "=" must be
-        escaped with a "\".
+        escaped with a "\\".
     timeout : str | int
         How long we try to find text before failing. Default 10 (seconds)
     Accepted kwargs:

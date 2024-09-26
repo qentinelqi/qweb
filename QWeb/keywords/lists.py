@@ -72,7 +72,7 @@ def use_list(
         xpath can be used to locate correct list. If wanted list is multiple amount
         of whatever web elements with some common attribute, xpath can be used
         to select those elements. When using XPaths, the equal sign "=" must be
-        escaped with a "\".
+        escaped with a "\\".
     anchor : str
         Index number or text near the locator element.
         If the page contains many places where the locator is then anchor is used
