@@ -33,6 +33,7 @@ Back & Forward
     ${url}=                     GetUrl
     Should Be Equal             ${url}                      about:blank
     Back
+    RefreshPage
 
 Use Frame And Use Page
     [Tags]                      Frame
