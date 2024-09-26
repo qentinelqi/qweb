@@ -171,16 +171,16 @@ jobs:
       id: acceptance-tests
       if: matrix.browser != 'safari'
       continue-on-error: true
-      timeout-minutes: 30
+      timeout-minutes: 20
       run: >
-        python -m robot
+        python -m pabot.pabot
+        --ordering test/acceptance/.pabot_order
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -v BROWSER_VERSION:127
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
@@ -190,9 +190,10 @@ jobs:
     - name: Rerun failed acceptance tests
       if: steps.acceptance-tests.outcome == 'failure'
       continue-on-error: true
-      timeout-minutes: 30
+      timeout-minutes: 20
       run: >
-        python -m robot
+        python -m pabot.pabot
+        --ordering test/acceptance/.pabot_order
         --rerunfailedsuites result/output.xml
         -o rerun.xml
         ${{ inputs.additional-rfw-parameters }}
@@ -201,7 +202,6 @@ jobs:
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
-        -v BROWSER_VERSION:127
         -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
         -b debug.txt
