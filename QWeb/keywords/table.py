@@ -106,6 +106,8 @@ def verify_table(
 ) -> None:
     r"""Verify text in table coordinates.
 
+    A table must be focused with **UseTable** keyword before using this keyword.
+
     Reads cell value from **coordinates** in active table and verifies it
     against expected value.
 
@@ -137,6 +139,9 @@ def verify_table(
     Examples
     --------
     .. code-block:: robotframework
+
+         # Activate table
+         UseTable              MyTable
 
          # Verify that row 2 column 3 contains "jane.doe@example.com"
          # Header row is omitted
@@ -200,6 +205,8 @@ def get_cell_text(
 ) -> Union[str, int, float]:
     r"""Get cell text to variable.
 
+    A table must be focused with **UseTable** keyword before using this keyword.
+
     Locates cell by coordinates from active table and return value.
 
     **Coordinate format**:
@@ -229,6 +236,7 @@ def get_cell_text(
     --------
     .. code-block:: robotframework
 
+        UseTable    MyTable
         ${value}    GetCellText  r2c3
         ${value}    GetCellText  r-2c5       #Row is second to last. Get value from cell c5
         ${value}    GetCellText  r?Robot/c5  #Row contains text Robot. Get value from cell c5
@@ -287,6 +295,9 @@ def click_cell(
     r"""Click table cell.
 
     Locates cell by coordinates or text from active table and clicks it.
+
+    A table must be focused with **UseTable** keyword before using this keyword.
+
     Note that by default click is sent to the cell element itself, so if you want
     to specify which child element is clicked, add tag argument.
 
@@ -318,6 +329,7 @@ def click_cell(
     --------
     .. code-block:: robotframework
 
+       UseTable     MyTable
        ClickCell    r2c3
        ClickCell    r-1c-1                  #Last row, last cell
        ClickCell    r?SomeText/c3           #Click cell 3 in row that contains text SomeText
@@ -378,6 +390,8 @@ def get_table_row(
 ) -> Union[WebElement, int]:
     r"""Get row (index) from current table.
 
+    A table must be focused with **UseTable** keyword before using this keyword.
+
     Get table row number by some visible text or value. Returned value is index of row
     including first header row, unless argument **skip_header=True** is used.
 
@@ -385,6 +399,7 @@ def get_table_row(
     --------
     .. code-block:: robotframework
 
+       UseTable     MyTable
        ${row}       GetTableRow     //last          #returns table length(last row)
        ${row}       GetTableRow     Qentinel        #return first row which contain text Qentinel
        ${row}       GetTableRow     Qentinel    2     #second row with text Qentinel
@@ -421,6 +436,8 @@ def get_table_row(
 def get_col_header_count() -> int:
     r"""Get Count of column headers in current active table.
 
+    A table must be focused with **UseTable** keyword before using this keyword.
+
     Note: only visible columns may be counted in some dynamic tables.
 
     Examples
@@ -448,6 +465,8 @@ def get_col_header_count() -> int:
 @keyword(tags=("Tables", "Getters"))
 def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
     r"""Get column header names/text as a list.
+
+    A table must be focused with **UseTable** keyword before using this keyword.
 
     Note: only visible columns may be counted in some dynamic tables.
 
@@ -511,6 +530,8 @@ def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
 @keyword(tags=("Tables", "Verification"))
 def verify_col_header(expected: str, index: Optional[int] = None, **kwargs) -> bool:
     r"""Verifies that a column header with given index matches the expected text.
+
+    A table must be focused with **UseTable** keyword before using this keyword.
 
     Note: only visible columns may be counted in some dynamic tables.
 
