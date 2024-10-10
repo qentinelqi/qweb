@@ -623,6 +623,9 @@ def get_attribute(
     ----------------
     \`VerifyAttribute\`, \`VerifyElement\`
     """
+    # remove all_frames from kwargs if given. It's not supported by
+    # GetAttribute, but would give error later
+    kwargs.pop("all_frames", None)
     webelement = get_webelement(locator, anchor, element_type, timeout, all_frames=False, **kwargs)
 
     if not webelement:
