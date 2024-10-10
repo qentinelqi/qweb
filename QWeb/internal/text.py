@@ -408,6 +408,8 @@ def _get_item_by_css(text: str, **kwargs) -> Optional[list[WebElement]]:
         "a, span, img, li, h1, h2, h3, h4, h5, h6, div, svg, p, button, input"
         ':not([type="text"]):not([type="password"]):not([type="email"])'
     )
+    # get_elements_by_attributes already handles going through frames
+    kwargs["continue_search"] = False
     full, partial = element.get_elements_by_attributes(css, text, **kwargs)
     web_elements = element.get_visible_elements_from_elements(full + partial, **kwargs)
     if web_elements:
