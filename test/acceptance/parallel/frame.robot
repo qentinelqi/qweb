@@ -157,13 +157,13 @@ Upload with xpath
     ShouldBeEqual               ${value}                    C:\fakepath\test2.txt
 
 GetTextCount and VerifyTextCount from multiple frames
-    [Tags]                      Frame    Upload
+    [Tags]                      Frame
     ${count}=                   GetTextCount    text
     Should Be Equal As Numbers  ${count}        15
     VerifyTextCount             Text            7
     
 GetWebelement from multiple frames
-    [Tags]                      Frame    Upload
+    [Tags]                      Frame
     ${elems}=                   GetWebElement    //button    all_frames=False
     ${count_one_frame}=         Evaluate         len($elems)
     ${elems}=                   GetWebElement    //button
@@ -171,3 +171,21 @@ GetWebelement from multiple frames
     Should Be Equal As Numbers  ${count_one_frame}         1
     Should Be Equal As Numbers  ${count_all_frames}        7
 
+
+GetWebelement & GetAttribute from multiple frames with element type
+    [Tags]                      Frame    Get
+    # Without all_frames
+    ${elem1}=                    GetWebElement    Blue     element_type=item    tag=input
+    ${attr1}=                    GetAttribute     Blue     id    element_type=item    tag=input
+    ${elem2}=                    GetWebElement    Button1  element_type=text
+    ${attr2}=                    GetAttribute     skimClick disable button  id    element_type=text
+    ShouldBeEqual                ${attr1}         ch_1_1
+    ShouldBeEqual                ${attr2}         skimclick
+    
+    # With all_frames, note that all_frames is not even supported in GetAttribute
+    ${elem1}=                    GetWebElement    Blue     element_type=item    tag=input    all_frames=True
+    ${attr1}=                    GetAttribute     Blue     id    element_type=item    tag=input      all_frames=True
+    ${elem2}=                    GetWebElement    Button1  element_type=text    all_frames=True
+    ${attr2}=                    GetAttribute     skimClick disable button  id    element_type=text  all_frames=True
+    ShouldBeEqual                ${attr1}         ch_1_1
+    ShouldBeEqual                ${attr2}         skimclick
