@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional, Callable, Any, Union
+from typing import Optional, Callable, Any, Union, List
 import os
 import time
 from functools import wraps
@@ -181,14 +181,14 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
     """
 
     @wraps(fn)
-    def wrapped(*args, **kwargs) -> Callable[..., Any]:
+    def wrapped(*args, **kwargs) -> Union[Callable[..., Any], List[Any], Any]:
         # Default behavior is not to continue searching
         continue_search = kwargs.get("continue_search", False)
 
         # pylint: disable=too-many-branches
         def search_from_frames(
             driver: Optional[WebDriver] = None, current_frame: Optional[WebElement] = None
-        ) -> Callable[..., Any]:
+        ) -> Union[List[Any], Any]:
             # Initialize the list to store found elements if continue_search is True
             all_elements = []
             keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
@@ -259,7 +259,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             driver: Optional[WebDriver] = None,
             current_frame: Union[Optional[WebElement], int] = None,
             parent_tree: list[Union[WebElement, int]] = [],
-        ) -> Callable[..., Any]:
+        ) -> Union[List[Any], Any]:
             # Initialize the list to store found elements if continue_search is True
             all_elements = []
             keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
