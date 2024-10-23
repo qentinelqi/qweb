@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.2] - 2024-10-23
+
+### Added
+- VerifyElement will highlight found elements too as requested
+- Added tests to GetWebelement where all_frames is on and page has multiple frames
+- Added check to GetAttribute to avoid errors in case unsupported kwarg "all_frames" is given.
+
+### Fixed
+- Typing errors with latest mypy in frame.py
+
+### Changed
+- Removed Python 3.8 from readme and setup.py as it's now in EOL'd. 
+  - Python 3.8 will still work, but it's not tested. Time to upgrade.
+- Documentation updates:
+  - Mention that UseTable needs to be used before other table keywords
+  - Fix all "\" character escaping issues in generated kw documentation
+
+
 ## [3.4.1] - 2024-09-14
 ### Added
 - Consider texts directly in `<slot>` visible in VerifyText too if they have a visible `<a>` parent.
