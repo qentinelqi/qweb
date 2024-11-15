@@ -642,22 +642,26 @@ def get_elements_by_attributes(
     if "tag" in kwargs:
         css = str(kwargs.get("tag"))
     try:
-        elements = javascript.get_all_elements(css)
-        if any_element:
-            return elements
-        matches = javascript.get_by_attributes(
-            elements,
-            locator.replace("'", "\\'"),  # type: ignore[union-attr]
-            partial,
-        )
+        xpath_search = css.startswith("xpath=") or css.startswith("//")
+        if not xpath_search:
+            elements = javascript.get_all_elements(css)
+            if any_element:
+                return elements
+            matches = javascript.get_by_attributes(
+                elements,
+                locator.replace("'", "\\'"),  # type: ignore[union-attr]
+                partial,
+            )
+        else:
+            matches = {"full": [], "partial": []}
 
-        # try with xpath if no matches
-        # there have been few where css search doesn't work
-        # this is supported only if tag argument is given
+        # try with xpath if no matches and tag is givenor if css contains xpath
+        # there have been few cases where css search doesn't work
         if len(matches.get("full", [])) == 0 and len(matches.get("partial", [])) == 0:
             try:
+                css = css if xpath_search else f"//{css}"
                 driver = browser.get_current_browser()
-                elements = driver.find_elements(By.XPATH, f"//{css}")
+                elements = driver.find_elements(By.XPATH, css)
 
                 matches = javascript.get_by_attributes(
                     elements,
