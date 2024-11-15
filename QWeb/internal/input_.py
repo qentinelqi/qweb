@@ -186,7 +186,6 @@ def get_input_element_by_css_selector(
         full_matches, partial_matches = get_input_elements_by_css(locator, **kwargs)
         # backup search via xpath. This is needed due to javascript search not reaching
         # all inputs under pseudo elements
-        # TODO: Finalize
         if not full_matches and not partial_matches:
             css = CONFIG["AllInputElements"]
             full_matches, partial_matches = element.get_elements_by_attributes(css, locator)
