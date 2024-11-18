@@ -158,6 +158,6 @@ def cache_browser_session(driver: WebDriver) -> None:
     )
     if browser_reuse_enabled:
         dbg_address = driver.capabilities["goog:chromeOptions"]["debuggerAddress"]
-        write_browser_session_argsfile(dbg_address, driver.command_executor._url)  # type: ignore # pylint: disable=protected-access
+        write_browser_session_argsfile(dbg_address, driver.service.service_url)  # type: ignore # pylint: disable=protected-access
         BuiltIn().set_global_variable("${BROWSER_EXECUTOR_URL}", None)
         BuiltIn().set_global_variable("${BROWSER_DEBUGGER_ADDRESS}", None)
