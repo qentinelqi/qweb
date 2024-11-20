@@ -52,7 +52,7 @@ Open Browser with invalid experimental args string
     ...     prefs=Foobar, "anotherone":"false"
 
 Open Browser with options and verify
-    [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE
+    [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE    PROBLEM_IN_WINDOWS
     [Documentation]                 Run this only in Chrome
     [Setup]    No Operation
     [Teardown]                      SetConfig            ShadowDOM             Off

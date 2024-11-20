@@ -313,7 +313,7 @@ def chromium_full_screenshot(driver: WebDriver, filepath: str) -> str:
         resource = f"/session/{driver.session_id}/chromium/send_command_and_get_result"
 
         # pylint:disable=W0212
-        url = driver.command_executor._url + resource
+        url = driver.service.service_url + resource
         body = json.dumps({"cmd": cmd, "params": params})
         response = driver.command_executor._request("POST", url, body)
         return response.get("value")

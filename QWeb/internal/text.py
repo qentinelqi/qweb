@@ -361,7 +361,7 @@ def get_item_using_anchor(text: str, anchor: str, **kwargs) -> Optional[WebEleme
         '@tooltip="{0}" or @aria-label="{0}" or @data-icon="{0}"]'.format(text)
     )
     if CONFIG["CssSelectors"]:
-        web_elements = _get_item_by_css(text, **kwargs)
+        web_elements = _get_item_by_css(text, **kwargs) or _get_item_by_xpath(text, **kwargs)
     else:
         web_elements = element.get_webelements(xpath, **kwargs)
     # extend search to Shadow DOM
@@ -411,6 +411,34 @@ def _get_item_by_css(text: str, **kwargs) -> Optional[list[WebElement]]:
     # get_elements_by_attributes already handles going through frames
     kwargs["continue_search"] = False
     full, partial = element.get_elements_by_attributes(css, text, **kwargs)
+    web_elements = element.get_visible_elements_from_elements(full + partial, **kwargs)
+    if web_elements:
+        return web_elements
+    return None
+
+
+def _get_item_by_xpath(text: str, **kwargs) -> Optional[list[WebElement]]:
+    """
+    Backup search for finding items by attribute via xpath.
+    Needed in cases where there a slots that can't be pierced through
+    with javascript.
+
+    Allows partial match. Anchor has to be number.
+    :param text: str
+        Attribute value of the element
+    :return:
+        webelement that containing attribute with given value
+    """
+    if "partial_match" not in kwargs:
+        kwargs["partial_match"] = True
+    xpath = (
+        "//a | //span | //img | //li | //h1 | //h2 | //h3 | //h4 | //h5 | //h6 | //div | //svg | "
+        "//p | //button | //input[not(@type='text') and not(@type='password') and "
+        "not(@type='email')]"
+    )
+    # get_elements_by_attributes already handles going through frames
+    kwargs["continue_search"] = False
+    full, partial = element.get_elements_by_attributes(xpath, text, **kwargs)
     web_elements = element.get_visible_elements_from_elements(full + partial, **kwargs)
     if web_elements:
         return web_elements

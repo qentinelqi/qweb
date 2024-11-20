@@ -184,6 +184,11 @@ def get_input_element_by_css_selector(
             logger.debug("locator was text")
     if "qweb_old" not in kwargs:
         full_matches, partial_matches = get_input_elements_by_css(locator, **kwargs)
+        # backup search via xpath. This is needed due to javascript search not reaching
+        # all inputs under pseudo elements
+        if not full_matches and not partial_matches:
+            xpath = CONFIG["AllInputElements"]
+            full_matches, partial_matches = element.get_elements_by_attributes(xpath, locator)
 
         if full_matches:
             full_matches = text.filter_by_modal_ancestor(full_matches)
