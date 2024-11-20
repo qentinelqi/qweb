@@ -187,8 +187,8 @@ def get_input_element_by_css_selector(
         # backup search via xpath. This is needed due to javascript search not reaching
         # all inputs under pseudo elements
         if not full_matches and not partial_matches:
-            css = CONFIG["AllInputElements"]
-            full_matches, partial_matches = element.get_elements_by_attributes(css, locator)
+            xpath = CONFIG["AllInputElements"]
+            full_matches, partial_matches = element.get_elements_by_attributes(xpath, locator)
 
         if full_matches:
             full_matches = text.filter_by_modal_ancestor(full_matches)

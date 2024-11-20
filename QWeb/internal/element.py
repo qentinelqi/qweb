@@ -659,9 +659,9 @@ def get_elements_by_attributes(
         # there have been few cases where css search doesn't work
         if len(matches.get("full", [])) == 0 and len(matches.get("partial", [])) == 0:
             try:
-                css = css if xpath_search else f"//{css}"
+                xpath = css if xpath_search else f"//{css}"
                 driver = browser.get_current_browser()
-                elements = driver.find_elements(By.XPATH, css)
+                elements = driver.find_elements(By.XPATH, xpath)
 
                 matches = javascript.get_by_attributes(
                     elements,
