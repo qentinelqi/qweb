@@ -22,6 +22,7 @@ jobs:
       os: '["windows-latest"]'
       browser: '["chrome", "edge", "firefox"]'
       python-version: '["3.11", "3.12"]'
-      rfw-4x-python: "3.11"
+      minimum-rfw-version: "5.1.1"
+      minimum-rfw-python: "3.11"
       rfw-exclude-tags: "-e FLASK"
       
