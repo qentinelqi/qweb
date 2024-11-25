@@ -22,4 +22,5 @@ jobs:
       os: '["ubuntu-latest"]'
       browser: '["chrome", "firefox", "edge"]'
       python-version: '["3.9", "3.12"]'
-      rfw-4x-python: "3.9"
+      minimum-rfw-version: "5.0.1"
+      minimum-rfw-python: "3.9"
