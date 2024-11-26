@@ -52,11 +52,12 @@ Open Browser with invalid experimental args string
     ...     prefs=Foobar, "anotherone":"false"
 
 Open Browser with options and verify
-    [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE    PROBLEM_IN_WINDOWS
-    [Documentation]                 Run this only in Chrome
+    [tags]          exp             PROBLEM_IN_SAFARI    PROBLEM_IN_FIREFOX    PROBLEM_IN_EDGE    PROBLEM_IN_WINDOWS    PROBLEM_IN_OSX    PROBLEM_IN_MACOS
+    [Documentation]                 Run this only in Chrome. Broken in Chrome 131 in Mac.
     [Setup]    No Operation
     [Teardown]                      SetConfig            ShadowDOM             Off
     # Suggested format
+    # There seems to be a regression in Mac chrome with this, developer mode toggle stays off.
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs="extensions.ui.developer_mode": "True"
     SetConfig       ShadowDOM       On
