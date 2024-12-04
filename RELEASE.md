@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.3] - 2024-12-04
+
+### Fixed
+- Removed the usage of internals of selenium's command_executor in order to support selenium 4.26 and up
+- Fixed issue (TypeText) where inputs under `<slot>` were not found using attributes, unless "tag" attribute was added
+-  Fixed issue (ClickItem, VerifyItem) where elements under `<slot>` were not found using attributes, unless "tag" attribute was added
+
+### Changed
+- Minimum required Robot Framework version changed from 4.x to 5.0.1
+- Minimun selenium version set to 4.27.0
+
 ## [3.4.2] - 2024-10-23
 
 ### Added
