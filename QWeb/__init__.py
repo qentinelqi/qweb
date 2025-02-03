@@ -14,47 +14,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-from typing import Callable, Any
+import time
 import traceback
 import types
-import time
-
 from functools import wraps
-from QWeb import custom_config
+from typing import Any, Callable
 
 try:
-    from QWeb.keywords import (
-        alert,
-        browser,
-        window,
-        frame,
-        element,
-        text,
-        checkbox,
-        input_,
-        javascript,
-        screenshot,
-        download,
-        table,
-        search_strategy,
-        dropdown,
-        cookies,
-        config,
-        icon,
-        dragdrop,
-        lists,
-        file,
-        debug,
-        ajax,
-        blocks,
-    )
+    from robot.api import logger
+    from robot.libraries import Dialogs
+    from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+    from robot.utils import timestr_to_secs as _timestr_to_secs
 
+    from QWeb import custom_config
     from QWeb.internal import util
     from QWeb.internal.config_defaults import CONFIG
-    from robot.api import logger
-    from robot.utils import timestr_to_secs as _timestr_to_secs
-    from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
-    from robot.libraries import Dialogs
+    from QWeb.keywords import (
+        ajax,
+        alert,
+        blocks,
+        browser,
+        checkbox,
+        config,
+        cookies,
+        debug,
+        download,
+        dragdrop,
+        dropdown,
+        element,
+        file,
+        frame,
+        icon,
+        input_,
+        javascript,
+        lists,
+        mouse,
+        screenshot,
+        search_strategy,
+        table,
+        text,
+        window,
+    )
 
 # Print system exit message. This can happen on fresh linux when tkinter
 # dependencies are not installed. This is a workaround as normally system
@@ -329,6 +329,7 @@ class QWeb:
             debug,
             ajax,
             blocks,
+            mouse,
         ):
             for name in dir(module):
                 if not name.startswith("_"):
