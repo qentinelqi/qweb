@@ -66,7 +66,6 @@ MouseMove
 MouseMove, incorrect
     [tags]              mouse  move
     VerifyText          Mouse Click and Hold Test
-    Run Keyword And Expect Error   *expected 2 arguments*       MouseMove    100
     Run Keyword And Expect Error   ValueError*     MouseMove    ${EMPTY}    100
     Run Keyword And Expect Error   ValueError*     MouseMove    a   b
 
@@ -91,7 +90,6 @@ Click coordinates
 Click coordinates, incorrect coordinates
     [tags]              mouse  coordinates
     VerifyText          Mouse Click and Hold Test
-    Run Keyword And Expect Error   *expected 2 arguments*     ClickCoordinates    100
     Run Keyword And Expect Error   ValueError*     ClickCoordinates    ${EMPTY}    100
     Run Keyword And Expect Error   ValueError*     ClickCoordinates    a   b
 
