@@ -94,7 +94,6 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
         censored_args = _hide_keyword_arg_values(keyword)
         _replace_keyword_args(keyword, tuple(censored_args))
 
-    LOGGER._started_keywords += 1
     LOGGER.log_message = LOGGER._log_message
     for start_logger in LOGGER.start_loggers:
         start_logger.start_keyword(keyword)
@@ -127,7 +126,6 @@ def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, resu
         _replace_keyword_args(data, tuple(censored_args))
         _replace_keyword_args(result, tuple(censored_args))
 
-    LOGGER._started_keywords += 1
     LOGGER.log_message = LOGGER._log_message
     for start_logger in LOGGER.start_loggers:
         start_logger.start_library_keyword(data, implementation, result)
@@ -155,12 +153,11 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
         censored_args = _hide_keyword_arg_values(keyword)
         _replace_keyword_args(keyword, tuple(censored_args))
 
-    LOGGER._started_keywords -= 1
     for end_logger in LOGGER.end_loggers:
         end_logger.end_keyword(keyword)
 
-    if not LOGGER._started_keywords:
-        LOGGER.log_message = LOGGER.message
+    # if not LOGGER._started_keywords:
+    LOGGER.log_message = LOGGER.message
 
     if apply_filter:
         _replace_keyword_args(keyword, tuple(original_args))
@@ -186,12 +183,10 @@ def _filtered_end_library_keyword(data: Keyword, implementation: Keyword, result
         _replace_keyword_args(result, tuple(censored_args))
         _replace_keyword_args(data, tuple(censored_args))
 
-    LOGGER._started_keywords -= 1
     for end_logger in LOGGER.end_loggers:
         end_logger.end_library_keyword(data, implementation, result)
 
-    if not LOGGER._started_keywords:
-        LOGGER.log_message = LOGGER.message
+    LOGGER.log_message = LOGGER.message
 
     if apply_filter:
         _replace_keyword_args(result, tuple(original_args))

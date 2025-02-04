@@ -1,0 +1,198 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Click and Hold Test</title>
+    <style>
+	body {
+            font-family: Arial, sans-serif;
+            display: flex, justify-content: center, align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+        }
+
+	.container {
+            width: 600px;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        #clickAndHoldButton {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+
+        }
+        #coordinatesField {
+            margin-top: 20px;
+            padding: 10px;
+            width: 300px;
+            font-size: 14px;
+        }
+        #resetButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #resetButton:hover {
+            background-color: #0056b3;
+        }
+        #timeField {
+            margin-top: 20px;
+            font-size: 16px;
+            display: none; /* Initially hidden */
+        }
+
+        #customContextMenu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        list-style: none;
+        padding: 5px 0;
+        margin: 0;
+        z-index: 1000;
+        width: 150px;
+        font-size: 14px;
+        }
+
+        #customContextMenu li {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        #customContextMenu li:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #contextMenuButton {
+        padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            background-color: #1612e0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Mouse Click and Hold Test</h1>
+    
+    <!-- Button to track click and hold time -->
+    <div class="button-container">
+    <button id="clickAndHoldButton">Click and Hold Me!</button>
+    <!-- Right Click button -->
+    <button id="contextMenuButton">Right Click Me!</button>
+    <ul id="customContextMenu">
+        <li>Option 1</li>
+        <li>Option 2</li>
+        <li>Option 3</li>
+    </ul>
+    <div id="timeField" data-ms="">
+        Time Held Down: <span id="millisecondsField"></span> ms
+    </div>
+    </div>
+
+    <!-- Text fields for coordinates -->
+    <h4>Current Coordinates:</h4>
+    <input type="text" id="xCoordinateField" placeholder="X Coordinate">
+    <input type="text" id="yCoordinateField" placeholder="Y Coordinate">
+
+    <!-- Reset button -->
+    <button id="resetButton">Reset Fields</button>
+    </div>
+
+
+    <script>
+        let clickAndHoldStartTime = null;
+        let isClickAndHoldHeldDown = false;
+
+        // Handle mouse down on button
+        document.getElementById('clickAndHoldButton').addEventListener('mousedown', function() {
+            if (!isClickAndHoldHeldDown) {
+                clickAndHoldStartTime = new Date();
+                isClickAndHoldHeldDown = true;
+            }
+        });
+
+        // Handle mouse up on button
+        document.getElementById('clickAndHoldButton').addEventListener('mouseup', function() {
+            if (isClickAndHoldHeldDown) {
+                const endTime = new Date();
+                const timeDifference = endTime - clickAndHoldStartTime;
+
+                // Update the time field and show it
+                document.getElementById('millisecondsField').innerText = timeDifference;
+                document.getElementById('timeField').setAttribute('data-ms', timeDifference);
+                document.getElementById('timeField').style.display = 'block';
+
+                isClickAndHoldHeldDown = false;
+            }
+        });
+
+        // Update coordinate fields on mouse move
+        document.addEventListener('mousemove', function(event) {
+            const xCoordinate = event.clientX;
+            const yCoordinate = event.clientY;
+            document.getElementById('xCoordinateField').value = xCoordinate;
+            document.getElementById('yCoordinateField').value = yCoordinate;
+        });
+
+        // Handle reset button click
+        document.getElementById('resetButton').addEventListener('click', function() {
+            // Clear all fields
+            document.getElementById('xCoordinateField').value = '';
+            document.getElementById('yCoordinateField').value = '';
+            document.getElementById('millisecondsField').innerText = '';
+            document.getElementById('timeField').setAttribute('data-ms', '');
+            
+            // Hide the time field
+            document.getElementById('timeField').style.display = 'none';
+        });
+        const contextMenuButton = document.getElementById('contextMenuButton');
+        const customContextMenu = document.getElementById('customContextMenu');
+
+        // Show context menu on right-click
+        contextMenuButton.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            customContextMenu.style.display = 'block';
+            customContextMenu.style.left = `${event.pageX}px`;
+            customContextMenu.style.top = `${event.pageY}px`;
+        });
+
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', function() {
+            customContextMenu.style.display = 'none';
+        });
+
+    </script>
+</body>
+</html>

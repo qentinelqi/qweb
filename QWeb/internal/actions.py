@@ -26,33 +26,36 @@ Coding rules:
 """
 
 from __future__ import annotations
-from typing import Optional, Union, Any
 
-import time
 import fnmatch
+import time
+from typing import Any, Optional, Union
+
 from robot.api import logger
+from selenium.common.exceptions import (
+    ElementNotInteractableException,
+    MoveTargetOutOfBoundsException,
+    NoSuchElementException,
+    WebDriverException,
+)
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import (
-    WebDriverException,
-    NoSuchElementException,
-    MoveTargetOutOfBoundsException,
-    ElementNotInteractableException,
-)
-from QWeb.internal.exceptions import (
-    QWebValueMismatchError,
-    QWebValueError,
-    QWebUnexpectedConditionError,
-    QWebInvalidElementStateError,
-    QWebTimeoutError,
-    QWebTextNotFoundError,
-)
-from QWeb.internal import text as internal_text, util
-from QWeb.internal import javascript, decorators, checkbox, browser
-from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
+
+from QWeb.internal import browser, checkbox, decorators, javascript, util
+from QWeb.internal import text as internal_text
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.exceptions import (
+    QWebInvalidElementStateError,
+    QWebTextNotFoundError,
+    QWebTimeoutError,
+    QWebUnexpectedConditionError,
+    QWebValueError,
+    QWebValueMismatchError,
+)
+from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 
 
 @decorators.timeout_decorator_for_actions
@@ -181,6 +184,25 @@ def right_click(element: WebElement) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
     ac.context_click(element).perform()
+
+
+def mouse_down(element: WebElement) -> None:
+    driver = browser.get_current_browser()
+    ac = ActionChains(driver)
+    ac.click_and_hold(element).perform()
+
+
+def mouse_up(element: WebElement) -> None:
+    driver = browser.get_current_browser()
+    ac = ActionChains(driver)
+    ac.release(element).perform()
+
+
+def mouse_move(x: int, y: int) -> None:
+    driver = browser.get_current_browser()
+    ab = ActionBuilder(driver)
+    ab.pointer_action.move_to_location(x, y)
+    ab.perform()
 
 
 def js_click(web_element: WebElement) -> None:
