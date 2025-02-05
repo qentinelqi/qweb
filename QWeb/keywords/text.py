@@ -29,6 +29,7 @@ from pynput.keyboard import Controller
 import pyperclip
 from QWeb.internal.actions import (
     scroll as _scroll,
+    scroll_overlay_adjustment as _scroll_overlay_adjustment,
     execute_click_and_verify_condition as _execute_click_and_verify_condition,
     hover_to as _hover_to,
     text_appearance as _text_appearance,
@@ -1261,12 +1262,23 @@ def scroll_text(
         ScrollText       Address
         ScrollText       Address    Billing
 
+        # Scroll to element with text "Address" and adjust overlay height
+        ScrollText       Address    overlay_height=30
+
+    Accepted kwargs:
+        overlay_height: Amount of pixels to adjust overlay height in cases where there is
+        a sticky header that covers the text.
+
     Related keywords
     ----------------
     \`HoverElement\`, \`HoverItem\`, \`HoverText\`, \`HoverTo\`, \`ScrollTo\`
     """
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
-    _scroll(web_element, timeout=timeout)
+    if web_element:
+        _scroll(web_element, timeout=timeout)
+        overlay = kwargs.get("overlay_height", None)
+        if overlay:
+            _scroll_overlay_adjustment(overlay)
 
 
 @keyword(tags=("input", "Text", "Interaction"))

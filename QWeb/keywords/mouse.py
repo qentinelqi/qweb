@@ -111,6 +111,7 @@ def mouse_down(
     \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
     """
     kwargs.pop("all_frames", None)
+    webelement: Union[WebElement, list[WebElement]]
     if isinstance(locator, WebElement):
         webelement = locator
     else:
@@ -206,6 +207,7 @@ def mouse_up(
     \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
     """
     kwargs.pop("all_frames", None)
+    webelement: Union[WebElement, list[WebElement]]
     if isinstance(locator, WebElement):
         webelement = locator
     else:

@@ -136,6 +136,22 @@ def scroll(web_element: WebElement, timeout: int) -> None:  # pylint: disable=un
     javascript.execute_javascript("arguments[0].scrollIntoView();", web_element)
 
 
+def scroll_overlay_adjustment(overlay_height: int = 0) -> None:  # pylint: disable=unused-argument
+    previous_scroll = None
+    driver = browser.get_current_browser()
+    current_scroll = driver.execute_script("return window.pageYOffset;")
+
+    # Keep checking until the scroll position stops changing
+    # This was needed in firefox because the scroll position was not updated immediately
+    while previous_scroll != current_scroll:
+        previous_scroll = current_scroll
+        time.sleep(0.2)  # Small delay to allow scrolling to stabilize
+        current_scroll = driver.execute_script("return window.pageYOffset;")
+
+    # scroll up by overlay height
+    driver.execute_script(f"window.scrollBy(0, -{overlay_height})")
+
+
 @decorators.timeout_decorator_for_actions
 def execute_click_and_verify_condition(
     web_element: WebElement, text_appear: bool = True, **kwargs: Any

@@ -17,7 +17,6 @@
 """Keywords for general elements that are retrieved using XPaths."""
 
 from __future__ import annotations
-import time
 from typing import Union, Optional, Dict
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
@@ -861,6 +860,7 @@ def get_coordinates(
     \`ClickElement\`, \`HoverElement\`, \`TypeText\`, \`ClickCoordinates\`
     """
     kwargs.pop("all_frames", None)
+    webelement: Union[WebElement, list[WebElement]]
     # webelement given as a locator
     if isinstance(locator, WebElement):
         webelement = locator
@@ -877,22 +877,9 @@ def get_coordinates(
 
     try:
 
-        previous_scroll = None
-        current_scroll = webelement.parent.execute_script("return window.pageYOffset;")
-
+        # scroll element into view and adjust scroll if needed
         scrolled_position = webelement.location_once_scrolled_into_view
-        if not scrolled_position:
-            raise QWebValueError(f"Could not retrieve position for element {locator}")
-
-        # Keep checking until the scroll position stops changing
-        # This was needed in firefox because the scroll position was not updated immediately
-        while previous_scroll != current_scroll:
-            previous_scroll = current_scroll
-            time.sleep(0.5)  # Small delay to allow scrolling to stabilize
-            current_scroll = webelement.parent.execute_script("return window.pageYOffset;")
-
-        # scroll up by overlay height
-        webelement.parent.execute_script(f"window.scrollBy(0, -{overlay_height})")
+        actions.scroll_overlay_adjustment(overlay_height)
 
     except Exception as e:
         raise QWebValueError(f"Could not scroll element {locator} into view. Error: {e}") from e
