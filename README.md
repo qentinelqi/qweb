@@ -71,6 +71,22 @@ Python **3.9-3.12** and Robot Framework 5.0.1 or above.
 ```
 
 ### Linux/Mac
+
+Some Linux distributions (Ubuntu) use snap to install browsers, which brings it's own problems with non-default binary, 
+user data-dir and/or profile location. We suggest installing the browser via terminal, for example:
+
+```bash
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    apt-get install -y ./google-chrome-stable_current_amd64.deb
+```
+
+Make sure the following dependencies are installed:
+
+```bash
+    sudo apt-get install python3-tk python3-dev scrot
+    pip install python-xlib
+```
+
 ```bash
     python3 -m pip install -U pip
     python3 -m pip install QWeb
@@ -89,6 +105,9 @@ Examples in [OpenBrowser keyword documentation](https://qentinelqi.github.io/qwe
 
 ### Manual driver management
 For manual installation of drivers, please refer to [Selenium documentation](https://www.selenium.dev/selenium/docs/api/py/index.html#drivers) for more information OR use 3rd party packages like [WebDriverManager](https://pypi.org/project/webdrivermanager/).
+
+NOTE: Manual driver management should only be used in exceptional cases. Letting Selenium Manager handle
+drivers is the preferred, less error prone option.
 
 
 [Back To The Top](#qweb)
