@@ -765,7 +765,7 @@ def verify_attribute(
 
 @keyword(tags=["Getters"])
 def get_coordinates(
-    locator: Union[str, WebElement],
+    locator: Union[WebElement, str],
     anchor: str = "1",
     element_type: Optional[str] = None,
     overlay_height: int = 0,
