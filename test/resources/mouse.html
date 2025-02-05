@@ -11,7 +11,21 @@
             margin: 0;
             background-color: #f0f8ff;
         }
-
+    
+    #overlayBar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 18px;
+        z-index: 1001;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
 	.container {
             width: 600px;
             padding: 2rem;
@@ -105,7 +119,9 @@
 <body>
     <div class="container">
     <h1>Mouse Click and Hold Test</h1>
-    
+    <!-- Overlay at the top of the page -->
+    <div id="overlayBar">Just a test overlay</div>
+   
     <!-- Button to track click and hold time -->
     <div class="button-container">
     <button id="clickAndHoldButton">Click and Hold Me!</button>
@@ -129,6 +145,12 @@
     <!-- Reset button -->
     <button id="resetButton">Reset Fields</button>
     </div>
+
+    
+    <button id="outsideButton" style="position: absolute; top: 110vh;">Outside viewport button</button>
+
+    <!-- Faraway button added at the bottom -->
+    <button id="farawayButton" style="margin-top: 2500px;">Faraway button</button>
 
 
     <script>
@@ -191,6 +213,14 @@
         // Hide context menu when clicking elsewhere
         document.addEventListener('click', function() {
             customContextMenu.style.display = 'none';
+        });
+
+        document.getElementById('outsideButton').addEventListener('click', function() {
+            this.innerText = 'Button outside viewport was clicked';
+        });
+
+        document.getElementById('farawayButton').addEventListener('click', function() {
+            this.innerText = 'Faraway button was clicked';
         });
 
     </script>

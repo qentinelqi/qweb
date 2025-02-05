@@ -69,23 +69,66 @@ MouseMove, incorrect
     Run Keyword And Expect Error   ValueError*     MouseMove    ${EMPTY}    100
     Run Keyword And Expect Error   ValueError*     MouseMove    a   b
 
-Click coordinates
+Get and Click coordinates
     [tags]              mouse  coordinates
     VerifyText          Mouse Click and Hold Test
     MouseMove           100     100
     VerifyInputValue    X Coordinate    100
     VerifyInputValue    Y Coordinate    100
 
-    ${reset}=           GetWebElement   Reset Fields    element_type=text
     # retunrs dict
-    &{coords}=          Evaluate    $reset.location
-    # Let's add some buffer since the previous command returns top left corner
-    ${x}=               Evaluate    $coords.x+10
-    ${y}=               Evaluate    $coords.y+10
-    ClickCoordinates    ${x}     ${y}
+    &{coords}=          GetCoordinates  Reset Fields    element_type=text
+    ClickCoordinates    ${coords.x}     ${coords.y}
     VerifyInputValue    X Coordinate    ${EMPTY}
     VerifyInputValue    Y Coordinate    ${EMPTY}
 
+Get and Click coordinates using GetWebElement
+    [tags]              mouse  coordinates
+    VerifyText          Mouse Click and Hold Test
+    MouseMove           200     200
+    VerifyInputValue    X Coordinate    200
+    VerifyInputValue    Y Coordinate    200
+
+    ${reset}=           GetWebElement   Reset Fields    element_type=text
+    &{coords}=          GetCoordinates  ${reset}
+    ClickCoordinates    ${coords.x}     ${coords.y}
+    VerifyInputValue    X Coordinate    ${EMPTY}
+    VerifyInputValue    Y Coordinate    ${EMPTY}
+
+Get & ClickCoordinates outside viewport
+    [tags]              mouse  coordinates
+    [Setup]             RefreshPage
+    VerifyText          Mouse Click and Hold Test
+    
+    # Get coordinates for element outside of viewport
+    &{coords}=          GetCoordinates  Outside viewport button    element_type=text    overlay_height=50
+    VerifyNoText        Button outside viewport was clicked
+    ClickCoordinates    ${coords.x}     ${coords.y}
+    VerifyText          Button outside viewport was clicked
+
+    # Bottom one, too
+    &{coords}=          GetCoordinates  Faraway button    element_type=text
+    ClickCoordinates    ${coords.x}     ${coords.y}
+    VerifyText          Faraway button was clicked
+    Scroll              //html          top
+    Sleep               2
+    LogScreenshot   
+    
+Get & ClickCoordinates outside viewport, not adjusting
+    [tags]              mouse  coordinates  negative
+    [Setup]             RefreshPage
+    VerifyText          Mouse Click and Hold Test
+    
+    # Get coordinates for element outside of viewport without adjusting overlay_height
+    # should not be clickable
+    &{coords}=          GetCoordinates  Outside viewport button    element_type=text
+    VerifyNoText        Button outside viewport was clicked
+    ClickCoordinates    ${coords.x}     ${coords.y}
+    Sleep               1
+    # Text should not change
+    VerifyNoText        Button outside viewport was clicked
+    Scroll              //html      top
+    Sleep               2
 
 Click coordinates, incorrect coordinates
     [tags]              mouse  coordinates
