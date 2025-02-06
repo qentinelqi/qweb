@@ -1277,10 +1277,10 @@ def scroll_text(
     if web_element:
         _scroll(web_element, timeout=timeout)
         overlay = kwargs.get("overlay_offset", None)
-        if overlay < 0:
+        if overlay and overlay < 0:
             raise QWebValueError(f"The overlay_offset cannot be negative ({overlay}).")
-
-        _scroll_overlay_adjustment(overlay)
+        if overlay:
+            _scroll_overlay_adjustment(overlay)
 
 
 @keyword(tags=("input", "Text", "Interaction"))
