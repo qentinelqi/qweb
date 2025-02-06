@@ -27,8 +27,8 @@ from robot.api.deco import keyword
 from selenium.webdriver.remote.webelement import WebElement
 
 from QWeb.internal import actions, javascript
-from QWeb.internal.exceptions import QWebElementNotFoundError
 from QWeb.keywords import element
+# from QWeb.internal.util import unique_webelement
 
 
 @keyword(tags=("Mouse", "Interaction"))
@@ -111,6 +111,7 @@ def mouse_down(
     \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
     """
     kwargs.pop("all_frames", None)
+    webelement: Union[WebElement, list[WebElement]]
     if isinstance(locator, WebElement):
         webelement = locator
     else:
@@ -121,13 +122,8 @@ def mouse_down(
                                             all_frames=False,
                                             **kwargs)
 
-    if not webelement:
-        raise QWebElementNotFoundError(
-            f"Could not find element {locator}"
-        )
     # first one if multiple returned
-    if isinstance(webelement, list):
-        webelement = webelement[0]
+    webelement = webelement[0] if isinstance(webelement, list) else webelement
 
     actions.mouse_down(webelement)
 
@@ -211,6 +207,7 @@ def mouse_up(
     \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
     """
     kwargs.pop("all_frames", None)
+    webelement: Union[WebElement, list[WebElement]]
     if isinstance(locator, WebElement):
         webelement = locator
     else:
@@ -221,33 +218,38 @@ def mouse_up(
                                             all_frames=False,
                                             **kwargs)
 
-    if not webelement:
-        raise QWebElementNotFoundError(
-            f"Could not find element {locator}"
-        )
-
     # first one if multiple returned
-    if isinstance(webelement, list):
-        webelement = webelement[0]
+    webelement = webelement[0] if isinstance(webelement, list) else webelement
 
     actions.mouse_up(webelement)
 
 
 @keyword(tags=("Mouse", "Interaction"))
 def mouse_move(x: int, y: int) -> None:
-    r"""Moves mouse to the given coordinates.
+    r"""Moves the mouse to the specified coordinates within the web browser viewport.
+
+    The coordinate system in a web browser starts from the **top-left corner** of the viewport
+    (the visible area of the browser window).
+    This means that the point `(0, 0)` represents the **top-left corner** of the viewport.
+    The **x-coordinate** increases as the mouse moves horizontally to the right,
+    and the **y-coordinate** increases as the mouse moves vertically downward.
+
+    If elements are outside of the current viewport (e.g., below the fold or hidden by scrolling),
+    the coordinates will still be relative to the top-left corner of the visible area.
+    Therefore, the keyword does not automatically account for scrolling unless explicitly handled.
+
+    This method can be used to simulate mouse gestures, draw patterns, or interact with elements
+    by moving the cursor to specified points.
 
     Examples
     --------
-    Moving mouse to the given coordinates:
+    Moving the mouse to a specific point:
 
     .. code-block:: robotframework
 
         MouseMove    100    200
 
-
-
-    Moving mouse to multiple coordinates (gestures, drawing etc.):
+    Moving the mouse through multiple points (gestures, drawing, etc.):
 
     .. code-block:: robotframework
 
@@ -255,28 +257,34 @@ def mouse_move(x: int, y: int) -> None:
         MouseMove    100    200
         MouseMove    400    500
 
-
-
     Parameters
     ----------
     x : int
-        x coordinate of the point to move
+        The x-coordinate of the point to move to. Starts from `0` at the left edge of the viewport
+        and increases as you move right.
     y : int
-        y coordinate of the point to move
+        The y-coordinate of the point to move to. Starts from `0` at the top edge of the viewport
+        and increases as you move down.
 
     Returns
     -------
     None
 
+    Notes
+    -----
+    - The coordinates are **relative to the current viewport** and do not account for scrolling.
+      To interact with elements outside the viewport, you may need to scroll the page first.
+    - Moving the mouse outside the viewport may not trigger any interaction on the page.
+
     Related keywords
     ----------------
-    \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
+    \`GetWebElement\`, \`MouseUp\`, \`MouseMove\`
     """
     actions.mouse_move(int(x), int(y))
 
 
 @keyword(tags=("Mouse", "Interaction"))
-def click_coordinates(x: int, y: int) -> None:
+def click_coordinates(x: float, y: float) -> None:
     r"""Clicks on the given coordinates.
 
     Examples
@@ -299,9 +307,9 @@ def click_coordinates(x: int, y: int) -> None:
 
     Parameters
     ----------
-    x : int
+    x : float
         x coordinate of the point to click
-    y : int
+    y : float
         y coordinate of the point to click
 
     Returns

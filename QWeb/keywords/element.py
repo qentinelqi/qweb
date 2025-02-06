@@ -17,7 +17,7 @@
 """Keywords for general elements that are retrieved using XPaths."""
 
 from __future__ import annotations
-from typing import Union, Optional
+from typing import Union, Optional, Dict
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
@@ -761,3 +761,139 @@ def verify_attribute(
         element.operator_verify(attr_val, value, operator)
     except QWebValueError as e:
         raise e
+
+
+@keyword(tags=["Getters"])
+def get_coordinates(
+    locator: Union[WebElement, str],
+    anchor: str = "1",
+    element_type: Optional[str] = None,
+    overlay_offset: int = 0,
+    timeout: Union[int, float, str] = 0,
+    **kwargs,
+) -> Dict[str, float]:
+    # pylint: disable=too-many-branches
+    r"""Gets middle point location (x, y) of the first element matching locator.
+    If locator is an instance of WebElement, returns the middle point location of that element.
+
+    This keyword tries to scroll the element into view (top) and then calculates the middle point
+    location. If the page has a overlay / top bar that covers the element,
+    you can use **overlay_offset** to adjust the scroll amount (see examples).
+
+    Examples
+    --------
+    Using attributes or xpaths like with ClickElement etc. kw:s without specified
+    element_type:
+
+    .. code-block:: robotframework
+
+        &{coords}=    GetCoordinates          click_me      tag=button
+        Click Coordinates    ${coords.x}    ${coords.y}
+
+        &{coords}=    GetCoordinates          //*[@id\="click_me"]
+        &{coords}=    GetCoordinates          xpath\=//*[@id\="click_me"]
+
+
+    Using element_type attribute to locate element.
+    Text elements works as ClickText, VerifyText, GetText etc.:
+
+    .. code-block:: robotframework
+
+        &{coords}=    GetCoordinates     Log In    id    login       element_type=text
+        &{coords}=    GetCoordinates     Contact   value abc         element_type=text  anchor=Name
+        &{coords}=    GetCoordinates     Contact   name  contact1    parent=div
+        Click Coordinates    ${coords.x}    ${coords.y}
+
+    Item, Input, Dropdown, Checkbox elements:
+
+    .. code-block:: robotframework
+
+        &{coords}=    GetCoordinates     Log In    id    login   element_type=item
+        &{coords}=    GetCoordinates     Username  placeholder   username    element_type=input
+        &{coords}=    GetCoordinates     Country   value     Finland         element_type=dropdown
+        &{coords}=    GetCoordinates     Gender    checked   checked         element_type=checkbox
+        Click Coordinates    ${coords.x}    ${coords.y}
+
+    Using previously fetched WebElement instance:
+
+    .. code-block:: robotframework
+
+        ${element}=   GetWebElement      Log In    id    login   element_type=item
+        &{coords}=    GetCoordinates     ${element}
+        Click Coordinates    ${coords.x}    ${coords.y}
+
+    If a page has an overlay that covers the element, you can use overlay_offset
+    to adjust the scroll:
+
+    .. code-block:: robotframework
+
+        # This will scroll the element into view and adjust the scroll (up) by 50 pixels
+        &{pos}=    GetCoordinates     Log In    id    login   element_type=item   overlay_offset=50
+        Click Coordinates    ${pos.x}    ${pos.y}
+
+
+    Parameters
+    ----------
+    locator : str
+        Visible text, attribute value Xpath expression or WebElement.
+        See GetWebElement for more information.
+    anchor : int
+        Used when element_type is defined. Default=1 (first match)
+    element_type : string
+        Define element type/preferred searching method
+        (available types: text, input, checkbox, item, dropdown or css).
+    overlay_offset: int
+        A positive integer representing the offset to adjust the scroll position
+        if a top bar or overlay obscures the element.
+        Typically, this is the height of the top overlay. Default = 0.
+
+    timeout : int
+        How long we wait element to appear. Default=10 sec
+    kwargs :
+        |  Accepted kwargs:
+        |       Any available for picked searching method.
+        |       See interacting with text, item, input etc. elements from
+        |       documentation
+
+    Returns
+    -------
+    dict: A dictionary with the coordinates `{"x": float, "y": float}`.
+
+    Related keywords
+    ----------------
+    \`ClickElement\`, \`HoverElement\`, \`TypeText\`, \`ClickCoordinates\`
+    """
+    kwargs.pop("all_frames", None)
+    webelement: Union[WebElement, list[WebElement]]
+
+    if overlay_offset < 0:
+        raise QWebValueError(f"The overlay_offset cannot be negative ({overlay_offset}).")
+    # webelement given as a locator
+    if isinstance(locator, WebElement):
+        webelement = locator
+    else:
+        webelement = get_webelement(locator,
+                                    anchor,
+                                    element_type,
+                                    timeout,
+                                    all_frames=False,
+                                    **kwargs)
+
+    # return first matching element
+    webelement = webelement[0] if isinstance(webelement, list) else webelement
+
+    try:
+
+        # scroll element into view and adjust scroll if needed
+        scrolled_position = webelement.location_once_scrolled_into_view
+        actions.scroll_overlay_adjustment(overlay_offset)
+
+    except Exception as e:
+        raise QWebValueError(f"Could not scroll element {locator} into view. Error: {e}") from e
+
+    # Calculate the coordinates at the center of the element + overlay height
+    size = webelement.size
+    x = scrolled_position['x'] + size["width"] / 2
+    y = scrolled_position['y'] + overlay_offset + size["height"] / 2
+
+    return {"x": x, "y": y}
