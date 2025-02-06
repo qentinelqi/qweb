@@ -1262,11 +1262,11 @@ def scroll_text(
         ScrollText       Address
         ScrollText       Address    Billing
 
-        # Scroll to element with text "Address" and adjust overlay height
-        ScrollText       Address    overlay_height=30
+        # Scroll to element with text "Address" and adjust overlay offset
+        ScrollText       Address    overlay_offset=30
 
     Accepted kwargs:
-        overlay_height: Amount of pixels to adjust overlay height in cases where there is
+        overlay_offset: Amount of pixels to adjust overlay height in cases where there is
         a sticky header that covers the text.
 
     Related keywords
@@ -1276,9 +1276,11 @@ def scroll_text(
     web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
     if web_element:
         _scroll(web_element, timeout=timeout)
-        overlay = kwargs.get("overlay_height", None)
-        if overlay:
-            _scroll_overlay_adjustment(overlay)
+        overlay = kwargs.get("overlay_offset", None)
+        if overlay < 0:
+            raise QWebValueError(f"The overlay_offset cannot be negative ({overlay}).")
+
+        _scroll_overlay_adjustment(overlay)
 
 
 @keyword(tags=("input", "Text", "Interaction"))

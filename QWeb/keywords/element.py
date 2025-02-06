@@ -768,7 +768,7 @@ def get_coordinates(
     locator: Union[WebElement, str],
     anchor: str = "1",
     element_type: Optional[str] = None,
-    overlay_height: int = 0,
+    overlay_offset: int = 0,
     timeout: Union[int, float, str] = 0,
     **kwargs,
 ) -> Dict[str, float]:
@@ -776,9 +776,9 @@ def get_coordinates(
     r"""Gets middle point location (x, y) of the first element matching locator.
     If locator is an instance of WebElement, returns the middle point location of that element.
 
-    This keyword tries to scroll the element into view and then calculates the middle point
+    This keyword tries to scroll the element into view (top) and then calculates the middle point
     location. If the page has a overlay / top bar that covers the element,
-    you can use overlay_height to adjust scroll.
+    you can use **overlay_offset** to adjust the scroll amount (see examples).
 
     Examples
     --------
@@ -822,12 +822,13 @@ def get_coordinates(
         &{coords}=    GetCoordinates     ${element}
         Click Coordinates    ${coords.x}    ${coords.y}
 
-    If a page has an overlay that covers the element, you can use overlay_height
+    If a page has an overlay that covers the element, you can use overlay_offset
     to adjust the scroll:
 
     .. code-block:: robotframework
 
-        &{pos}=    GetCoordinates     Log In    id    login   element_type=item   overlay_height=50
+        # This will scroll the element into view and adjust the scroll (up) by 50 pixels
+        &{pos}=    GetCoordinates     Log In    id    login   element_type=item   overlay_offset=50
         Click Coordinates    ${pos.x}    ${pos.y}
 
 
@@ -841,8 +842,11 @@ def get_coordinates(
     element_type : string
         Define element type/preferred searching method
         (available types: text, input, checkbox, item, dropdown or css).
-    overlay_height: int
-        Height of the overlay to be added to the element's height. Default=0
+    overlay_offset: int
+        A positive integer representing the offset to adjust the scroll position
+        if a top bar or overlay obscures the element.
+        Typically, this is the height of the top overlay. Default = 0.
+
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :
@@ -861,6 +865,9 @@ def get_coordinates(
     """
     kwargs.pop("all_frames", None)
     webelement: Union[WebElement, list[WebElement]]
+
+    if overlay_offset < 0:
+        raise QWebValueError(f"The overlay_offset cannot be negative ({overlay_offset}).")
     # webelement given as a locator
     if isinstance(locator, WebElement):
         webelement = locator
@@ -879,7 +886,7 @@ def get_coordinates(
 
         # scroll element into view and adjust scroll if needed
         scrolled_position = webelement.location_once_scrolled_into_view
-        actions.scroll_overlay_adjustment(overlay_height)
+        actions.scroll_overlay_adjustment(overlay_offset)
 
     except Exception as e:
         raise QWebValueError(f"Could not scroll element {locator} into view. Error: {e}") from e
@@ -887,6 +894,6 @@ def get_coordinates(
     # Calculate the coordinates at the center of the element + overlay height
     size = webelement.size
     x = scrolled_position['x'] + size["width"] / 2
-    y = scrolled_position['y'] + overlay_height + size["height"] / 2
+    y = scrolled_position['y'] + overlay_offset + size["height"] / 2
 
     return {"x": x, "y": y}

@@ -77,7 +77,7 @@ Get and Click coordinates
     VerifyInputValue    Y Coordinate    100
 
     # retunrs dict
-    &{coords}=          GetCoordinates  Reset Fields    element_type=text
+    &{coords}=          GetCoordinates  Reset Fields    element_type=text    overlay_offset=50
     ClickCoordinates    ${coords.x}     ${coords.y}
     VerifyInputValue    X Coordinate    ${EMPTY}
     VerifyInputValue    Y Coordinate    ${EMPTY}
@@ -90,7 +90,7 @@ Get and Click coordinates using GetWebElement
     VerifyInputValue    Y Coordinate    200
 
     ${reset}=           GetWebElement   Reset Fields    element_type=text
-    &{coords}=          GetCoordinates  ${reset}
+    &{coords}=          GetCoordinates  ${reset}        overlay_offset=50
     ClickCoordinates    ${coords.x}     ${coords.y}
     VerifyInputValue    X Coordinate    ${EMPTY}
     VerifyInputValue    Y Coordinate    ${EMPTY}
@@ -101,7 +101,7 @@ Get & ClickCoordinates outside viewport
     VerifyText          Mouse Click and Hold Test
     
     # Get coordinates for element outside of viewport
-    &{coords}=          GetCoordinates  Outside viewport button    element_type=text    overlay_height=50
+    &{coords}=          GetCoordinates  Outside viewport button    element_type=text    overlay_offset=50
     VerifyNoText        Button outside viewport was clicked
     ClickCoordinates    ${coords.x}     ${coords.y}
     VerifyText          Button outside viewport was clicked
@@ -119,7 +119,7 @@ Get & ClickCoordinates outside viewport, not adjusting
     [Setup]             RefreshPage
     VerifyText          Mouse Click and Hold Test
     
-    # Get coordinates for element outside of viewport without adjusting overlay_height
+    # Get coordinates for element outside of viewport without adjusting overlay_offset
     # should not be clickable
     &{coords}=          GetCoordinates  Outside viewport button    element_type=text
     VerifyNoText        Button outside viewport was clicked
@@ -131,11 +131,16 @@ Get & ClickCoordinates outside viewport, not adjusting
     Sleep               2
 
 Click coordinates, incorrect coordinates
-    [tags]              mouse  coordinates
+    [tags]              mouse  coordinates  negative
     VerifyText          Mouse Click and Hold Test
     Run Keyword And Expect Error   ValueError*     ClickCoordinates    ${EMPTY}    100
     Run Keyword And Expect Error   ValueError*     ClickCoordinates    a   b
 
+Click coordinates, incorrect overlay offset
+    [tags]              mouse  coordinates  negative
+    VerifyText          Mouse Click and Hold Test
+    Run Keyword And Expect Error   ValueError*      GetCoordinates  Outside viewport button    element_type=text    overlay_offset=abc
+    Run Keyword And Expect Error   QWebValueError*  GetCoordinates  Outside viewport button    element_type=text    overlay_offset=-50
 
 Right Click button
     [tags]              mouse  right-click_and_hold
