@@ -33,17 +33,17 @@ from QWeb.keywords import element
 
 @keyword(tags=("Mouse", "Interaction"))
 def mouse_down(
-    locator: Union[WebElement, str],
+    locator: Optional[Union[WebElement, str]] = None,
     anchor: str = "1",
     element_type: Optional[str] = None,
     timeout: Union[int, float, str] = 0,
     **kwargs,
 ) -> None:
-    r"""Holds down mouse button on the element. Mouse will be held down until MouseUp
-    keyword is called.
+    r"""Holds down mouse button on the element or in-place if locator is not given.
+    Mouse will be held down until MouseUp keyword is called.
 
-    Keyword takes WebElement or locator as input. Given locator must follow the syntax
-    defined in GetWebElement keyword.
+    Keyword takes None, WebElement or locator as input. If given, locator must follow
+    the syntax defined in GetWebElement keyword.
 
     Examples
     --------
@@ -81,6 +81,12 @@ def mouse_down(
 
         MouseDown          input[type=button]   value    element_type=css
 
+    Hold mouse down in-place without specifying locator:
+
+    .. code-block:: robotframework
+
+        MouseDown
+
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Qwords like ClickText/Item, TypeText, Dropdown etc.
 
@@ -111,26 +117,28 @@ def mouse_down(
     \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
     """
     kwargs.pop("all_frames", None)
-    webelement: Union[WebElement, list[WebElement]]
-    if isinstance(locator, WebElement):
-        webelement = locator
+    webelement: Optional[Union[WebElement, list[WebElement]]]
+    if locator is not None:
+        if isinstance(locator, WebElement):
+            webelement = locator
+        else:
+            webelement = element.get_webelement(locator,
+                                                anchor,
+                                                element_type,
+                                                timeout,
+                                                all_frames=False,
+                                                **kwargs)
+
+        # first one if multiple returned
+        webelement = webelement[0] if isinstance(webelement, list) else webelement
+        actions.mouse_down(webelement)
     else:
-        webelement = element.get_webelement(locator,
-                                            anchor,
-                                            element_type,
-                                            timeout,
-                                            all_frames=False,
-                                            **kwargs)
-
-    # first one if multiple returned
-    webelement = webelement[0] if isinstance(webelement, list) else webelement
-
-    actions.mouse_down(webelement)
+        actions.mouse_down()
 
 
 @keyword(tags=("Mouse", "Interaction"))
 def mouse_up(
-    locator: Union[WebElement, str],
+    locator: Optional[Union[WebElement, str]] = None,
     anchor: str = "1",
     element_type: Optional[str] = None,
     timeout: Union[int, float, str] = 0,
@@ -138,8 +146,8 @@ def mouse_up(
 ) -> None:
     r"""Releases mouse button held down with MouseDown keyword.
 
-    Keyword takes WebElement or locator as input. Given locator must follow the syntax
-    defined in GetWebElement keyword.
+    Keyword takes None, WebElement or locator as input. If given, locator must follow the syntax
+    defined in GetWebElement keyword. If locator is not given, mouse will be released in-place.
 
     Examples
     --------
@@ -177,6 +185,12 @@ def mouse_up(
 
         MouseUp          input[type=button]   value    element_type=css
 
+    Release mouse without specifying locator:
+
+    .. code-block:: robotframework
+
+        MouseUp
+
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Qwords like ClickText/Item, TypeText, Dropdown etc.
 
@@ -207,25 +221,28 @@ def mouse_up(
     \`GetWebElement\`, \`MouseUp\, \`MouseMove\`
     """
     kwargs.pop("all_frames", None)
-    webelement: Union[WebElement, list[WebElement]]
-    if isinstance(locator, WebElement):
-        webelement = locator
+    webelement: Optional[Union[WebElement, list[WebElement]]]
+    if locator is not None:
+        if isinstance(locator, WebElement):
+            webelement = locator
+        else:
+            webelement = element.get_webelement(locator,
+                                                anchor,
+                                                element_type,
+                                                timeout,
+                                                all_frames=False,
+                                                **kwargs)
+
+        # first one if multiple returned
+        webelement = webelement[0] if isinstance(webelement, list) else webelement
+
+        actions.mouse_up(webelement)
     else:
-        webelement = element.get_webelement(locator,
-                                            anchor,
-                                            element_type,
-                                            timeout,
-                                            all_frames=False,
-                                            **kwargs)
-
-    # first one if multiple returned
-    webelement = webelement[0] if isinstance(webelement, list) else webelement
-
-    actions.mouse_up(webelement)
+        actions.mouse_up()
 
 
 @keyword(tags=("Mouse", "Interaction"))
-def mouse_move(x: int, y: int) -> None:
+def mouse_move(x: float, y: float) -> None:
     r"""Moves the mouse to the specified coordinates within the web browser viewport.
 
     The coordinate system in a web browser starts from the **top-left corner** of the viewport
@@ -280,7 +297,7 @@ def mouse_move(x: int, y: int) -> None:
     ----------------
     \`GetWebElement\`, \`MouseUp\`, \`MouseMove\`
     """
-    actions.mouse_move(int(x), int(y))
+    actions.mouse_move(float(x), float(y))
 
 
 @keyword(tags=("Mouse", "Interaction"))
