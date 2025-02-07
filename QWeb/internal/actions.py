@@ -207,20 +207,14 @@ def right_click(element: WebElement) -> None:
 def mouse_down(element: Optional[WebElement] = None) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
-    if element:
-        ac.click_and_hold(element)
-    else:
-        ac.click_and_hold()
+    ac.click_and_hold(element)
     ac.perform()
 
 
 def mouse_up(element: Optional[WebElement] = None) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
-    if element:
-        ac.release(element)
-    else:
-        ac.release()
+    ac.release(element)
     ac.perform()
 
 
