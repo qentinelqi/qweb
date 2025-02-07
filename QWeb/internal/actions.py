@@ -204,19 +204,27 @@ def right_click(element: WebElement) -> None:
     ac.context_click(element).perform()
 
 
-def mouse_down(element: WebElement) -> None:
+def mouse_down(element: Optional[WebElement] = None) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
-    ac.click_and_hold(element).perform()
+    if element:
+        ac.click_and_hold(element)
+    else:
+        ac.click_and_hold()
+    ac.perform()
 
 
-def mouse_up(element: WebElement) -> None:
+def mouse_up(element: Optional[WebElement] = None) -> None:
     driver = browser.get_current_browser()
     ac = ActionChains(driver)
-    ac.release(element).perform()
+    if element:
+        ac.release(element)
+    else:
+        ac.release()
+    ac.perform()
 
 
-def mouse_move(x: int, y: int) -> None:
+def mouse_move(x: float, y: float) -> None:
     driver = browser.get_current_browser()
     ab = ActionBuilder(driver)
     ab.pointer_action.move_to_location(x, y)

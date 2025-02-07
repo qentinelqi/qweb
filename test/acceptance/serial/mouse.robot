@@ -50,6 +50,17 @@ Click And Hold, incorrect
     # element not found, text
     Run Keyword And Expect Error   QWebElementNotFoundError*       MouseDown   Not here     element_type=text   timeout=1
 
+Click And Hold with None
+    [tags]              mouse   click_and_hold
+    VerifyText          Mouse Click and Hold Test
+    &{coords}=          GetCoordinates  clickAndHoldButton  element_type=item   overlay_offset=50
+    MouseMove           ${coords.x}     ${coords.y}
+    MouseDown
+    Sleep               3
+    MouseUp             
+    ${ms}=              GetText     millisecondsField   tag=span
+    Should Be True      ${ms} > 3000
+
 MouseMove
     [tags]              mouse  move
     VerifyText          Mouse Click and Hold Test
