@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.0] - 2025-02-07
+### Added
+- Robot Framework 7.2.x support
+- Added following keywords to make it easier to build custom "drag and drop", "click and hold" or drawing functionality:
+  - MouseDown
+  - MouseUp
+  - MouseMove
+  - ClickCoordinates
+  - GetCoordinates
+  
+### Fixed
+- ScrollText keyword to support **overlay_offset** argument (as new GetCoordinates keyword)
+- TypeSecret keyword to support rfw 7.2
+
+### Changed
+- Documentation updated on linux installation
+- Documentation: clarified that automatic driver management is preferred
+
+
 ## [3.4.3] - 2024-12-04
 
 ### Fixed
