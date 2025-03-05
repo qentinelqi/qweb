@@ -143,6 +143,7 @@ jobs:
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
+        -i MaximizeWindow
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
