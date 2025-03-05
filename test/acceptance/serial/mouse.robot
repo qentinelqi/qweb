@@ -53,6 +53,8 @@ Click And Hold, incorrect
 Click And Hold with None
     [tags]              mouse   click_and_hold
     VerifyText          Mouse Click and Hold Test
+    Sleep               2
+
     &{coords}=          GetCoordinates  clickAndHoldButton  element_type=item   overlay_offset=50
     MouseMove           ${coords.x}     ${coords.y}
     MouseDown
