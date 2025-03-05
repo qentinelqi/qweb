@@ -161,6 +161,7 @@ jobs:
         -o rerun.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
+        -i MaximizeWindow
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -204,6 +205,7 @@ jobs:
         -o rerun.xml
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -i MaximizeWindow
         -e jailed 
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
