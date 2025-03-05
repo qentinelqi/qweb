@@ -145,7 +145,7 @@ def scroll_overlay_adjustment(overlay_offset: int = 0) -> None:  # pylint: disab
     # This was needed in firefox because the scroll position was not updated immediately
     while previous_scroll != current_scroll:
         previous_scroll = current_scroll
-        time.sleep(0.2)  # Small delay to allow scrolling to stabilize
+        time.sleep(0.5)  # Small delay to allow scrolling to stabilize
         current_scroll = driver.execute_script("return window.pageYOffset;")
 
     # scroll up by overlay offset
