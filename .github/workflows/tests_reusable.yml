@@ -140,10 +140,10 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -i MaximizeWindow
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
-        -i MaximizeWindow
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -182,6 +182,7 @@ jobs:
         --ordering test/acceptance/.pabot_order
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -i MaximizeWindow
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
