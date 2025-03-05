@@ -65,11 +65,11 @@ jobs:
     - name: Setup Linux windowing
       if: runner.os == 'Linux'
       run: |
-        sudo apt-get install matchbox scrot
+        sudo apt-get install openbox obconf scrot
         pip install python-xlib
         Xvfb $DISPLAY -screen 0 1920x1080x24 &
         sleep 1
-        matchbox-window-manager -use_titlebar no &
+        openbox &
         touch /home/runner/.Xauthority
         pushd /home/runner
         xauth generate $DISPLAY .
