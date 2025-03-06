@@ -16,6 +16,7 @@ ${text}    ${EMPTY}
 *** Test Cases ***
 Click And Hold with text
     [tags]              mouse  click_and_hold
+    SetConfig           WindowSize    1024x768
     VerifyText          Mouse Click and Hold Test
     MouseDown           Click and Hold Me!  element_type=text
     Sleep               2

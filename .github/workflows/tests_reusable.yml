@@ -75,6 +75,12 @@ jobs:
         xauth generate $DISPLAY .
         popd
 
+      - name: Setup Windows display resolution
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        Set-DisplayResolution -Width 1920 -Height 1080 -Force
+
     - name: Install RFW ${{ inputs.minimum-rfw-version }}
       if: matrix.python-version == inputs.minimum-rfw-python
       run: |
@@ -140,6 +146,7 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -i mouse
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -160,6 +167,7 @@ jobs:
         -o rerun.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
+        -i mouse
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -181,6 +189,7 @@ jobs:
         --ordering test/acceptance/.pabot_order
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -i mouse
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -202,6 +211,7 @@ jobs:
         -o rerun.xml
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -i mouse
         -e jailed 
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
