@@ -75,7 +75,7 @@ jobs:
         xauth generate $DISPLAY .
         popd
 
-      - name: Setup Windows display resolution
+    - name: Setup Windows display resolution
       if: runner.os == 'Windows'
       shell: powershell
       run: |
