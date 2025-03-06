@@ -136,7 +136,7 @@ Get & ClickCoordinates outside viewport, not adjusting
     
     # Get coordinates for element outside of viewport without adjusting overlay_offset
     # should not be clickable
-    &{coords}=          GetCoordinates  Outside viewport button    element_type=text
+    &{coords}=          GetCoordinates  Outside viewport button    element_type=text        overlay_offset=50
     VerifyNoText        Button outside viewport was clicked
     ClickCoordinates    ${coords.x}     ${coords.y}
     Sleep               1
