@@ -75,11 +75,11 @@ jobs:
         xauth generate $DISPLAY .
         popd
 
-    - name: Setup Windows display resolution
-      if: runner.os == 'Windows'
-      shell: powershell
-      run: |
-        Set-DisplayResolution -Width 1920 -Height 1080 -Force
+    # - name: Setup Windows display resolution
+    #   if: runner.os == 'Windows'
+    #   shell: powershell
+    #   run: |
+    #     Set-DisplayResolution -Width 1920 -Height 1080 -Force
 
     - name: Install RFW ${{ inputs.minimum-rfw-version }}
       if: matrix.python-version == inputs.minimum-rfw-python
