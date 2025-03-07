@@ -150,13 +150,15 @@ def scroll_overlay_adjustment(overlay_offset: int = 0) -> None:  # pylint: disab
 
     # scroll up by overlay offset
     # negative offset -> down, positive offset -> up
-    if driver.capabilities["browserName"].lower() in browser.firefox.NAMES:
-        # Firefox 135+ needs to have a minimum 3 sec delay, more in cloud environments
-        time.sleep(4)
+    # if driver.capabilities["browserName"].lower() in browser.firefox.NAMES:
+    #     # Firefox 135+ needs to have a minimum 3 sec delay, more in cloud environments
+    #     time.sleep(4)
 
     scroll_amount = -overlay_offset if overlay_offset > 0 else abs(overlay_offset)
+    driver.execute_script("document.body.style.willChange = 'scroll-position';")
+    driver.execute_script("document.body.style.overflowAnchor = 'none';")
     driver.execute_script(f"window.scrollBy(0, {scroll_amount})")
-    time.sleep(0.5)  # Small delay to allow scrolling to stabilize
+    
 
 
 @decorators.timeout_decorator_for_actions
