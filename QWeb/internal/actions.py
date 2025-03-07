@@ -34,6 +34,7 @@ from typing import Any, Optional, Union
 from robot.api import logger
 from selenium.common.exceptions import (
     ElementNotInteractableException,
+    JavascriptException,
     MoveTargetOutOfBoundsException,
     NoSuchElementException,
     WebDriverException,
@@ -153,17 +154,23 @@ def scroll_overlay_adjustment(overlay_offset: int = 0) -> None:  # pylint: disab
     scroll_amount = -overlay_offset if overlay_offset > 0 else abs(overlay_offset)
     if driver.capabilities["browserName"].lower() in browser.firefox.NAMES:
         # Firefox 135+ needs these settings in some Windows environments
-        driver.execute_script("document.body.style.willChange = 'scroll-position';")
-        driver.execute_script("document.body.style.overflowAnchor = 'none';")
-        driver.execute_script(f"window.scrollBy(0, {scroll_amount})")
-
-        # Restore default behavior (to prevent unexpected side effects)
-        driver.execute_script("document.body.style.willChange = '';")
-        driver.execute_script("document.body.style.overflowAnchor = '';")
+        # read current values
+        opt_wc = driver.execute_script("return getComputedStyle(document.body).willChange;")
+        opt_oa = driver.execute_script("return getComputedStyle(document.body).overflowAnchor;")
+        try:
+            # set new values and scroll
+            driver.execute_script("document.body.style.willChange = 'scroll-position';")
+            driver.execute_script("document.body.style.overflowAnchor = 'none';")
+            driver.execute_script(f"window.scrollBy(0, {scroll_amount})")
+        except JavascriptException:
+            pass
+        finally:
+            # Restore default behavior (to prevent unexpected side effects)
+            driver.execute_script(f"document.body.style.willChange = '{opt_wc}';")
+            driver.execute_script(f"document.body.style.overflowAnchor = '{opt_oa}';")
 
     else:
         driver.execute_script(f"window.scrollBy(0, {scroll_amount})")
-    
 
 
 @decorators.timeout_decorator_for_actions
