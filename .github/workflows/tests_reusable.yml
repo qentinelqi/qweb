@@ -146,7 +146,6 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
-        -i mouse
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -167,7 +166,6 @@ jobs:
         -o rerun.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
-        -i mouse
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
         --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
@@ -189,7 +187,6 @@ jobs:
         --ordering test/acceptance/.pabot_order
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
-        -i mouse
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -211,7 +208,6 @@ jobs:
         -o rerun.xml
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
-        -i mouse
         -e jailed 
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
