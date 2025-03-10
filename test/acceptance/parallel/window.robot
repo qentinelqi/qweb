@@ -182,6 +182,34 @@ Set Window Size
 Maximize Window
     [Documentation]             Tests for MaximizeWindow keyword
     [Tags]                      Window    MaximizeWindow
+    CloseAllBrowsers
+    OpenBrowser                 about:blank                 ${BROWSER} 
+    GoTo                        http://howbigismybrowser.com/
+    Sleep                       2                           # wait for browser
+    SetConfig                   WindowSize                  550X550
+    Sleep                       2                           # give time for size to change
+    LogScreenshot
+    ${driver}=                  Return Browser
+    ${size}                     Set Variable                ${driver.get_window_size()}
+    ${width} =                  Get From Dictionary         ${size}                     width
+    ${height} =                 Get From Dictionary         ${size}                     height
+    Log                         Window size: ${width}x${height}
+
+    MaximizeWindow
+    Sleep                       2                           # give time for size to change
+    LogScreenshot
+    ${max_size}                 Set Variable                ${driver.get_window_size()}
+    ${max_width} =              Get From Dictionary         ${max_size}                 width
+    ${max_height} =             Get From Dictionary         ${max_size}                 height
+
+    Log                         Window size after: ${max_width}x${max_height}
+
+    Should be True              ${max_width} > ${width}
+    Should be True              ${max_height} > ${height}
+
+Maximize Window headless
+    [Documentation]             Tests for MaximizeWindow keyword
+    [Tags]                      Window    MaximizeWindow
     GoTo                        http://howbigismybrowser.com/
     Sleep                       2                           # wait for browser
     SetConfig                   WindowSize                  550X550
