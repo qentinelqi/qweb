@@ -176,7 +176,7 @@ class Table:
         else:
             row, _ = self._convert_coordinates(locator[0])
         if locator[1].startswith("c?"):
-            # try with old one if no full matches or if partial match used
+            # try with old one if partial match used
             if partial_match:
                 column = self.get_cell_by_locator(locator[1][2:], **kwargs)
             else:
@@ -401,8 +401,8 @@ class Table:
         try:
             index = column_texts.index(locator)
             index = index + 1
-        except ValueError:
-            raise QWebValueError(f"Matching column not found for locator {locator}.")
+        except ValueError as e:
+            raise QWebValueError(f"Matching column not found for locator {locator}.") from e
         return index
 
     def get_column_header_texts(self, columns: List[WebElement]) -> List[str]:
