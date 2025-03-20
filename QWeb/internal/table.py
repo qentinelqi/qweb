@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 import fnmatch
 import re
@@ -167,6 +167,7 @@ class Table:
         row_elem = None
         cell = None
         locator = coordinates.split("/")
+        partial_match = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
         if locator[0].startswith("r?"):
             row_elem = self.get_row(locator[0][2:], anchor)
             # take last row as "row" if row_elem is not None
@@ -175,7 +176,13 @@ class Table:
         else:
             row, _ = self._convert_coordinates(locator[0])
         if locator[1].startswith("c?"):
-            column = self.get_cell_by_locator(locator[1][2:], **kwargs)
+            # try with old one if no full matches or if partial match used
+            if partial_match:
+                column = self.get_cell_by_locator(locator[1][2:], **kwargs)
+            else:
+                # new direct column index full match locator
+                column = self.get_full_match_column_index(locator[1][2:])
+
         else:
             _, column = self._convert_coordinates(f"r{row}{locator[1]}")
         if row_elem:
@@ -386,3 +393,22 @@ class Table:
                     }
                 return(columns(arguments[0]));"""
         return javascript.execute_javascript(js, self.table)
+
+    def get_full_match_column_index(self, locator: str) -> int:
+        """Get the index of the column based on the locator text. Full match"""
+        columns = self.get_columns()
+        column_texts = self.get_column_header_texts(columns)
+        try:
+            index = column_texts.index(locator)
+            index = index + 1
+        except ValueError:
+            raise QWebValueError(f"Matching column not found for locator {locator}.")
+        return index
+
+    def get_column_header_texts(self, columns: List[WebElement]) -> List[str]:
+        # prefer using title, then aria-label, then text
+        column_texts = [
+            c.get_attribute("aria-label") or c.get_attribute("title") or c.text for c in columns
+        ]
+
+        return column_texts
