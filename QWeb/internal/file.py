@@ -18,8 +18,8 @@ from __future__ import annotations
 from typing import Any, Union
 from pathlib import Path
 import os
-import slate3k as slate_pdf_reader
-from pdfminer.pdfparser import PSEOF
+from pypdf import PdfReader
+from pypdf.errors import PdfStreamError
 from QWeb.internal import download, util
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueMismatchError
 
@@ -36,17 +36,15 @@ class File:
     def create_pdf_instance(filename: str) -> File:
         all_text = ""
         filepath = download.get_path(filename)
+
         try:
-            with open(filepath, "rb") as pdf_obj:
-                pdf = slate_pdf_reader.PDF(pdf_obj)
-                for page in pdf:
-                    all_text += page.strip()
+            reader = PdfReader(filepath)
+            for page in reader.pages:
+                all_text += page.extract_text()
                 if all_text != "":
                     return File(all_text, filepath)
                 raise QWebValueMismatchError("Text not found. Seems that the pdf is empty.")
-        except TypeError as e:
-            raise QWebFileNotFoundError(f"File not found. Got {e} instead.") from e
-        except PSEOF as e:
+        except PdfStreamError as e:
             raise QWebFileNotFoundError(f"File found, but it's not valid pdf-file: {e}") from e
 
     @staticmethod
