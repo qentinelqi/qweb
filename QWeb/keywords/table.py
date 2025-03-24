@@ -513,7 +513,7 @@ def get_col_header(index: Optional[int] = None) -> Union[str, List[str]]:
     table = Table.ACTIVE_TABLE.update_table()
     columns = table.get_columns()
 
-    column_texts = _get_column_header_texts(columns)
+    column_texts = table.get_column_header_texts(columns)
 
     if not index:
         return column_texts
@@ -586,14 +586,14 @@ def verify_col_header(expected: str, index: Optional[int] = None, **kwargs) -> b
         raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
     table = Table.ACTIVE_TABLE.update_table()
     columns = table.get_columns()
-    column_texts = _get_column_header_texts(columns)
+    column_texts = table.get_column_header_texts(columns)
     partial = kwargs.get("partial_match", CONFIG["PartialMatch"])
 
     # If index is not specified, verify that the expected text is in any column
     if not index:
         # accept partial match
         if util.par2bool(partial):
-            found = found = any(expected in c for c in column_texts)
+            found = any(expected in c for c in column_texts)
         # full match
         else:
             found = expected in column_texts
@@ -618,12 +618,3 @@ def verify_col_header(expected: str, index: Optional[int] = None, **kwargs) -> b
         return True
 
     raise QWebElementNotFoundError(f'Column "{index}" "{actual}" does not match "{expected}".')
-
-
-def _get_column_header_texts(columns: List[WebElement]) -> List[str]:
-    # prefer using title, then aria-label, then text
-    column_texts = [
-        c.get_attribute("aria-label") or c.get_attribute("title") or c.text for c in columns
-    ]
-
-    return column_texts
