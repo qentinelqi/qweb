@@ -41,9 +41,9 @@ class File:
             reader = PdfReader(filepath)
             for page in reader.pages:
                 all_text += page.extract_text()
-                if all_text != "":
-                    return File(all_text, filepath)
-                raise QWebValueMismatchError("Text not found. Seems that the pdf is empty.")
+            if all_text != "":
+                return File(all_text, filepath)
+            raise QWebValueMismatchError("Text not found. Seems that the pdf is empty.")
         except PdfStreamError as e:
             raise QWebFileNotFoundError(f"File found, but it's not valid pdf-file: {e}") from e
 
