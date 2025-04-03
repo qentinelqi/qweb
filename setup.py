@@ -49,6 +49,7 @@ setup(
                       "pyautogui>=0.9.53",
                       "pynput>=1.7.7",
                       "pypdf>=5.4.0",
+                      "pyperclip==1.9.0",
                       'requests>=2.32.2',
                       "robotframework>=5.0.1,<8",
                       "robotframework-debuglibrary==2.5.0",
