@@ -395,7 +395,9 @@ class Table:
         return javascript.execute_javascript(js, self.table)
 
     def get_full_match_column_index(self, locator: str) -> int:
-        """Get the index of the column based on the locator text. Full match"""
+        """Get the index of the column based on the locator text. Full match
+            is used to find the column header. Returned Index starts from 1.
+        """
         columns = self.get_columns()
         column_texts = self.get_column_header_texts(columns)
         try:
@@ -406,7 +408,7 @@ class Table:
         return index
 
     def get_column_header_texts(self, columns: List[WebElement]) -> List[str]:
-        # prefer using title, then aria-label, then text
+        # prefer using aria-label, then title, then text
         column_texts = [
             c.get_attribute("aria-label") or c.get_attribute("title") or c.text for c in columns
         ]
