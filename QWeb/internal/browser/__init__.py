@@ -124,7 +124,7 @@ def cache_browser(driver: WebDriver) -> None:
     # pylint: disable=global-statement
     global _current_browser
     # pylint: disable=global-statement, global-variable-not-assigned
-    global _open_browsers
+    global _open_browsers  # noqa: F824
     _current_browser = driver
     _open_browsers.append(driver)
 
@@ -135,7 +135,7 @@ def remove_from_browser_cache(driver: WebDriver) -> None:
     # pylint: disable=global-statement
     global _current_browser
     # pylint: disable=global-statement, global-variable-not-assigned
-    global _open_browsers
+    global _open_browsers  # noqa: F824
     _open_browsers.remove(driver)
     # there's at least one browser open, move to latest
     _current_browser = _open_browsers[-1] if _open_browsers else None
