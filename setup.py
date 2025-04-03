@@ -45,7 +45,7 @@ setup(
     python_requires= ">3.7,<4.0",
     license= "Apache License 2.0",
     install_requires=["setuptools>=70.0.0",
-                      "pyscreeze==1.0.1",
+                      "pyscreeze==0.1.28",
                       "pyautogui>=0.9.53",
                       "pynput>=1.8.0",
                       "pypdf>=5.4.0",

@@ -1,4 +1,4 @@
-PyScreeze==1.0.1
+PyScreeze==0.1.28
 pyperclip==1.9.0
 PyAutoGUI>=0.9.53
 Pillow>=10.3.0,<11
