@@ -147,6 +147,7 @@ def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     index = 1 if cv2.__version__.startswith("3") else 0  # type: ignore
 
     for c in contours[index]:
+        assert isinstance(c, ndarray)
         (x, y, w, h) = cv2.boundingRect(c)
         cv2.rectangle(ref_image_c, (x, y), ((x + w), (y + h)), (0, 0, 255), 2)
     return ref_image_c

@@ -56,11 +56,10 @@ setup(
                       "selenium>=4.27.0,<5",
                       "Pillow>=10.3.0,<11",
                       "scipy>=1.7.3",
-                      "scikit-image==0.21;python_version=='3.8'",
                       "scikit-image==0.24;python_version=='3.9'",
                       "scikit-image==0.25.2;python_version>'3.9'",
                       "ply",
-                      "numpy>=1.23.5,<2",
+                      "numpy>=2.24",
                       "opencv-python==4.11.0.86"],
 
     extras_require={':"linux" in sys_platform': ['xlib'],
