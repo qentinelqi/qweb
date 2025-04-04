@@ -10,7 +10,7 @@ pynput==1.8.1
 setuptools>=70.0.0
 # numpy is not QWeb's direct dependency, but opencv's.
 # v2.0+ not supported yet
-numpy>=2.24
+numpy>=2.0.0
 opencv-python==4.11.0.86
 pypdf==5.4.0
 requests==2.32.2
