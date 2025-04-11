@@ -144,7 +144,7 @@ def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     # Modified as per latest minimum required opencv version
     contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    index =  0
+    index = 0
 
     for c in contours[index]:
         assert isinstance(c, ndarray)

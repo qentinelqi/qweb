@@ -84,53 +84,55 @@ def debug_off() -> None:
 
 
 @keyword(tags=("Debug", "Notify"))
-def toast_notify(message: str, type: str = "info", position: str = "center",
-                 font_size: int = 18, heading: str = "Test Automation Notification", timeout: int = 3):
-   r"""Show toast notification in the browser.
+def toast_notify(message: str, level: str = "info", position: str = "center",
+                 font_size: int = 18,
+                 heading: str = "Test Automation Notification", timeout: int = 3):
+    r"""Show toast notification in the browser.
 
-   Displays a temporary notification in the browser window using shadow DOM.
-   Useful for visual feedback during debugging and test execution.
+    Displays a temporary notification in the browser window using shadow DOM.
+    Useful for visual feedback during debugging and test execution.
 
-   Here are the different types of notifications you can use:
+    Here are the different types of notifications you can use:
 
-   .. image:: https://github.com/qentinelqi/qweb/raw/master/images/toast_notify.png
+    .. image:: https://github.com/qentinelqi/qweb/raw/master/images/toast_notify.png
 
-   **Warning**
-   -----------
-   This keyword injects temporary elements into the target application's DOM.
-   While the notification is encapsulated in Shadow DOM to minimize side effects,
-   there is still a slight potential for interference with the tested application.
-   Use primarily for debugging and non-production test runs. The added elements are
-   removed automatically after the timeout period.
+    **Warning**
+    -----------
+    This keyword injects temporary elements into the target application's DOM.
+    While the notification is encapsulated in Shadow DOM to minimize side effects,
+    there is still a slight potential for interference with the tested application.
+    Use primarily for debugging and non-production test runs. The added elements are
+    removed automatically after the timeout period.
 
-   Parameters
-   ----------
-   message : str
-      Notification message to display.
-   type : str, optional
-      Type of notification. Options: "info" (default), "success", "warning", "error".
-   position : str, optional
-      Position of the toast. Options: "center" (default), "top-left", "top-right", "bottom-left", "bottom-right".
-   font_size : int, optional
-      Font size of the notification text. Default is 18.
-   heading : str, optional
-      Heading text of the notification. Default is "Test Automation Notification".
-   timeout : int, optional
-      Duration in seconds before the notification disappears. Default is 3 seconds.
+    Parameters
+    ----------
+    message : str
+       Notification message to display.
+    level : str, optional
+       Type of notification. Options: "info" (default), "success", "warning", "error".
+    position : str, optional
+       Position of the toast. Options: "center" (default),
+       "top-left", "top-right", "bottom-left", "bottom-right".
+    font_size : int, optional
+       Font size of the notification text. Default is 18.
+    heading : str, optional
+       Heading text of the notification. Default is "Test Automation Notification".
+    timeout : int, optional
+       Duration in seconds before the notification disappears. Default is 3 seconds.
 
-   Examples
-   --------
-   .. code-block:: robotframework
+    Examples
+    --------
+    .. code-block:: robotframework
 
-      Toast Notify    message=Test step passed!    type=success
-      Toast Notify    message=Warning occurred!    type=warning    position=top-right    timeout=5
+       Toast Notify    message=Test step passed!    level=success
+       Toast Notify    message=Warning occurred!    level=warning    position=top-right    timeout=5
 
-   Related keywords
-   ----------------
-   `DebugOn`, `DebugOff`
-   """
-   try:
-      create_toast_notification(message, type, position, font_size, heading, timeout)
-      logger.info(f"Toast notification displayed: [{type.upper()}] {message}")
-   except JavascriptException as e:
-      logger.warn(f"Toast notification failed: {e}")
+    Related keywords
+    ----------------
+    `DebugOn`, `DebugOff`
+    """
+    try:
+        create_toast_notification(message, level, position, font_size, heading, timeout)
+        logger.info(f"Toast notification displayed: [{level.upper()}] {message}")
+    except JavascriptException as e:
+        logger.warn(f"Toast notification failed: {e}")

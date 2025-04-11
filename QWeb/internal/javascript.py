@@ -615,8 +615,10 @@ def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
     )
     return execute_javascript(js, tag)
 
-def create_toast_notification(message: str, type: str = "info", position: str = "center",
-                 font_size: int = 18, heading: str = "Test Automation Notification", timeout: int = 3):
+
+def create_toast_notification(message: str, level: str = "info", position: str = "center",
+                              font_size: int = 18,
+                              heading: str = "Test Automation Notification", timeout: int = 3):
 
     """Display toast notification in the browser via JavaScript."""
     js = f"""
@@ -645,9 +647,9 @@ def create_toast_notification(message: str, type: str = "info", position: str = 
         var iconText = '';
         var bgColor = 'black';
 
-        if ('{type}' === 'success') {{ iconText = '✔️'; bgColor = 'green'; }}
-        else if ('{type}' === 'warning') {{ iconText = '⚠️'; bgColor = 'orange'; }}
-        else if ('{type}' === 'error') {{ iconText = '✖'; bgColor = 'red'; }}
+        if ('{level}' === 'success') {{ iconText = '✔️'; bgColor = 'green'; }}
+        else if ('{level}' === 'warning') {{ iconText = '⚠️'; bgColor = 'orange'; }}
+        else if ('{level}' === 'error') {{ iconText = '✖'; bgColor = 'red'; }}
         else {{ iconText = 'ℹ️'; bgColor = 'black'; }}
 
         toast.style.position = 'fixed';

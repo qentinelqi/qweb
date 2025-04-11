@@ -25,18 +25,6 @@ Toast notifications in the normal browser
     LogScreenshot
     SetConfig           ShadowDOM                       Off
 
-Screenshot all toasts
-    [Documentation]
-    [tags]              notify_shot     Go to the web shop, and verify that the slogan text appears on the page.
-    GoTo                https://qentinelqi.github.io/shop/
-    ToastNotify         Default settings               timeout=20
-    ToastNotify         Heads up! Check top-right part.   warning        top-right      timeout=20
-    ToastNotify         Heads up! Check top-left part.   warning        top-left      timeout=20 
-    ToastNotify         Something went wrong!           error          bottom-left    timeout=20 
-    ToastNotify         Custom heading & font size      info           bottom-right   font_size=32  heading=QWeb Notification   timeout=20
-    Sleep               3
-    LogScreenshot
-    VerifyText          Find your spirit animal
 
 Toast notifications in the headless browser
     [tags]              toast    notify
