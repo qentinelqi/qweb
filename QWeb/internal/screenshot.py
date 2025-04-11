@@ -141,10 +141,10 @@ def _draw_contours(diff: ndarray, ref_image_c: ndarray) -> ndarray:
     """
     diff = (diff * 255).astype("uint8")
     thresh = cv2.threshold(diff, 220, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Modified as per latest minimum required opencv version
+    contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # api differs on opencv3 and opencv4
-    index = 1 if cv2.__version__.startswith("3") else 0  # type: ignore
+    index =  0
 
     for c in contours[index]:
         assert isinstance(c, ndarray)
