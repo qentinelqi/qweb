@@ -13,6 +13,9 @@ screenshots/
 **/pabot_results/
 .pabot*
 
+# Unignore images in images folder
+!images/*.png
+
 # doc output
 docs/build
 

@@ -153,7 +153,7 @@ External site with shadow DOM
     SetConfig                   ShadowDOM                   True
     VerifyText                  Sign In                     timeout=3
     ClickText                   Sign In                     timeout=3
-    VerifyText                  Remember me                 timeout=20
+    VerifyText    Sign in with your ServiceNow ID           timeout=20
     LogScreenshot
 
 
