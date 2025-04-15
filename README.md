@@ -1,4 +1,4 @@
-<img id="qweb" src="https://github.com/qentinelqi/qweb/raw/master/images/qweb.png" alt="QWeb">
+<img id="qweb" src="./images/qweb_logo_256.png" alt="QWeb">
 
 > Keyword based test automation for the web.
 

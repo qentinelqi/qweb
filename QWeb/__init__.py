@@ -65,6 +65,8 @@ except SystemExit as se:
 
 class QWeb:
     r"""
+    .. image:: https://github.com/qentinelqi/qweb/raw/master/images/qweb_logo_256.png
+
     QWeb is a powerful and versatile `Robot Framework <https://robotframework.org/>`_ library that
     enables efficient and reliable web testing and automation. One of the key strengths of QWeb
     is its intuitive and user-friendly syntax, which makes it easy to write and maintain complex

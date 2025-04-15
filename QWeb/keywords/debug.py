@@ -22,7 +22,7 @@ from robot.api.deco import keyword
 from robot.api import logger
 from selenium.common.exceptions import JavascriptException
 from QWeb.internal.config_defaults import CONFIG
-from QWeb.internal.javascript import create_toast_notification
+from QWeb.internal.javascript import create_toast_notification as _toast
 
 cur_timeout = 0
 cur_mode = None
@@ -132,7 +132,7 @@ def toast_notify(message: str, level: str = "info", position: str = "center",
     `DebugOn`, `DebugOff`
     """
     try:
-        create_toast_notification(message, level, position, font_size, heading, timeout)
+        _toast(message, level, position, font_size, heading, timeout)
         logger.info(f"Toast notification displayed: [{level.upper()}] {message}")
     except JavascriptException as e:
         logger.warn(f"Toast notification failed: {e}")

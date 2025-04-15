@@ -6,6 +6,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.0] - 2025-02-07
+### Added
+- New keyword: [ToastNotify](https://qentinelqi.github.io/qweb/QWeb.html#Toast%20Notify)
+  - Displays a temporary notification in the browser window using shadow DOM.
+  - Useful for visual feedback during debugging and test execution.
+
+### Fixed
+- Fix for Windows Firefox not updating scroll / view right after scrolling in some Windows systems
+- Better handling of full match in table keywords
+
+### Changed
+- Bumped major versions of the following dependencies:
+  - Numpy
+  - Pillow
+- Bumped minor version of the following dependencies:
+  - scikit-image
+  - pynput
+  - opencv
+  - pyperclip
+- PDF handling functionality now done with pypdf instead of slate3k
+- Pipeline: switched to openbox Window Manager in linux
+- Pipeline: switched static analyzed to be run with Python 3.11
+
 ## [3.5.0] - 2025-02-07
 ### Added
 - Robot Framework 7.2.x support
