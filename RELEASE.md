@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.6.0] - 2025-02-07
+## [3.6.0] - 2025-04-15
 ### Added
 - New keyword: [ToastNotify](https://qentinelqi.github.io/qweb/QWeb.html#Toast%20Notify)
   - Displays a temporary notification in the browser window using shadow DOM.
