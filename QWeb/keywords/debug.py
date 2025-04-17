@@ -131,8 +131,19 @@ def toast_notify(message: str, level: str = "info", position: str = "center",
     ----------------
     `DebugOn`, `DebugOff`
     """
+    lower_limit = 10
+    upper_limit = 100
     try:
-        _toast(message, level, position, font_size, heading, timeout)
-        logger.info(f"Toast notification displayed: [{level.upper()}] {message}")
+      # only allow font size between 10 and 100
+      if not (lower_limit <= font_size <= 100):
+         logger.warn(
+               f"Font size {font_size} is out of bounds ({lower_limit}-{upper_limit})."
+               f"Using default font size 18."
+         )
+         font_size = 18
+
+      _toast(message, level, position, font_size, heading, timeout)
+      logger.info(f"Toast notification displayed: [{level.upper()}] {message}")
+
     except JavascriptException as e:
-        logger.warn(f"Toast notification failed: {e}")
+      logger.warn(f"Toast notification failed: {e}")

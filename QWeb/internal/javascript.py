@@ -629,6 +629,7 @@ def create_toast_notification(message: str, level: str = "info", position: str =
         host.style.width = '100%';
         host.style.height = '100%';
         host.style.pointerEvents = 'none';
+        host.style.zIndex = '2147483647';
         document.body.appendChild(host);
 
         var shadow = host.attachShadow({{ mode: 'open' }});
