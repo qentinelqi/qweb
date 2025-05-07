@@ -55,10 +55,6 @@ tag_prefix = "v"
 versionfile_source = "QWeb/_version.py"
 versionfile_build = "QWeb/_version.py"
 
-[tool.mypy]
-warn_return_any = false
-warn_unused_configs = true
-
 [tool.isort]
 known_third_party = ["mock", "pytest", "robot", "selenium"]
 line_length = 100
