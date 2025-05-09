@@ -38,12 +38,13 @@ dependencies = [
     "scikit-image==0.25.2; python_version>'3.9'",
     "ply",
     "numpy>=2.0.0",
-    "opencv-python==4.11.0.86"
-]
+    "opencv-python==4.11.0.86",
+    # platform specific
+    "xlib; sys_platform == 'linux'",
+    "pyobjc>=9.2; sys_platform == 'darwin'",
+    "pyobjc-core>=9.2; sys_platform == 'darwin'",
 
-[project.optional-dependencies]
-linux = ["xlib"]
-darwin = ["pyobjc-core>=9.2", "pyobjc>=9.2"]
+]
 
 [tool.setuptools.packages.find]
 exclude = ["*.test", "*.test.*", "test.*", "test"]
