@@ -135,8 +135,8 @@ def kw_docs(ctx):
 @duty
 def create_dist(ctx):
     """
-    Creates distribution packages
+    Creates distribution packages (wheel + sdist) using PEP 517 build
     Args:
         ctx: The context instance (passed automatically)
     """
-    ctx.run(f"{python_exe} setup.py sdist bdist_wheel", title="Creating packages to ./dist", capture=False)
+    ctx.run(f"{python_exe} -m build", title="Creating packages to ./dist", capture=False)

@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=70", "wheel", "versioneer[toml]"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qweb"
+description = "Keyword driven automation for the web"
+readme = "README.md"
+requires-python = ">3.7,<4.0"
+dynamic = ["version"]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Copado Inc.", email = "copadorobotictesting@copado.com" }]
+keywords = ["test", "automation", "robot", "framework"]
+urls = { Homepage = "https://github.com/qentinelqi/qweb/" }
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: Robot Framework",
+    "Framework :: Robot Framework :: Library"
+]
+dependencies = [
+    "setuptools>=70.0.0",
+    "pyscreeze==0.1.28",
+    "pyautogui>=0.9.53",
+    "pynput>=1.8.0",
+    "pypdf>=5.4.0",
+    "pyperclip==1.9.0",
+    "requests>=2.32.2",
+    "robotframework>=5.0.1,<8",
+    "robotframework-debuglibrary==2.5.0",
+    "selenium>=4.27.0,<5",
+    "Pillow>=11.0.0",
+    "scipy>=1.7.3",
+    "scikit-image==0.24; python_version=='3.9'",
+    "scikit-image==0.25.2; python_version>'3.9'",
+    "ply",
+    "numpy>=2.0.0",
+    "opencv-python==4.11.0.86",
+    # platform specific
+    "xlib; sys_platform == 'linux'",
+    "pyobjc>=9.2; sys_platform == 'darwin'",
+    "pyobjc-core>=9.2; sys_platform == 'darwin'",
+
+]
+
+[tool.setuptools.packages.find]
+exclude = ["*.test", "*.test.*", "test.*", "test"]
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440-pre"
+tag_prefix = "v"
+versionfile_source = "QWeb/_version.py"
+versionfile_build = "QWeb/_version.py"
+
+[tool.isort]
+known_third_party = ["mock", "pytest", "robot", "selenium"]
+line_length = 100
+skip = ["versioneer.py", "QWeb/_version.py"]
