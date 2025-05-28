@@ -633,6 +633,10 @@ def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> Web
         return firefox.open_browser(firefox_args=options, *args, **kwargs)
 
     def use_safari():
+        # Make sure that enable_logging is a boolean
+        kwargs["enable_logging"] = util.par2bool(
+            kwargs.get("enable_logging", False)
+        )
         return safari.open_browser(*args, **kwargs)
 
     def use_android():

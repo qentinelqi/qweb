@@ -39,6 +39,7 @@ def open_browser(
 
     remote_url = kwargs.get("remote_url", None)
     enable_logging = kwargs.get("enable_logging", False)
+    # make sure this is not just a string
     if remote_url:
         driver = WebDriver(command_executor=remote_url, options=options)
     else:
