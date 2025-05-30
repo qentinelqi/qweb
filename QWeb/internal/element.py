@@ -637,7 +637,7 @@ def _list_info(candidate_element):
 def get_elements_by_attributes(
     css: str, locator: Optional[str] = None, **kwargs
 ) -> Union[list[WebElement], tuple[list[WebElement], list[WebElement]]]:
-    any_element = util.par2bool(kwargs.get("any_element", None))
+    any_element = util.par2bool(kwargs.get("any_element", ""))
     partial = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
     if "tag" in kwargs:
         css = str(kwargs.get("tag"))
