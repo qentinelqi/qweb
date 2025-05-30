@@ -22,7 +22,6 @@ NAMES: list[str] = ["firefox", "ff"]
 
 # pylint: disable=too-many-branches
 def open_browser(
-    profile_dir: Optional[str] = None,
     headless: bool = False,
     binary: Optional[str] = None,
     driver_path: str = "",
@@ -59,11 +58,7 @@ def open_browser(
         )
         options.add_argument("-headless")
         CONFIG.set_value("Headless", True)
-    # if profile_dir:
-    #     logger.warn('Deprecated.\n'
-    #                 'Profile directory can be selected like any other firefox option:\n'
-    #                 '"OpenBrowser   https://site.com   ${BROWSER}  -profile /path/to/profile"')
-    #     # options.add_argument('-profile {}'.format(profile_dir))
+
     ff_version_kwarg = kwargs.get("browser_version", None)
     ff_version = ff_version_kwarg or util.get_rfw_variable_value("${BROWSER_VERSION}")
     if ff_version:
@@ -91,9 +86,7 @@ def open_browser(
         for option in firefox_args:
             option = option.strip()
             if option.startswith("-profile"):
-                profile_dir = _get_profile_dir(option)
-                options.add_argument("-profile")
-                options.add_argument(profile_dir)
+                _parse_profile_option(option, options)
             elif option.startswith("-"):
                 options.add_argument(option)
             else:
@@ -160,3 +153,11 @@ def _get_profile_dir(option_str: str) -> Optional[str]:
         profile = None
 
     return profile
+
+
+def _parse_profile_option(option_str: str, options: Options):
+    profile_dir = _get_profile_dir(option_str)
+    if not profile_dir:
+        raise ValueError(f"Profile directory could not be determined from option: {option_str}")
+    options.add_argument("-profile")
+    options.add_argument(profile_dir)
