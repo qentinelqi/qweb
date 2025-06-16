@@ -672,7 +672,15 @@ def upload_file(
     index: int = 1,
     **kwargs,
 ) -> None:
-    r"""Upload file.
+    r"""Uploads a file to an HTML input element of type ``file``.
+
+    This keyword interacts with native HTML file upload fields by setting the full
+    file path to an ``<input type="file">`` element. The input may be visible or hidden,
+    but it must support direct value assignment via standard browser automation.
+
+    ⚠️ This keyword only works with standard HTML file uploads where an `<input type="file">`
+    element is present. It does not support custom-styled file upload components that do not
+    use native file inputs.
 
     Examples
     --------
