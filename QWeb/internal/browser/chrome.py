@@ -1,6 +1,7 @@
 from __future__ import annotations
 import os
-from typing import Optional, Any
+import subprocess
+from typing import Optional, Any, Union
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
@@ -143,12 +144,42 @@ def create_reused_browser(debugger_address: str) -> WebDriver:
 
 def create_new_browser(chromedriver_path: str, options: Options, **kwargs: Any) -> WebDriver:
     """Create a new browser instance."""
-    remote_url = kwargs.get("remote_url", None)
+    log_level = kwargs.pop("log_level", None)
+    log_output = kwargs.pop("log_output", None)
+    remote_url = kwargs.get("remote_url")
     if remote_url:
         return WebDriver(command_executor=remote_url, options=options)
 
-    service = Service(chromedriver_path) if chromedriver_path else Service()
+    service = build_chromium_service(Service, chromedriver_path, log_level, log_output)
     return Chrome(service=service, options=options)
+
+
+def build_chromium_service(
+    service_cls,
+    executable_path: Optional[str] = None,
+    log_level: Optional[str] = None,
+    log_output: Optional[Union[str, int]] = None,
+) -> Any:
+    """Construct a ChromeDriver Service with optional logging."""
+    # Auto-default log_level if only output is given
+    if log_output and not log_level:
+        log_level = "ALL"
+
+    if isinstance(log_output, str) and log_output.upper() in ["CONSOLE",
+                                                              "STDOUT",
+                                                              "SUBPROCESS.STDOUT"]:
+        log_output = subprocess.STDOUT
+    service_args = [f"--log-level={log_level}"] if log_level else None
+
+    kwargs: dict[str, Any] = {}
+    if executable_path:
+        kwargs["executable_path"] = executable_path
+    if service_args:
+        kwargs["service_args"] = service_args
+    if log_output:
+        kwargs["log_output"] = log_output
+
+    return service_cls(**kwargs)
 
 
 def cache_browser_session(driver: WebDriver) -> None:

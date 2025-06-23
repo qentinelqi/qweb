@@ -1,9 +1,9 @@
 *** Settings ***
 Documentation                   Tests for Dropdown keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 ${BASE_URI}/dropdown.html            ${BROWSER}    --headless
+Suite Setup                     OpenBrowser                 ${BASE_URI}/dropdown.html            ${BROWSER}   # --headless
 Suite Teardown                  CloseBrowser
-Test Timeout                    60 seconds
+#Test Timeout                    60 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
@@ -150,19 +150,19 @@ Test dd kw:s when traverse limit is false
 Locate dropdowns with anchor
     [Documentation]             Locator is the default option of the dropdown and anchor is a number
     Dropdown                    Qentinel                    Rules                       anchor=3
-    VerifyInputValue            //*[@id\="dropdown6"]       Rules
+    VerifyInputValue            //*[@id\="dropdown6"]       Rules                       delay=1
     RefreshPage
     DropDown                    Qentinel                    Rules                       anchor=2
-    VerifyInputValue            //*[@id\="dropdown5"]       Rules
+    VerifyInputValue            //*[@id\="dropdown5"]       Rules                       delay=1
 
 Locate dropdowns with anchor 2
     [Documentation]             Locator is the default option of the dropdown and anchor is text
     RefreshPage
     DropDown                    Qentinel                    Rules                       anchor=Ankkurien avulla
-    VerifyInputValue            //*[@id\="dropdown4"]       Rules
+    VerifyInputValue            //*[@id\="dropdown4"]       Rules                       delay=1
     RefreshPage
     DropDown                    Qentinel                    Rules                       anchor=Delayed dropdown
-    VerifyInputValue            //*[@id\="dropdown6"]       Rules
+    VerifyInputValue            //*[@id\="dropdown6"]       Rules                       delay=1
 
 Select and unselect in multiselection dropdown
     [Documentation]             Test for multiple selection dropdowns

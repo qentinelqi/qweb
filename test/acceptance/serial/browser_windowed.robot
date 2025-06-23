@@ -101,6 +101,17 @@ Open Browser with dictionary prefs
     ...     prefs=${prefsdict}
     [Teardown]     Close Browsers And Remove CHROME_ARGS
 
+Open Browser with driver logging
+    [tags]          exp             PROBLEM_IN_SAFARI
+    [Setup]    No Operation
+    ${log_file}=                    Set Variable    ${OUTPUTDIR}/webdriver.log
+    OperatingSystem.Remove File     ${log_file}
+    OpenBrowser     about:blank     ${BROWSER}    log_output=${log_file}
+    Sleep           2
+    CloseBrowser
+    File Should Exist               ${log_file}
+    OperatingSystem.Remove File     ${log_file}
+
 *** Keywords ***
 Open Browser And Wait A Bit
     IF    $HEADLESS

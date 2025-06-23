@@ -7,6 +7,7 @@ from selenium.webdriver.edge.service import Service
 from robot.api import logger
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal import browser, user, util
+from QWeb.internal.browser.chrome import build_chromium_service
 
 NAMES: list[str] = ["edge", "msedge"]
 
@@ -87,16 +88,18 @@ def open_browser(
         options.add_experimental_option("mobileEmulation", emulate_device)
 
     remote_url = kwargs.get("remote_url", None)
+    log_level = kwargs.pop("log_level", None)
+    log_output = kwargs.pop("log_output", None)
     if remote_url:
         driver = WebDriver(command_executor=remote_url, options=options)
+
     else:
-        service = Service(edgedriver_path) if edgedriver_path else Service()
+        # same function as in Chrome
+        service = build_chromium_service(Service,
+                                         edgedriver_path,
+                                         log_level,
+                                         log_output)
         driver = Edge(service=service, options=options)
 
-    # driver = Edge(
-    #     util.get_rfw_variable_value('${EDGEDRIVER_PATH}')  # pylint: disable=unexpected-keyword-arg
-    #     or executable_path,
-    #     options=options,
-    #     capabilities=desired_capabilities)
     browser.cache_browser(driver)
     return driver

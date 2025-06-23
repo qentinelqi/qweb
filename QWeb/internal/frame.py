@@ -339,7 +339,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
     return wrapped
 
 
-def is_valid(web_element: Union[WebElement, tuple]) -> bool:
+def is_valid(web_element: Any) -> bool:
     if web_element and not isinstance(web_element, tuple):
         return True
     if isinstance(web_element, tuple) and any(web_element):

@@ -128,6 +128,19 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     safari    remote_url=http://127.0.0.1:4444/wd/hub
         CloseAllBrowsers
 
+        # Enabling webdriver logging
+
+        # default log level is INFO in firefox and ALL in Edge/Chrome.
+        OpenBrowser    http://google.com     chrome    log_output=${OUTPUTDIR}/chromedriver.log
+        OpenBrowser    http://google.com     firefox   log_output=${OUTPUTDIR}/geckodriver.log
+        # Console or STDOUT logs to console, log level changed
+        OpenBrowser    http://google.com     edge      log_output=CONSOLE    log_level=DEBUG
+        OpenBrowser    http://google.com     firefox   log_output=STDOUT     log_level=warn
+        # Unlike other browsers, Safari doesn’t let you choose where logs are output, or change levels.
+        # The one option available is to turn logs off or on (default is off).
+        # If logs are toggled on, they can be found at:~/Library/Logs/com.apple.WebDriver/
+        OpenBrowser    http://google.com     safari    enable_logging=True
+
     Selenium Manager
     ----------------
 
@@ -620,6 +633,10 @@ def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> Web
         return firefox.open_browser(firefox_args=options, *args, **kwargs)
 
     def use_safari():
+        # Make sure that enable_logging is a boolean
+        kwargs["enable_logging"] = util.par2bool(
+            kwargs.get("enable_logging", False)
+        )
         return safari.open_browser(*args, **kwargs)
 
     def use_android():

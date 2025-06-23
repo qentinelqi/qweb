@@ -38,13 +38,15 @@ def open_browser(
             )
 
     remote_url = kwargs.get("remote_url", None)
+    enable_logging = kwargs.get("enable_logging", False)
+    # make sure this is not just a string
     if remote_url:
         driver = WebDriver(command_executor=remote_url, options=options)
     else:
         if driver_path:
-            service = Service(driver_path, port=port, quiet=quiet)
+            service = Service(driver_path, port=port, quiet=quiet, enable_logging=enable_logging)
         else:
-            service = Service(port=port, quiet=quiet)
+            service = Service(port=port, quiet=quiet, enable_logging=enable_logging)
 
         driver = webdriver.Safari(service=service, options=options)
 
