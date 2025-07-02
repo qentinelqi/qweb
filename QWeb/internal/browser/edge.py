@@ -73,6 +73,11 @@ def open_browser(
             options.add_argument(item.lstrip())  # pylint: disable=no-member
     options.add_argument("start-maximized")  # pylint: disable=no-member
     options.add_argument("--disable-notifications")  # pylint: disable=no-member
+
+    # page load strategy
+    page_load_strategy = kwargs.get("page_load_strategy", "normal")
+    options.page_load_strategy = page_load_strategy
+
     if "headless" in kwargs:
         CONFIG.set_value("Headless", True)
         options.add_argument("--headless")  # pylint: disable=no-member

@@ -96,6 +96,10 @@ def create_chrome_options(chrome_args: Optional[list[str]], **kwargs: Any) -> Op
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-search-engine-choice-screen")
 
+    # page load strategy
+    page_load_strategy = kwargs.get("page_load_strategy", "normal")
+    options.page_load_strategy = page_load_strategy
+
     if "headless" in kwargs:
         CONFIG.set_value("Headless", True)
         options.add_argument("headless")

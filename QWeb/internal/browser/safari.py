@@ -8,6 +8,7 @@ from robot.api import logger
 
 from QWeb.internal import browser
 
+
 NAMES: list[str] = ["safari", "sf"]
 open_windows: list[str] = []
 
@@ -20,6 +21,10 @@ def open_browser(
     **kwargs: Any,
 ) -> WebDriver:
     options = Options()
+
+    # page load strategy
+    page_load_strategy = kwargs.get("page_load_strategy", "normal")
+    options.page_load_strategy = page_load_strategy
 
     # safari options can be given as desired_capabilities (dict)
     # Example:

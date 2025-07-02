@@ -141,6 +141,11 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         # If logs are toggled on, they can be found at:~/Library/Logs/com.apple.WebDriver/
         OpenBrowser    http://google.com     safari    enable_logging=True
 
+        # Changing selenium's page load strategy
+        OpenBrowser    http://google.com     chrome    page_load_strategy=none
+        OpenBrowser    http://google.com     safari    page_load_strategy=eager
+        CloseAllBrowsers
+
     Selenium Manager
     ----------------
 
@@ -308,6 +313,17 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
             WIDTHxHEIGHT (i.e. 385x812)
         remote_url:
             URL of the Selenium Grid server.
+        page_load_strategy:
+            Selenium's page load strategy. Default is "normal".
+            Other options are "eager" and "none".
+        log_output:
+            Controls webdriver logging for Chrome/Edge/Firefox.
+            Path to the log file where webdriver logs are written. Default is None (no logging).
+            If set to "CONSOLE" or "STDOUT", logs are written to console.
+        log_level:
+            Log level for the webdriver logs. Default is INFO for Firefox and ALL for Chrome/Edge.
+        enable_logging:
+            If True, enables Safari's webdriver logging. Default is False. See examples for more info.
 
     Raises
     ------
