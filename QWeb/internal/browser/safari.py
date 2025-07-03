@@ -23,7 +23,7 @@ def open_browser(
     options = Options()
 
     # page load strategy
-    page_load_strategy = kwargs.get("page_load_strategy", "normal")
+    page_load_strategy = kwargs.pop("page_load_strategy", "normal")
     options.page_load_strategy = page_load_strategy
 
     # safari options can be given as desired_capabilities (dict)

@@ -119,6 +119,9 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    about:blank           chrome
         ...            prefs="autofill.profile_enabled":false, "autofill.credit_card_enabled":false
 
+        # Disable opening browser in a maximized state (Chromium based browsers only)
+        Open Browser    about:blank         chrome      maximize=False
+
         # Mobile emulation
         OpenBrowser    http://google.com     chrome    emulation=iPhone SE
         OpenBrowser    http://google.com     chrome    emulation=375x812
@@ -324,6 +327,10 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
             Log level for the webdriver logs. Default is INFO for Firefox and ALL for Chrome/Edge.
         enable_logging:
             If True, enables Safari's webdriver logging. Default is False. See examples for more info.
+        maximize:
+            If True, browser window starts in a maximized state. Default is True.
+            Note: due to platform limitations and known issues,
+            this is currently only supported in Chromium based browsers (Chrome and Edge).
 
     Raises
     ------

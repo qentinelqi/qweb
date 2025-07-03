@@ -71,11 +71,13 @@ def open_browser(
             CONFIG.set_value("Headless", True)
         for item in edge_args:
             options.add_argument(item.lstrip())  # pylint: disable=no-member
-    options.add_argument("start-maximized")  # pylint: disable=no-member
+    maximize = kwargs.pop("maximize", True)
+    if util.par2bool(maximize):
+        options.add_argument("start-maximized")  # pylint: disable=no-member
     options.add_argument("--disable-notifications")  # pylint: disable=no-member
 
     # page load strategy
-    page_load_strategy = kwargs.get("page_load_strategy", "normal")
+    page_load_strategy = kwargs.pop("page_load_strategy", "normal")
     options.page_load_strategy = page_load_strategy
 
     if "headless" in kwargs:

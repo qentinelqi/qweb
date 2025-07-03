@@ -119,7 +119,7 @@ def create_firefox_options(**kwargs: Any) -> Options:
         options.browser_version = ff_version
 
     # page load strategy
-    page_load_strategy = kwargs.get("page_load_strategy", "normal")
+    page_load_strategy = kwargs.pop("page_load_strategy", "normal")
     options.page_load_strategy = page_load_strategy
 
     return options
