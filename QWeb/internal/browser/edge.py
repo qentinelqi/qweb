@@ -30,27 +30,8 @@ def open_browser(
         "proxy" or "loggingPref".
     chrome_args : Optional arguments to modify browser settings
     """
-    options = Options()
-    # https://learn.microsoft.com/en-us/microsoft-edge/webdriver-chromium/?tabs=c-sharp
-    #     Remove all usages of the EdgeOptions.UseChromium property.
-    #     This property no longer exists in Selenium 4,
-    #     because Selenium 4 supports only Microsoft Edge (Chromium)
-    # options.use_chromium = True  # pylint: disable=no-member
+    options = create_edge_options(edge_args, **kwargs)
 
-    # Gets rid of Devtools listening .... printing
-    # other non-sensical error messages
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])  # pylint: disable=no-member
-
-    # If user wants to re-use existing browser session then
-    # he/she has to set variable BROWSER_REUSE_ENABLED to True.
-    # If enabled, then web driver connection details are written
-    # to an argument file. This file enables re-use of the current
-    # chrome session.
-    #
-    # When variables BROWSER_SESSION_ID and BROWSER_EXECUTOR_URL are
-    # set from argument file, then OpenBrowser will use those
-    # parameters instead of opening new chrome session.
-    # New Remote Web Driver is created in headless mode.
     edgedriver_path = util.get_rfw_variable_value("${EDGEDRIVER_PATH}") or executable_path
     if edgedriver_path:
         logger.debug(f"Edgedriver path: {edgedriver_path}")
@@ -63,6 +44,32 @@ def open_browser(
 
     if edge_version:
         options.browser_version = edge_version
+
+    # Gets rid of Devtools listening .... printing
+    # other non-sensical error messages
+
+    remote_url = kwargs.get("remote_url", None)
+    log_level = kwargs.pop("log_level", None)
+    log_output = kwargs.pop("log_output", None)
+    if remote_url:
+        driver = WebDriver(command_executor=remote_url, options=options)
+
+    else:
+        # same function as in Chrome
+        service = build_chromium_service(Service,
+                                         edgedriver_path,
+                                         log_level,
+                                         log_output)
+        driver = Edge(service=service, options=options)
+
+    browser.cache_browser(driver)
+    return driver
+
+
+def create_edge_options(edge_args: Optional[list[str]], **kwargs: Any) -> Options:
+    """Create Chrome options based on arguments and keyword arguments."""
+    options = Options()
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])  # pylint: disable=no-member
 
     if user.is_root() or user.is_docker():
         options.add_argument("no-sandbox")  # pylint: disable=no-member
@@ -93,20 +100,4 @@ def open_browser(
         emulation = kwargs["emulation"]
         emulate_device = util.get_emulation_pref(emulation)
         options.add_experimental_option("mobileEmulation", emulate_device)
-
-    remote_url = kwargs.get("remote_url", None)
-    log_level = kwargs.pop("log_level", None)
-    log_output = kwargs.pop("log_output", None)
-    if remote_url:
-        driver = WebDriver(command_executor=remote_url, options=options)
-
-    else:
-        # same function as in Chrome
-        service = build_chromium_service(Service,
-                                         edgedriver_path,
-                                         log_level,
-                                         log_output)
-        driver = Edge(service=service, options=options)
-
-    browser.cache_browser(driver)
-    return driver
+    return options
