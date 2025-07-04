@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.1] - 2025-07-04
+### Added
+- New arguments to Open Browser:
+  - **page_load_strategy** endables setting selenium page load strategy (none, normal, eager)
+  - Enabled turning on webdriver logging and setting the log level (**log_output, log_level and enable_logging**)
+  - New argument **maximize** (default True) to control if Chromium based browsers are opened in a maximized state
+
+### Fixed
+- Refactored Edge and Firefox options handling
+- Fixed few new typing issues
+
+### Changed
+- Moved to pyproject.toml based packaging
+- Minor clarification to UploadFile documentation: it's expected to work only on standard html file inputs
+
 ## [3.6.0] - 2025-04-15
 ### Added
 - New keyword: [ToastNotify](https://qentinelqi.github.io/qweb/QWeb.html#Toast%20Notify)
