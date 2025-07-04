@@ -23,6 +23,7 @@ from QWeb.internal import browser, javascript, xhr, window, decorators, util
 from QWeb.internal.browser.safari import open_windows
 from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 from QWeb.internal.config_defaults import CONFIG
+import platform
 
 
 @keyword(tags=("Browser", "Interaction"))
@@ -297,7 +298,10 @@ def maximize_window() -> None:
     if driver is None:
         raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
 
-    if CONFIG.get_value("Headless") is True:
+    # workaround for linux driver errors
+    is_linux = platform.system().lower() == "linux"
+
+    if CONFIG.get_value("Headless") is True or is_linux:
         logger.debug("Maximizing browser in headless mode")
         screen_width_js = driver.execute_script("return screen.width")
         screen_height_js = driver.execute_script("return screen.height")

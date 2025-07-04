@@ -112,6 +112,45 @@ Open Browser with driver logging
     File Should Exist               ${log_file}
     OperatingSystem.Remove File     ${log_file}
 
+Open Browser with non-valid page load strategy
+    [Setup]    No Operation
+    [tags]         page_load_strategy
+    Run Keyword And Expect Error    ValueError: Strategy can only be one of the following: normal, eager, none*    OpenBrowser     about:blank     ${BROWSER}         page_load_strategy=non-valid
+    CloseAllBrowsers
+
+Open Browser with default page load strategy
+    [tags]         page_load_strategy
+    [Setup]    No Operation
+    OpenBrowser     about:blank     ${BROWSER}
+    ${driver}=      Return Browser
+    ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
+    Should Be Equal As Strings    ${strategy}    normal
+    CloseAllBrowsers
+
+Open Browser with valid page load strategies
+    [tags]          page_load_strategy
+    [Setup]    No Operation
+    OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=normal
+    ${driver}=      Return Browser
+    ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
+    Should Be Equal As Strings    ${strategy}    normal
+    CloseBrowser
+
+    # Eager
+    OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=eager
+    ${driver}=      Return Browser
+    ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
+    Should Be Equal As Strings    ${strategy}    eager
+    CloseBrowser
+
+    # none
+    OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=none
+    ${driver}=      Return Browser
+    ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
+    Should Be Equal As Strings    ${strategy}    none
+    CloseBrowser
+
+
 *** Keywords ***
 Open Browser And Wait A Bit
     IF    $HEADLESS

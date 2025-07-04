@@ -49,7 +49,7 @@ def open_browser(
         Optional arguments to modify browser settings.
         https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options
     """
-    options = Options()
+    options = create_firefox_options(**kwargs)
     if headless:
         logger.warn(
             "Deprecated.\n"
@@ -59,16 +59,6 @@ def open_browser(
         options.add_argument("-headless")
         CONFIG.set_value("Headless", True)
 
-    ff_version_kwarg = kwargs.get("browser_version", None)
-    ff_version = ff_version_kwarg or util.get_rfw_variable_value("${BROWSER_VERSION}")
-    if ff_version:
-        options.browser_version = ff_version
-    options.set_preference("browser.helperApps.neverAsk.saveToDisk", browser.MIME_TYPES)
-    options.set_preference("extensions.update.enabled", False)
-    options.set_preference("app.update.enabled", False)
-    options.set_preference("app.update.auto", False)
-    options.set_preference("dom.webnotifications.enabled", False)
-    options.set_preference("privacy.socialtracking.block_cookies.enabled", False)
     kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
     if "prefs" in kwargs:
         tmp_prefs = kwargs.get("prefs")
@@ -111,6 +101,28 @@ def open_browser(
     browser.cache_browser(driver)
 
     return driver
+
+
+def create_firefox_options(**kwargs: Any) -> Options:
+    """Create Chrome options based on arguments and keyword arguments."""
+    options = Options()
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk", browser.MIME_TYPES)
+    options.set_preference("extensions.update.enabled", False)
+    options.set_preference("app.update.enabled", False)
+    options.set_preference("app.update.auto", False)
+    options.set_preference("dom.webnotifications.enabled", False)
+    options.set_preference("privacy.socialtracking.block_cookies.enabled", False)
+
+    ff_version_kwarg = kwargs.get("browser_version", None)
+    ff_version = ff_version_kwarg or util.get_rfw_variable_value("${BROWSER_VERSION}")
+    if ff_version:
+        options.browser_version = ff_version
+
+    # page load strategy
+    page_load_strategy = kwargs.pop("page_load_strategy", "normal")
+    options.page_load_strategy = page_load_strategy
+
+    return options
 
 
 def build_firefox_service(

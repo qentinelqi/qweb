@@ -92,9 +92,15 @@ def create_chrome_options(chrome_args: Optional[list[str]], **kwargs: Any) -> Op
         for arg in chrome_args:
             options.add_argument(arg.lstrip())
 
-    options.add_argument("start-maximized")
+    maximize = kwargs.pop("maximize", True)
+    if util.par2bool(maximize):
+        options.add_argument("start-maximized")  # pylint: disable=no-member
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-search-engine-choice-screen")
+
+    # page load strategy
+    page_load_strategy = kwargs.pop("page_load_strategy", "normal")
+    options.page_load_strategy = page_load_strategy
 
     if "headless" in kwargs:
         CONFIG.set_value("Headless", True)

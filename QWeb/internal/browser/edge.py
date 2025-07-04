@@ -30,27 +30,8 @@ def open_browser(
         "proxy" or "loggingPref".
     chrome_args : Optional arguments to modify browser settings
     """
-    options = Options()
-    # https://learn.microsoft.com/en-us/microsoft-edge/webdriver-chromium/?tabs=c-sharp
-    #     Remove all usages of the EdgeOptions.UseChromium property.
-    #     This property no longer exists in Selenium 4,
-    #     because Selenium 4 supports only Microsoft Edge (Chromium)
-    # options.use_chromium = True  # pylint: disable=no-member
+    options = create_edge_options(edge_args, **kwargs)
 
-    # Gets rid of Devtools listening .... printing
-    # other non-sensical error messages
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])  # pylint: disable=no-member
-
-    # If user wants to re-use existing browser session then
-    # he/she has to set variable BROWSER_REUSE_ENABLED to True.
-    # If enabled, then web driver connection details are written
-    # to an argument file. This file enables re-use of the current
-    # chrome session.
-    #
-    # When variables BROWSER_SESSION_ID and BROWSER_EXECUTOR_URL are
-    # set from argument file, then OpenBrowser will use those
-    # parameters instead of opening new chrome session.
-    # New Remote Web Driver is created in headless mode.
     edgedriver_path = util.get_rfw_variable_value("${EDGEDRIVER_PATH}") or executable_path
     if edgedriver_path:
         logger.debug(f"Edgedriver path: {edgedriver_path}")
@@ -64,28 +45,8 @@ def open_browser(
     if edge_version:
         options.browser_version = edge_version
 
-    if user.is_root() or user.is_docker():
-        options.add_argument("no-sandbox")  # pylint: disable=no-member
-    if edge_args:
-        if any("--headless" in _.lower() for _ in edge_args):
-            CONFIG.set_value("Headless", True)
-        for item in edge_args:
-            options.add_argument(item.lstrip())  # pylint: disable=no-member
-    options.add_argument("start-maximized")  # pylint: disable=no-member
-    options.add_argument("--disable-notifications")  # pylint: disable=no-member
-    if "headless" in kwargs:
-        CONFIG.set_value("Headless", True)
-        options.add_argument("--headless")  # pylint: disable=no-member
-    if "prefs" in kwargs:
-        tmp_prefs = kwargs.get("prefs")
-        prefs = util.parse_prefs(tmp_prefs)
-        options.add_experimental_option("prefs", prefs)
-        logger.warn("prefs: {}".format(prefs))
-
-    if "emulation" in kwargs:
-        emulation = kwargs["emulation"]
-        emulate_device = util.get_emulation_pref(emulation)
-        options.add_experimental_option("mobileEmulation", emulate_device)
+    # Gets rid of Devtools listening .... printing
+    # other non-sensical error messages
 
     remote_url = kwargs.get("remote_url", None)
     log_level = kwargs.pop("log_level", None)
@@ -103,3 +64,40 @@ def open_browser(
 
     browser.cache_browser(driver)
     return driver
+
+
+def create_edge_options(edge_args: Optional[list[str]], **kwargs: Any) -> Options:
+    """Create Chrome options based on arguments and keyword arguments."""
+    options = Options()
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])  # pylint: disable=no-member
+
+    if user.is_root() or user.is_docker():
+        options.add_argument("no-sandbox")  # pylint: disable=no-member
+    if edge_args:
+        if any("--headless" in _.lower() for _ in edge_args):
+            CONFIG.set_value("Headless", True)
+        for item in edge_args:
+            options.add_argument(item.lstrip())  # pylint: disable=no-member
+    maximize = kwargs.pop("maximize", True)
+    if util.par2bool(maximize):
+        options.add_argument("start-maximized")  # pylint: disable=no-member
+    options.add_argument("--disable-notifications")  # pylint: disable=no-member
+
+    # page load strategy
+    page_load_strategy = kwargs.pop("page_load_strategy", "normal")
+    options.page_load_strategy = page_load_strategy
+
+    if "headless" in kwargs:
+        CONFIG.set_value("Headless", True)
+        options.add_argument("--headless")  # pylint: disable=no-member
+    if "prefs" in kwargs:
+        tmp_prefs = kwargs.get("prefs")
+        prefs = util.parse_prefs(tmp_prefs)
+        options.add_experimental_option("prefs", prefs)
+        logger.warn("prefs: {}".format(prefs))
+
+    if "emulation" in kwargs:
+        emulation = kwargs["emulation"]
+        emulate_device = util.get_emulation_pref(emulation)
+        options.add_experimental_option("mobileEmulation", emulate_device)
+    return options
