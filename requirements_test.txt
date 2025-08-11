@@ -14,4 +14,4 @@ duty
 mypy
 types-setuptools
 types-requests
-robotframework-pabot
+robotframework-pabot<5
