@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation                   Tests for text keywords
 Library                         QWeb
-Suite Setup                     OpenBrowser                 ${BASE_URI}/text.html                 ${BROWSER}                  --HEADLESS
+Suite Setup                     Headless Setup
 Suite Teardown                  CloseBrowser
 Test Timeout                    60 seconds
 
@@ -164,6 +164,7 @@ Child and Parents - Click parent
     [tags]                      PROBLEM_IN_FIREFOX
     VerifyNoText                parent clicked!             timeout=2
     ClickText                   Identifying text            parent=div
+    LogScreenshot
     VerifyText                  parent clicked!
 
 Child and Parents - Click child
@@ -221,3 +222,8 @@ WriteText error in headless mode
     ...                         to be fixed as well.
     ${error}                    Set Variable                QWebEnvironmentError: Running in headless*
     Run Keyword and Expect Error                            ${error}                    WriteText                   Foobar
+
+*** Keywords ***
+Headless Setup                     
+    OpenBrowser                 ${BASE_URI}/text.html                 ${BROWSER}                  --HEADLESS
+    SetConfig                   WindowSize               1920x1080
