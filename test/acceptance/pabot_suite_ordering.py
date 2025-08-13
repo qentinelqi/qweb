@@ -17,7 +17,7 @@ for root, dirs, files in os.walk(os.getcwd()):
             if os.path.basename(root) == "serial":
                 serial_str += f"--suite {root}.{name}\n"
             else:
-                parallel_str += f"--suite {root}{name}\n"
+                parallel_str += f"--suite {root}.{name}\n"
 
 if acceptance_path is None:
     raise OSError("Couldn't find directory: 'acceptance'")
