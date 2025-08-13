@@ -53,7 +53,7 @@ jobs:
     env:
       # Used in Linux tests for windowing
       DISPLAY: :88
-      RFW_SUITE_NAME: ${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
+      RFW_SUITE_NAME: ${{ matrix.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
 
     steps:
     - uses: actions/checkout@v4
