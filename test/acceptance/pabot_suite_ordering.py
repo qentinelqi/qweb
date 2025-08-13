@@ -7,11 +7,13 @@ if (len(sys.argv) > 1) and sys.argv[1] == "--github":
 serial_str = "{\n"
 parallel_str = ""
 last_parallel = ""
+basename = ""
 acceptance_path = None
 for root, dirs, files in os.walk(os.getcwd()):
-    if os.path.basename(root) == "acceptance":
+    basename = os.path.basename(root)
+    if basename == "acceptance":
         acceptance_path = root
-    if os.path.basename(root) in ("serial", "parallel"):
+    if basename in ("serial", "parallel"):
         # invert to descending alphabetical order for shorter total exec time
         for f in files[::-1]:
             if os.path.splitext(f)[-1] != ".robot":
@@ -22,8 +24,8 @@ for root, dirs, files in os.walk(os.getcwd()):
             # Because name in gh action has python version with '.' 
             # we need to use the original name
             if is_gh_action:
-                name = f"{acceptance_path}.{root.title()}.{name}\n"
-            if os.path.basename(root) == "serial":    
+                name = f"{acceptance_path}.{basename.title()}.{name}"
+            if basename == "serial":    
                 serial_str += f"--suite {name}\n"
             else:
                 parallel_str += f"--suite {name}\n"
