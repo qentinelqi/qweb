@@ -20,12 +20,12 @@ for root, dirs, files in os.walk(os.getcwd()):
             name = f.split(".")[0].replace("_", " ").title()
             if os.path.basename(root) == "serial":
                 if suite_name:
-                    serial_str += f"--suite {suite_name}.serial.{name}\n"
+                    serial_str += f"--suite Serial.{name}\n"
                 else:
                     serial_str += f"--suite {name}\n"
             else:
                 if suite_name:
-                    parallel_str += f"--suite {suite_name}.parallel.{name}\n"
+                    parallel_str += f"--suite Parallel.{name}\n"
                 else:
                     parallel_str += f"--suite {name}\n"
 
