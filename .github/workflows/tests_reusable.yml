@@ -216,10 +216,10 @@ jobs:
       continue-on-error: true
       timeout-minutes: 20
       run: >
-        python -m pabot.pabot
-        --ordering test/acceptance/.pabot_order
+        python -m robot
         --rerunfailedsuites result/output.xml
         -o rerun.xml
+        --exitonfailure
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
         -e jailed 
