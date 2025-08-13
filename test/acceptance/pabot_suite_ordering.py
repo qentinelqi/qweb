@@ -1,5 +1,8 @@
-
 import os, sys
+
+suite_name = ""
+if (len(sys.argv) > 1):
+    suite_name = sys.argv[1]
 
 serial_str = "{\n"
 parallel_str = ""
@@ -15,14 +18,20 @@ for root, dirs, files in os.walk(os.getcwd()):
                 continue
             name = f.split(".")[0].replace("_", " ").title()
             if os.path.basename(root) == "serial":
-                serial_str += f"--suite serial.{name}\n"
+                if suite_name:
+                    serial_str += f"--suite {suite_name}.serial.{name}\n"
+                else:
+                    serial_str += f"--suite {name}\n"
             else:
-                parallel_str += f"--suite parallel.{name}\n"
+                if suite_name:
+                    parallel_str += f"--suite {suite_name}.parallel.{name}\n"
+                else:
+                    parallel_str += f"--suite {name}\n"
 
 if acceptance_path is None:
     raise OSError("Couldn't find directory: 'acceptance'")
 serial_str += "}\n"
-if (len(sys.argv) > 1) and sys.argv[1] == "--github":
+if (len(sys.argv) > 1):
     serial_str += f"#WAIT\n"
 
 order_str = serial_str + parallel_str

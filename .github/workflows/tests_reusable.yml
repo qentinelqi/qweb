@@ -175,7 +175,7 @@ jobs:
 
     - name: Generate suite order file
       if: matrix.browser != 'safari'
-      run: python test/acceptance/pabot_suite_ordering.py --github
+      run: python test/acceptance/pabot_suite_ordering.py ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
      
     - name: Acceptance tests
       id: acceptance-tests
