@@ -2,6 +2,7 @@ import os, sys
 
 suite_name = ""
 if (len(sys.argv) > 1):
+    print(f"suite_name: {suite_name}")
     suite_name = sys.argv[1]
 
 serial_str = "{\n"
@@ -35,5 +36,8 @@ if (len(sys.argv) > 1):
     serial_str += f"#WAIT\n"
 
 order_str = serial_str + parallel_str
+
+print(f"order_str:\n{order_str}")
+
 with open(os.path.join(acceptance_path, ".pabot_order"), "w") as f:
     f.write(order_str)
