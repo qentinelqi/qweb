@@ -67,7 +67,7 @@ jobs:
     - name: Dotless RFW suite name Powershell
       if: runner.os == 'Windows'
       run: |
-        $suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
+        $suite_name="${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}"
         $suite_name=$suite_name.replace('.','')
         echo RFW_SUITE_NAME=$suite_name >> $env:GITHUB_ENV
 
