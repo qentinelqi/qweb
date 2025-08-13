@@ -1,8 +1,8 @@
 import os, sys
 
-is_gh_action = False
-if (len(sys.argv) > 1) and sys.argv[1] == "--github":
-    is_gh_action = True
+suite_name = None
+if (len(sys.argv) > 1):
+    suite_name = sys.argv[1]
 
 serial_str = "{\n"
 parallel_str = ""
@@ -23,8 +23,8 @@ for root, dirs, files in os.walk(os.getcwd()):
             # with ordering if top suite is renamed with --name
             # Because name in gh action has python version with '.' 
             # we need to use the original name
-            if is_gh_action:
-                name = f"Acceptance.{basename.title()}.{name}"
+            if suite_name:
+                name = f"{suite_name}.{basename.title()}.{name}"
             if basename == "serial":    
                 serial_str += f"--suite {name}\n"
             else:
@@ -36,13 +36,13 @@ serial_str += "}\n"
 
 # gh runners can run out of resources
 # if serial and parallel tests run concurrently
-if is_gh_action:
+if suite_name:
     serial_str += f"#WAIT\n"
 
 order_str = serial_str + parallel_str
 
 # print the contents in gh action just in case
-if is_gh_action:
+if suite_name:
     print(f"order_str:\n{order_str}")
 
 with open(os.path.join(acceptance_path, ".pabot_order"), "w") as f:
