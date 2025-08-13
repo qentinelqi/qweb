@@ -53,7 +53,6 @@ jobs:
     env:
       # Used in Linux tests for windowing
       DISPLAY: :88
-      RFW_SUITE_NAME: ${{ matrix.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
 
     steps:
     - uses: actions/checkout@v4
@@ -117,11 +116,19 @@ jobs:
         directory: test/resources
         port: 8000
 
-    - name: Dotless RFW suite name
+    - name: Dotless RFW suite name BASH
+      if: runner.os != 'Windows'
       run: |
-        suite_name=${{ env.RFW_SUITE_NAME }}
+        suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
         suite_name=${suite_name//.}
         echo RFW_SUITE_NAME=${suite_name} >> $GITHUB_ENV
+
+    - name: Dotless RFW suite name Powershell
+      if: runner.os == 'Windows'
+      run: |
+        suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
+        $suite_name=$suite_name.replace('.','')
+        echo RFW_SUITE_NAME=$suite_name >> $env:GITHUB_ENV
 
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
