@@ -24,7 +24,7 @@ for root, dirs, files in os.walk(os.getcwd()):
             # Because name in gh action has python version with '.' 
             # we need to use the original name
             if is_gh_action:
-                name = f"{acceptance_path}.{basename.title()}.{name}"
+                name = f"Acceptance.{basename.title()}.{name}"
             if basename == "serial":    
                 serial_str += f"--suite {name}\n"
             else:
