@@ -57,6 +57,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Dotless RFW suite name BASH
+      if: runner.os != 'Windows'
+      run: |
+        suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
+        suite_name=${suite_name//.}
+        echo RFW_SUITE_NAME=${suite_name} >> $GITHUB_ENV
+
+    - name: Dotless RFW suite name Powershell
+      if: runner.os == 'Windows'
+      run: |
+        $suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
+        $suite_name=$suite_name.replace('.','')
+        echo RFW_SUITE_NAME=$suite_name >> $env:GITHUB_ENV
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
@@ -115,20 +129,6 @@ jobs:
       with:
         directory: test/resources
         port: 8000
-
-    - name: Dotless RFW suite name BASH
-      if: runner.os != 'Windows'
-      run: |
-        suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
-        suite_name=${suite_name//.}
-        echo RFW_SUITE_NAME=${suite_name} >> $GITHUB_ENV
-
-    - name: Dotless RFW suite name Powershell
-      if: runner.os == 'Windows'
-      run: |
-        suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
-        $suite_name=$suite_name.replace('.','')
-        echo RFW_SUITE_NAME=$suite_name >> $env:GITHUB_ENV
 
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
