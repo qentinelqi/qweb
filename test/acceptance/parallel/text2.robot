@@ -163,6 +163,7 @@ Child and Parents - Click Identifier
 Child and Parents - Click parent
     [tags]                      PROBLEM_IN_FIREFOX
     VerifyNoText                parent clicked!             timeout=2
+    HoverItem                   alertBox
     ClickText                   Identifying text            parent=div
     LogScreenshot
     VerifyText                  parent clicked!

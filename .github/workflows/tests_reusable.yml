@@ -57,6 +57,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Dotless RFW suite name BASH
+      if: runner.os != 'Windows'
+      run: |
+        suite_name=${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}
+        suite_name=${suite_name//.}
+        echo RFW_SUITE_NAME=${suite_name} >> $GITHUB_ENV
+
+    - name: Dotless RFW suite name Powershell
+      if: runner.os == 'Windows'
+      run: |
+        $suite_name="${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.browser }}"
+        $suite_name=$suite_name.replace('.','')
+        echo RFW_SUITE_NAME=$suite_name >> $env:GITHUB_ENV
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
@@ -116,7 +130,6 @@ jobs:
         directory: test/resources
         port: 8000
 
-  
     # if this test suite fails then a proper test run won't be attempted
     - name: Safari smoke test
       timeout-minutes: 1
@@ -128,7 +141,7 @@ jobs:
         -v ON_HTTP_SERVER:True
         -L TRACE
         -d result
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors
         ansi
@@ -151,7 +164,7 @@ jobs:
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
         test/acceptance
@@ -168,14 +181,15 @@ jobs:
         ${{ inputs.additional-rfw-parameters }}
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
         test/acceptance
 
     - name: Generate suite order file
       if: matrix.browser != 'safari'
-      run: python test/acceptance/pabot_suite_ordering.py --github
+      run: |
+        python test/acceptance/pabot_suite_ordering.py ${{ env.RFW_SUITE_NAME }}
      
     - name: Acceptance tests
       id: acceptance-tests
@@ -192,7 +206,7 @@ jobs:
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
         test/acceptance
@@ -202,10 +216,10 @@ jobs:
       continue-on-error: true
       timeout-minutes: 20
       run: >
-        python -m pabot.pabot
-        --ordering test/acceptance/.pabot_order
+        python -m robot
         --rerunfailedsuites result/output.xml
         -o rerun.xml
+        --exitonfailure
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
         -e jailed 
@@ -213,7 +227,7 @@ jobs:
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
-        --name ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
         test/acceptance
@@ -234,5 +248,5 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@v4
       with:
-        name: test-report-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.browser }}
+        name: test-report-${{ env.RFW_SUITE_NAME }}
         path: ./result
