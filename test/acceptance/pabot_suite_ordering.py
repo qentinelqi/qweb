@@ -21,8 +21,6 @@ for root, dirs, files in os.walk(os.getcwd()):
             name = f.split(".")[0].replace("_", " ").title()
             # pabot 5+ requires using full suite name (either original or new name) 
             # with ordering if top suite is renamed with --name
-            # Because name in gh action has python version with '.' 
-            # we need to use the original name
             if suite_name:
                 name = f"{suite_name}.{basename.title()}.{name}"
             if basename == "serial":    
