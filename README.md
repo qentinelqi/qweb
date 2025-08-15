@@ -15,6 +15,7 @@
 ### Table of Contents
 
 - [Introduction](#introduction)
+  - [Quick Example](#quick-example)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Windows](#windows)
@@ -41,19 +42,38 @@
 
 ## Introduction
 
-QWeb is a powerful and versatile [Robot Framework](https://robotframework.org/) library that enables efficient and reliable web testing and automation. One of the key strengths of QWeb is its intuitive and user-friendly syntax, which makes it easy to write and maintain complex test cases. 
+QWeb is a powerful and versatile [Robot Framework](https://robotframework.org/) library designed for efficient, reliable, and maintainable web testing and automation. Its core strength lies in an intuitive, human-readable syntax that allows teams to write and maintain even complex test cases with minimal effort. 
+
+QWeb's philosophy is to give you the best of both worlds: text-based automation for 80–90 % of cases where brittle XPath/CSS selectors aren’t needed, and precise DOM targeting for the tricky 10–20 % where they are.
 
 QWeb aims to make web automation easy and maintainable by:
-* providing an intuitive and **user-friendly syntax for writing and maintaining** complex test cases.
-* providing **smart locators**: finding elements by text or by any attribute value with a simple syntax
-* automatically handling latencies etc. via **automatic wait times**
-* automatically handling **frames**
-* automatically handling unexpected **alerts**
-* providing support for finding **shadow dom** elements with an easy syntax
-* providing **in-built bitmap comparison** for special cases where element can't be identified by any other means
-* being **technology agnostic** and providing extensive support for various web technologies/frameworks 
+* **Intuitive, human-readable syntax** for writing and maintaining complex test cases.
+* **Smart locators**: find elements by visible text or any attribute value with simple, natural syntax.
+* **Automatic waits**: built-in retry logic in most keywords eliminates the need for explicit wait calls.
+* **Automatic frame handling**: automatically searches across all iframes without manual frame-switching.
+* **Automatic alert handling**: gracefully manages unexpected browser alerts.
+* **Shadow dom support**: easily locate and interact with elements in shadow roots.
+* **In-built bitmap comparison**: handle edge cases where no attribute or text can reliably identify an element.
+* **Technology agnostic**: works across a wide range of web technologies and frameworks. 
 
-See [examples](#examples).
+### Quick Example
+
+```RobotFramework
+*** Settings ***
+Library    QWeb
+
+*** Test Cases ***
+User Can Log In
+    Open Browser    chrome
+    Go To           https://example.com
+    Type Text       Email       demo@example.com
+    Type Text       Password    changeme
+    Click Text      Sign in
+    Verify Text     Dashboard
+
+```
+
+See more [examples](#examples).
 
 [Back To The Top](#qweb)
 
