@@ -64,8 +64,7 @@ Library    QWeb
 
 *** Test Cases ***
 User Can Log In
-    Open Browser    chrome
-    Go To           https://example.com
+    Open Browser    https://example.com      chrome
     Type Text       Email       demo@example.com
     Type Text       Password    changeme
     Click Text      Sign in
@@ -315,3 +314,4 @@ Apache 2.0 License. See [LICENSE](https://github.com/qentinelqi/qweb/blob/master
 [pypi-badge]: https://img.shields.io/pypi/v/QWeb?color=green
 [slack-badge]: https://img.shields.io/badge/Slack-QWeb-blue?style=flat-square&logo=Slack
 [slack-url]: https://robotframework.slack.com/archives/C029L0N3N81
+
