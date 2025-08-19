@@ -19,13 +19,13 @@ Open Browser With Options
 Open Browser with Environment Chromeargs
     [tags]          PROBLEM_IN_SAFARI
     [Setup]    No Operation
-    Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu, disable-impl-side-painting
+    Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu, disable-impl-side-painting, --allow-remote-origins=localhost:8000,localhost:8001
     OpenBrowser    about:blank    ${BROWSER}
 
 Open Browser with Options and Environment Chromeargs
     [tags]          PROBLEM_IN_SAFARI
     [Setup]    No Operation
-    Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu
+    Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu, --allow-remote-origins=localhost:8000,localhost:8001
     OpenBrowser    about:blank    ${BROWSER}    disable-impl-side-painting
 
 Open Browser with experimental args
