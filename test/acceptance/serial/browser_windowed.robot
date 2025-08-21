@@ -14,19 +14,26 @@ ${HEADLESS}   ${TRUE}
 Open Browser With Options
     [tags]          PROBLEM_IN_SAFARI
     [Setup]    No Operation
-    OpenBrowser    about:blank    ${BROWSER}    no-sandbox, disable-gpu, disable-impl-side-painting
+    ${opts}=  Set Variable  no-sandbox, disable-gpu, disable-impl-side-painting
+    OpenBrowser    about:blank    ${BROWSER}    ${opts}
+    Check Chrome Options  ${opts}
 
 Open Browser with Environment Chromeargs
     [tags]          PROBLEM_IN_SAFARI
     [Setup]    No Operation
-    Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu, disable-impl-side-painting
+    ${chrome_args}=    Set Variable    no-sandbox, disable-gpu, disable-impl-side-painting, --allow-remote-origins=localhost:8000,localhost:8001
+    Set Environment Variable     CHROME_ARGS    ${chrome_args}
     OpenBrowser    about:blank    ${BROWSER}
+    Check Chrome Options    env_args=${chrome_args}
 
 Open Browser with Options and Environment Chromeargs
     [tags]          PROBLEM_IN_SAFARI
     [Setup]    No Operation
-    Set Environment Variable     CHROME_ARGS    no-sandbox, disable-gpu
-    OpenBrowser    about:blank    ${BROWSER}    disable-impl-side-painting
+    ${chrome_args}=    Set Variable    disable-gpu, --allow-remote-origins=localhost:8000,localhost:8001
+    ${opts}=  Set Variable    disable-impl-side-painting, no-sandbox
+    Set Environment Variable     CHROME_ARGS    ${chrome_args}
+    OpenBrowser    about:blank    ${BROWSER}    ${opts}
+    Check Chrome Options    ${opts}  env_args=${chrome_args}
 
 Open Browser with experimental args
     [tags]          exp             PROBLEM_IN_SAFARI
@@ -99,6 +106,7 @@ Open Browser with dictionary prefs
     ...             plugins.always_open_pdf_externally    True
     OpenBrowser     about:blank     ${BROWSER}
     ...     prefs=${prefsdict}
+
     [Teardown]     Close Browsers And Remove CHROME_ARGS
 
 Open Browser with driver logging
@@ -165,3 +173,25 @@ Close Browsers And Remove CHROME_ARGS
     ResetConfig    LogScreenshot
     Close All Browsers
     Remove Environment Variable   CHROME_ARGS
+
+Check Chrome Options
+    [Arguments]  ${options}=${EMPTY}    ${env_args}=${EMPTY}
+    [Teardown]  SetConfig    ShadowDom  Off
+    IF  $BROWSER.lower() != 'chrome'
+        RETURN
+    END
+
+    ${opt_list}=  Create List
+    IF  $options != ''
+        Evaluate    $opt_list.extend($options.split(','))
+    END
+    IF  $env != ''
+        Evaluate    $opt_list.extend($env.split(', '))
+    END
+        
+    GoTo    chrome://version
+    SetConfig    ShadowDom  On
+
+    FOR  ${opt}  IN  @{opt_list}
+        VerifyText    ${opt.strip()}  timeout=1
+    END
