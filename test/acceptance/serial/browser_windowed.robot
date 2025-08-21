@@ -185,8 +185,8 @@ Check Chrome Options
     IF  $options != ''
         Evaluate    $opt_list.extend($options.split(','))
     END
-    IF  $env != ''
-        Evaluate    $opt_list.extend($env.split(', '))
+    IF  $env_args != ''
+        Evaluate    $opt_list.extend($env_args.split(', '))
     END
         
     GoTo    chrome://version

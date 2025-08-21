@@ -360,7 +360,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     if os.getenv("QWEB_HEADLESS"):
         kwargs = {"headless": True}
     if os.getenv("CHROME_ARGS") is not None:
-        option_list = option_list + os.getenv("CHROME_ARGS", "").split(", ")
+        option_list.extend(os.getenv("CHROME_ARGS", "").split(", "))
     logger.debug("Options: {}".format(option_list))
 
     bs_project_name = util.get_rfw_variable_value("${PROJECTNAME}") or ""
