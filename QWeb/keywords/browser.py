@@ -66,8 +66,11 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     # pylint: disable=line-too-long
     r"""Open new browser to given url.
 
-    Browser options can also be given in the robot command, for example:
+    Browser options can be given in the robot command, for example:
     robot -v browser_options:"--kiosk, --disable-gpu" testytest.robot
+
+    Browser options can be set in with an environment variable CHROME_ARGS, for example:
+    export CHROME_ARGS="--kiosk, --disable-gpu"
 
     Examples
     --------
@@ -357,10 +360,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     if os.getenv("QWEB_HEADLESS"):
         kwargs = {"headless": True}
     if os.getenv("CHROME_ARGS") is not None:
-        if option_list is None:
-            option_list = os.getenv("CHROME_ARGS").split(",")
-        else:
-            option_list = option_list + os.getenv("CHROME_ARGS", "").split(",")
+        option_list.extend(os.getenv("CHROME_ARGS", "").split(", "))
     logger.debug("Options: {}".format(option_list))
 
     bs_project_name = util.get_rfw_variable_value("${PROJECTNAME}") or ""
