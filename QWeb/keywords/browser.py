@@ -69,7 +69,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     Browser options can be given in the robot command, for example:
     robot -v browser_options:"--kiosk, --disable-gpu" testytest.robot
 
-    Browser options can be set in with an environment variable CHROME_ARGS, for example
+    Browser options can be set in with an environment variable CHROME_ARGS, for example:
     export CHROME_ARGS="--kiosk, --disable-gpu"
 
     Examples
