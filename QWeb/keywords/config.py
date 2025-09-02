@@ -60,6 +60,9 @@ def set_config(par: str, val: Any) -> Any:
     | DefaultTimeout_     | How long to wait for element to appear  | 10s            |
     |                     | before failing the case.                |                |
     +---------------------+-----------------------------------------+----------------+
+    | DomQuiet_           | Time to wait for dom to stabilize before|   200          |
+    |                     | interacting (milliseconds).             |                |
+    +---------------------+-----------------------------------------+----------------+
     | DoubleClick_        | Perform double-click action in all click|   False        |
     |                     | keywords.                               |                |
     +---------------------+-----------------------------------------+----------------+
@@ -119,6 +122,9 @@ def set_config(par: str, val: Any) -> Any:
     |                     | by searches (None, debug, draw).        |                |
     +---------------------+-----------------------------------------+----------------+
     | ShadowDOM_          | Extend element searches to shadow DOM.  |   False        |
+    +---------------------+-----------------------------------------+----------------+
+    | SpinnerCSS_         | CSS selector for the spinner element to | none           |
+    |                     | wait for in default wait function.      |                |
     +---------------------+-----------------------------------------+----------------+
     | StayInCurrentFrame_ | Only search from current frame, do not  |   False        |
     |                     | automatically find elements from all    |                |
@@ -445,6 +451,32 @@ def set_config(par: str, val: Any) -> Any:
         SetConfig   DefaultTimeout    10s
         # One time use:
         VerifyText        Foo          60s
+
+
+    .. _domquiet:
+
+    ----
+
+    Parameter: DomQuiet
+    -------------------
+
+    Defines the required “quiet period” (in milliseconds) where the DOM must remain unchanged
+    before continuing. This acts as a grace period after network activity has finished, ensuring
+    the UI has settled (animations, rendering, reflows).
+
+    Internally a cap is applied: the wait will not exceed 1.5 x DomQuiet (with an
+    absolute maximum of 1500 ms) even if the DOM never fully quiets. This prevents tests
+    from hanging indefinitely on pages with continuous background changes (e.g. timers, ads,
+    or blinking cursors).
+
+    Default = 200 (DOM must be stable for at least 200 ms).
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        # Require 500 ms of DOM quiet before continuing
+        SetConfig       DomQuiet       500
 
     .. _xhrtimeout:
 
@@ -998,6 +1030,31 @@ def set_config(par: str, val: Any) -> Any:
         VerifyText      This is under shadow root
         ClickText       As is this
         SetConfig       ShadowDOM       False
+
+
+    .. _spinnercss:
+
+    ----
+
+    Parameter: SpinnerCSS
+    -----------------------------
+
+    Defines a comma-separated list of CSS selectors used to detect loading indicators
+    (spinners, overlays, progress bars).
+    If any element matching these selectors is found and visible, keywords
+    will wait until they disappear before continuing.
+
+    This setting is useful when testing applications that show spinners during background
+    activity (e.g. Salesforce Lightning, Angular, React apps). If left unset, spinner checks
+    are skipped entirely, so waiting relies only on network idle and DOM quiet signals.
+
+    Default = None (spinner checks are not performed).
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig       SpinnerCSS      lightning-spinner,.slds-spinner:not(.slds-hide),[aria-busy="true"]
 
 
     .. _stayincurrentframe:

@@ -99,6 +99,8 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "LogMatchedIcons": (False, util.par2bool),
     "ShadowDOM": (False, util.par2bool),
     "HighlightColor": ("blue", util.highlight_validation),
+    "SpinnerCSS": ("none", None),
+    "DomQuiet": (200, int)
 }
 
 CONFIG: Config = Config(CONFIG_DEFAULTS)
