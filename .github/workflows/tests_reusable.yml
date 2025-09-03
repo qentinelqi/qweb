@@ -95,6 +95,14 @@ jobs:
     #   run: |
     #     Set-DisplayResolution -Width 1920 -Height 1080 -Force
 
+    - name: Setup macOS display resolution
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        brew install displayplacer
+        DISP_ID="$(displayplacer list | awk '/Persistent screen id/ {print $4; exit}')"
+        displayplacer "id:${DISP_ID} res:1920x1080 scaling:on"
+
     - name: Install RFW ${{ inputs.minimum-rfw-version }}
       if: matrix.python-version == inputs.minimum-rfw-python
       run: |
