@@ -95,41 +95,7 @@ jobs:
     #   run: |
     #     Set-DisplayResolution -Width 1920 -Height 1080 -Force
 
-    - name: Setup macOS display resolution
-      if: runner.os == 'macOS'
-      shell: bash
-      run: |
-        set -euo pipefail
-        brew install displayplacer
-
-        # Get the first display's persistent ID
-        DISP_ID="$(displayplacer list | awk '/Persistent screen id/ {print $4; exit}')"
-
-        # Extract the block of ready-to-run "displayplacer ..." commands for that display
-        # and prefer 1920x1080 -> 1920x1200 -> otherwise the largest resolution.
-        BLOCK="$(displayplacer list | awk -v id="$DISP_ID" '
-          $0 ~ ("Persistent screen id: " id) {in=1; next}
-          in && /^displayplacer "/ {print}
-          in && NF==0 {exit}
-        ')"
-
-        # Try exact targets in priority order
-        CMD="$(printf "%s\n" "$BLOCK" | grep -m1 'res:1920x1080' || true)"
-        if [ -z "$CMD" ]; then
-          CMD="$(printf "%s\n" "$BLOCK" | grep -m1 'res:1920x1200' || true)"
-        fi
-
-        # If no preferred mode found, pick the largest by pixel area
-        if [ -z "$CMD" ]; then
-          CMD="$(printf "%s\n" "$BLOCK" \
-            | awk 'match($0,/res:([0-9]+)x([0-9]+)/,m){print m[1]*m[2] " " $0}' \
-            | sort -nr | head -n1 | cut -d" " -f2-)"
-        fi
-
-        echo "Applying: $CMD"
-        eval "$CMD"
-
-
+    
     - name: Install RFW ${{ inputs.minimum-rfw-version }}
       if: matrix.python-version == inputs.minimum-rfw-python
       run: |
