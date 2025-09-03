@@ -1054,7 +1054,7 @@ def set_config(par: str, val: Any) -> Any:
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig       SpinnerCSS      lightning-spinner,.slds-spinner:not(.slds-hide),[aria-busy="true"]
+        SetConfig    SpinnerCSS   lightning-spinner,.slds-spinner:not(.slds-hide),[aria-busy="true"]
 
 
     .. _stayincurrentframe:
