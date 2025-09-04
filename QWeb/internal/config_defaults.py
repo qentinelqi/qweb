@@ -100,7 +100,7 @@ CONFIG_DEFAULTS: dict[str, Any] = {
     "ShadowDOM": (False, util.par2bool),
     "HighlightColor": ("blue", util.highlight_validation),
     "SpinnerCSS": ("none", None),
-    "RenderWait": (200, int)
+    "RenderWait": ("200ms", util.validate_ms)
 }
 
 CONFIG: Config = Config(CONFIG_DEFAULTS)
