@@ -207,7 +207,7 @@ def wait_xhr(timeout: float = 15.0,
     DOM_QUIET_MAX_MS = 1500     # Max time to wait for DOM quiet
     DOM_CAP_MULTIPLIER = 1.5    # Cap multiplier for DOM quiet time
     spinner_css = _parse_spinner_selectors()
-    quiet_ms = config.get_config("DomQuiet")
+    quiet_ms = config.get_config("RenderWait")
     # wait at max configured quite_ms + multiplier or max amount (to avoid getting stuck)
     dom_quiet_cap_ms = min(quiet_ms * DOM_CAP_MULTIPLIER, DOM_QUIET_MAX_MS)
     setup_xhr_monitor()
