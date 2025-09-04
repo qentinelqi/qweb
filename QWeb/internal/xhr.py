@@ -16,7 +16,7 @@
 # ---------------------------
 import time
 from robot.api import logger
-from selenium.common.exceptions import JavascriptException
+from selenium.common.exceptions import JavascriptException, WebDriverException
 from typing import Optional
 from QWeb.internal import javascript, util
 from QWeb.internal.exceptions import QWebDriverError
@@ -263,3 +263,74 @@ def wait_xhr(timeout: float = 15.0,
         return
 
     logger.debug(f"Page was not ready after {timeout} seconds. Trying to continue..")
+
+
+def setup_jquery_monitor() -> bool:
+    """Inject jQuery if needed and check if page is ready.
+
+    Setup_xhr_monitor injects jQuery to page if there isn't one
+    already.
+
+    """
+    try:
+        js = """
+        function inject(){
+            if (typeof(jQuery) === "undefined"){
+               var head = document.querySelector('head');
+               var script = document.createElement('script');
+               script.type = "text/javascript";
+               script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+               head.appendChild(script);
+               if (typeof(jQuery) === "undefined"){
+                    return false;
+               }
+            }
+            return true;
+        }
+        return inject()"""
+
+        return javascript.execute_javascript(js)
+
+    except (WebDriverException, JavascriptException) as e:
+        raise QWebDriverError(e)  # pylint: disable=W0707
+
+
+def get_ready_state() -> bool:
+    ready_state = javascript.execute_javascript('return document.readyState === "complete"')
+    logger.debug("Readystate = {}".format(ready_state))
+    return ready_state
+
+
+def get_jquery_ready() -> bool:
+    jqueries_ready = javascript.execute_javascript("return window.jQuery.active === 0;")
+    return jqueries_ready
+
+
+def wait_xhr_legacy(timeout: float = 0.0) -> None:
+    """Uses jQuery.active to check if page is ready
+
+    if jQuery is not available, calls setup_xhr_monitor
+    which injects it to the page.
+    jQuery.active returns 0 when page and js are ready and
+    AJAX is done.
+
+    """
+    start = time.time()
+    while time.time() < timeout + start:
+        logger.debug("Timeout for xhr:s = {}".format(timeout))
+        ready_state = get_ready_state()
+        logger.debug("ready_state {}".format(ready_state))
+        if ready_state:
+            jquery = setup_jquery_monitor()
+            if jquery:
+                jquery_ready = get_jquery_ready()
+                if jquery_ready:
+                    return
+                logger.debug("There are still pending AJAX requests..")
+            else:
+                logger.debug("Unable to inject jQuery..")
+                return
+        else:
+            logger.debug("Page is not loaded yet..")
+
+    logger.debug("Page was not ready after {} seconds." "Trying to continue..".format(timeout))

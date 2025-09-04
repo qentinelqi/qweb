@@ -432,3 +432,11 @@ def validate_ms(value: int | str) -> str:
 def parse_ms(value: str) -> int:
     """Convert a canonical '<int>ms' string into an int."""
     return int(value[:-2])
+
+
+def validate_wait_strategy(value: str) -> str:
+    """Validate and normalize wait strategy values."""
+    valid_strategies = ["enhanced", "legacy"]
+    if value.lower() not in valid_strategies:
+        raise ValueError(f"Invalid wait strategy: {value!r}. Must be one of: {valid_strategies}")
+    return value.lower()

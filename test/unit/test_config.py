@@ -166,3 +166,16 @@ class TestConfig:
             return None
         
         custom_config.set_wait_function(my_wait_function)
+    
+    @staticmethod
+    def test_set_wait_strategy():
+        with pytest.raises(ValueError):
+            config.set_config("WaitStrategy", "unknown")
+        assert config.get_config("WaitStrategy") == "enhanced"
+
+        old_val = config.set_config("WaitStrategy", "legacy")
+        assert old_val == "enhanced"
+        assert config.get_config("WaitStrategy") == "legacy"
+
+        config.reset_config("WaitStrategy")
+        assert config.get_config("WaitStrategy") == "enhanced"

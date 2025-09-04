@@ -132,6 +132,12 @@ def set_config(par: str, val: Any) -> Any:
     +---------------------+-----------------------------------------+----------------+
     | XHRTimeout_         | Maximum wait for page to be loaded      | 30s            |
     +---------------------+-----------------------------------------+----------------+
+    | WaitStrategy_       | Controls which synchronization strategy |                |
+    |                     | is used before actions (clicks, typing, | enhanced       |
+    |                     | verifications).                         |                |
+    |                     | This determines how the framework       |                |
+    |                     | decides that the page is "ready".       |                |
+    +---------------------+-----------------------------------------+----------------+
     | VerifyAppAccuracy_  | Threshold for needed similarity in      | 0.9999         |
     |                     | VerifyApp keyword.                      |                |
     +---------------------+-----------------------------------------+----------------+
@@ -691,14 +697,14 @@ def set_config(par: str, val: Any) -> Any:
     indefinitely on pages with continuous background changes
     (e.g. timers, ads, or blinking cursors).
 
-    Default = 200 (page must be stable for at least 200 ms)
+    Default = 200ms (page must be stable for at least 200 milliseconds)
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
         # Require 500 ms of rendering stability before continuing
-        SetConfig       RenderWait       500
+        SetConfig       RenderWait       500ms
 
         # Interaction waits until page has been stable for 0.5 s,
         # but never more than 750 ms total (1.5 × 500 ms)
@@ -965,6 +971,62 @@ def set_config(par: str, val: Any) -> Any:
     .. code-block:: robotframework
 
         SetConfig   XHRTimeout        60
+
+    .. _waitstrategy:
+
+    ----
+
+    Parameter: WaitStrategy
+    -----------------------
+
+    Controls which synchronization strategy is used before actions (clicks, typing, verifications).
+    This determines how the framework decides that the page is "ready".
+
+    Two strategies are available:
+
+    Enhanced (default)
+    ^^^^^^^^^^^^^^^^^^
+    Uses multiple signals to detect readiness:
+
+    - document.readyState === "complete"
+    - No active network requests (patched fetch + XMLHttpRequest, and jQuery.active if available)
+    - No visible spinners (if **SpinnerCSS** is configured)
+    - DOM has been stable for a configured quiet period (**RenderWait**)
+
+    This mode is suitable for modern single-page applications
+    (e.g. Salesforce Lightning, React, Angular), where activity is not tracked by jQuery alone.
+
+    Legacy
+    ^^^^^^
+    Uses the old jQuery-based waiter:
+
+    - document.readyState === "complete"
+    - Optionally injects jQuery if not present
+    - Waits until jQuery.active === 0 (no active jQuery AJAX requests)
+
+    Notes:
+
+    - In both strategies the maximum wait time is controlled by the **XHR_TIMEOUT** setting.
+      If this timeout expires, the wait ends and execution continues
+    - Either strategy can be overridden entirely by calling the SetWaitFunction keyword or function
+      and providing your own custom wait implementation.
+
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        # Use default (enhanced) waiter
+        ClickText       Save
+        VerifyText      Saved Successfully
+
+        # Explicitly force legacy waiter
+        SetConfig       WaitStrategy    legacy
+        ClickText       Save
+        VerifyText      Saved Successfully
+
+        # Restore enhanced waiter
+        SetConfig       WaitStrategy    enhanced
 
     .. _verifyappaccuracy:
 

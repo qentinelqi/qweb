@@ -81,9 +81,16 @@ def wait_page_loaded() -> None:
     if timeout.lower() == "none":
         return
     try:
-        xhr.wait_xhr(timestr_to_secs(timeout))
+        strategy = CONFIG["WaitStrategy"]
+        if strategy.lower() == "legacy":
+            logger.debug("Using legacy jQuery-based waiter")
+            xhr.wait_xhr_legacy(timestr_to_secs(timeout))
+        else:
+            logger.debug("Using enhanced waiter (network/spinner/render)")
+            xhr.wait_xhr(timestr_to_secs(timeout))
+
     except (WebDriverException, QWebDriverError) as e:
-        logger.debug(f"Unable to check AJAX requests due error: {e}")
+        logger.debug(f"Unable to check network requests due error: {e}")
 
 
 def get_raw_html() -> str:
