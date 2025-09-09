@@ -148,11 +148,11 @@ External site with shadow DOM
     Run Keyword If              ${cookie_dialog}            ClickText                   Close
 
     ${error}=                   Run Keyword and Expect Error                            *
-    ...                         VerifyText                  Sign In                     partial_match=False         timeout=3
+    ...                         VerifyText                  Sign in                     partial_match=False         timeout=3
 
     SetConfig                   ShadowDOM                   True
-    VerifyText                  Sign In                     timeout=3
-    ClickText                   Sign In                     timeout=3
+    VerifyText                  Sign in                     timeout=3
+    ClickText                   Sign in                     timeout=3
     VerifyText    Sign in with your ServiceNow ID           timeout=20
     LogScreenshot
 
