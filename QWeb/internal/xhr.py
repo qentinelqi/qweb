@@ -191,18 +191,17 @@ def is_spinner_busy(selectors: Optional[list[str]] = None) -> Optional[bool]:
 
 
 def _parse_spinner_selectors() -> Optional[list[str]]:
-    raw = config.get_config("SpinnerCSS")
-    if raw is None:
+    # Parse spinner CSS selectors from config
+    try:
+        raw = config.get_config("SpinnerCSS")
+    except ValueError:
         return None
 
     # Normalize common "empty" markers to None
-    if isinstance(raw, str) and raw.strip().lower() in ("", "none", "null", "false", "off"):
-        return None
-
-    # Otherwise interpret as comma-separated CSS selectors
     if isinstance(raw, str):
-        return [s.strip() for s in raw.split(",") if s.strip()]
-
+        # Interpret only non empty, comma-separated CSS selectors
+        if raw.strip().lower() not in ("", "none", "null", "false", "off"):
+            return [s.strip() for s in raw.split(",") if s.strip()]
     return None
 
 
