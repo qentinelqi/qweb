@@ -209,7 +209,12 @@ def wait_xhr(timeout: float = 15.0,
              poll_interval: float = 0.1) -> None:
     """
     Order: readyState -> network idle -> spinner gone -> DOM quiet (bounded).
-    - `quiet_ms`: quiet window needed to call DOM "settled"
+    - `quiet_ms`: quiet window needed to call DOM "settled". This will come from
+       config value `RenderWait`.
+    - `dom_quiet_cap_ms`: capped maximum time to wait for DOM quiet. This is to avoid
+       excessive waiting in case of slow or unresponsive pages. This will be the smaller
+       value of `DOM_QUIET_MAX` (1500 ms by default) and whatever is given as `quiet_ms`
+       multiplied by `DOM_CAP_MULTIPLIER` (default=1.5).
     """
     DOM_QUIET_MAX_MS = 1500     # Max time to wait for DOM quiet
     DOM_CAP_MULTIPLIER = 1.5    # Cap multiplier for DOM quiet time
