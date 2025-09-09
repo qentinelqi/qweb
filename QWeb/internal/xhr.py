@@ -25,7 +25,17 @@ from QWeb.keywords import config
 
 # Install monitor (fetch/XMLHttpRequest + MutationObserver). Idempotent.
 JS_INSTALL_MONITOR = r"""
-return (function () {
+// JS_INSTALL_MONITOR
+// ------------------
+// Installs network/DOM activity monitors into the page (fetch, XHR, MutationObserver).
+// Always returns true on success (even if some patches are skipped).
+//
+// The optional `debug` flag (default: false) is used only for troubleshooting:
+//   - When true, logs warnings to the browser console if one of the patches fails.
+//   - When false, failures are silently ignored to avoid polluting logs.
+//
+// Python side can pass an explicit `true` for one-off debugging cases.
+return (function (debug = false) {
   if (window.__xhrMon && window.__xhrMon.installed) return true;
 
   window.__xhrMon = Object.assign(window.__xhrMon || {}, {
@@ -50,7 +60,7 @@ return (function () {
       };
       window.__xhrMon.fetchPatched = true;
     }
-  } catch(e){}
+  } catch(e){if (debug) console.warn("XHR monitor: fetch patch failed", e);}
 
   try {
     if (!window.__xhrMon.xhrPatched && window.XMLHttpRequest && window.XMLHttpRequest.prototype) {
@@ -66,7 +76,7 @@ return (function () {
       };
       window.__xhrMon.xhrPatched = true;
     }
-  } catch(e){}
+  } catch(e){ if (debug) console.warn("XHR monitor: xhr patch failed", e);}
 
   try {
     if (!window.__xhrMon.observerStarted && window.MutationObserver) {
@@ -76,8 +86,9 @@ return (function () {
       });
       window.__xhrMon.observerStarted = true;
     }
-  } catch(e){}
+  } catch(e){if (debug) console.warn("XHR monitor: observer setup failed", e);}
 
+  if (debug) console.log("XHR monitor: setup complete");
   return true;
 })();
 """
@@ -146,10 +157,7 @@ return (function (selectors) {
 
 def setup_xhr_monitor() -> bool:
     try:
-        ok = javascript.execute_javascript(JS_INSTALL_MONITOR)
-        if ok is not True:
-            logger.debug(f"setup_xhr_monitor returned non-True: {ok}")
-        return bool(ok)
+        return javascript.execute_javascript(JS_INSTALL_MONITOR)
     except JavascriptException as e:
         logger.debug(f"setup_xhr_monitor failed: {e}")
         raise QWebDriverError(e)  # pylint: disable=W0707
