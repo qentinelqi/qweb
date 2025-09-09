@@ -431,7 +431,13 @@ def validate_ms(value: int | str) -> str:
 
 def parse_ms(value: str) -> int:
     """Convert a canonical '<int>ms' string into an int."""
-    return int(value[:-2])
+    v = value.strip().lower().replace(" ", "")
+    v = v.removesuffix("ms")
+    try:
+        n = int(v)
+    except ValueError as e:
+        raise ValueError(f"Invalid millisecond value: {value!r}") from e
+    return n
 
 
 def validate_wait_strategy(value: str) -> str:
