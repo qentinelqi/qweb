@@ -52,13 +52,13 @@ def set_config(par: str, val: Any) -> Any:
     +---------------------+-----------------------------------------+----------------+
     | CssSelectors_       | Use CSS selectors for finding elements  | True           |
     +---------------------+-----------------------------------------+----------------+
-    | Delay_              | Wait time before each keyword           |   0 (no delay) |
-    +---------------------+-----------------------------------------+----------------+
     | DefaultDocument_    | Automatically switch back to default    | True           |
     |                     | framew after each keyword.              |                |
     +---------------------+-----------------------------------------+----------------+
     | DefaultTimeout_     | How long to wait for element to appear  | 10s            |
     |                     | before failing the case.                |                |
+    +---------------------+-----------------------------------------+----------------+
+    | Delay_              | Wait time before each keyword           |   0 (no delay) |
     +---------------------+-----------------------------------------+----------------+
     | DoubleClick_        | Perform double-click action in all click|   False        |
     |                     | keywords.                               |                |
@@ -98,6 +98,9 @@ def set_config(par: str, val: Any) -> Any:
     | PartialMatch_       | Accept partial matches from element     | True           |
     |                     | search functions or require exact match |                |
     +---------------------+-----------------------------------------+----------------+
+    | RenderWait_         | Time to wait for dom to stabilize before|   200ms        |
+    |                     | interacting (milliseconds).             |                |
+    +---------------------+-----------------------------------------+----------------+
     | RetinaDisplay_      | Is current monitor Retina display       |   Automatic    |
     |                     | (True) or not (False)                   |   detection    |
     +---------------------+-----------------------------------------+----------------+
@@ -120,11 +123,20 @@ def set_config(par: str, val: Any) -> Any:
     +---------------------+-----------------------------------------+----------------+
     | ShadowDOM_          | Extend element searches to shadow DOM.  |   False        |
     +---------------------+-----------------------------------------+----------------+
+    | SpinnerCSS_         | CSS selector for the spinner element to | none           |
+    |                     | wait for in default wait function.      |                |
+    +---------------------+-----------------------------------------+----------------+
     | StayInCurrentFrame_ | Only search from current frame, do not  |   False        |
     |                     | automatically find elements from all    |                |
     |                     | frames. Useful with \`UseFrame\`.       |                |
     +---------------------+-----------------------------------------+----------------+
     | XHRTimeout_         | Maximum wait for page to be loaded      | 30s            |
+    +---------------------+-----------------------------------------+----------------+
+    | WaitStrategy_       | Controls which synchronization strategy |                |
+    |                     | is used before actions (clicks, typing, | enhanced       |
+    |                     | verifications).                         |                |
+    |                     | This determines how the framework       |                |
+    |                     | decides that the page is "ready".       |                |
     +---------------------+-----------------------------------------+----------------+
     | VerifyAppAccuracy_  | Threshold for needed similarity in      | 0.9999         |
     |                     | VerifyApp keyword.                      |                |
@@ -138,58 +150,114 @@ def set_config(par: str, val: Any) -> Any:
     | WindowSize_         | Set the size of browser window          | Full screen    |
     +---------------------+-----------------------------------------+----------------+
 
-    .. _logscreenshot:
+
+    .. _blindreturn:
 
     ----
 
-    Parameter: LogScreenshot
-    ========================
+    Parameter: BlindReturn
+    ----------------------
 
-    Enables or disables logging screenshots when keyword fails.
-    Default is screenshot (True). False disables screenshots from logs when keyword fails.
-
-    Examples
-    --------
-    .. code-block:: robotframework
-
-        SetConfig    LogScreenshot         False
-        SetConfig    LogScreenshot         True
-
-
-    .. _screenshottype:
-
-    ----
-
-    Parameter: ScreenshotType
-    -------------------------
-
-    Defines how screenshot is taken. Default is normal screenshot.
-    "html" saves page as html frame in test log. "all" saves both image and html page.
+    Return any value (even empty) from input element without waiting.
+    Default = false (Raises QWebValueError if field is empty after timeout).
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig    ScreenshotType        html
-        SetConfig    ScreenshotType        screenshot
-        SetConfig    ScreenshotType        all
+        SetConfig    BlindReturn       True
+        ${VALUE}     GetInputValue     username
+        #Some value must exists inside of given timeout(default):
+        SetConfig    BlindReturn       False
+        ${VALUE}     GetInputValue     username
+        # One time use:
+        ${VALUE}     GetInputValue     username     blind=True
 
-    .. _osscreenshots:
+    .. _caseinsensitive:
 
     ----
 
-    Parameter: OSScreenshots
-    ------------------------
+    Parameter: CaseInsensitive
+    --------------------------
 
-    Defines if screenhots are taken using selenium's or operating system's functionalities.
-    Default is selenium screenshot (False).
+    Set containing_text_match according to selected case sensitivity.
+
+    Default = False
+    Note: if containing_text_match has been overwritten manually
+    this will return the default value.
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig    OSScreenshots        True
-        SetConfig    OSScreenshots        False
+        SetConfig   CaseInsensitive    True
+        SetConfig   CaseInsensitive    False
+
+    .. _checkinputvalue:
+
+    ----
+
+    Parameter: CheckInputValue
+    --------------------------
+
+    Check that real value matches to preferred value after TypeText.
+
+    If value is not match we try to re type (three times before fail)
+    This is optional feature. Default = false.
+    Use with caution on elements where webdriver has tendency to lost focus
+    and some part of the preferred text gone missing.
+
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig   CheckInputValue    True
+        SetConfig   CheckInputValue    False
+        # One time use:
+        TypeText    username           Robot       check=True
+
+    .. _clearkey:
+
+    ----
+
+    Parameter: ClearKey
+    -------------------
+
+    Set key to be pressed before text is written to input field.
+
+    By default uses webdrivers clear method to clear element.
+
+    Available values are same as with LineBreak. Some keyboard shortcuts
+    also available. Some examples from link below:
+    https://turbofuture.com/computers/keyboard-shortcut-keys:
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig   ClearKey     None           # Uses clear method (=default)
+        SetConfig   ClearKey     {NULL}         # Does nothing
+        SetConfig   ClearKey     {CONTROL + A}  # Select all and overwrite
+        # One time use:
+        TypeText    username    Robot       clear_key={CONTROL + A}
+
+    .. _clicktofocus:
+
+    ----
+
+    Parameter: ClickToFocus
+    -----------------------
+
+    Clicks Input element before typing. This is sometimes needed to activate
+    target element.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    ClickToFocus         True    # Clicks element before TypeText
+        SetConfig    ClickToFocus         False   # Handle TypeText without clicks(default)
 
     .. _cssselectors:
 
@@ -221,60 +289,189 @@ def set_config(par: str, val: Any) -> Any:
         TypeText     MyLocator   Robot
         SetConfig    CssSelectors       off
 
-
-    .. _searchdirection:
+    .. _defaultdocument:
 
     ----
 
-    Parameter: SearchDirection
+    Parameter: DefaultDocument
     --------------------------
 
-    Set search direction for element search.
+    Switches to default frame automatically.
 
-    Search direction is "closest, "up", "down", "left", "right",
-    "up!", "down!", "left!", "right!".
-    "Closest" is the default value.
+    If some other frame is used by previous keyword
+    we switch back to default after keyword is executed so
+    that we are starting to find next locator from html document
+    instead of previously used frame.
+    Default = True
+    Use False only when there is need to use and move
+    between frames and page manually for some reason.
 
-    Elements are searched according to their relative position to anchor.
+    Related setting: StayInCurrentFrame_
 
-    With this setting you can choose between two ways of searching:
-
-    - **normal mode**
-    - **strict mode** (ending with "!").
-
-    **Normal Mode**: In this mode, you start looking for something starting from a specific point
-    or direction you've chosen. If you can't find it there, the search will then try to find
-    the closest match, even if it's not exactly in the direction you started from.
-
-    **Strict Mode**: This mode is stricter. You also start searching from a specific direction,
-    but the big difference is that if what you're looking for isn't found exactly in that direction,
-    the search will fail.
-    It won't try to find the next closest thing. The search insists that the item must be found in
-    the direction you specified, or not at all.
-    It's important to note that this enforced format works only when you're searching for text
-    on a page, like when you're using commands to verify text is there (VerifyText)
-    or when you want to click on text (ClickText).
 
     Examples
     ^^^^^^^^
-
     .. code-block:: robotframework
 
-        *** Test Cases ***
-        SearchDirection Example
-            # finds input using text "My Locator" on the right of text "Robot"
-            SetConfig    SearchDirection       right
-            TypeText     MyLocator  Hello  Robot
+        SetConfig   DefaultDocument    True
+        SetConfig   DefaultDocument    False
+        SetConfig   DefaultDocument    On
+        SetConfig   DefaultDocument    off
 
-            # finds input using text "My Locator" above of text "Robot"
-            SetConfig    SearchDirection       up
-            TypeText     MyLocator  Hello  Robot
+    .. _defaulttimeout:
 
-            # When using strict mode (!), the test case fails if the locator text is
-            # not found in the correct direction from the anchor.
-            SetConfig    SearchDirection       left!
-            VerifyText   Firstname             anchor=Lastname
-            SetConfig    SearchDirection       closest
+    ----
+
+    Parameter: DefaultTimeout
+    -------------------------
+
+    Set default timeout for QWeb keywords.
+
+    Timeout can be overridden by entering it manually
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig   DefaultTimeout    10s
+        # One time use:
+        VerifyText        Foo          60s
+
+    .. _delay:
+
+    ----
+
+    Parameter: Delay
+    ----------------
+
+    Set delay for Paceword.
+    This is meant to be used in demo purposes only
+    and is not recommended way to control execution flow.
+    Default = 0s (No delays before execution).
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        # Wait 0.5 seconds before any Paceword is executed:
+        SetConfig    Delay             0.5s
+        # One time use - Wait 1s before given Paceword is executed:
+        TypeText     username          QRobot   delay=1s
+
+    .. _doubleclick:
+
+    ----
+
+    Parameter: DoubleClick
+    ----------------------
+
+    Sets double-click the default action for all Click* keywords.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    DoubleClick          True    # All Click keywords perform double-click action
+        SetConfig    DoubleClick          False   # Single-click action(default)
+
+    .. _handlealerts:
+
+    ----
+
+    Parameter: HandleAlerts
+    -----------------------
+
+    Option for handling alerts boxes, on by default.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    HandleAlerts       False
+
+    .. _highlightcolor:
+
+    ----
+
+    Parameter: HighlightColor
+    -------------------------
+
+    Sets the highlight color to use when element is highlighted.
+
+    Accepted colors are:
+
+    * aqua
+    * black
+    * blue
+    * fuchsia
+    * green
+    * lime
+    * navy
+    * olive
+    * orange
+    * purple
+    * red
+    * teal
+    * yellow
+
+
+    Default = "blue".
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    HighlightColor       olive
+
+    .. _inputhandler:
+
+    ----
+
+    Parameter: InputHandler
+    -----------------------
+
+    Set input handler.
+
+    Default handler is "selenium" which uses Selenium library's
+    methods clear() and send_keys(). These methods assume that
+    the web element is writable (enabled). Inserts tab character
+    at the end of text.
+
+    Alternative writers "raw" and "javascript. "raw" uses pyautogui to input text directly
+    without checking the web element state. "javascript" uses javascript for input.
+    These version are intended to be used when the web page doesn't update input element status
+    Selenium compliant way.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+         SetConfig      InputHandler        raw
+         SetConfig      InputHandler        selenium
+
+         # Use JavaScript to set the text to input element's value attribute
+         SetConfig      InputHandler        javascript
+
+    .. _inviewport:
+
+    ----
+
+    Parameter: InViewport
+    ---------------------
+
+    If InViewport is set to true every element outside of current viewport is considered
+    invisible. This helps to narrow searching area when there is lots of similar texts/elements
+    in dom content. This can be also used to prevent searching functions to match any element
+    that is hidden outside of viewport - even if css visibility settings of given element
+    says that it's visible.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    InViewport      False  #returns all matching elements(default)
+        SetConfig    InViewport      True   #element has to be inside of current viewport
+        ClickItem    Qentinel        viewport=False
 
     .. _linebreak:
 
@@ -378,139 +575,91 @@ def set_config(par: str, val: Any) -> Any:
         SetConfig   LineBreak    \ue007    # Enter key
         SetConfig   LineBreak    ${EMPTY}  # Do not send anything
 
-    .. _clearkey:
+    .. _logmatchedicons:
 
     ----
 
-    Parameter: ClearKey
-    -------------------
-
-    Set key to be pressed before text is written to input field.
-
-    By default uses webdrivers clear method to clear element.
-
-    Available values are same as with LineBreak. Some keyboard shortcuts
-    also available. Some examples from link below:
-    https://turbofuture.com/computers/keyboard-shortcut-keys:
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig   ClearKey     None           # Uses clear method (=default)
-        SetConfig   ClearKey     {NULL}         # Does nothing
-        SetConfig   ClearKey     {CONTROL + A}  # Select all and overwrite
-        # One time use:
-        TypeText    username    Robot       clear_key={CONTROL + A}
-
-    .. _checkinputvalue:
-
-    ----
-
-    Parameter: CheckInputValue
+    Parameter: LogMatchedIcons
     --------------------------
 
-    Check that real value matches to preferred value after TypeText.
-
-    If value is not match we try to re type (three times before fail)
-    This is optional feature. Default = false.
-    Use with caution on elements where webdriver has tendency to lost focus
-    and some part of the preferred text gone missing.
-
+    When True, highlights where icon was found on the screen and adds a sceenshot
+    to logs. Default = False (Screenshots are not added to the logs).
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig   CheckInputValue    True
-        SetConfig   CheckInputValue    False
-        # One time use:
-        TypeText    username           Robot       check=True
+        SetConfig    LogMatchedIcons       True
 
-    .. _defaulttimeout:
+    .. _logscreenshot:
 
     ----
 
-    Parameter: DefaultTimeout
-    -------------------------
+    Parameter: LogScreenshot
+    ------------------------
 
-    Set default timeout for QWeb keywords.
-
-    Timeout can be overridden by entering it manually
+    Enables or disables logging screenshots when keyword fails.
+    Default is screenshot (True). False disables screenshots from logs when keyword fails.
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig   DefaultTimeout    10s
-        # One time use:
-        VerifyText        Foo          60s
+        SetConfig    LogScreenshot         False
+        SetConfig    LogScreenshot         True
 
-    .. _xhrtimeout:
-
-    ----
-
-    Parameter: XHRTimeout
-    ---------------------
-
-    Set default timeout for XHR (How log we wait page to be loaded).
-
-    Timeout can be overridden by entering it manually
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig   XHRTimeout        60
-
-    .. _defaultdocument:
+    .. _multipleanchors:
 
     ----
 
-    Parameter: DefaultDocument
+    Parameter: MultipleAnchors
     --------------------------
 
-    Switches to default frame automatically.
-
-    If some other frame is used by previous keyword
-    we switch back to default after keyword is executed so
-    that we are starting to find next locator from html document
-    instead of previously used frame.
-    Default = True
-    Use False only when there is need to use and move
-    between frames and page manually for some reason.
-
-    Related setting: StayInCurrentFrame_
-
+    Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to True,
+    QWeb accepts multiple anchors and selects the first one.
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig   DefaultDocument    True
-        SetConfig   DefaultDocument    False
-        SetConfig   DefaultDocument    On
-        SetConfig   DefaultDocument    off
+        SetConfig    MultipleAnchors      True    # Accept multiple anchors
+        SetConfig    MultipleAnchors      False   # Raise error if anchor is not unique
 
-    .. _caseinsensitive:
+    .. _offsetcheck:
 
     ----
 
-    Parameter: CaseInsensitive
-    --------------------------
+    Parameter: OffsetCheck
+    ----------------------
 
-    Set containing_text_match according to selected case sensitivity.
-
-    Default = False
-    Note: if containing_text_match has been overwritten manually
-    this will return the default value.
+    Element with no offset is considered invisible by default.
+    To bypass this check set OffsetCheck to false.
 
     Examples
     ^^^^^^^^
     .. code-block:: robotframework
 
-        SetConfig   CaseInsensitive    True
-        SetConfig   CaseInsensitive    False
+        SetConfig    OffsetCheck     False  #returns also elements that has offset=0
+        SetConfig    OffsetCheck     True   #offset is needed (default)
+        # One time use:
+        ClickItem    Qentinel        offset=False
+
+    .. _osscreenshots:
+
+    ----
+
+    Parameter: OSScreenshots
+    ------------------------
+
+    Defines if screenhots are taken using selenium's or operating system's functionalities.
+    Default is selenium screenshot (False).
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    OSScreenshots        True
+        SetConfig    OSScreenshots        False
 
     .. _partialmatch:
 
@@ -530,6 +679,354 @@ def set_config(par: str, val: Any) -> Any:
 
         SetConfig   PartialMatch    True
         SetConfig   PartialMatch    False
+
+    .. _renderwait:
+
+    ----
+
+    Parameter: RenderWait
+    ---------------------
+
+    Defines the required rendering settle period (in milliseconds) where the page must remain
+    unchanged before continuing.
+    This acts as a grace period after network activity has finished, ensuring that
+    UI rendering, animations, and reflows have completed.
+
+    Internally a cap is applied: the wait will not exceed 1.5 × RenderWait (with an absolute
+    maximum of 1500 ms) even if the page never fully settles. This prevents tests from hanging
+    indefinitely on pages with continuous background changes
+    (e.g. timers, ads, or blinking cursors).
+
+    Default = 200ms (page must be stable for at least 200 milliseconds)
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        # Require 500 ms of rendering stability before continuing
+        SetConfig       RenderWait       500ms
+
+        # Interaction waits until page has been stable for 0.5 s,
+        # but never more than 750 ms total (1.5 × 500 ms)
+        ClickText       Submit
+        VerifyText      Submitted
+
+        # Restore default (200 ms)
+        SetConfig       RenderWait       200
+
+    .. _retinadisplay:
+
+    ----
+
+    Parameter: RetinaDisplay
+    ------------------------
+
+    Is current monitor Retina display (True) or not (False). Will be automatically
+    set based on used monitor, but can be changed for testing purposes if needed.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    RetinaDisplay       False
+
+    .. _retryinterval:
+
+    ----
+
+    Parameter: RetryInterval
+    ------------------------
+
+    Set default interval for QWeb retry keywords.
+
+    Timeout can be overridden by entering it manually
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig   RetryInterval    1s
+        # One time use:
+        ClickUntil      Foo         button       interval=3
+
+    .. _runbefore:
+
+    ----
+
+    Parameter: RunBefore
+    --------------------
+
+    Set a verificaton keyword to be run before any interaction
+    keywords (click*, get_text, dropdown).
+
+    Most common use for this configuration is in applications, that have a custom
+    "spinner"/ loading indicator which needs to be waited even if
+    page itself is already in ReadyState.
+
+    Any custom robot fw keywords which start with word "Verify" can be used as RunBefore keyword.
+    A resource file defining this keyword must be imported prior to usage.
+
+
+    Supports giving keyword to run and parameters either in python or in robot framework syntax.
+    Robot fw syntax needs to be given in a variable due to handling of arguments.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        # Python syntax
+        SetConfig  RunBefore   element.verify_no_element('//html[contains(@class, "custom-busy")]')
+        ClickText  Foo
+        # Waits that custom spinner disappears before running other keywords
+
+        # Robot Framework syntax, needs to be in variable
+        ${run_bf}=   SetVariable    VerifyNoText    Loading....     timeout=5
+        SetConfig    RunBefore      ${run_bf}
+        ClickText    Foo
+        # Waits that text "Loading..." disappears before running other keywords
+
+    .. _screenshottype:
+
+    ----
+
+    Parameter: ScreenshotType
+    -------------------------
+
+    Defines how screenshot is taken. Default is normal screenshot.
+    "html" saves page as html frame in test log. "all" saves both image and html page.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    ScreenshotType        html
+        SetConfig    ScreenshotType        screenshot
+        SetConfig    ScreenshotType        all
+
+    .. _searchdirection:
+
+    ----
+
+    Parameter: SearchDirection
+    --------------------------
+
+    Set search direction for element search.
+
+    Search direction is "closest, "up", "down", "left", "right",
+    "up!", "down!", "left!", "right!".
+    "Closest" is the default value.
+
+    Elements are searched according to their relative position to anchor.
+
+    With this setting you can choose between two ways of searching:
+
+    - **normal mode**
+    - **strict mode** (ending with "!").
+
+    **Normal Mode**: In this mode, you start looking for something starting from a specific point
+    or direction you've chosen. If you can't find it there, the search will then try to find
+    the closest match, even if it's not exactly in the direction you started from.
+
+    **Strict Mode**: This mode is stricter. You also start searching from a specific direction,
+    but the big difference is that if what you're looking for isn't found exactly in that direction,
+    the search will fail.
+    It won't try to find the next closest thing. The search insists that the item must be found in
+    the direction you specified, or not at all.
+    It's important to note that this enforced format works only when you're searching for text
+    on a page, like when you're using commands to verify text is there (VerifyText)
+    or when you want to click on text (ClickText).
+
+    Examples
+    ^^^^^^^^
+
+    .. code-block:: robotframework
+
+        *** Test Cases ***
+        SearchDirection Example
+            # finds input using text "My Locator" on the right of text "Robot"
+            SetConfig    SearchDirection       right
+            TypeText     MyLocator  Hello  Robot
+
+            # finds input using text "My Locator" above of text "Robot"
+            SetConfig    SearchDirection       up
+            TypeText     MyLocator  Hello  Robot
+
+            # When using strict mode (!), the test case fails if the locator text is
+            # not found in the correct direction from the anchor.
+            SetConfig    SearchDirection       left!
+            VerifyText   Firstname             anchor=Lastname
+            SetConfig    SearchDirection       closest
+
+    .. _searchmode:
+
+    ----
+
+    Parameter: SearchMode
+    ---------------------
+
+    When SearchMode is used, any found web element is highlighted with blue borders
+    before the actual execution. This setting is useful especially in debug mode when
+    we want to search right kw:s and locators to actual testscript.
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    SearchMode      debug  #Highlights element, but won't put action on it
+        SetConfig    SearchMode      draw   #Highlights element and then executes kw (default)
+        SetConfig    SearchMode      None   #Turns off highlighting element
+
+    .. _shadowdom:
+
+    ----
+
+    Parameter: ShadowDOM
+    --------------------
+
+    Extends element search to open shadow roots / shadow DOM.
+    Elments under shadow dom are not reachable by normal means, so setting
+    this configuration to True also changes how elements are searched.
+    This basically means that some attributes given to keywords can be ignored
+    and other search strategies are overridden.
+
+    It's best to use this setting only in specific situations where shadow dom
+    elements need to be verified or interacted with.
+
+    Default = False (Elements are only searched from the light / normal dom).
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig       ShadowDOM       True
+        # Do things related to shadow dom elements
+        VerifyText      This is under shadow root
+        ClickText       As is this
+        SetConfig       ShadowDOM       False
+
+
+    .. _spinnercss:
+
+    ----
+
+    Parameter: SpinnerCSS
+    -----------------------------
+
+    Defines a comma-separated list of CSS selectors used to detect loading indicators
+    (spinners, overlays, progress bars).
+    If any element matching these selectors is found and visible, keywords
+    will wait until they disappear before continuing.
+
+    This setting is useful when testing applications that show spinners during background
+    activity (e.g. Salesforce Lightning, Angular, React apps). If left unset, spinner checks
+    are skipped entirely, so waiting relies only on network idle and DOM quiet signals.
+
+    Default = None (spinner checks are not performed).
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig    SpinnerCSS   lightning-spinner,.slds-spinner:not(.slds-hide),[aria-busy="true"]
+
+
+    .. _stayincurrentframe:
+
+    ----
+
+    Parameter: StayInCurrentFrame
+    -----------------------------
+
+    Disables default automatic frame traverse when searching elements.
+
+    Use True only when there is need to use a specific frame and
+    find elements from that specific frame only.
+
+    Default = False (Automatic frame traverse in on).
+
+    Related setting: DefaultDocument_
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        UseFrame               //iframe
+        SetConfig              StayInCurrentFrame   True
+        # Sets focus to first nested frame in current frame
+        UseFrame               //iframe
+
+    .. _xhrtimeout:
+
+    ----
+
+    Parameter: XHRTimeout
+    ---------------------
+
+    Set default timeout for XHR (How log we wait page to be loaded).
+
+    Timeout can be overridden by entering it manually
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        SetConfig   XHRTimeout        60
+
+    .. _waitstrategy:
+
+    ----
+
+    Parameter: WaitStrategy
+    -----------------------
+
+    Controls which synchronization strategy is used before actions (clicks, typing, verifications).
+    This determines how the framework decides that the page is "ready".
+
+    Two strategies are available:
+
+    Enhanced (default)
+    ^^^^^^^^^^^^^^^^^^
+    Uses multiple signals to detect readiness:
+
+    - document.readyState === "complete"
+    - No active network requests (patched fetch + XMLHttpRequest, and jQuery.active if available)
+    - No visible spinners (if **SpinnerCSS** is configured)
+    - DOM has been stable for a configured quiet period (**RenderWait**)
+
+    This mode is suitable for modern single-page applications
+    (e.g. Salesforce Lightning, React, Angular), where activity is not tracked by jQuery alone.
+
+    Legacy
+    ^^^^^^
+    Uses the old jQuery-based waiter:
+
+    - document.readyState === "complete"
+    - Optionally injects jQuery if not present
+    - Waits until jQuery.active === 0 (no active jQuery AJAX requests)
+
+    Notes:
+
+    - In both strategies the maximum wait time is controlled by the **XHR_TIMEOUT** setting.
+      If this timeout expires, the wait ends and execution continues
+    - Either strategy can be overridden entirely by calling the SetWaitFunction keyword or function
+      and providing your own custom wait implementation.
+
+
+    Examples
+    ^^^^^^^^
+    .. code-block:: robotframework
+
+        # Use default (enhanced) waiter
+        ClickText       Save
+        VerifyText      Saved Successfully
+
+        # Explicitly force legacy waiter
+        SetConfig       WaitStrategy    legacy
+        ClickText       Save
+        VerifyText      Saved Successfully
+
+        # Restore enhanced waiter
+        SetConfig       WaitStrategy    enhanced
 
     .. _verifyappaccuracy:
 
@@ -562,54 +1059,6 @@ def set_config(par: str, val: Any) -> Any:
 
         SetConfig    WindowSize     1920x1080
 
-    .. _inputhandler:
-
-    ----
-
-    Parameter: InputHandler
-    -----------------------
-
-    Set input handler.
-
-    Default handler is "selenium" which uses Selenium library's
-    methods clear() and send_keys(). These methods assume that
-    the web element is writable (enabled). Inserts tab character
-    at the end of text.
-
-    Alternative writers "raw" and "javascript. "raw" uses pyautogui to input text directly
-    without checking the web element state. "javascript" uses javascript for input.
-    These version are intended to be used when the web page doesn't update input element status
-    Selenium compliant way.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-         SetConfig      InputHandler        raw
-         SetConfig      InputHandler        selenium
-
-         # Use JavaScript to set the text to input element's value attribute
-         SetConfig      InputHandler        javascript
-
-    .. _offsetcheck:
-
-    ----
-
-    Parameter: OffsetCheck
-    ----------------------
-
-    Element with no offset is considered invisible by default.
-    To bypass this check set OffsetCheck to false.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    OffsetCheck     False  #returns also elements that has offset=0
-        SetConfig    OffsetCheck     True   #offset is needed (default)
-        # One time use:
-        ClickItem    Qentinel        offset=False
-
     .. _visibility:
 
     ----
@@ -627,46 +1076,6 @@ def set_config(par: str, val: Any) -> Any:
         SetConfig    Visibility      True   #returns only visible elements(default).
         # One time use:
         ClickItem    Qentinel        visibility=False
-
-    .. _inviewport:
-
-    ----
-
-    Parameter: InViewport
-    ---------------------
-
-    If InViewport is set to true every element outside of current viewport is considered
-    invisible. This helps to narrow searching area when there is lots of similar texts/elements
-    in dom content. This can be also used to prevent searching functions to match any element
-    that is hidden outside of viewport - even if css visibility settings of given element
-    says that it's visible.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    InViewport      False  #returns all matching elements(default)
-        SetConfig    InViewport      True   #element has to be inside of current viewport
-        ClickItem    Qentinel        viewport=False
-
-    .. _searchmode:
-
-    ----
-
-    Parameter: SearchMode
-    ---------------------
-
-    When SearchMode is used, any found web element is highlighted with blue borders
-    before the actual execution. This setting is useful especially in debug mode when
-    we want to search right kw:s and locators to actual testscript.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    SearchMode      debug  #Highlights element, but won't put action on it
-        SetConfig    SearchMode      draw   #Highlights element and then executes kw (default)
-        SetConfig    SearchMode      None   #Turns off highlighting element
 
     .. _windowfind:
 
@@ -739,291 +1148,6 @@ def set_config(par: str, val: Any) -> Any:
     Raises
     ------
     ValueError: Unknown search strategy
-
-    .. _multipleanchors:
-
-    ----
-
-    Parameter: MultipleAnchors
-    --------------------------
-
-    Normally QWeb requires anchor to be an unique text. If MultipleAnchors is set to True,
-    QWeb accepts multiple anchors and selects the first one.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    MultipleAnchors      True    # Accept multiple anchors
-        SetConfig    MultipleAnchors      False   # Raise error if anchor is not unique
-
-    .. _clicktofocus:
-
-    ----
-
-    Parameter: ClickToFocus
-    -----------------------
-
-    Clicks Input element before typing. This is sometimes needed to activate
-    target element.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    ClickToFocus         True    # Clicks element before TypeText
-        SetConfig    ClickToFocus         False   # Handle TypeText without clicks(default)
-
-    .. _doubleclick:
-
-    ----
-
-    Parameter: DoubleClick
-    ----------------------
-
-    Sets double-click the default action for all Click* keywords.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    DoubleClick          True    # All Click keywords perform double-click action
-        SetConfig    DoubleClick          False   # Single-click action(default)
-
-    .. _handlealerts:
-
-    ----
-
-    Parameter: HandleAlerts
-    -----------------------
-
-    Option for handling alerts boxes, on by default.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    HandleAlerts       False
-
-
-    .. _blindreturn:
-
-    ----
-
-    Parameter: BlindReturn
-    ----------------------
-
-    Return any value (even empty) from input element without waiting.
-    Default = false (Raises QWebValueError if field is empty after timeout).
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    BlindReturn       True
-        ${VALUE}     GetInputValue     username
-        #Some value must exists inside of given timeout(default):
-        SetConfig    BlindReturn       False
-        ${VALUE}     GetInputValue     username
-        # One time use:
-        ${VALUE}     GetInputValue     username     blind=True
-
-    .. _delay:
-
-    ----
-
-    Parameter: Delay
-    ----------------
-
-    Set delay for Paceword.
-    This is meant to be used in demo purposes only
-    and is not recommended way to control execution flow.
-    Default = 0s (No delays before execution).
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        # Wait 0.5 seconds before any Paceword is executed:
-        SetConfig    Delay             0.5s
-        # One time use - Wait 1s before given Paceword is executed:
-        TypeText     username          QRobot   delay=1s
-
-    .. _retryinterval:
-
-    ----
-
-    Parameter: RetryInterval
-    ------------------------
-
-    Set default interval for QWeb retry keywords.
-
-    Timeout can be overridden by entering it manually
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig   RetryInterval    1s
-        # One time use:
-        ClickUntil      Foo         button       interval=3
-
-    .. _runbefore:
-
-    ----
-
-    Parameter: RunBefore
-    --------------------
-
-    Set a verificaton keyword to be run before any interaction
-    keywords (click*, get_text, dropdown).
-
-    Most common use for this configuration is in applications, that have a custom
-    "spinner"/ loading indicator which needs to be waited even if
-    page itself is already in ReadyState.
-
-    Any custom robot fw keywords which start with word "Verify" can be used as RunBefore keyword.
-    A resource file defining this keyword must be imported prior to usage.
-
-
-    Supports giving keyword to run and parameters either in python or in robot framework syntax.
-    Robot fw syntax needs to be given in a variable due to handling of arguments.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        # Python syntax
-        SetConfig  RunBefore   element.verify_no_element('//html[contains(@class, "custom-busy")]')
-        ClickText  Foo
-        # Waits that custom spinner disappears before running other keywords
-
-        # Robot Framework syntax, needs to be in variable
-        ${run_bf}=   SetVariable    VerifyNoText    Loading....     timeout=5
-        SetConfig    RunBefore      ${run_bf}
-        ClickText    Foo
-        # Waits that text "Loading..." disappears before running other keywords
-
-    .. _retinadisplay:
-
-    ----
-
-    Parameter: RetinaDisplay
-    ------------------------
-
-    Is current monitor Retina display (True) or not (False). Will be automatically
-    set based on used monitor, but can be changed for testing purposes if needed.
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    RetinaDisplay       False
-
-    .. _logmatchedicons:
-
-    ----
-
-    Parameter: LogMatchedIcons
-    --------------------------
-
-    When True, highlights where icon was found on the screen and adds a sceenshot
-    to logs. Default = False (Screenshots are not added to the logs).
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    LogMatchedIcons       True
-
-    .. _highlightcolor:
-
-    ----
-
-    Parameter: HighlightColor
-    -------------------------
-
-    Sets the highlight color to use when element is highlighted.
-
-    Accepted colors are:
-
-    * aqua
-    * black
-    * blue
-    * fuchsia
-    * green
-    * lime
-    * navy
-    * olive
-    * orange
-    * purple
-    * red
-    * teal
-    * yellow
-
-
-    Default = "blue".
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig    HighlightColor       olive
-
-
-    .. _shadowdom:
-
-    ----
-
-    Parameter: ShadowDOM
-    --------------------
-
-    Extends element search to open shadow roots / shadow DOM.
-    Elments under shadow dom are not reachable by normal means, so setting
-    this configuration to True also changes how elements are searched.
-    This basically means that some attributes given to keywords can be ignored
-    and other search strategies are overridden.
-
-    It's best to use this setting only in specific situations where shadow dom
-    elements need to be verified or interacted with.
-
-    Default = False (Elements are only searched from the light / normal dom).
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        SetConfig       ShadowDOM       True
-        # Do things related to shadow dom elements
-        VerifyText      This is under shadow root
-        ClickText       As is this
-        SetConfig       ShadowDOM       False
-
-
-    .. _stayincurrentframe:
-
-    ----
-
-    Parameter: StayInCurrentFrame
-    -----------------------------
-
-    Disables default automatic frame traverse when searching elements.
-
-    Use True only when there is need to use a specific frame and
-    find elements from that specific frame only.
-
-    Default = False (Automatic frame traverse in on).
-
-    Related setting: DefaultDocument_
-
-    Examples
-    ^^^^^^^^
-    .. code-block:: robotframework
-
-        UseFrame               //iframe
-        SetConfig              StayInCurrentFrame   True
-        # Sets focus to first nested frame in current frame
-        UseFrame               //iframe
 
     ---
 

@@ -402,3 +402,47 @@ def remove_stale_elements(elems: Optional[List[WebElement]]) -> Optional[List[We
         except (StaleElementReferenceException, NoSuchElementException):
             elems.remove(elem)
     return elems
+
+
+def validate_ms(value: int | str) -> str:
+    """
+    Normalize milliseconds value for config storage.
+    Always stored as '<int>ms', non-negative.
+    """
+    if isinstance(value, int):
+        if value < 0:
+            raise ValueError("Milliseconds must be non-negative.")
+        return f"{value}ms"
+
+    if isinstance(value, str):
+        v = value.strip().lower().replace(" ", "")
+        if v.endswith("ms"):
+            v = v[:-2]
+        try:
+            n = int(v)
+        except ValueError as e:
+            raise ValueError(f"Invalid millisecond value: {value!r}") from e
+        if n < 0:
+            raise ValueError("Milliseconds value must be non-negative.")
+        return f"{n}ms"
+
+    raise ValueError(f"Invalid millisecond value: '{value}'")
+
+
+def parse_ms(value: str) -> int:
+    """Convert a canonical '<int>ms' string into an int."""
+    v = value.strip().lower().replace(" ", "")
+    v = v.removesuffix("ms")
+    try:
+        n = int(v)
+    except ValueError as e:
+        raise ValueError(f"Invalid millisecond value: {value!r}") from e
+    return n
+
+
+def validate_wait_strategy(value: str) -> str:
+    """Validate and normalize wait strategy values."""
+    valid_strategies = ["enhanced", "legacy"]
+    if value.lower() not in valid_strategies:
+        raise ValueError(f"Invalid wait strategy: {value!r}. Must be one of: {valid_strategies}")
+    return value.lower()
