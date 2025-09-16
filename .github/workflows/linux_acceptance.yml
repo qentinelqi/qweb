@@ -21,6 +21,6 @@ jobs:
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
       os: '["ubuntu-latest"]'
       browser: '["chrome", "firefox", "edge"]'
-      python-version: '["3.9", "3.12"]'
+      python-version: '["3.12", "3.13"]'
       minimum-rfw-version: "5.0.1"
-      minimum-rfw-python: "3.9"
+      minimum-rfw-python: "3.12"
