@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.7.0] - 2025-09-17
+### Added
+- New, improved wait function that supports adding waiting for custom spinners
+- Configuration option "WaitStrategy"
+- Configuration option "RenderWait"
+- Configuration option "SpinnerCSS"
+- Python 3.13 added to pipeline and packaging information
+
+### Changed
+- Improved usage of CHROME_ARGS environment variable and documented this in OpenBrowser keyword documentation
+
+### Removed
+- Python 3.9 official support removed as it will hit end-of-life soon
+- 
+
+
 ## [3.6.1] - 2025-07-04
 ### Added
 - New arguments to Open Browser:
