@@ -48,6 +48,9 @@ dependencies = [
 [tool.setuptools.packages.find]
 exclude = ["*.test", "*.test.*", "test.*", "test"]
 
+[tool.setuptools.package-data]
+"QWeb.internal.js" = ["*.js"]
+
 [tool.versioneer]
 VCS = "git"
 style = "pep440-pre"
