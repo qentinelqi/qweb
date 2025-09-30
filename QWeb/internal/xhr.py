@@ -228,9 +228,11 @@ def _parse_spinner_selectors() -> Optional[list[str]]:
 
 
 def wait_xhr(timeout: float = 15.0,
-             poll_interval: float = 0.1) -> None:
+             poll_interval: float = 0.1,
+             skip_network: bool = False) -> None:
     """
     Order: readyState -> network idle -> spinner gone -> DOM quiet (bounded).
+    If skip_network is True, network idle check is skipped (for XHRTimeout='none').
     - `quiet_ms`: quiet window needed to call DOM "settled". This will come from
        config value `RenderWait`.
     - `dom_quiet_cap_ms`: capped maximum time to wait for DOM quiet. This is to avoid
@@ -259,8 +261,8 @@ def wait_xhr(timeout: float = 15.0,
             logger.debug("wait_xhr: waiting for document.readyState=complete")
             time.sleep(poll_interval)
             continue
-
-        if not st.get("networkIdle"):
+        
+        if not skip_network and not st.get("networkIdle"):
             logger.debug(
                 f"wait_xhr: waiting for network idle "
                 f"(pending={st.get('pending')} jqActive={st.get('jqActive')})"
