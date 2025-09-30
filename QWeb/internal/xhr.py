@@ -261,7 +261,7 @@ def wait_xhr(timeout: float = 15.0,
             logger.debug("wait_xhr: waiting for document.readyState=complete")
             time.sleep(poll_interval)
             continue
-        
+
         if not skip_network and not st.get("networkIdle"):
             logger.debug(
                 f"wait_xhr: waiting for network idle "

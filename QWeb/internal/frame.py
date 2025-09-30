@@ -78,7 +78,7 @@ def wait_page_loaded() -> None:
                 raise QWebBrowserError(e) from e
             driver.switch_to.default_content()
     timeout = CONFIG["XHRTimeout"]
-    
+
     try:
         strategy = CONFIG["WaitStrategy"]
         if strategy.lower() == "legacy":
