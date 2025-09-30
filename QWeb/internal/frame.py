@@ -78,16 +78,21 @@ def wait_page_loaded() -> None:
                 raise QWebBrowserError(e) from e
             driver.switch_to.default_content()
     timeout = CONFIG["XHRTimeout"]
-    if timeout.lower() == "none":
-        return
+    
     try:
         strategy = CONFIG["WaitStrategy"]
         if strategy.lower() == "legacy":
             logger.debug("Using legacy jQuery-based waiter")
+            if timeout.lower() == "none":
+                return
             xhr.wait_xhr_legacy(timestr_to_secs(timeout))
         else:
             logger.debug("Using enhanced waiter (network/spinner/render)")
-            xhr.wait_xhr(timestr_to_secs(timeout))
+            if timeout.lower() == "none":
+                # Use default timeout, but skip network idle check
+                xhr.wait_xhr(skip_network=True)
+            else:
+                xhr.wait_xhr(timestr_to_secs(timeout))
 
     except (WebDriverException, QWebDriverError) as e:
         logger.debug(f"Unable to check network requests due error: {e}")
