@@ -62,15 +62,37 @@ return (function (debug = false) {
     }
   } catch(e){if (debug) console.warn("XHR monitor: fetch patch failed", e);}
 
-  try {
+    try {
     if (!window.__xhrMon.xhrPatched && window.XMLHttpRequest && window.XMLHttpRequest.prototype) {
       const _open = XMLHttpRequest.prototype.open;
       const _send = XMLHttpRequest.prototype.send;
       XMLHttpRequest.prototype.open = function() { this.__xhrTracked = true; return _open.apply(this, arguments); };
       XMLHttpRequest.prototype.send = function() {
-        if (this.__xhrTracked) {
-          try { window.__xhrMon.pending++; } catch(e) {}
-          this.addEventListener("loadend", function(){ try { window.__xhrMon.pending--; } catch(e) {} }, { once:true });
+        // Check for long-polling in request body
+        let isLongPolling = false;
+        if (arguments[0]) {
+          try {
+            const body = typeof arguments[0] === "string" ? arguments[0] : JSON.stringify(arguments[0]);
+            if (body && body.indexOf('"connectionType":"long-polling"') !== -1) {
+              isLongPolling = true;
+            }
+          } catch(e) {}
+        }
+        if (this.__xhrTracked && !isLongPolling) {
+          try {
+            window.__xhrMon.pending++;
+            if (debug) {
+              console.log("XHR monitor: waiting for request, pending count:", window.__xhrMon.pending);
+            }
+          } catch(e) {}
+          this.addEventListener("loadend", function(){
+            try {
+              window.__xhrMon.pending--;
+              if (debug) {
+                console.log("XHR monitor: request ended, pending count:", window.__xhrMon.pending);
+              }
+            } catch(e) {}
+          }, { once:true });
         }
         return _send.apply(this, arguments);
       };
