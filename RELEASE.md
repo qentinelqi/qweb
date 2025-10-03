@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.7.1] - 2025-10-03
+### Added
+- Excluding most obvious "long-polling" requests in new wait function
+
+
 ## [3.7.0] - 2025-09-17
 ### Added
 - New, improved wait function that supports adding waiting for custom spinners
