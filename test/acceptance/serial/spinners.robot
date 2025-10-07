@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation       Tests for icon keywords
 Library             QWeb
+Library             String
 Suite Setup         OpenBrowser    about:blank    ${BROWSER}
 Test Setup          GoTo    ${BASE_URI}/spinner_test.html
 Test Teardown       ResetConfig    SpinnerCSS
@@ -25,14 +26,19 @@ Normal Spinner visible
     SetConfig               SpinnerCSS     .spinner
     ${conf_locators}=       GetConfig      SpinnerCSS
     ${locators_list}=       Create List    ${conf_locators}
+    ${spinner_busy}=        Evaluate       QWeb.internal.xhr.is_spinner_busy(${locators_list})
+    Should Not Be True      ${spinner_busy}
     ClickText               Toggle Normal Spinner
+    
+
     ${spinner_busy}=        Evaluate       QWeb.internal.xhr.is_spinner_busy(${locators_list})
     Should Be True         ${spinner_busy}
     # hide to avoid unnecessary waiting
     SetConfig               SpinnerCSS     none
     ClickText               Hide Normal Spinner
     SetConfig               SpinnerCSS     lightning-spinner, .spinner
-    ${spinner_busy}=        Evaluate       QWeb.internal.xhr.is_spinner_busy(${locators_list})
+    ${locators_list}=       Create List    ${conf_locators}
+    ${spinner_busy}=        Evaluate       QWeb.internal.xhr.is_spinner_busy(@{locators_list})
     Should Not Be True      ${spinner_busy}
 
 SF Style Spinner behind dialog, but not hidden
@@ -52,7 +58,7 @@ SF Style Spinner behind dialog, but not hidden
 
 SF Style Spinner fully visible
     VerifyText              Spinner Test Page
-    # Click button to show spinner behind dialog/element
+    # Click button to show spinner behind dialog/element and again to make it fully visible
     ClickText               SF Style Spinner 
     ClickText               Bring SF Style Spinner to Front
     # Set custom spinner locators just to makes sure that SetConfig works
