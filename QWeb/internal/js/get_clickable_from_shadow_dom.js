@@ -1,6 +1,6 @@
 // get_clickable_from_shadow_dom.js
 // Finds clickable elements in shadow DOM matching the locator (full and partial matches)
-// Assumes recursiveWalk is defined in the context
+// Assumes recursiveWalk (get_recursive_walk.js) is defined in the context
 function find_clickable_from_shadow_dom(text, partial) {
     var results = [];
     var full = [];

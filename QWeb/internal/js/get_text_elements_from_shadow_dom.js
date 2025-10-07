@@ -1,7 +1,7 @@
 // get_text_elements_from_shadow_dom.js
 // Finds elements in shadow DOM whose textContent matches or includes the given text
 
-// Assumes recursiveWalk is defined in the context
+// Assumes recursiveWalk (get_recursive_walk.js) is defined in the context
 function find_text_from_shadow_dom(text, partial) {
     var results = [];
     var unsupported_tags = ["script", "#document-fragment"];

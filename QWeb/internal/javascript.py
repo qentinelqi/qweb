@@ -147,47 +147,42 @@ def get_clickable(locator: str) -> list[WebElement]:
     return execute_javascript(js, locator)
 
 
-def get_recursive_walk() -> str:
-    """Return the recursiveWalk JS function as a string (using external JS file, preloaded)."""
-    return _GET_RECURSIVE_WALK_JS
-
-
 def get_text_elements_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
     """Find elements in shadow DOM whose textContent matches to preferred text (using
        external JS file, preloaded)."""
-    js = get_recursive_walk() + "\n" + _GET_TEXT_ELEMENTS_FROM_SHADOW_DOM_JS
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_TEXT_ELEMENTS_FROM_SHADOW_DOM_JS
     return execute_javascript(js, locator, partial)
 
 
 def get_clickable_from_shadow_dom(locator: str, partial: bool) -> list[WebElement]:
     """Find clickable elements in shadow DOM matching the locator
        (using external JS file, preloaded)."""
-    js = get_recursive_walk() + "\n" + _GET_CLICKABLE_FROM_SHADOW_DOM_JS
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_CLICKABLE_FROM_SHADOW_DOM_JS
     return execute_javascript(js, locator, partial)
 
 
 def get_all_frames_from_shadow_dom() -> list[WebElement]:
     """Find all iframe and frame elements in shadow DOM (using external JS file, preloaded)."""
-    js = get_recursive_walk() + "\n" + _GET_ALL_FRAMES_FROM_SHADOW_DOM_JS
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_ALL_FRAMES_FROM_SHADOW_DOM_JS
     return execute_javascript(js)
 
 
 def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
     """Find all input and textarea elements in shadow DOM (using external JS file, preloaded)."""
-    js = get_recursive_walk() + "\n" + _GET_ALL_INPUT_ELEMENTS_FROM_SHADOW_DOM_JS
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_ALL_INPUT_ELEMENTS_FROM_SHADOW_DOM_JS
     return execute_javascript(js)
 
 
 def get_all_dropdown_elements_from_shadow_dom() -> list[WebElement]:
     """Find all select elements in shadow DOM (using external JS file, preloaded)."""
-    js = get_recursive_walk() + "\n" + _GET_ALL_DROPDOWN_ELEMENTS_FROM_SHADOW_DOM_JS
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_ALL_DROPDOWN_ELEMENTS_FROM_SHADOW_DOM_JS
     return execute_javascript(js)
 
 
 def get_item_elements_from_shadow_dom(tag: str) -> list[WebElement]:
     """Find item elements in shadow DOM matching supported tags or a given tag
        (using external JS file, preloaded)."""
-    js = get_recursive_walk() + "\n" + _GET_ITEM_ELEMENTS_FROM_SHADOW_DOM_JS
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_ITEM_ELEMENTS_FROM_SHADOW_DOM_JS
     return execute_javascript(js, tag)
 
 

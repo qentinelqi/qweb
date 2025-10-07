@@ -1,6 +1,6 @@
 // get_item_elements_from_shadow_dom.js
 // Finds item elements in shadow DOM matching supported tags or a given tag
-// Assumes recursiveWalk is defined in the context
+// Assumes recursiveWalk (get_recursive_walk.js) is defined in the context
 function find_item_elements_from_shadow_dom(tag) {
     var results = [];
     var supported_tags = tag === null ? ["A", "SPAN", "IMG", "LI", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "SVG", "P", "BUTTON", "INPUT", "TEXTAREA"] : [tag.toUpperCase()];

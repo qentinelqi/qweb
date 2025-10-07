@@ -1,6 +1,6 @@
 // get_all_input_elements_from_shadow_dom.js
 // Finds all input and textarea elements in shadow DOM
-// Assumes recursiveWalk is defined in the context
+// Assumes recursiveWalk (get_recursive_walk.js) is defined in the context
 function find_all_input_elements_from_shadow_dom() {
     var results = [];
     var elem = recursiveWalk(document.body, function(node) {
