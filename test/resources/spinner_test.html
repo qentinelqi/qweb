@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spinner Test Page</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 32px; }
+    button { padding: 10px 16px; margin: 4px; cursor: pointer; }
+    h1 { margin-top: 0; }
+
+    /* Normal spinner */
+    .spinner-container { display: none; margin: 20px 0; }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 6px solid #eee; border-top: 6px solid #1589ee;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Salesforce-style area */
+    .sf-area { position: relative; border: 1px dashed #aaa; padding: 20px; min-height: 180px; margin-top: 28px; }
+
+    /* Simulated lightning-spinner */
+    lightning-spinner {
+      position: absolute; inset: 0;
+      /* IMPORTANT: start hidden, no duplicate display props */
+      display: none; 
+      place-items: center;
+    }
+    /* When we want it visible, we add this class */
+    .shown { display: grid; }
+    .topmost { z-index: 3; }
+
+    .slds-spinner { width: 64px; height: 64px; position: relative; }
+    .slds-spinner__dot-a, .slds-spinner__dot-b {
+      position: absolute; top: 50%; left: 50%;
+      width: 16px; height: 16px; margin: -8px 0 0 -8px;
+      border-radius: 50%; background: #1589ee;
+      opacity: 0.2; animation: pulse 1s infinite ease-in-out;
+    }
+    .slds-spinner__dot-b { animation-delay: .5s; }
+    @keyframes pulse {0%,100%{transform:scale(.6);opacity:.25;}50%{transform:scale(1.1);opacity:1;}}
+
+    .fake-dialog {
+      display: none; position: absolute; z-index: 2;
+      top: 24px; left: 24px; right: 24px; background: #fff;
+      border: 1px solid #ddd; padding: 20px; border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.15);
+    }
+  </style>
+</head>
+<body>
+<h1>Spinner Test Page</h1>
+
+<button id="btn-normal">Toggle Normal Spinner</button>
+<button id="btn-sf">SF Style Spinner</button>
+
+<div class="spinner-container" id="normalSpinner"><div class="spinner"></div></div>
+
+<div class="sf-area">
+  <lightning-spinner id="sfSpinner" size="large" variant="brand" aria-hidden="true" aria-busy="false">
+    <div class="slds-spinner" role="status" aria-live="polite">
+      <span class="slds-spinner__dot-a"></span>
+      <span class="slds-spinner__dot-b"></span>
+    </div>
+  </lightning-spinner>
+
+  <div class="fake-dialog" id="dialog" role="dialog" aria-modal="true" aria-label="Example Dialog">
+    <strong>Dialog</strong>
+    <p>This covers the spinner. Each click of SF Style spinner button toggles its visibility (Hidden → Behind → Top → Hide)</p>
+  </div>
+</div>
+
+<script>
+  // Normal spinner
+  const btnNormal = document.getElementById('btn-normal');
+  const normal = document.getElementById('normalSpinner');
+  btnNormal.onclick = () => {
+    const on = normal.style.display !== 'block';
+    normal.style.display = on ? 'block' : 'none';
+    btnNormal.textContent = on ? 'Hide Normal Spinner' : 'Show Normal Spinner';
+  };
+
+  // Salesforce-style spinner cycle: 0 hidden → 1 behind → 2 top → 0 hidden …
+  const btnSf = document.getElementById('btn-sf');
+  const sfSpinner = document.getElementById('sfSpinner');
+  const dialog = document.getElementById('dialog');
+  let state = 0; // 0=hidden, 1=behind dialog, 2=topmost
+
+  function setHidden() {
+    sfSpinner.classList.remove('shown', 'topmost');
+    sfSpinner.style.display = 'none';
+    sfSpinner.setAttribute('aria-hidden', 'true');
+    sfSpinner.setAttribute('aria-busy', 'false');
+    dialog.style.display = 'none';
+    btnSf.textContent = 'SF Style Spinner';
+    state = 0;
+  }
+
+  function setBehind() {
+    sfSpinner.style.display = ''; // allow class to control display
+    sfSpinner.classList.add('shown');
+    sfSpinner.classList.remove('topmost');
+    sfSpinner.setAttribute('aria-hidden', 'false');
+    sfSpinner.setAttribute('aria-busy', 'true');
+    dialog.style.display = 'block';
+    btnSf.textContent = 'Bring SF Style Spinner to Front';
+    state = 1;
+  }
+
+  function setTopmost() {
+    sfSpinner.classList.add('topmost');
+    dialog.style.display = 'block';
+    btnSf.textContent = 'Hide Salesforce Style Spinner';
+    state = 2;
+  }
+
+  btnSf.onclick = () => {
+    if (state === 0) setBehind();
+    else if (state === 1) setTopmost();
+    else setHidden();
+  };
+
+  // Ensure initial hidden state (defensive)
+  setHidden();
+</script>
+</body>
+</html>
