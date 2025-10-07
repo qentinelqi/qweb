@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from socket import timeout
 from typing import Any
 
 # pylint: disable=line-too-long
@@ -113,8 +114,18 @@ class SearchStrategies:
         return timeout
 
     @staticmethod
-    def xhr_timeout_validation(timeout: Any) -> Any:
-        return timeout
+    def xhr_timeout_validation(timeout: Any) -> str:
+        """Validate and normalize XHR timeout value."""
+        if timeout is None or (isinstance(timeout, str) and timeout.lower() == "none"):
+            return "none"
+        if isinstance(timeout, (int)):
+            return str(timeout)
+        if isinstance(timeout, str):
+            # Accept numeric strings
+            if timeout.isdigit():
+                return timeout
+            raise ValueError(f"Invalid XHRTimeout value: {timeout!r}")
+        raise ValueError(f"Invalid XHRTimeout type: {type(timeout).__name__}")
 
     @staticmethod
     def verify_format_string(s: str, placeholder_num: int) -> None:
