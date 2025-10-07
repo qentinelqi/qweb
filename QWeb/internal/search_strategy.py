@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-from socket import timeout
 from typing import Any
 
 # pylint: disable=line-too-long
