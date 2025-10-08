@@ -110,7 +110,7 @@ class SearchStrategies:
         return set.intersection(s, set(range(num))) == set(range(num))
 
     @staticmethod
-    def timeout_validator(timeout: Any) -> Any:
+    def timeout_validator(timeout: Any) -> str:
         """
         Validate and normalize a timeout value, returning seconds as a string.
 
