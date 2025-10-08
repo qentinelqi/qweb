@@ -32,6 +32,7 @@ JS_STATUS_LITE = javascript.load_js("wait_status_lite.js")
 # Separate spinner probe (selectors configurable)
 JS_IS_SPINNER_BUSY = javascript.load_js("spinner_busy.js")
 
+
 def setup_xhr_monitor() -> bool:
     try:
         return javascript.execute_javascript(JS_INSTALL_MONITOR)
