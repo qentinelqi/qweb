@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from robot.utils import timestr_to_secs
 from typing import Any
 
 # pylint: disable=line-too-long
@@ -109,12 +110,38 @@ class SearchStrategies:
         return set.intersection(s, set(range(num))) == set(range(num))
 
     @staticmethod
-    def default_timeout_validation(timeout: Any) -> Any:
-        return timeout
+    def timeout_validator(timeout: Any) -> str:
+        """
+        Validate and normalize a timeout value, returning seconds as a string.
+
+        Accepts timeouts as numbers, numeric strings, or Robot Framework time strings
+        (e.g. "30", "1.5", "20s", "2.5s"). Raises ValueError for invalid formats.
+
+        Args:
+            timeout: Timeout value as int, float, or string.
+
+        Returns:
+            str: Timeout value in seconds.
+
+        Raises:
+            ValueError: If the timeout value is invalid.
+        """
+        try:
+            timestr_to_secs(timeout)
+            return timeout
+        except Exception as e:
+            raise ValueError(f"Invalid Timeout value: {timeout!r}") from e
 
     @staticmethod
-    def xhr_timeout_validation(timeout: Any) -> Any:
-        return timeout
+    def xhr_timeout_validation(timeout: Any) -> str:
+        """Validate and normalize XHR timeout value."""
+        if timeout is None or (isinstance(timeout, str) and timeout.lower() == "none"):
+            return "none"
+        try:
+            SearchStrategies.timeout_validator(timeout)
+            return timeout
+        except Exception as e:
+            raise ValueError(f"Invalid XHRTimeout value: {timeout!r}") from e
 
     @staticmethod
     def verify_format_string(s: str, placeholder_num: int) -> None:
