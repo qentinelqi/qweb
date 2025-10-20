@@ -151,8 +151,8 @@ External site with shadow DOM
     ...                         VerifyText                  Sign in                     partial_match=False         timeout=3
 
     SetConfig                   ShadowDOM                   True
-    VerifyText                  Sign in                     timeout=3
-    ClickText                   Sign in                     timeout=3
+    VerifyText                  Sign in                     partial_match=False         timeout=3
+    ClickText                   Sign in                     partial_match=False         timeout=3
     VerifyText    Sign in with your ServiceNow ID           timeout=20
     LogScreenshot
 
