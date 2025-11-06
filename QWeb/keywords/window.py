@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+from dataclasses import dataclass
 from typing import Union, Optional
 
 from robot.api import logger
@@ -25,6 +26,11 @@ from QWeb.internal.exceptions import QWebDriverError, QWebValueError
 from QWeb.internal.config_defaults import CONFIG
 import platform
 
+
+@dataclass
+class TabInfo:
+    index: int
+    title: str
 
 @keyword(tags=("Browser", "Interaction"))
 @decorators.timeout_decorator
@@ -189,7 +195,7 @@ def close_window() -> None:
 
 @keyword(tags=("Browser", "Interaction", "Window"))
 @decorators.timeout_decorator
-def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
+def switch_window(target: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
     r"""Switch to another tab.
 
     Examples
@@ -198,13 +204,17 @@ def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # p
 
         SwitchWindow     1
         SwitchWindow     NEW    # Switches to latest opened tab
+        SwitchWindow     2
+        SwitchWindow     Google Search   # Switches to tab with title "Google Search"
 
     Parameters
     ----------
-    index : str
+    target : str
         Index of the tab starting from one and counting from left to right.
         OR
-        Special keyword "NEW" which can be used to move to the latest opened tab.
+        Special keyword "NEW" which can be used to move to the latest opened tab
+        OR
+        Tab title (case sensitive) which can be used to switch to a tab with a specific title
     timeout : str | int
         How long we search before failing.
 
@@ -222,29 +232,45 @@ def switch_window(index: str, timeout: Union[int, float, str] = 0) -> None:  # p
         window.append_new_windows_safari()
     window_handles = window.get_window_handles()
     logger.info("Current browser contains {} tabs".format(len(window_handles)))
-    if index.isdigit():
-        if int(index) == 0:
+    if target.isdigit():
+        if int(target) == 0:
             raise QWebValueError("SwitchWindow index starts at 1.")
-        i = int(index) - 1
+        i = int(target) - 1
         if i < len(window_handles):
             correct_window_handle = window_handles[i]
             window.switch_to_window(correct_window_handle)
             return
-        logger.debug(
-            "Tried to select tab with index {} but there" " are only {} tabs open".format(
-                index, len(window_handles)
-            )
+        raise QWebDriverError(
+        f"Tried to select tab with index {target} but there are only {len(window_handles)} tabs open"
         )
-    elif index == "NEW":
+    elif target == "NEW":
         window.switch_to_window(window_handles[-1])
         return
     else:
-        raise QWebValueError('Given argument "{}" is not a digit or NEW'.format(index))
-    raise QWebDriverError(
-        "Tried to select tab with index {} but there are only {} tabs open".format(
-            index, len(window_handles)
-        )
-    )
+        current = window.get_current_window_handle()
+        for handle in window_handles:
+            title = window.get_title_for_handle(handle, moveback=False)
+            if title == target:
+                return  # if found, we can keep the switched window current
+        window.switch_to_window(current)
+    raise QWebValueError(f'Could not find window "{target}" in {timeout} seconds.')
+    
+
+def list_windows() -> list[TabInfo]:
+    r"""Lists all open window handles in the current browser.
+
+    Each item in the returned list is a TabInfo dataclass containing:
+    * index (the order of the tab in the browser, starting from 1)
+    * title (title of the currently open page in that tab, if available)
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ${open_tabs}=    ListWindows
+    """
+    handles = window.get_window_handles()
+    return [TabInfo(idx + 1, window.get_title_for_handle(tab)) for idx, tab in enumerate(handles)]
 
 
 def set_window_size(width: int, height: int) -> None:

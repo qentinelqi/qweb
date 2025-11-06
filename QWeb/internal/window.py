@@ -39,6 +39,20 @@ def get_current_window_handle() -> str:
     return driver.current_window_handle
 
 
+def get_title_for_handle(handle, moveback=True):
+    driver = browser.get_current_browser()
+    if driver is None:
+        raise QWebDriverError("No browser open. Use OpenBrowser keyword to open browser first")
+    current_handle = driver.current_window_handle
+    try:
+        driver.switch_to.window(handle)
+        title = driver.title
+    finally:
+        if moveback:
+            driver.switch_to.window(current_handle)
+    return title
+
+
 def append_new_windows_safari() -> None:
     """Safari returns window handles in random order.
     We must keep track of opened windows in safari.
