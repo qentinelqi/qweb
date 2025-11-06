@@ -95,25 +95,34 @@ def get_current_browser() -> WebDriver:
     return _current_browser
 
 
-def set_current_browser(index: Union[int, str]) -> None:
+def set_current_browser(target: Union[int, str]) -> None:
     # pylint: disable=global-statement
     global _current_browser
 
-    if str(index).isdigit():
-        if int(index) == 0:
+    if str(target).isdigit():
+        if int(target) == 0:
             raise QWebValueError("SwitchBrowser index starts at 1.")
 
-        i = int(index) - 1
+        i = int(target) - 1
 
         if i < len(_open_browsers):
             _current_browser = _open_browsers[i]
         else:
-            raise QWebDriverError(f"Tried to select browser with index {index} but there are \
+            raise QWebDriverError(f"Tried to select browser with index {target} but there are \
                                   {len(_open_browsers)} browsers open")
-    elif str(index) == "NEW":
+    elif str(target) == "NEW":
         _current_browser = _open_browsers[-1]
     else:
-        raise QWebValueError('Given argument "{}" is not a digit or NEW'.format(index))
+        # Try to find a browser by open page title. If multiple matches, first one is selected
+        for browser in _open_browsers:
+            try:
+                if target == browser.title:
+                    _current_browser = browser
+                    return
+            except Exception:  # pylint: disable=broad-except
+                # Browser might be closed already etc.
+                continue
+        raise QWebValueError(f'No open browser with title "{target}" found.')
 
 
 def get_open_browsers() -> list[WebDriver]:

@@ -405,29 +405,37 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
 
 
 @keyword(tags=("Browser", "Interaction"))
-def switch_browser(index: Union[int, str]) -> None:
-    r"""Switches to another browser instance in browser cache.
+def switch_browser(target: Union[int, str]) -> None:
+    r"""Switches to another browser instance in the browser cache.
 
+    You can switch between open browser instances using their index (as shown by `List Browsers`),
+    the special keyword `NEW` (to switch to the most recently opened browser), or by providing
+    the title of the currently open page in the desired browser. If multiple browsers have the
+    same page title, the first match will be used.
 
     Examples
     --------
-     .. code-block:: robotframework
+    .. code-block:: robotframework
 
         OpenBrowser     about:chrome                chrome
         OpenBrowser     https://www.github.com      firefox
         OpenBrowser     https://www.google.com      edge
-        SwitchBrowser   1       # following keywords will interact with chrome instance
-        ...
-        SwitchBrowser   NEW     # following keywords will interact with latest opened browser (edge)
-        ...
-        SwitchBrowser   2       # following keywords will interact with firefox instance
+        SwitchBrowser   1           # Switch to Chrome instance
+        SwitchBrowser   NEW         # Switch to the latest opened browser (Edge)
+        SwitchBrowser   2           # Switch to Firefox instance
+        SwitchBrowser   Google      # Switch to the browser with page title "Google" (Edge)
+
+    Parameters
+    ----------
+    target : int or str
+        The identifier to switch to. Can be an integer index, the string `NEW`, or a page title.
 
 
     Related keywords
     ----------------
-     \`OpenBrowser\,  \`CloseBrowser\,  \`SwitchWindow\, \`GetWebElement\`
+    `OpenBrowser`, `CloseBrowser`, `SwitchWindow`, `List Browsers`, `GetWebElement`
     """
-    browser.set_current_browser(index)
+    browser.set_current_browser(target)
     # try to move to currently active window
     driver = browser.get_current_browser()
     driver.switch_to.window(driver.current_window_handle)
