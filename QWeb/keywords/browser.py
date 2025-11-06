@@ -38,7 +38,7 @@ from QWeb.internal.browser import (
     safari,
     edge,
 )
-from QWeb.internal.exceptions import QWebDriverError
+from QWeb.internal.exceptions import QWebDriverError, QWebBrowserError
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -376,7 +376,22 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         else:
             raise exceptions.QWebException("Unknown browserstack browser {}".format(browser_alias))
     else:
-        driver = _browser_checker(b_lower, option_list, **kwargs)
+        try:
+            driver = _browser_checker(b_lower, option_list, **kwargs)
+        except KeyError as ke:
+            raise QWebBrowserError(f"Unknown browser type: {browser_alias}") from ke
+        except Exception as e:
+            msg = f"Failed to open browser: {browser_alias}"
+    
+            # detect if user is trying to use user-data-dir or profile option
+            if any(opt.strip().startswith("--user-data-dir") or opt.strip().startswith("-profile") for opt in option_list):
+                msg += (
+                    "\nUsage of a -profile or --user-data-dir was detected.\n"
+                    "Multiple browser instances cannot share the same profile.\n"
+                    "Please ensure the profile path is correct and not in use by another browser.\n "
+                    "To open additional windows in the same browser session, use the OpenWindow keyword."
+                )
+            raise   QWebBrowserError(msg) from e
     util.initial_logging(driver.capabilities)
 
     # If user wants to re-use Chrome browser then he/she has to give
