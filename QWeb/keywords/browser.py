@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
+from dataclasses import dataclass
 from typing import Union, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -39,6 +40,13 @@ from QWeb.internal.browser import (
     edge,
 )
 from QWeb.internal.exceptions import QWebDriverError, QWebBrowserError
+
+
+@dataclass
+class BrowserInfo:
+    index: int
+    name: str
+    title: str
 
 
 @keyword(tags=("Browser", "Getters"))
@@ -346,14 +354,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     \`GetUrl\`, \`GoTo\`, \`RefreshPage\`, \`ReturnBrowser\`,
     \`SwitchWindow\`, \`VerifyTitle\`, \`VerifyUrl\`
     """
-    try:
-        qweb_version = version("QWeb")
-        logger.info(f"QWeb version number: {qweb_version}", also_console=True)
-    except PackageNotFoundError:
-        logger.info("Could not find QWeb version number.")
-    number_of_open_sessions = _sessions_open()
-    if number_of_open_sessions > 0:
-        logger.warn("You have {} browser sessions already open".format(number_of_open_sessions))
+    _startup_logging()
     option_list = util.option_handler(options)
     b_lower = browser_alias.lower()
 
@@ -382,7 +383,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
             raise QWebBrowserError(f"Unknown browser type: {browser_alias}") from ke
         except Exception as e:
             msg = f"Failed to open browser: {browser_alias}"
-    
+
             # detect if user is trying to use user-data-dir or profile option
             if any(opt.strip().startswith("--user-data-dir") or opt.strip().startswith("-profile") for opt in option_list):
                 msg += (
@@ -391,7 +392,7 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
                     "Please ensure the profile path is correct and not in use by another browser.\n "
                     "To open additional windows in the same browser session, use the OpenWindow keyword."
                 )
-            raise   QWebBrowserError(msg) from e
+            raise QWebBrowserError(msg) from e
     util.initial_logging(driver.capabilities)
 
     # If user wants to re-use Chrome browser then he/she has to give
@@ -430,6 +431,20 @@ def switch_browser(index: Union[int, str]) -> None:
     # try to move to currently active window
     driver = browser.get_current_browser()
     driver.switch_to.window(driver.current_window_handle)
+
+
+@keyword(tags=("Browser", "Getters"))
+def list_browsers() -> list[BrowserInfo]:
+    """
+    Returns a list of all open browsers.
+
+    Each item in the returned list is a BrowserInfo dataclass containing:
+    * index (the order of the browser in the browser cache, starting from 1)
+    * name (e.g. "Chrome")
+    * title (title of the currently open page in that browser, if available)
+    """
+    drivers = browser.get_open_browsers()
+    return [BrowserInfo(idx + 1, driver.name, driver.title) for idx, driver in enumerate(drivers)]
 
 
 def _sessions_open() -> int:
@@ -659,6 +674,17 @@ def verify_links(
         logger.warn("No links found.")
     if errors > 0:
         raise exceptions.QWebException(f"Found {errors} broken link(s): {broken}")
+
+
+def _startup_logging() -> None:
+    try:
+        qweb_version = version("QWeb")
+        logger.info(f"QWeb version number: {qweb_version}", also_console=True)
+    except PackageNotFoundError:
+        logger.info("Could not find QWeb version number.")
+    number_of_open_sessions = _sessions_open()
+    if number_of_open_sessions > 0:
+        logger.warn("You have {} browser sessions already open".format(number_of_open_sessions))
 
 
 def _browser_checker(browser_x: str, options: list[str], *args, **kwargs) -> WebDriver:
