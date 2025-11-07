@@ -30,7 +30,8 @@ import platform
 @dataclass
 class TabInfo:
     index: int
-    title: str
+    handle: str
+
 
 @keyword(tags=("Browser", "Interaction"))
 @decorators.timeout_decorator
@@ -65,7 +66,7 @@ def go_to(url: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: dis
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
-def open_window() -> None:
+def open_window() -> str:
     r"""Open new tab.
 
     Uses javascript to do this so javascript has to be enabled.
@@ -76,33 +77,42 @@ def open_window() -> None:
 
         OpenWindow
 
+    Returns
+    -------
+    str
+        The handle of the newly opened window. This can be used later to switch to this window.
+
     Related keywords
     ----------------
     \`CloseAllBrowsers\`, \`CloseBrowser\`, \`CloseOthers\`, \`GoTo\`,
     \`OpenBrowser\`, \`SwitchWindow\`
     """
+    handles_before = set(window.get_window_handles())
     script = "window.open()"
     javascript.execute_javascript(script)
-    window_handles = window.get_window_handles()
-    logger.debug(f"available handles: {len(window_handles)}")
-
-    current_window_handle = window.get_current_window_handle()
 
     # make ordered list for safari
     if util.is_safari():
         # refresh all windows, not just the ones we have tracked as open
         window.append_new_windows_safari()
-        window_handles = window.get_window_handles()
 
-    index = window_handles.index(current_window_handle)
-    new_window_index = index + 1
+    # After opening new window
+    handles_after = set(window.get_window_handles())
+    logger.debug(f"available handles: {len(handles_after)}")
 
-    window.switch_to_window(window_handles[new_window_index])
+    # The new handle is the one in 'after' but not in 'before'
+    new_handles = handles_after - handles_before
+    if not new_handles:
+        raise QWebDriverError("No new window was opened.")
+    new_handle = new_handles.pop()
+    window.switch_to_window(new_handle)
 
     try:
         xhr.setup_xhr_monitor()
     except QWebDriverError:
         logger.debug("XHR monitor threw exception. Bypassing jQuery injection")
+
+    return window.get_current_window_handle()
 
 
 @keyword(tags=("Browser", "Interaction", "Window"))
@@ -195,43 +205,63 @@ def close_window() -> None:
 
 @keyword(tags=("Browser", "Interaction", "Window"))
 @decorators.timeout_decorator
-def switch_window(target: str, timeout: Union[int, float, str] = 0) -> None:  # pylint: disable=unused-argument
-    r"""Switch to another tab.
+def switch_window(target: str, timeout: Union[int, float, str] = 0) -> str:  # pylint: disable=unused-argument
+    r"""Switch to another browser tab or window.
+
+    **Preferred usage:**
+        - Use the window handle (as returned by `ListWindows`, `GetWindowHandle`, or `OpenWindow`)
+          or the special keyword "NEW" whenever possible.
+        - Using an index is supported for simple cases, but the index refers to the
+          internal order of window handles, which may not match the visual order in the browser UI.
+          The index can change if tabs are closed or re-ordered by the browser.
+        - If you must use an index, it is recommended to run `ListWindows` first
+          to verify the current order and index of tabs.
 
     Examples
     --------
     .. code-block:: robotframework
 
-        SwitchWindow     1
-        SwitchWindow     NEW    # Switches to latest opened tab
-        SwitchWindow     2
-        SwitchWindow     Google Search   # Switches to tab with title "Google Search"
+        ...
+        ${tab_1}=       OpenWindow
+        # ... click link that opens a new tab
+        ${new_tab}=     SwitchWindow     NEW    # Switches to the latest opened tab (recommended)
+        SwitchWindow    ${tab_1}    # Switches to a specific tab by handle (recommended)
+        SwitchWindow    2      # Switches to the tab at index 2 (see caveats above)
+        SwitchWindow    ${new_tab}
 
     Parameters
     ----------
     target : str
-        Index of the tab starting from one and counting from left to right.
-        OR
-        Special keyword "NEW" which can be used to move to the latest opened tab
-        OR
-        Tab title (case sensitive) which can be used to switch to a tab with a specific title
+        The tab to switch to. Can be:
+            - The window handle string (recommended; use `ListWindows` to get handles)
+            - The special keyword "NEW" to switch to the latest opened tab (recommended)
+            - An integer index (as a string), starting from 1 (see caveats above)
     timeout : str | int
-        How long we search before failing.
+        How long to search before failing.
+
+    Returns
+    -------
+    str
+        The window handle of the switched tab.
 
     Raises
     ------
-    ValueError
-         If the window index is out of reach
+    QWebValueError
+        If the window handle or title is not found.
+    QWebDriverError
+        If the index is out of range.
 
     Related keywords
     ----------------
-    \`CloseBrowser\`, \`CloseWindow\`, \`CloseOthers\`, \`GoTo\`, \`OpenWindow\`
+    `ListWindows`, `OpenWindow`, `CloseBrowser`, `CloseWindow`, `CloseOthers`, `GoTo`
     """
     # safari specific, refresh windows not open by keywords
     if util.is_safari():
         window.append_new_windows_safari()
     window_handles = window.get_window_handles()
     logger.info("Current browser contains {} tabs".format(len(window_handles)))
+
+    # switch by index
     if target.isdigit():
         if int(target) == 0:
             raise QWebValueError("SwitchWindow index starts at 1.")
@@ -239,29 +269,35 @@ def switch_window(target: str, timeout: Union[int, float, str] = 0) -> None:  # 
         if i < len(window_handles):
             correct_window_handle = window_handles[i]
             window.switch_to_window(correct_window_handle)
-            return
+            return correct_window_handle
         raise QWebDriverError(
-        f"Tried to select tab with index {target} but there are only {len(window_handles)} tabs open"
+            f"Tried to select tab with index {target} but there are only "
+            f"{len(window_handles)} tabs open"
         )
-    elif target == "NEW":
-        window.switch_to_window(window_handles[-1])
-        return
-    else:
-        current = window.get_current_window_handle()
-        for handle in window_handles:
-            title = window.get_title_for_handle(handle, moveback=False)
-            if title == target:
-                return  # if found, we can keep the switched window current
-        window.switch_to_window(current)
-    raise QWebValueError(f'Could not find window "{target}" in {timeout} seconds.')
-    
 
+    # switch to newest window
+    if target == "NEW":
+        window.switch_to_window(window_handles[-1])
+        return window.get_current_window_handle()
+
+    # switch by handle
+    try:
+        window_handles.index(target)
+        window.switch_to_window(target)
+        return target
+    except ValueError as ve:
+        logger.debug(f"Switching to window by handle failed: {target}")
+        raise QWebValueError(f'Could not find window "{target}"') from ve
+
+
+@keyword(tags=("Browser", "Getters", "Window"))
 def list_windows() -> list[TabInfo]:
     r"""Lists all open window handles in the current browser.
 
     Each item in the returned list is a TabInfo dataclass containing:
+
     * index (the order of the tab in the browser, starting from 1)
-    * title (title of the currently open page in that tab, if available)
+    * handle (the unique identifier of the currently open page in that tab)
 
     Examples
     --------
@@ -270,7 +306,25 @@ def list_windows() -> list[TabInfo]:
         ${open_tabs}=    ListWindows
     """
     handles = window.get_window_handles()
-    return [TabInfo(idx + 1, window.get_title_for_handle(tab)) for idx, tab in enumerate(handles)]
+    return [TabInfo(idx + 1, tab) for idx, tab in enumerate(handles)]
+
+
+@keyword(tags=("Browser", "Getters", "Window"))
+def get_window_handle() -> str:
+    r"""Gets the handle of the current browser window/tab.
+
+    Examples
+    --------
+    .. code-block:: robotframework
+
+        ${handle}=    GetWindowHandle
+
+    Returns
+    -------
+    str
+        The window handle of the current browser window/tab.
+    """
+    return window.get_current_window_handle()
 
 
 def set_window_size(width: int, height: int) -> None:
