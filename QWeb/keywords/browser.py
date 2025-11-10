@@ -392,7 +392,8 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
                     "Please ensure the profile path is correct and not in use by another browser.\n "
                     "To open additional windows in the same browser session, use the OpenWindow keyword."
                 )
-            raise QWebBrowserError(msg) from e
+                raise QWebBrowserError(msg) from e
+            raise e
     util.initial_logging(driver.capabilities)
 
     # If user wants to re-use Chrome browser then he/she has to give
