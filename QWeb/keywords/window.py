@@ -208,12 +208,13 @@ def close_window() -> None:
 def switch_window(target: str, timeout: Union[int, float, str] = 0) -> str:  # pylint: disable=unused-argument
     r"""Switch to another browser tab or window.
 
-    **Preferred usage:**
+    **Usage:**
         - Use the window handle (as returned by `ListWindows`, `GetWindowHandle`, or `OpenWindow`)
-          or the special keyword "NEW" whenever possible.
-        - Using an index is supported for simple cases, but the index refers to the
-          internal order of window handles, which may not match the visual order in the browser UI.
-          The index can change if tabs are closed or re-ordered by the browser.
+          or the special keyword "NEW" whenever possible. This is the preferred method.
+        - Alternatively, using an index is supported for simple cases, but please note that the
+          index refers to the internal order of window handles, which may not match the visual
+          order in the browser UI. The index can change if tabs are closed or re-ordered by the
+          browser.
         - If you must use an index, it is recommended to run `ListWindows` first
           to verify the current order and index of tabs.
 
@@ -225,8 +226,8 @@ def switch_window(target: str, timeout: Union[int, float, str] = 0) -> str:  # p
         ${tab_1}=       OpenWindow
         # ... click link that opens a new tab
         ${new_tab}=     SwitchWindow     NEW    # Switches to the latest opened tab (recommended)
-        SwitchWindow    ${tab_1}    # Switches to a specific tab by handle (recommended)
-        SwitchWindow    2      # Switches to the tab at index 2 (see caveats above)
+        SwitchWindow    ${tab_1}                # Switches to a specific tab by handle (recommended)
+        SwitchWindow    2                       # Switches to the tab at index 2 (see caveats above)
         SwitchWindow    ${new_tab}
 
     Parameters
