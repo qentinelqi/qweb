@@ -63,7 +63,7 @@ SwitchBrowser
     VerifyText      Delayed dropdown
     Run Keyword and Expect Error    QWebValueError: *index starts at 1*    SwitchBrowser   0
     Run Keyword and Expect Error    QWebDriverError: *Tried to select browser with index*    SwitchBrowser   7
-    Run Keyword and Expect Error    QWebValueError: *is not a digit or NEW*    SwitchBrowser   my_fake_browser
+    Run Keyword and Expect Error    QWebValueError: No open browser with title*    SwitchBrowser   my_fake_browser
 
 *** Keywords ***
 Open Browser And Wait A Bit

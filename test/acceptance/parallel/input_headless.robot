@@ -30,11 +30,13 @@ Fill form using CSS
     ShouldbeEqual           ${value}                I'am catching you too..
 
 Use tab and enter in input text
-    [tags]	PROBLEM_IN_FIREFOX
+    [tags]  PROBLEM_IN_FIREFOX
+    ${old_value}=           SetConfig               ClickToFocus            ${TRUE}
     TypeText                First input             Robot\tSecondInputText
     VerifyInputValue        Second input            SecondInputText
     TypeText                Second input            QENROB\n
     VerifyInputValue        Second input            QENROB
+    [Teardown]              SetConfig               ClickToFocus            ${old_value}
 
 Use xpaths while CSS Selectors are on
     TypeText                //*[@placeholder\="username"]       Test Automation

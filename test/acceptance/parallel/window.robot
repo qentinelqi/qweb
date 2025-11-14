@@ -163,6 +163,36 @@ Switch window, open multiple, close index
     Length Should Be            ${driver.window_handles}    3
     Should Be Equal             ${driver.title}             Window Acceptance Tests
 
+Switch window, open multiple, close handle
+    [Tags]                      Window    SwitchWindow      Handle
+    ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
+    Length Should Be            ${driver.window_handles}    1
+    GoTo                        ${BASE_URI}/window.html
+    ${tab_2}=                   OpenWindow
+    Length Should Be            ${driver.window_handles}    2
+    ${url}=                     GetUrl
+    Should Be Equal             ${driver.current_url}       about:blank
+    Should Be Equal             ${url}                      about:blank
+    OpenWindow
+    Length Should Be            ${driver.window_handles}    3
+    GoTO                        ${BASE_URI}/window.html
+    Should Be Equal             ${driver.title}             Window Acceptance Tests
+    OpenWindow
+    Length Should Be            ${driver.window_handles}    4
+    Should Be Equal             ${driver.current_url}       about:blank
+    VerifyUrl                   about:blank
+    SwitchWindow                ${tab_2}
+    Close window
+    Length Should Be            ${driver.window_handles}    3
+    Should Be Equal             ${driver.title}             Window Acceptance Tests
+
+Switch window, incorrect handle
+    [Tags]                      Window    SwitchWindow    Handle
+    ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
+    Length Should Be            ${driver.window_handles}    1
+    Run Keyword And Expect Error                            QWebValueError: Could not find window "A39E8E7CC24649304B7BFF6226B2FÄÄ1"                        
+    ...                         Switch Window               A39E8E7CC24649304B7BFF6226B2FÄÄ1
+
 Title and url
     [Tags]                      Window    Title    Url
     [Documentation]             Tests for -title and -url keywords
@@ -234,7 +264,7 @@ Maximize Window headless
     Should be True              ${max_height} > ${height}
 
 Close Other Windows
-    [Tags]                      Window
+    [Tags]                      Window    Handle
     [Documentation]             Close other windows
     ${driver}=                  Evaluate                    sys.modules["QWeb.internal.browser"].get_current_browser()            modules=sys
     GoTo                        ${BASE_URI}/window.html
@@ -243,7 +273,7 @@ Close Other Windows
     OpenWindow
     GoTo                        ${BASE_URI}/text.html
     VerifyText                  HoverDropdown
-    SwitchWindow                1
+    ${tab1}=                    SwitchWindow                1
     VerifyText                  Liirum
     OpenWindow
     GoTo                        ${BASE_URI}/table.html
@@ -251,6 +281,22 @@ Close Other Windows
     CloseOthers
     Length Should Be            ${driver.window_handles}    1
     VerifyText                  Liirum
+    ${current_handle}=          Get Window Handle
+    Should Be Equal             ${current_handle}           ${tab1}
+
+ListWindows returns all handles
+    [Tags]                      Window    Handle    ListWindows
+    [Documentation]             Verifies ListWindows returns correct number of handles and structure
+    GoTo                        ${BASE_URI}/window.html
+    OpenWindow
+    OpenWindow
+    ${tabs}=                    ListWindows
+    Log                         ${tabs}
+    Length Should Be            ${tabs}                     3
+    FOR    ${tab}    IN    @{tabs}
+        Should Be True          ${tab.index} > 0
+        Should Not Be Empty    ${tab.handle}
+    END
 
 Self Closing PopUp
     [Tags]                      Window

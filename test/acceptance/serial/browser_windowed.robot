@@ -158,6 +158,38 @@ Open Browser with valid page load strategies
     Should Be Equal As Strings    ${strategy}    none
     CloseBrowser
 
+Open Multiple Browsers, use ListBrowsers      
+    [tags]          PROBLEM_IN_SAFARI
+    [Setup]    No Operation
+    OpenBrowser    about:blank    ${BROWSER}
+    GoTo                        ${BASE_URI}/spinner_test.html
+    OpenBrowser    about:blank    ${BROWSER}
+    GoTo                        ${BASE_URI}/window.html
+    ${browsers}=   List Browsers
+    Length Should Be    ${browsers}    2
+    FOR    ${browser}    IN    @{browsers}
+        Should Be True          ${browser.index} > 0
+        Should Not Be Empty    ${browser.name}
+        Should Not Be Empty    ${browser.title}
+    END
+    Close All Browsers
+
+Switch by title and verify                     
+    [tags]          PROBLEM_IN_SAFARI
+    [Setup]    No Operation
+    OpenBrowser    about:blank    ${BROWSER}
+    GoTo                          ${BASE_URI}/spinner_test.html
+    OpenBrowser    about:blank    ${BROWSER}
+    GoTo                          ${BASE_URI}/window.html
+    ${browsers}=   List Browsers
+    Length Should Be              ${browsers}    2
+    ${browser_1_title}=           Set Variable    ${browsers[0].title}
+    ${current}=                   GetTitle
+    Should Not be Equal As Strings    ${current}    ${browser_1_title}
+    SwitchBrowser                 ${browser_1_title}
+    ${current}=                   GetTitle
+    Should be Equal As Strings    ${current}    ${browser_1_title}
+    Close All Browsers
 
 *** Keywords ***
 Open Browser And Wait A Bit

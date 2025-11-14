@@ -29,6 +29,8 @@ Verify Value Negative Cases
     Run Keyword And Expect Error       QWebValueError*   VerifyTable   r2c1       Foo  timeout=1
 
 Type text to table and verify values
+    # Safari 26+ focus issue
+    ${old_value}=           SetConfig               ClickToFocus            ${TRUE}
     UseTable                Sample
     TypeText                r4c1                    Qentiro
     TypeText                r4c2                    Robot
@@ -40,6 +42,7 @@ Type text to table and verify values
     VerifyInputValue        r4c4                    2019-02-24
     Run Keyword And Expect Error       QWebValueError: Expected value "2019-02-23" didn't*
     ...   VerifyInputValue              r4c4        2019-02-23          timeout=1
+    [Teardown]              SetConfig               ClickToFocus            ${old_value}
 
 Get Cell Value to variable
     UseTable                Sample
