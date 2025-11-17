@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.7.2] - 2025-11-07
+## [3.7.2] - 2025-11-17
 ### Added
 - Added new keyword **ListWindows** and ability to switch to window/tab based on window handle
 - Added new keyword **GetWindowHandle** to get current active window/tab handle
