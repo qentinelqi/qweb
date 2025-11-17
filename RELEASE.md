@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.7.2] - 2025-11-07
+### Added
+- Added new keyword **ListWindows** and ability to switch to window/tab based on window handle
+- Added new keyword **GetWindowHandle** to get current active window/tab handle
+- Added new kw **ListBrowsers**
+
+
+### Changed
+- Moved all embedded javascript to .js files
+- Improved error message when user tries to open another browser instance with same, specific profile
+- Modified **SwitchWindow** to work with window handle in addition to index. 
+- **OpenWindow** now returns opened window handle
+- **SwitchBrowser** now supports moving to browser instance based on active tab's title
+- Added occlusion / topmost check to spinners check.
+
 ## [3.7.1] - 2025-10-03
 ### Added
 - Excluding most obvious "long-polling" requests in new wait function
