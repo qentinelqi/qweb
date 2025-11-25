@@ -163,6 +163,9 @@ def highlight_validation(color: str) -> str:
 def get_substring(text: str, remove_newlines: bool = True, **kwargs) -> Union[int, float, str]:
     if "\xa0" in text:
         text = text.replace("\xa0", " ")
+    log_text = kwargs.get("log_text", False)
+    if log_text:
+        logger.info(f"Full text before substring extraction: {repr(text)}", also_console=True)
     start, end = kwargs.get("between", "{}???{}").format(0, len(text)).split("???")
     include_start = kwargs.get("include_locator", False)
     exclude_end = kwargs.get("exclude_post", True)
