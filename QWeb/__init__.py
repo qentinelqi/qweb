@@ -23,7 +23,7 @@ from typing import Any, Callable
 try:
     from robot.api import logger
     from robot.libraries import Dialogs
-    from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+    from robot.libraries.BuiltIn import BuiltIn
     from robot.utils import timestr_to_secs as _timestr_to_secs
 
     from QWeb import custom_config
@@ -372,10 +372,19 @@ class QWeb:
                 logger.debug(traceback.format_exc())
                 if not self._is_run_on_failure_keyword(keyword_method):
                     if not util.par2bool(kwargs.get("skip_screenshot", False)):
-                        try:
-                            BuiltIn().run_keyword(self._run_on_failure_keyword)
-                        except RobotNotRunningError:
-                            logger.debug("Robot not running")
+                        # try:
+                        #     BuiltIn().run_keyword(self._run_on_failure_keyword)
+                        # except RobotNotRunningError:
+                        #     logger.debug("Robot not running")
+                        kw_name = self._run_on_failure_keyword.replace(" ", "_").lower()
+                        run_on_failure_func = getattr(self, kw_name, None)
+                        if callable(run_on_failure_func):
+                            run_on_failure_func()  # pylint: disable=not-callable
+                        else:
+                            logger.warn(
+                                f"Run-on-failure keyword '{self._run_on_failure_keyword}' "
+                                "not found as a method."
+                            )
                 devmode = util.par2bool(util.get_rfw_variable_value("${DEV_MODE}", False))
                 if devmode and not config.get_config("Debug_Run"):
                     Dialogs.pause_execution(
