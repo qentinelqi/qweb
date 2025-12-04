@@ -23,22 +23,20 @@ from unittest.mock import Mock
 
 def test_run_once():
     qweb = QWeb_.QWeb()
-    # Patch the default run-on-failure method
-    setattr(qweb, "log_screenshot", Mock())
+    # Patch the default run-on-failure method, log_screenshot
+    QWeb_.screenshot.log_screenshot = Mock()
     with pytest.raises(AttributeError):
         qweb.click_text(u"Browser not open")
-    qweb.log_screenshot.assert_called_once()
+    QWeb_.screenshot.log_screenshot.assert_called_once()
 
 
 def test_correct_keyword():
     keyword_name = 'Verify Text'
     qweb = QWeb_.QWeb(keyword_name)
-    # Patch the method corresponding to the keyword
-    method_name = keyword_name.replace(" ", "_").lower()
-    setattr(qweb, method_name, Mock())
+    QWeb_.BuiltIn.run_keyword = Mock()
     with pytest.raises(AttributeError):
         qweb.click_text(u"Browser not open")
-    getattr(qweb, method_name).assert_called_once()
+    QWeb_.BuiltIn.run_keyword.assert_called_with(keyword_name)
 
 
 def test_not_failed():
