@@ -83,12 +83,16 @@ jobs:
         sudo apt-get install -y openbox obconf scrot xvfb x11-utils
         pip install python-xlib
         Xvfb $DISPLAY -screen 0 1920x1080x24 &
-        sleep 1
-        openbox &
+        Xvfb_PID=$!
         touch /home/runner/.Xauthority
         pushd /home/runner
         xauth generate $DISPLAY .
         popd
+        openbox &
+        Openbox_PID=$!
+        echo "Waiting for X server to be ready..."
+        timeout 60 bash -c 'until xset -q; do sleep 1; done'
+        
 
     - name: Setup Windows display resolution
       if: runner.os == 'Windows'
