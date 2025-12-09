@@ -884,6 +884,8 @@ def get_text(
         |       exclude_post : False - Ending text is part of returned string
         |       int : True - Return integer instead of string
         |       float : int - Return float instead of string
+        |       log_text : True - Log the original found text to robot log. Useful to see
+        |                     what text was found before substring operations.
 
     Returns
     -------

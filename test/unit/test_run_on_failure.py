@@ -23,10 +23,11 @@ from unittest.mock import Mock
 
 def test_run_once():
     qweb = QWeb_.QWeb()
-    QWeb_.BuiltIn.run_keyword = Mock()
+    # Patch the default run-on-failure method, log_screenshot
+    QWeb_.screenshot.log_screenshot = Mock()
     with pytest.raises(AttributeError):
         qweb.click_text(u"Browser not open")
-    QWeb_.BuiltIn.run_keyword.assert_called_once()
+    QWeb_.screenshot.log_screenshot.assert_called_once()
 
 
 def test_correct_keyword():

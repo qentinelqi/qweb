@@ -63,6 +63,9 @@ except SystemExit as se:
     raise Exception(se) from se  # pylint: disable=W0719
 
 
+DEFAULT_RUN_ON_FAILURE_KEYWORD = "Log Screenshot"
+
+
 class QWeb:
     r"""
     .. image:: https://github.com/qentinelqi/qweb/raw/master/images/qweb_logo_256.png
@@ -298,7 +301,7 @@ class QWeb:
 
     ROBOT_LIBRARY_SCOPE = "Global"
 
-    def __init__(self, run_on_failure_keyword: str = "Log Screenshot") -> None:
+    def __init__(self, run_on_failure_keyword: str = DEFAULT_RUN_ON_FAILURE_KEYWORD) -> None:
         """Initializes the QWeb library and adds all the keywords to the instance.
 
         - ``run_on_failure_keyword``:
@@ -370,12 +373,12 @@ class QWeb:
                 return keyword_method(*args, **kwargs)
             except Exception as e:  # pylint: disable=W0703
                 logger.debug(traceback.format_exc())
-                if not self._is_run_on_failure_keyword(keyword_method):
-                    if not util.par2bool(kwargs.get("skip_screenshot", False)):
-                        try:
-                            BuiltIn().run_keyword(self._run_on_failure_keyword)
-                        except RobotNotRunningError:
-                            logger.debug("Robot not running")
+                logger.info(str(e))
+                if not self._is_run_on_failure_keyword(keyword_method) and not util.par2bool(
+                    kwargs.get("skip_screenshot", False)
+                ):
+                    self._handle_run_on_failure()
+
                 devmode = util.par2bool(util.get_rfw_variable_value("${DEV_MODE}", False))
                 if devmode and not config.get_config("Debug_Run"):
                     Dialogs.pause_execution(
@@ -388,6 +391,17 @@ class QWeb:
                     raise
 
         return inner
+
+    def _handle_run_on_failure(self) -> None:
+        """Helper function to run the registered run_on_failure keyword."""
+        # if default, embed screenshot kw directly for log readability
+        if self._run_on_failure_keyword == DEFAULT_RUN_ON_FAILURE_KEYWORD:
+            screenshot.log_screenshot()
+        else:
+            try:
+                BuiltIn().run_keyword(self._run_on_failure_keyword)
+            except RobotNotRunningError:
+                logger.debug("Robot not running")
 
     @staticmethod
     def _xpath_decorator(keyword_method: Callable[..., Any]) -> Callable[..., Callable[..., Any]]:
