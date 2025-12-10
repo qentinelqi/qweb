@@ -25,6 +25,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from robot.api.deco import keyword
+try:
+    from robot.api.types import Secret
+except ImportError:
+    Secret = str
 from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
@@ -32,12 +36,8 @@ from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
 
-try:
-    from robot.api.types import Secret
-except ImportError:
-    Secret = str
-
 str_or_secret = Union[str, Secret]
+
 
 @keyword(tags=("Config", "Input"))
 def set_input_handler(input_method: str) -> None:
@@ -286,7 +286,7 @@ def type_text(
             locator, anchor, timeout=timeout, index=index, **kwargs
         )
     if isinstance(input_text, Secret):
-         input_text = input_text.value
+        input_text = input_text.value
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 

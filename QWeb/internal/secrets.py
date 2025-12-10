@@ -130,7 +130,6 @@ def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, resu
     if hasattr(LOGGER, "_log_message"):
         LOGGER.log_message = LOGGER._log_message
 
-
     for start_logger in LOGGER.start_loggers:
         start_logger.start_library_keyword(data, implementation, result)
 
