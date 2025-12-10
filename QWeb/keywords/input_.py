@@ -27,16 +27,17 @@ from robot.api import logger
 from robot.api.deco import keyword
 try:
     from robot.api.types import Secret
+    BUILT_IN_SECRET = True
+    str_or_secret = Union[str, Secret]
 except ImportError:
-    Secret = str
+    BUILT_IN_SECRET = False
+    str_or_secret = str
 from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
-
-str_or_secret = Union[str, Secret]
 
 
 @keyword(tags=("Config", "Input"))
@@ -285,7 +286,7 @@ def type_text(
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs
         )
-    if isinstance(input_text, Secret):
+    if BUILT_IN_SECRET and isinstance(input_text, Secret):
         input_text = input_text.value
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
