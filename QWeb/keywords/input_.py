@@ -32,6 +32,12 @@ from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
 
+try:
+    from robot.api.types import Secret
+except ImportError:
+    Secret = str
+
+str_or_secret = Union[str, Secret]
 
 @keyword(tags=("Config", "Input"))
 def set_input_handler(input_method: str) -> None:
@@ -78,7 +84,7 @@ secrets.add_filter("Type Secret3", 1, "hint")
 
 def type_secret3(
     locator: str,
-    input_text: str,
+    input_text: str_or_secret,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
@@ -119,7 +125,7 @@ secrets.add_filter("Type Secret", 1, None)
 @keyword(tags=("Input", "Interaction"))
 def type_secret(
     locator: str,
-    input_text: str,
+    input_text: str_or_secret,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
@@ -156,7 +162,7 @@ def type_secret(
 @decorators.timeout_decorator
 def type_text(
     locator: Union[WebElement, str],
-    input_text: str,
+    input_text: str_or_secret,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
@@ -279,6 +285,8 @@ def type_text(
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs
         )
+    if isinstance(input_text, Secret):
+         input_text = input_text.value
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 
