@@ -28,16 +28,17 @@ from robot.api.deco import keyword
 try:
     from robot.api.types import Secret
     BUILT_IN_SECRET = True
-    str_or_secret = Union[str, Secret]
 except ImportError:
     BUILT_IN_SECRET = False
-    str_or_secret = str
+    Secret = str
 from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
+
+str_or_secret = Union[str, Secret]
 
 
 @keyword(tags=("Config", "Input"))
