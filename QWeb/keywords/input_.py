@@ -26,11 +26,12 @@ from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from robot.api.deco import keyword
 try:
-    from robot.api.types import Secret
+    # Use alias as "Secret" could be quite generic type name
+    from robot.api.types import Secret as RFSecret
     BUILT_IN_SECRET = True
 except ImportError:
     BUILT_IN_SECRET = False
-    Secret = str
+    RFSecret = str
 from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
@@ -38,7 +39,7 @@ from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
 
-str_or_secret = Union[str, Secret]
+str_or_secret = Union[str, RFSecret]
 
 
 @keyword(tags=("Config", "Input"))
@@ -287,7 +288,7 @@ def type_text(
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs
         )
-    if BUILT_IN_SECRET and isinstance(input_text, Secret):
+    if BUILT_IN_SECRET and isinstance(input_text, RFSecret):
         input_text = input_text.value
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
