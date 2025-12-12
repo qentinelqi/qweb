@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.7.3] - 2025-12-12
+### Added
+- Robot Framework v7.4 support
+- Support new Secret type in TypeText and TypeSecret keywords
+- Added kwarg "log_text" to GetText in order to better see original text when filtering is used.
+
+### Changed
+- Fix for issue #199
+
 ## [3.7.2] - 2025-11-17
 ### Added
 - Added new keyword **ListWindows** and ability to switch to window/tab based on window handle
