@@ -25,12 +25,21 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
 from robot.api.deco import keyword
+try:
+    # Use alias as "Secret" could be quite generic type name
+    from robot.api.types import Secret as RFSecret
+    BUILT_IN_SECRET = True
+except ImportError:
+    BUILT_IN_SECRET = False
+    RFSecret = str
 from pyautogui import hotkey
 from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
 from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 from QWeb.keywords import browser
+
+str_or_secret = Union[str, RFSecret]
 
 
 @keyword(tags=("Config", "Input"))
@@ -78,7 +87,7 @@ secrets.add_filter("Type Secret3", 1, "hint")
 
 def type_secret3(
     locator: str,
-    input_text: str,
+    input_text: str_or_secret,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
@@ -119,7 +128,7 @@ secrets.add_filter("Type Secret", 1, None)
 @keyword(tags=("Input", "Interaction"))
 def type_secret(
     locator: str,
-    input_text: str,
+    input_text: str_or_secret,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
@@ -156,7 +165,7 @@ def type_secret(
 @decorators.timeout_decorator
 def type_text(
     locator: Union[WebElement, str],
-    input_text: str,
+    input_text: str_or_secret,
     anchor: str = "1",
     timeout: Union[int, float, str] = 0,
     index: int = 1,
@@ -279,6 +288,8 @@ def type_text(
         input_element = input_.get_input_elements_from_all_documents(
             locator, anchor, timeout=timeout, index=index, **kwargs
         )
+    if BUILT_IN_SECRET and isinstance(input_text, RFSecret):
+        input_text = input_text.value
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 
