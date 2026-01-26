@@ -94,7 +94,8 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
         censored_args = _hide_keyword_arg_values(keyword)
         _replace_keyword_args(keyword, tuple(censored_args))
 
-    LOGGER.log_message = LOGGER._log_message
+    if hasattr(LOGGER, "_log_message"):
+        LOGGER.log_message = LOGGER._log_message
     for start_logger in LOGGER.start_loggers:
         start_logger.start_keyword(keyword)
 
