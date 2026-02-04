@@ -389,8 +389,11 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
                 msg += (
                     "\nUsage of a -profile or --user-data-dir was detected.\n"
                     "Multiple browser instances cannot share the same profile.\n"
-                    "Please ensure the profile path is correct and not in use by another browser.\n "
-                    "To open additional windows in the same browser session, use the OpenWindow keyword."
+                    "Please ensure the profile path is correct and not in use by another browser.\n"
+                    "To open additional windows in the same browser session, use the OpenWindow keyword.\n"
+                    "Even if the browser  is not visibly open, there might be background processes running.\n"
+                    "It's generally safer to use Chrome For Testing or a separate profile copy when testing profiles.\n\n"
+                    f"[Original error: {e}]"
                 )
                 raise QWebBrowserError(msg) from e
             raise e
