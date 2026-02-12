@@ -94,8 +94,7 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
         censored_args = _hide_keyword_arg_values(keyword)
         _replace_keyword_args(keyword, tuple(censored_args))
 
-    if hasattr(LOGGER, "_log_message"):
-        LOGGER.log_message = LOGGER._log_message
+    LOGGER.log_message = LOGGER._log_message
     for start_logger in LOGGER.start_loggers:
         start_logger.start_keyword(keyword)
 
@@ -130,7 +129,6 @@ def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, resu
     # Reset log_message to original function (rfw < 7.4)
     if hasattr(LOGGER, "_log_message"):
         LOGGER.log_message = LOGGER._log_message
-
     for start_logger in LOGGER.start_loggers:
         start_logger.start_library_keyword(data, implementation, result)
 
@@ -189,6 +187,9 @@ def _filtered_end_library_keyword(data: Keyword, implementation: Keyword, result
 
     for end_logger in LOGGER.end_loggers:
         end_logger.end_library_keyword(data, implementation, result)
+
+    if hasattr(LOGGER, "_log_message"):
+        LOGGER.log_message = LOGGER.message
 
     if apply_filter:
         _replace_keyword_args(result, tuple(original_args))
