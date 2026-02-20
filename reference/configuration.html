@@ -1,0 +1,1598 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="keywords.html">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>User configurable settings - QWeb Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="QWeb Documentation" class="md-header__button md-logo" aria-label="QWeb Documentation" data-md-component="logo">
+      
+  <img src="../assets/logo_white.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QWeb Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              User configurable settings
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/qentinelqi/qweb" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    qweb
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="QWeb Documentation" class="md-nav__button md-logo" aria-label="QWeb Documentation" data-md-component="logo">
+      
+  <img src="../assets/logo_white.png" alt="logo">
+
+    </a>
+    QWeb Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/qentinelqi/qweb" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    qweb
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/installation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/basics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing Your First Test
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/locators.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Locator Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/assertions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assertions & Logic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/waits.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Smart Waits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/anchors.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anchors & Spatial Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/frames.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handling Frames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/shadow_dom.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shadow DOM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/browser.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Browser & Window Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/input.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forms & Inputs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/checkboxes.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkboxes & Toggles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/dropdowns.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dropdowns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/tables.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/upload_download.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upload/Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/attribute_access.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Low-Level DOM Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/debugging.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging & Visualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/python.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_to/extending.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending QWeb
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="keywords.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyword Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User configurable settings
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="configuration.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User configurable settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-handling-slow-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Handling Slow Environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-testing-invisible-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Testing "Invisible" Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-debugging-layouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Debugging Layouts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-handling-spinners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Handling Spinners
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../index.html" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="keywords.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="configuration">Configuration</h1>
+<p>QWeb is designed to work "out of the box" for most websites. However, you can customize its behavior globally using the <code>SetConfig</code> keyword.</p>
+<h2 id="usage">Usage</h2>
+<p>Settings changed with <code>SetConfig</code> stay in effect until you change them back or the test execution ends.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Syntax: SetConfig    Parameter    Value</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">DefaultTimeout</span><span class="p">    </span><span class="c">30s</span>
+</code></pre></div>
+<h2 id="available-settings">Available Settings</h2>
+<!-- The div style below is just a hack to keep first column in one line. Without it,
+MatchingInputElement had "t" in new line. -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><div style="width:170px">Parameter</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>ActiveAreaXpath</code></strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Set search strategy for element search.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>AllInputElements</code></strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Set search strategy for element search.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>BlindReturn</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Return value without waiting. If <code>True</code>, returns empty string instead of failing if input is empty/not found immediately.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>CaseInsensitive</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Allow case insensitive search when partial match is used.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>CheckInputValue</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Check that typed value is stored correctly after <code>TypeText</code>. If mismatch, retries typing.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>ClearKey</code></strong></td>
+<td style="text-align: left;"><em>Default</em></td>
+<td style="text-align: left;">Key used to clear previous value before typing (e.g., <code>{BACKSPACE}</code>). Default uses WebDriver's clear method.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>ClickToFocus</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, sets focus by clicking the input field before typing.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>CssSelectors</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Use CSS selectors as a fallback strategy for finding elements (e.g., inputs without placeholders).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>DefaultDocument</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Automatically switch back to the default frame after each keyword. Set to <code>False</code> for manual frame handling.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>DefaultTimeout</code></strong></td>
+<td style="text-align: left;"><code>10s</code></td>
+<td style="text-align: left;">How long to wait for an element to appear before failing the test case.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>Delay</code></strong></td>
+<td style="text-align: left;"><code>0s</code></td>
+<td style="text-align: left;">Wait time added <em>before</em> every keyword execution. Useful for debugging or demos.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>DoubleClick</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, performs a double-click action for all <code>Click*</code> keywords.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>HandleAlerts</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Automatically handle/dismiss unexpected browser alerts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>HighlightColor</code></strong></td>
+<td style="text-align: left;"><code>blue</code></td>
+<td style="text-align: left;">Sets the color of the highlight rectangle when <code>SearchMode</code> is active. (e.g., <code>red</code>, <code>orange</code>, <code>green</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>InputHandler</code></strong></td>
+<td style="text-align: left;"><code>selenium</code></td>
+<td style="text-align: left;">Method to input text: <code>selenium</code> (standard), <code>raw</code> (pyautogui), or <code>javascript</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>InViewport</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, elements outside the current viewport are considered invisible/not found.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>IsModalXPath</code></strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Set search strategy for element search regarding modal dialogs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>LineBreak</code></strong></td>
+<td style="text-align: left;"><code>\ue004</code></td>
+<td style="text-align: left;">Key to send after typing text. Default is <code>Tab</code> (\ue004).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>LogMatchedIcons</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, highlights where an icon was found and adds a screenshot to the logs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>LogScreenShot</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Adds a screenshot of the failure to the logs. Set to <code>False</code> to disable failure screenshots.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>MatchingInputElement</code></strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Set search strategy for element search.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>MultipleAnchors</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, accepts non-unique anchors and selects the first match.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>OffsetCheck</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Check if element has offset (dimensions). Elements with no offset are considered invisible.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>OSScreenshots</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Use operating system functionalities instead of Selenium to take screenshots.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>PartialMatch</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Accept partial matches for text search (e.g., "Log" matches "Login"). Set to <code>False</code> for exact match only.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>RenderWait</code></strong></td>
+<td style="text-align: left;"><code>200ms</code></td>
+<td style="text-align: left;">Time to wait for DOM to stabilize before interacting. Ensures page is not still rendering.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>RetinaDisplay</code></strong></td>
+<td style="text-align: left;"><em>Auto</em></td>
+<td style="text-align: left;">Manually set if current monitor is Retina (<code>True</code>) or not (<code>False</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>RetryInterval</code></strong></td>
+<td style="text-align: left;"><code>5s</code></td>
+<td style="text-align: left;">Timeout to wait before re-trying in <code>ClickUntil</code> / <code>ClickWhile</code> keywords.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>RunBefore</code></strong></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">A keyword to run before <em>every</em> interaction keyword. Useful for waiting for custom spinners.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>ScreenShotType</code></strong></td>
+<td style="text-align: left;"><code>screenshot</code></td>
+<td style="text-align: left;">Defines logging format: <code>screenshot</code>, <code>html</code> (source), or <code>all</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>SearchDirection</code></strong></td>
+<td style="text-align: left;"><code>closest</code></td>
+<td style="text-align: left;">Relative direction for element search (<code>closest</code>, <code>up</code>, <code>down</code>, <code>left</code>, <code>right</code>). Append <code>!</code> for strict mode (e.g., <code>down!</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>SearchMode</code></strong></td>
+<td style="text-align: left;"><code>draw</code></td>
+<td style="text-align: left;">Visual feedback. <code>draw</code> highlights elements with a border. <code>debug</code> blinks them. <code>None</code> disables it.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>ShadowDOM</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, extends search to include elements inside Shadow DOMs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>SpinnerCSS</code></strong></td>
+<td style="text-align: left;"><code>none</code></td>
+<td style="text-align: left;">CSS selector for loading indicators. If found, QWeb waits for them to disappear before acting.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>StayInCurrentFrame</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Only search from the current frame. Disables automatic frame traversal.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>VerifyAppAccuracy</code></strong></td>
+<td style="text-align: left;"><code>0.9999</code></td>
+<td style="text-align: left;">Threshold for image similarity in <code>VerifyApp</code> keyword.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>Visibility</code></strong></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">If <code>False</code>, QWeb will interact with invisible/hidden elements.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>WaitStrategy</code></strong></td>
+<td style="text-align: left;"><code>enhanced</code></td>
+<td style="text-align: left;">Synchronization strategy: <code>enhanced</code> (checks network/DOM) or <code>legacy</code> (jQuery based).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>WindowFind</code></strong></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">If <code>True</code>, simulates <code>CTRL+F</code> behavior to find text instead of DOM search.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>WindowSize</code></strong></td>
+<td style="text-align: left;"><code>Full screen</code></td>
+<td style="text-align: left;">Sets the size of the browser window.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>XHRTimeout</code></strong></td>
+<td style="text-align: left;"><code>30s</code></td>
+<td style="text-align: left;">Maximum wait time for the page to load (XHR/Network idle).</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Refer to the Set Config keyword documentation for the latest details and examples for each configuration parameter.</p>
+</div>
+<h2 id="common-use-cases">Common Use Cases</h2>
+<h3 id="1-handling-slow-environments">1. Handling Slow Environments</h3>
+<p>If your test environment is consistently slow, increase the global timeout at the start of your suite.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh">*** Test Cases ***</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="gu">Setup Suite</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">    </span><span class="nf">SetConfig</span><span class="p">    </span><span class="s">DefaultTimeout</span><span class="p">    </span><span class="s">60s</span>
+</code></pre></div>
+<h3 id="2-testing-invisible-inputs">2. Testing "Invisible" Inputs</h3>
+<p>Some file uploaders or modern frameworks hide the actual <code>&lt;input&gt;</code> tag.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Allow QWeb to interact with hidden elements</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">Visibility</span><span class="p">    </span><span class="c">False</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c">UploadFile</span><span class="p">   </span><span class="c">Upload</span><span class="p">        </span><span class="c">C:/data/image.png</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">Visibility</span><span class="p">    </span><span class="c">True</span>
+</code></pre></div>
+<h3 id="3-debugging-layouts">3. Debugging Layouts</h3>
+<p>If QWeb is clicking the wrong "Edit" button, you can visualize the search and slow it down.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Draw a red box around elements and wait 1s before clicking</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">HighlightColor</span><span class="p">    </span><span class="c">Red</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">Delay</span><span class="p">             </span><span class="c">1s</span>
+</code></pre></div>
+<h3 id="4-handling-spinners">4. Handling Spinners</h3>
+<p>To automatically wait for a custom loading animation (e.g., a spinning wheel with class <code>loader</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">SpinnerCSS</span><span class="p">    </span><span class="c">.loader</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># QWeb will now automatically wait for &quot;.loader&quot; to disappear before clicking anything</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c">ClickText</span><span class="p">    </span><span class="c">Submit</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "navigation.sections", "navigation.prune", "navigation.tracking", "navigation.path", "search.suggest", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
