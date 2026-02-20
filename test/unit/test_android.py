@@ -20,7 +20,7 @@ from unittest.mock import patch
 import pytest
 
 
-@patch('QWeb.internal.browser.android.webdriver.Remote')
+@patch('QWeb.internal.browser.android.WebDriver')
 @patch('QWeb.internal.browser.android.subprocess.check_output')
 def test_android_open_browser(patch_subprocess, patch_webdriver):
     patch_subprocess.side_effect = [b'List of devices attached ad061603092984da09 device',
