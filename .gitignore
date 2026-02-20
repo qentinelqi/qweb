@@ -19,7 +19,7 @@ screenshots/
 
 # doc output
 docs/build
-docs/site
+/site
 
 # caches
 .*_cache/
