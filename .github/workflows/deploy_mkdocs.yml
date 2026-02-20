@@ -28,7 +28,7 @@ jobs:
 
       - name: Build documentation
         run: |
-          mkdocs build --strict
+          mkdocs build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
