@@ -7,6 +7,7 @@ on:
       - '**.md'
       - 'docs/**'
       - '.github/workflows/*.yml'  # exclude ghactions changes.
+  pull_request:
     branches: [ master ]
     paths-ignore:
       - '**.md'
