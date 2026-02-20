@@ -6,11 +6,13 @@ on:
     paths-ignore:
       - '**.md'
       - 'docs/**'
+      - '.github/workflows/*.yml'
   pull_request:
     branches: [ master ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
+      - '.github/workflows/*.yml'
 
 jobs:
   windows_acceptance:

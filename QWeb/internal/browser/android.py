@@ -2,7 +2,6 @@ from __future__ import annotations
 import subprocess
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
 from robot.api import logger
 from QWeb.internal import browser
 
@@ -37,6 +36,6 @@ def open_browser() -> WebDriver:
     options.set_capability("browserName", "Chrome")
     options.set_capability("nativeWebScreenshot", ss_type)
 
-    driver = webdriver.Remote(command_executor="http://localhost:4723/wd/hub", options=options)
+    driver = WebDriver(command_executor="http://localhost:4723/wd/hub", options=options)
     browser.cache_browser(driver)
     return driver

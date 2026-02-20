@@ -3,7 +3,7 @@ from typing import Optional, Any
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.safari.service import Service
 from selenium.webdriver.safari.options import Options
-from selenium import webdriver
+from selenium.webdriver.safari.webdriver import WebDriver as Safari
 from robot.api import logger
 
 from QWeb.internal import browser
@@ -53,7 +53,7 @@ def open_browser(
         else:
             service = Service(port=port, quiet=quiet, enable_logging=enable_logging)
 
-        driver = webdriver.Safari(service=service, options=options)
+        driver = Safari(service=service, options=options)
 
     # If implicit_wait is not > 0 Safaridriver starts raising TimeoutExceptions
     #    instead of proper exception types

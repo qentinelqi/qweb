@@ -3,7 +3,7 @@ import os
 import subprocess
 from typing import Optional, Any, Union
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from robot.api import logger
