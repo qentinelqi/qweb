@@ -1,0 +1,76 @@
+site_name: QWeb Documentation
+repo_url: https://github.com/qentinelqi/qweb
+repo_name: qweb
+#edit_uri: edit/master/docs/
+
+theme:
+  name: material
+  logo: assets/logo_white.png
+  favicon: assets/favicon.svg
+  palette:
+    - scheme: default
+      primary: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.tabs.link
+    - navigation.sections
+    - navigation.prune
+    - navigation.tracking
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.path
+    - search.suggest
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting_started/installation.md
+      - Writing Your First Test: getting_started/basics.md
+  - Core Concepts:
+      - Locator Strategies: concepts/locators.md
+      - Assertions & Logic: concepts/assertions.md
+      - Smart Waits: concepts/waits.md
+      - Anchors & Spatial Search: concepts/anchors.md
+      - Handling Frames: concepts/frames.md
+      - Shadow DOM: concepts/shadow_dom.md
+  - How To Guides:
+      - Browser & Window Management: how_to/browser.md
+      - Forms & Inputs: how_to/input.md
+      - Checkboxes & Toggles: how_to/checkboxes.md
+      - Dropdowns: how_to/dropdowns.md
+      - Working with Tables: how_to/tables.md
+      - Upload/Download: how_to/upload_download.md
+      - Low-Level DOM Access: how_to/attribute_access.md
+      - Debugging & Visualization: how_to/debugging.md
+      - Python Support: how_to/python.md
+      - Extending QWeb: how_to/extending.md
+  - Reference:
+      - Keyword Documentation: reference/keywords.md
+      - User configurable settings: reference/configuration.md
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+use_directory_urls: false
+
+plugins:
+  - search
+
+extra_css:
+  - stylesheets/extra.css

@@ -15,9 +15,11 @@ screenshots/
 
 # Unignore images in images folder
 !images/*.png
+!docs/assets/*.*
 
 # doc output
 docs/build
+docs/site
 
 # caches
 .*_cache/
