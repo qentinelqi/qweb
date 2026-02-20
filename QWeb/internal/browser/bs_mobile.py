@@ -1,6 +1,5 @@
 import os
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as chrome_options
 from selenium.webdriver.safari.options import Options as safari_options
 from selenium.common.exceptions import WebDriverException
@@ -42,7 +41,7 @@ def open_browser(bs_device: str, project_name: str, run_id: str, **kwargs: Any) 
     bs_user = util.get_rfw_variable_value("${USERNAME}") or os.environ.get("bsuser")
 
     try:
-        driver = webdriver.Remote(
+        driver = WebDriver(
             command_executor=f"http://{bs_user}:{bs_key}@hub.browserstack.com:80/wd/hub",
             options=options,
         )

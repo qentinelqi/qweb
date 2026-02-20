@@ -22,8 +22,9 @@ import re
 import time
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
-from selenium import webdriver
-
+from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
+from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
+from selenium.webdriver.edge.webdriver import WebDriver as Edge
 from QWeb.internal import browser, platform
 from QWeb.internal.exceptions import QWebFileNotFoundError
 
@@ -103,11 +104,11 @@ def is_tmp_file(filepath: str) -> bool:
     bool
     """
     driver = browser.get_current_browser()
-    if isinstance(driver, webdriver.Chrome):
+    if isinstance(driver, Chrome):
         partial_download_suffix = "crdownload"
-    elif isinstance(driver, webdriver.Firefox):
+    elif isinstance(driver, Firefox):
         partial_download_suffix = ".part"
-    elif isinstance(driver, webdriver.Edge):
+    elif isinstance(driver, Edge):
         partial_download_suffix = "crdownload"
     else:
         raise ValueError("Unknown browser {}".format(driver.name))

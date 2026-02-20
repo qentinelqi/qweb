@@ -5,7 +5,6 @@ from selenium.webdriver.chrome.options import Options as chrome_options
 from selenium.webdriver.edge.options import Options as edge_options
 from selenium.webdriver.firefox.options import Options as firefox_options
 from selenium.webdriver.safari.options import Options as safari_options
-from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from typing import Any, Union
 from robot.api import logger
@@ -70,7 +69,7 @@ def open_browser(bs_browser: str, project_name: str, run_id: str, **kwargs: Any)
 
     try:
         executor_url = f"https://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub"
-        driver = webdriver.Remote(command_executor=executor_url, options=options)
+        driver = WebDriver(command_executor=executor_url, options=options)
         logger.info(f"BrowserStack session ID: {driver.session_id}", also_console=True)
     except WebDriverException as e:
         logger.error(str(e))

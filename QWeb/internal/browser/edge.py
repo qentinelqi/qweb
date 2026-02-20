@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Optional, Any
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver import Edge
+from selenium.webdriver.edge.webdriver import WebDriver as Edge
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.edge.service import Service
 from robot.api import logger

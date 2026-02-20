@@ -7,7 +7,7 @@ import os
 import subprocess
 
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium import webdriver
+from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from QWeb.internal import browser, util
@@ -95,7 +95,7 @@ def open_browser(
         driver = WebDriver(command_executor=remote_url, options=options)
     else:
         service = build_firefox_service(Service, driver_path, log_level, log_output)
-        driver = webdriver.Firefox(service=service, options=options)
+        driver = Firefox(service=service, options=options)
     if os.name == "nt":  # Maximize window if running on windows, doesn't work on linux
         driver.maximize_window()
     browser.cache_browser(driver)
