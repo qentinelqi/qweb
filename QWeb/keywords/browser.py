@@ -387,13 +387,14 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
             # detect if user is trying to use user-data-dir or profile option
             if any(opt.strip().startswith("--user-data-dir") or opt.strip().startswith("-profile") for opt in option_list):
                 msg += (
-                    "\nUsage of a -profile or --user-data-dir was detected.\n"
-                    "Multiple browser instances cannot share the same profile.\n"
-                    "Please ensure the profile path is correct and not in use by another browser.\n"
-                    "To open additional windows in the same browser session, use the OpenWindow keyword.\n"
-                    "Even if the browser  is not visibly open, there might be background processes running.\n"
-                    "It's generally safer to use Chrome For Testing or a separate profile copy when testing profiles.\n\n"
-                    f"[Original error: {e}]"
+                    "\nError detected while using browser profiles (-profile or --user-data-dir).\n"
+                    "- Multiple browser instances cannot share the same profile.\n"
+                    "- Check that the profile path is correct and not used by another browser.\n"
+                    "- To open more windows in the same session, use OpenWindow.\n"
+                    "- Background browser processes may still be running even if not visible.\n"
+                    "- Avoid using the default Chrome profile; prefer Chrome for Testing or a separate profile copy.\n"
+                    "  - More info: https://developer.chrome.com/blog/remote-debugging-port\n\n"
+                    f"[Original error: {str(e)}]"
                 )
                 raise QWebBrowserError(msg) from e
             raise e
