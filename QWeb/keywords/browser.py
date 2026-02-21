@@ -388,12 +388,12 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
             if any(opt.strip().startswith("--user-data-dir") or opt.strip().startswith("-profile") for opt in option_list):
                 msg += (
                     "\nError detected while using browser profiles (-profile or --user-data-dir).\n"
-                    "- Multiple browser instances cannot share the same profile.\n"
-                    "- Check that the profile path is correct and not used by another browser.\n"
-                    "- To open more windows in the same session, use OpenWindow.\n"
-                    "- Background browser processes may still be running even if not visible.\n"
-                    "- Avoid using the default Chrome profile; prefer Chrome for Testing or a separate profile copy.\n"
-                    "  - More info: https://developer.chrome.com/blog/remote-debugging-port\n\n"
+                    "  - Multiple browser instances cannot share the same profile.\n"
+                    "  - Check that the profile path is correct and not used by another browser.\n"
+                    "  - To open more windows in the same session, use OpenWindow.\n"
+                    "  - Background browser processes may still be running even if not visible.\n"
+                    "  - Avoid using the default Chrome profile; prefer Chrome for Testing or a separate profile copy.\n"
+                    "    - More info: https://developer.chrome.com/blog/remote-debugging-port\n\n"
                     f"[Original error: {str(e)}]"
                 )
                 raise QWebBrowserError(msg) from e
