@@ -32,6 +32,7 @@ try:
     from QWeb.keywords import (
         ajax,
         alert,
+        bidi,
         blocks,
         browser,
         checkbox,
@@ -335,6 +336,7 @@ class QWeb:
             ajax,
             blocks,
             mouse,
+            bidi
         ):
             for name in dir(module):
                 if not name.startswith("_"):
