@@ -50,6 +50,7 @@ nav:
       - Upload/Download: how_to/upload_download.md
       - Low-Level DOM Access: how_to/attribute_access.md
       - Debugging & Visualization: how_to/debugging.md
+      - Browser Console & BiDi: how_to/devconsole.md
       - Python Support: how_to/python.md
       - Extending QWeb: how_to/extending.md
   - Reference:
