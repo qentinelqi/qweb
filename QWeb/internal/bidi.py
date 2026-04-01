@@ -82,6 +82,9 @@ def _start_console_capture() -> None:
         )
     driver = browser.get_current_browser()
     session_id = driver.session_id
+    if driver is None or session_id is None:
+        raise QWebDriverError("Could not get session, no open browser")
+
     # Limit to CONSOLE_MSG_LIMIT messages per session
     _console_messages[session_id] = deque(maxlen=CONSOLE_MSG_LIMIT)
     _js_exceptions[session_id] = deque(maxlen=CONSOLE_MSG_LIMIT)
@@ -111,6 +114,9 @@ def _get_console_messages(
         )
     driver = browser.get_current_browser()
     session_id = driver.session_id
+    if driver is None or session_id is None:
+        raise QWebDriverError("Could not get session, no open browser")
+
     messages = list(_console_messages.get(session_id, []))
     exceptions = list(_js_exceptions.get(session_id, []))
     all_msgs = messages + exceptions
@@ -161,6 +167,9 @@ def _stop_console_capture() -> None:
 
     driver = browser.get_current_browser()
     session_id = driver.session_id
+    if driver is None or session_id is None:
+        raise QWebDriverError("Could not get session, no open browser")
+
     handler_id = _handler_ids.pop(session_id, None)
     if handler_id is not None:
         driver.script.remove_console_message_handler(handler_id)
