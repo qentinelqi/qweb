@@ -26,6 +26,10 @@ def open_browser(
     page_load_strategy = kwargs.pop("page_load_strategy", "normal")
     options.page_load_strategy = page_load_strategy
 
+    # BiDi support: add capability if requested
+    if kwargs.get("bidi", False):
+        options.set_capability("webSocketUrl", True)
+
     # safari options can be given as desired_capabilities (dict)
     # Example:
     #   &{caps}=   Create Dictionary  safari:automaticInspection=True
