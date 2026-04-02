@@ -52,6 +52,11 @@ VerifyText     Popup Message       timeout=3
 
 Instead, rely on `Verify*` keywords and adjust the max wait time with `timeout` argument necessary.
 
+## The "Wait Until Keyword Succeeds" Trap
+
+!!! danger "Avoid wrapping QWeb keywords with `Wait Until Keyword Succeeds`"
+    QWeb keywords (like ClickText, VerifyText, etc.) already have a built-in retry and timeout mechanism. Wrapping them with Robot Framework’s Wait Until Keyword Succeeds is not only redundant, but can cause confusing and unpredictable wait times.
+
 ## Timeout vs. Delay
 
 QWeb offers two arguments that look similar but behave very differently.
