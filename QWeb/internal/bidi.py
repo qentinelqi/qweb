@@ -16,10 +16,32 @@
 # ---------------------------
 from dataclasses import dataclass
 from collections import deque
+from selenium.webdriver.common.bidi.log import JavaScriptLogEntry
 from QWeb.internal import browser
 from typing import Optional, Dict, Any
 from QWeb.internal.exceptions import QWebDriverError
 import time
+
+
+# FIXME: Selenium's BiDi API for JS exceptions is inconsistent across browsers.
+# Firefox's BiDi logs for JS exceptions do not include 'stackTrace' field,
+# while Chrome's do. This causes Selenium's JavaScriptLogEntry.from_json to raise KeyError
+# Patch JavaScriptLogEntry.from_json to handle missing 'stackTrace' in Firefox BiDi logs
+
+# Store the original method
+original_from_json = JavaScriptLogEntry.from_json.__func__  # type: ignore
+
+
+def patched_from_json(cls: Any, json: dict[str, Any]) -> Any:
+    # If Firefox forgot 'stackTrace', we provide an empty one
+    # so the original method doesn't raise a KeyError
+    if "stackTrace" not in json:
+        json["stackTrace"] = None
+    return original_from_json(cls, json)
+
+
+# Apply the patch
+JavaScriptLogEntry.from_json = classmethod(patched_from_json)  # type: ignore
 
 
 @dataclass(frozen=True)
