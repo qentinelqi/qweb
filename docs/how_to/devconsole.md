@@ -7,6 +7,11 @@ s
     Only enable BiDi when you need to use keywords that require it (such as console capture). Keeping BiDi enabled at all times is not recommended, as browser and Selenium support may impact stability and compatibility.
     For now, we recommend creating individual tests for features that require BiDi to be enabled, rather than enabling it globally for all tests.
 
+!!! danger "Safari Does Not Support BiDi"
+    The stable version of Safari does not support the BiDi protocol.
+    If you attempt to enable BiDi when launching Safari, QWeb will log a warning and BiDi features will be disabled for that session.
+    Use BiDi features only with supported browsers (Chrome, Edge, Firefox).
+
 ## What is BiDi?
 
 BiDi (Bidirectional) is a new browser automation protocol that allows advanced features like real-time console message capture. QWeb supports BiDi for Chrome, Edge, and Firefox (with recent Selenium and browser versions).

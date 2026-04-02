@@ -12,6 +12,7 @@ ${BROWSER}                  chrome
 
 *** Test Cases ***
 Start console capture and verify messages are captured
+    [tags]          PROBLEM_IN_SAFARI
     StartConsoleCapture
     ClickText    Run Logs
     Sleep    1s
@@ -20,6 +21,7 @@ Start console capture and verify messages are captured
 
 
 Filter by source and level
+    [tags]          PROBLEM_IN_SAFARI
     ${warnings}=    GetConsoleMessages    level=warning
     Length Should Be    ${warnings}       1
 
@@ -36,13 +38,16 @@ Filter by source and level
     Length Should Be    ${all}             9
 
 VerifyNoConsole Errors should raise if errors are found
+    [tags]          PROBLEM_IN_SAFARI
     Run Keyword And Expect Error   *Console errors found*    VerifyNoConsoleErrors   
 
 Message contains
+    [tags]          PROBLEM_IN_SAFARI
     ${delayed}=    GetConsoleMessages    contains=Delayed
     Should Contain    ${delayed[0]["text"]}    LOG: delayed message (500ms)
 
 Stop console capture and verify that no messages are found
+    [tags]          PROBLEM_IN_SAFARI
     StopConsoleCapture
     ${msgs}=    GetConsoleMessages
     Should Be Empty    ${msgs}
