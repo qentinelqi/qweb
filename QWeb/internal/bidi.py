@@ -16,6 +16,7 @@
 # ---------------------------
 from dataclasses import dataclass
 from collections import deque
+from enum import Enum
 from selenium.webdriver.common.bidi.log import JavaScriptLogEntry
 from QWeb.internal import browser
 from typing import Optional, Dict, Any
@@ -44,15 +45,37 @@ def patched_from_json(cls: Any, json: dict[str, Any]) -> Any:
 JavaScriptLogEntry.from_json = classmethod(patched_from_json)  # type: ignore
 
 
+class SourceType(Enum):
+    CONSOLE = "console"
+    EXCEPTION = "exception"
+
+
+class LogLevel(Enum):
+    ALL = "all"
+    DEBUG = "debug"
+    INFO = "info"
+    WARN = "warn"
+    ERROR = "error"
+    LOG = "log"
+
+
+# support common aliases for log levels
+level_aliases = {
+    "warning": LogLevel.WARN,
+    "err": LogLevel.ERROR,
+    "critical": LogLevel.ERROR,
+}
+
+
 @dataclass(frozen=True)
 class ConsoleMsg:
     ts: float
-    level: str
+    level: LogLevel
     text: str
     url: Optional[str] = None
     line: Optional[int] = None
     column: Optional[int] = None
-    source: str = "console"  # 'console' or 'exception'
+    source: SourceType = SourceType.CONSOLE  # 'console' or 'exception'
 
     def as_dict(self) -> Dict[str, Any]:
         return {
@@ -60,11 +83,11 @@ class ConsoleMsg:
             "level": self.level,
             "text": self.text,
             "location": {
-                            "url": self.url,
-                            "line": self.line,
-                            "column": self.column,
-                        } if self.url else None,
-            "source": self.source,
+                "url": self.url,
+                "line": self.line,
+                "column": self.column,
+            } if self.url else None,
+            "source": self.source.value,
         }
 
 
@@ -142,37 +165,25 @@ def _get_console_messages(
     messages = list(_console_messages.get(session_id, []))
     exceptions = list(_js_exceptions.get(session_id, []))
     all_msgs = messages + exceptions
-    # Normalize level input
-    level = level.lower()
-    valid_levels = ["all", "debug", "info", "warn", "error", "log"]
-    level_map = {
-        "warning": "warn",
-        "err": "error",
-        "critical": "error",  # treat as error
-    }
-    if level in level_map:
-        level = level_map.get(level, level)
-    if level not in valid_levels:
-        raise ValueError(
-            f"Unknown log level: {level}"  # noqa: E501
-        )
+
     # Filter by source if specified
-    if source:
+    if source is not None:
         source = source.lower()
         if source in ("console",):
-            filtered_msgs = [msg for msg in all_msgs if msg.source == "console"]
+            filtered_msgs = [msg for msg in all_msgs if msg.source == SourceType.CONSOLE]
         elif source in ("js", "exception"):
-            filtered_msgs = [msg for msg in all_msgs if msg.source == "exception"]
+            filtered_msgs = [msg for msg in all_msgs if msg.source == SourceType.EXCEPTION]
         else:
             raise ValueError(f"Unknown message source: {source}. Use 'console' or 'js'.")
     else:
         filtered_msgs = all_msgs
-    if level == "all":
+    if level == LogLevel.ALL.value:
         filtered = filtered_msgs
     else:
-        filtered = [msg for msg in filtered_msgs if _normalize_msg_level(msg, level_map) == level]
+        normalized_level = _normalize_msg_level(level)
+        filtered = [msg for msg in filtered_msgs if msg.level == normalized_level.value]
     # Filter by contains if specified
-    if contains:
+    if contains is not None:
         contains_lower = contains.lower()
         filtered = [msg for msg in filtered if contains_lower in msg.text.lower()]
     return [msg.as_dict() for msg in filtered]
@@ -204,11 +215,14 @@ def _stop_console_capture() -> None:
 
 
 # Helper functions
-def _normalize_msg_level(msg, level_map):
-    msg_level = msg.level.lower() if hasattr(msg, "level") else getattr(msg, "level", "all").lower()
-    if msg_level in level_map:
-        msg_level = level_map[msg_level]
-    return msg_level
+def _normalize_msg_level(level: str) -> LogLevel:
+    level = level.lower()
+    if level in level_aliases:
+        return level_aliases[level]
+    try:
+        return LogLevel(level)
+    except ValueError as e:
+        raise ValueError(f"Unknown log level: {level}") from e
 
 
 def _is_bidi_enabled() -> bool:
@@ -225,12 +239,12 @@ def _is_bidi_enabled() -> bool:
 def on_console_event(event, session_id) -> None:
     msg = ConsoleMsg(
         ts=time.time(),
-        level=getattr(event, "level", "all"),
+        level=getattr(event, "level", LogLevel.ALL),
         text=getattr(event, "message", getattr(event, "text", "")),
         url=getattr(event, "url", None),
         line=getattr(event, "line", getattr(event, "lineNumber", None)),
         column=getattr(event, "column", getattr(event, "columnNumber", None)),
-        source="console"
+        source=SourceType.CONSOLE
     )
     _console_messages[session_id].append(msg)
 
@@ -246,11 +260,11 @@ def on_js_exception_event(event, session_id) -> None:
         url = line = column = None
     msg = ConsoleMsg(
         ts=time.time(),
-        level=getattr(event, "level", "error"),
+        level=getattr(event, "level", LogLevel.ERROR),
         text=getattr(event, "text", str(event)),
         url=url,
         line=line,
         column=column,
-        source="exception"
+        source=SourceType.EXCEPTION
     )
     _js_exceptions[session_id].append(msg)
