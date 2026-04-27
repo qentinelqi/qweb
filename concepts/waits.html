@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/favicon.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -637,6 +637,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-wait-until-keyword-succeeds-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "Wait Until Keyword Succeeds" Trap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#timeout-vs-delay" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1032,6 +1043,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../how_to/devconsole.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Browser Console & BiDi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../how_to/python.html" class="md-nav__link">
         
   
@@ -1314,6 +1353,11 @@ When you run a keyword like <code>ClickText</code>, QWeb enters a retry loop:</p
 <strong>Avoid this in QWeb.</strong> Hard-coded sleeps make your test suite slow. If the button loads in 1 second, your test still waits for 5, wasting 4 seconds every time.</p>
 </div>
 <p>Instead, rely on <code>Verify*</code> keywords and adjust the max wait time with <code>timeout</code> argument necessary.</p>
+<h2 id="the-wait-until-keyword-succeeds-trap">The "Wait Until Keyword Succeeds" Trap</h2>
+<div class="admonition danger">
+<p class="admonition-title">Avoid wrapping QWeb keywords with <code>Wait Until Keyword Succeeds</code></p>
+<p>QWeb keywords (like ClickText, VerifyText, etc.) already have a built-in retry and timeout mechanism. Wrapping them with Robot Framework’s Wait Until Keyword Succeeds is not only redundant, but can cause confusing and unpredictable wait times.</p>
+</div>
 <h2 id="timeout-vs-delay">Timeout vs. Delay</h2>
 <p>QWeb offers two arguments that look similar but behave very differently.</p>
 <table>
