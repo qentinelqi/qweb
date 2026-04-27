@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Console Test Page</title>
+</head>
+<body>
+
+<h1>Console Test Page</h1>
+
+<button onclick="runLogs()">Run Logs</button>
+
+<script>
+function runLogs() {
+    console.log("LOG: normal log message");
+    console.info("INFO: informational message");
+    console.warn("WARN: warning message");
+    console.error("ERROR: error message");
+
+    // Delayed log
+    setTimeout(() => {
+        console.log("LOG: delayed message (500ms)");
+    }, 500);
+
+    // Simulated JS exception (uncaught)
+    setTimeout(() => {
+        throw new Error("Uncaught exception test");
+    }, 800);
+
+    // Structured object logging
+    console.log("LOG: object payload", { foo: 123, bar: "hello" });
+
+    // Promise rejection
+    Promise.reject("Rejected promise test");
+
+
+    window.addEventListener("unhandledrejection", event => {
+    console.error("UNHANDLED PROMISE:", event.reason);
+    });
+
+}
+</script>
+
+</body>
+</html>

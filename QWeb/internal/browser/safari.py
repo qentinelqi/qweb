@@ -26,6 +26,13 @@ def open_browser(
     page_load_strategy = kwargs.pop("page_load_strategy", "normal")
     options.page_load_strategy = page_load_strategy
 
+    # BiDi support requested but not supported by Safari
+    if kwargs.get("bidi", False):
+        logger.warn(
+            "BiDi (Bidirectional) communication is not supported by Safari. "
+            "Please use a different browser if BiDi is required."
+        )
+
     # safari options can be given as desired_capabilities (dict)
     # Example:
     #   &{caps}=   Create Dictionary  safari:automaticInspection=True

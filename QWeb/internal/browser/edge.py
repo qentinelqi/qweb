@@ -29,8 +29,14 @@ def open_browser(
         Dictionary object with non-browser specific capabilities only, such as
         "proxy" or "loggingPref".
     chrome_args : Optional arguments to modify browser settings
+    bidi : bool (optional)
+        If True, enables BiDi (Bidirectional) communication for Edge.
     """
     options = create_edge_options(edge_args, **kwargs)
+
+    # BiDi support: add capability if requested
+    if kwargs.get("bidi", False):
+        options.set_capability("webSocketUrl", True)
 
     edgedriver_path = util.get_rfw_variable_value("${EDGEDRIVER_PATH}") or executable_path
     if edgedriver_path:

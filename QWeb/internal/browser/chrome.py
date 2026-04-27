@@ -60,6 +60,8 @@ def open_browser(
         Dictionary object with non-browser specific capabilities only, such as
         "proxy" or "loggingPref".
     chrome_args : Optional arguments to modify browser settings
+    bidi : bool (optional)
+        If True, enables BiDi (Bidirectional) communication for Chrome.
     """
     options = create_chrome_options(chrome_args, **kwargs)
     chromedriver_path = resolve_chromedriver_path(executable_path)
@@ -73,6 +75,10 @@ def open_browser(
 
     if browser_reuse and executor_url and debugger_address:
         return create_reused_browser(debugger_address)
+
+    # BiDi support: add capability if requested
+    if kwargs.get("bidi", False):
+        options.set_capability("webSocketUrl", True)
 
     driver = create_new_browser(chromedriver_path, options, **kwargs)
     cache_browser_session(driver)

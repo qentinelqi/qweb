@@ -48,6 +48,8 @@ def open_browser(
     firefox_args : list
         Optional arguments to modify browser settings.
         https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options
+    bidi : bool (optional)
+        If True, enables BiDi (Bidirectional) communication for Firefox.
     """
     options = create_firefox_options(**kwargs)
     if headless:
@@ -58,6 +60,10 @@ def open_browser(
         )
         options.add_argument("-headless")
         CONFIG.set_value("Headless", True)
+
+    # BiDi support: add capability if requested
+    if kwargs.get("bidi", False):
+        options.set_capability("webSocketUrl", True)
 
     kwargs = {k.lower(): v for k, v in kwargs.items()}  # Kwargs keys to lowercase
     if "prefs" in kwargs:

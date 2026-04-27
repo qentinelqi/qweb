@@ -70,7 +70,11 @@ def return_browser() -> WebDriver:
 
 
 @keyword(tags=("Browser", "Interaction"))
-def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **kwargs):
+def open_browser(url: str,
+                 browser_alias: str,
+                 options: Optional[str] = None,
+                 bidi: bool = False,
+                 **kwargs):
     # pylint: disable=line-too-long
     r"""Open new browser to given url.
 
@@ -159,6 +163,15 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
         OpenBrowser    http://google.com     chrome    page_load_strategy=none
         OpenBrowser    http://google.com     safari    page_load_strategy=eager
         CloseAllBrowsers
+
+    BiDi support
+    ------------
+    BiDi (Bidirectional) communication can be enabled for supported browsers by setting `bidi=True`.
+    Currently supported browsers: desktop Chrome, Edge, and Firefox.
+    Not supported by Safari or mobile browsers.
+
+    Some keywords, such as StartConsoleCapture and GetConsoleMessages, require BiDi to be enabled in order to work.
+    If BiDi is not enabled, these keywords will raise an error or not function as expected.
 
     Selenium Manager
     ----------------
@@ -315,6 +328,8 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     options
         Arguments for initialization of WebDriver objects(chrome).
         Some available opts: https://peter.sh/experiments/chromium-command-line-switches/
+    bidi : bool
+        If True, enables BiDi (Bidirectional) communication for supported browsers.
     kwargs
         prefs=args:
             Experimental options for chrome browser.
@@ -363,6 +378,10 @@ def open_browser(url: str, browser_alias: str, options: Optional[str] = None, **
     if os.getenv("CHROME_ARGS") is not None:
         option_list.extend(os.getenv("CHROME_ARGS", "").split(", "))
     logger.debug("Options: {}".format(option_list))
+
+    # Pass bidi to browser openers if True
+    if bidi:
+        kwargs["bidi"] = True
 
     bs_project_name = util.get_rfw_variable_value("${PROJECTNAME}") or ""
     bs_run_id = util.get_rfw_variable_value("${RUNID}") or ""
