@@ -273,8 +273,8 @@ Secret
     TypeSecret              First input             fdfsdf98723fdkjc9vsdv222
     Verify Input Value      First input             fdfsdf98723fdkjc9vsdv222
     # Try multiple parameters
-    TypeSecret              First input             223423423423423432      end-key                 1
-    Verify Input Value      First input             223423423423423432      end-key                 1
+    TypeSecret              First input             223423423423423432      end-key                 2
+    Verify Input Value      First input             223423423423423432      end-key                 2
 
 Secret Without Debug Logs When Debugfile Option Used
     [documentation]         Test secrets when -b/--debugfile option is used.
