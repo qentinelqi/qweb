@@ -1,22 +1,20 @@
 PyScreeze==0.1.28
 pyperclip==1.9.0
 PyAutoGUI>=0.9.53
-Pillow>=11.0.0
+Pillow>=12.2.0
 robotframework>=5.0.1,<8
 robotframework-debuglibrary==2.5.0
 selenium>=4.27.0,<5
-ply
 pynput==1.8.1
-setuptools>=70.0.0
+setuptools>=78.1.1
 # numpy is not QWeb's direct dependency, but opencv's.
 # v2.0+ not supported yet
 numpy>=2.0.0
 opencv-python==4.11.0.86
-pypdf==5.4.0
-requests==2.32.4
-scipy>=1.7.3
-scikit-image==0.24;python_version=="3.9"
-scikit-image==0.25.2;python_version>"3.9"
+pypdf==6.10.2
+requests==2.33.0
+scipy>= 1.10.0
+scikit-image==0.25.2
 pyobjc-core>=9.2; sys_platform == "darwin"
 pyobjc>=9.2; sys_platform == "darwin"
 

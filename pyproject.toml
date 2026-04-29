@@ -22,20 +22,19 @@ classifiers = [
     "Framework :: Robot Framework :: Library"
 ]
 dependencies = [
-    "setuptools>=70.0.0",
+    "setuptools>=78.1.1",
     "pyscreeze==0.1.28",
     "pyautogui>=0.9.53",
     "pynput>=1.8.0",
-    "pypdf>=5.4.0",
+    "pypdf>=6.10.2",
     "pyperclip==1.9.0",
-    "requests>=2.32.2",
+    "requests>=2.33.0",
     "robotframework>=5.0.1,<8",
     "robotframework-debuglibrary==2.5.0",
     "selenium>=4.27.0,<5",
-    "Pillow>=11.0.0",
-    "scipy>=1.7.3",
+    "Pillow>=12.2.0",
+    "scipy>=1.10.0",
     "scikit-image==0.25.2",
-    "ply",
     "numpy>=2.0.0",
     "opencv-python==4.11.0.86",
     # platform specific
