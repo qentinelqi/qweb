@@ -273,7 +273,9 @@ Secret
     TypeSecret              First input             fdfsdf98723fdkjc9vsdv222
     Verify Input Value      First input             fdfsdf98723fdkjc9vsdv222
     # Try multiple parameters
-    RefreshPage    # for macOS GH action troubleshooting
+    # Safari GH action fails at 'Verify Input Value' without refresh
+    # can not reproduce locally
+    RefreshPage
     TypeSecret              First input             223423423423423432      end-key                 2
     Verify Input Value      First input             223423423423423432      end-key                 2
 
@@ -288,7 +290,9 @@ Secret Without Debug Logs When Debugfile Option Used
     Should Not Contain      ${TextFileContent}    fdfsdf98723fdkjc9vsdv333
     Verify Input Value      First input           fdfsdf98723fdkjc9vsdv333
 
-    RefreshPage    # for macOS GH action troubleshooting
+    # Safari GH action fails at 'Verify Input Value' without refresh
+    # can not reproduce locally
+    RefreshPage
     TypeSecret3             First input           223423423423423431
     ${TextFileContent}      Get File              ${DEBUG FILE}
     Should Contain          ${TextFileContent}    QWeb.Type Secret3
