@@ -288,6 +288,7 @@ Secret Without Debug Logs When Debugfile Option Used
     Should Not Contain      ${TextFileContent}    fdfsdf98723fdkjc9vsdv333
     Verify Input Value      First input           fdfsdf98723fdkjc9vsdv333
 
+    RefreshPage    # for macOS GH action troubleshooting
     TypeSecret3             First input           223423423423423431
     ${TextFileContent}      Get File              ${DEBUG FILE}
     Should Contain          ${TextFileContent}    QWeb.Type Secret3
