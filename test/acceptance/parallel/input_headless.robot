@@ -273,6 +273,7 @@ Secret
     TypeSecret              First input             fdfsdf98723fdkjc9vsdv222
     Verify Input Value      First input             fdfsdf98723fdkjc9vsdv222
     # Try multiple parameters
+    RefreshPage    # for macOS GH action troubleshooting
     TypeSecret              First input             223423423423423432      end-key                 2
     Verify Input Value      First input             223423423423423432      end-key                 2
 
