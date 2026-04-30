@@ -35,10 +35,22 @@ Following adds secrets filtering to a keyword function "type_secret":
 """
 
 from __future__ import annotations
-from typing import Any, Optional
+from typing import Any, Optional, Callable
+from robot.version import get_version as rfw_version
 from robot.model.keyword import Keyword
-
 from robot.output.logger import LOGGER
+
+try:  # exists only in rf7+
+    from robot.output.logger import start_body_item, end_body_item
+except ImportError:
+    # dummy decorators for rfs below 7
+    def start_body_item(fn):
+        return fn
+
+    def end_body_item(fn):
+        return fn
+
+
 from robot.libraries.BuiltIn import BuiltIn
 
 
@@ -64,13 +76,13 @@ def _replace_keyword_args(keyword: Keyword, args: tuple) -> None:
 
 def _hide_keyword_arg_values(keyword: Keyword) -> list[str]:
     if hasattr(keyword, "kwname"):
-        par_index, secret = filtered_keywords[keyword.kwname]
+        par_index, secret = FILTERED_KEYWORDS[keyword.kwname]
     else:  # rfw 7
         # name is in different format
         kw_name = "".join(
             f" {char}" if char.isupper() else char.strip() for char in keyword.name
         ).strip()
-        par_index, secret = filtered_keywords[kw_name]
+        par_index, secret = FILTERED_KEYWORDS[kw_name]
     censored_args = list(keyword.args)
     if secret == "hint":
         censored_args[par_index] = "SECRET"
@@ -87,8 +99,8 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
     logs and disables logging during the keyword.
     """
     # pylint: disable=protected-access, global-statement
-    global log_level
-    apply_filter = keyword.kwname in filtered_keywords
+    global LOG_LEVEL
+    apply_filter = keyword.kwname in FILTERED_KEYWORDS
     original_args = keyword.args
     if apply_filter:
         censored_args = _hide_keyword_arg_values(keyword)
@@ -104,21 +116,21 @@ def _filtered_start_keyword(keyword: Keyword) -> None:
         b = BuiltIn()
         # Disable logging and store previous log level
         if "INFO" not in b.get_variables()["${LOG_LEVEL}"]:
-            log_level = b.set_log_level("INFO")
-        if debugfile_log:
+            LOG_LEVEL = b.set_log_level("INFO")
+        if DEBUGFILE_LOG_MSG_FN:
             LOGGER._other_loggers[0].log_message = lambda x: None
 
 
-def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, result: Keyword):
+@start_body_item
+def _filtered_start_library_keyword(self, data: Keyword, implementation: Keyword, result: Keyword):
     """Modify Robot FW 7+ internal function "start_library_keyword".
 
     This function removes secret data from "start library keyword"
     logs and disables logging during the keyword.
     """
-    # pylint: disable=protected-access, global-statement
-    global log_level
+    # pylint: disable=protected-access
     # using implementation.name as data.name is in slightly different format
-    apply_filter = implementation.name in filtered_keywords
+    apply_filter = implementation.name in FILTERED_KEYWORDS
     original_args = data.args
 
     if apply_filter:
@@ -127,20 +139,16 @@ def _filtered_start_library_keyword(data: Keyword, implementation: Keyword, resu
         _replace_keyword_args(data, tuple(censored_args))
         _replace_keyword_args(result, tuple(censored_args))
 
-    # Reset log_message to original function (rfw < 7.4)
-    if hasattr(LOGGER, "_log_message"):
-        LOGGER.log_message = LOGGER._log_message
-    for start_logger in LOGGER.start_loggers:
+    for start_logger in self.start_loggers:
         start_logger.start_library_keyword(data, implementation, result)
 
     if apply_filter:
         _replace_keyword_args(data, tuple(original_args))
-        b = BuiltIn()
-        # Disable logging and store previous log level
-        if "INFO" not in b.get_variables()["${LOG_LEVEL}"]:
-            log_level = b.set_log_level("INFO")
-        if debugfile_log:
-            LOGGER._other_loggers[0].log_message = lambda x: None
+        _replace_keyword_args(result, tuple(original_args))
+        OTHER_LOGGERS.clear()
+        for other in self._other_loggers:
+            OTHER_LOGGERS.append((other, other.log_message))
+            other.log_message = lambda x: None
 
 
 def _filtered_end_keyword(keyword: Keyword) -> None:
@@ -149,8 +157,8 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
     This function removes secret data from "end keyword"
     logs and returns previous log level.
     """
-    # pylint: disable=protected-access, global-statement
-    apply_filter = keyword.kwname in filtered_keywords
+    # pylint: disable=protected-access
+    apply_filter = keyword.kwname in FILTERED_KEYWORDS
     original_args = keyword.args
     if apply_filter:
         censored_args = _hide_keyword_arg_values(keyword)
@@ -166,19 +174,19 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
         _replace_keyword_args(keyword, tuple(original_args))
         b = BuiltIn()
         # Return previous log level
-        b.set_log_level(log_level)
-        if debugfile_log:
-            LOGGER._other_loggers[0].log_message = debugfile_log
+        b.set_log_level(LOG_LEVEL)
+        if DEBUGFILE_LOG_MSG_FN:
+            LOGGER._other_loggers[0].log_message = DEBUGFILE_LOG_MSG_FN
 
-
-def _filtered_end_library_keyword(data: Keyword, implementation: Keyword, result: Keyword) -> None:
+@end_body_item
+def _filtered_end_library_keyword(self, data: Keyword, implementation: Keyword, result: Keyword) -> None:
     """Modify Robot FW 7+ internal function "end_library_keyword".
 
     This function removes secret data from "end library keyword"
     logs and returns previous log level.
     """
-    # pylint: disable=protected-access, global-statement
-    apply_filter = result.name in filtered_keywords
+    # pylint: disable=protected-access
+    apply_filter = result.name in FILTERED_KEYWORDS
     original_args = result.args
     if apply_filter:
         censored_args = _hide_keyword_arg_values(result)
@@ -186,19 +194,17 @@ def _filtered_end_library_keyword(data: Keyword, implementation: Keyword, result
         _replace_keyword_args(result, tuple(censored_args))
         _replace_keyword_args(data, tuple(censored_args))
 
-    for end_logger in LOGGER.end_loggers:
+    for end_logger in self.end_loggers:
         end_logger.end_library_keyword(data, implementation, result)
 
-    if hasattr(LOGGER, "_log_message"):
-        LOGGER.log_message = LOGGER.message
-
     if apply_filter:
+        _replace_keyword_args(data, tuple(original_args))
         _replace_keyword_args(result, tuple(original_args))
-        b = BuiltIn()
-        # Return previous log level
-        b.set_log_level(log_level)
-        if debugfile_log:
-            LOGGER._other_loggers[0].log_message = debugfile_log
+        for other in self._other_loggers:
+            for stored in OTHER_LOGGERS:
+                if other == stored[0]:
+                    other.log_message = stored[1]
+                    break
 
 
 def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None:
@@ -209,25 +215,27 @@ def add_filter(keyword_name: str, par_index: int, secret: Optional[str]) -> None
     Parameter index defines the index number of function parameter which is
     filtered out. First parameter is 0.
     """
-    filtered_keywords[keyword_name] = (par_index, secret)
+    FILTERED_KEYWORDS[keyword_name] = (par_index, secret)
 
 
 # List of keyword names for which filtering of secret parameters is applied.
 # Format: "keyword name": index of secret parameter
-filtered_keywords: dict[str, Any] = {}
-log_level = "INFO"
+FILTERED_KEYWORDS: dict[str, Any] = {}
+LOG_LEVEL = "INFO"
+
+# list (logger object, log_message fn)
+OTHER_LOGGERS: list[tuple[object, Callable]] = []
 
 try:
-    debugfile_log = LOGGER._other_loggers[0].log_message  # pylint: disable=protected-access
+    DEBUGFILE_LOG_MSG_FN = LOGGER._other_loggers[0].log_message  # pylint: disable=protected-access
 except IndexError:
-    debugfile_log = False
+    DEBUGFILE_LOG_MSG_FN = False
 
 # Monkey patch Robot FW methods
-rfw_major_version, *_ = BuiltIn.ROBOT_LIBRARY_VERSION.split(".", maxsplit=1)
-rfw_major_version = int(rfw_major_version)
+rfw_major_version = int(rfw_version().split(".")[0])
 if rfw_major_version < 7:
     LOGGER.start_keyword = _filtered_start_keyword
     LOGGER.end_keyword = _filtered_end_keyword
 else:
-    LOGGER.start_library_keyword = _filtered_start_library_keyword
-    LOGGER.end_library_keyword = _filtered_end_library_keyword
+    LOGGER.start_library_keyword = _filtered_start_library_keyword.__get__(LOGGER)  # pylint: disable=no-value-for-parameter
+    LOGGER.end_library_keyword = _filtered_end_library_keyword.__get__(LOGGER)  # pylint: disable=no-value-for-parameter

@@ -268,24 +268,40 @@ Secret
     ${SECRET}               Set Variable            sdfpv98xddv097vsdxv97
     # Recommended, secret is provided as variable OUTSIDE of the test script and version control.
     TypeSecret              end-key          Qentinel       ${SECRET}
+    Verify Input Value      end-key          Qentinel       ${SECRET}
     # Not recommended, secret is stored in script.
     TypeSecret              First input             fdfsdf98723fdkjc9vsdv222
+    Verify Input Value      First input             fdfsdf98723fdkjc9vsdv222
     # Try multiple parameters
-    TypeSecret              First input             223423423423423432      end-key                 1
+    # Safari GH action fails at 'Verify Input Value' without refresh
+    # can not reproduce locally
+    RefreshPage
+    TypeSecret              First input             223423423423423432      end-key                 2
+    Verify Input Value      First input             223423423423423432      end-key                 2
 
 Secret Without Debug Logs When Debugfile Option Used
     [documentation]         Test secrets when -b/--debugfile option is used.
     [Tags]                  WITH_DEBUGFILE
     GoTo                    ${BASE_URI}/input.html
-    TypeSecret              First input           fdfsdf98723fdkjc9vsdv222
-    TypeSecret3             First input           223423423423423432
-    TypeText                Second input          View this text in debug file
+
+    TypeSecret              First input           fdfsdf98723fdkjc9vsdv333
     ${TextFileContent}      Get File              ${DEBUG FILE}
     Should Contain          ${TextFileContent}    QWeb.Type Secret
+    Should Not Contain      ${TextFileContent}    fdfsdf98723fdkjc9vsdv333
+    Verify Input Value      First input           fdfsdf98723fdkjc9vsdv333
+
+    # Safari GH action fails at 'Verify Input Value' without refresh
+    # can not reproduce locally
+    RefreshPage
+    TypeSecret3             First input           223423423423423431
+    ${TextFileContent}      Get File              ${DEBUG FILE}
     Should Contain          ${TextFileContent}    QWeb.Type Secret3
+    Should Not Contain      ${TextFileContent}    223423423423423431
+    Verify Input Value      First input           223423423423423431
+
+    TypeText                Second input          View this text in debug file
+    ${TextFileContent}      Get File              ${DEBUG FILE}
     Should Contain          ${TextFileContent}    QWeb.Type Text
-    Should Not Contain      ${TextFileContent}    fdfsdf98723fdkjc9vsdv22
-    Should Not Contain      ${TextFileContent}    223423423423423432
     Should Contain          ${TextFileContent}    DEBUG - Preferred text: "View this text in debug file"
 
 Test ClearKey Parameter
