@@ -19,9 +19,9 @@ from collections import deque
 from enum import Enum
 # Name change in Selenium 4.44 nightly
 try:
-    from selenium.webdriver.common.bidi.log import JavaScriptLogEntry
+    from selenium.webdriver.common.bidi.log import JavaScriptLogEntry  # type: ignore[attr-defined]
 except ImportError:
-    from selenium.webdriver.common.bidi.log import JavascriptLogEntry as JavaScriptLogEntry
+    from selenium.webdriver.common.bidi.log import JavascriptLogEntry as JavaScriptLogEntry  # type: ignore[attr-defined, no-redef]
 from QWeb.internal import browser
 from typing import Optional, Dict, Any
 from QWeb.internal.exceptions import QWebDriverError

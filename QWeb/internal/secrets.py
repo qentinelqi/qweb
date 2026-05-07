@@ -178,8 +178,14 @@ def _filtered_end_keyword(keyword: Keyword) -> None:
         if DEBUGFILE_LOG_MSG_FN:
             LOGGER._other_loggers[0].log_message = DEBUGFILE_LOG_MSG_FN
 
+
 @end_body_item
-def _filtered_end_library_keyword(self, data: Keyword, implementation: Keyword, result: Keyword) -> None:
+def _filtered_end_library_keyword(
+    self,
+    data: Keyword,
+    implementation: Keyword,
+    result: Keyword,
+) -> None:
     """Modify Robot FW 7+ internal function "end_library_keyword".
 
     This function removes secret data from "end library keyword"
