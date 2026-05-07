@@ -6,21 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.8.0] - 2026-05-07
-
-### Added
-- Added option to open browser in [BiDi mode](https://qentinelqi.github.io/qweb/how_to/devconsole.html)
-- Added new (bidi) keywords for interacting with browser [dev console](https://qentinelqi.github.io/qweb/QWeb.html?tag=DevConsole)
-
-### Changed
-- Bumped lowest approved version of several dependencies due to old versions having vulnerabiltiies
-- Removed unneeded Ply dependency
-
-### Fixed
-- Fixed issue with RF 7+ secrets handling removing some MESSAGEs
-- #204
-- #210
-
 ## [3.7.4] - 2026-02-12
 ### Fixed
 - Misplaced msg tag in output XML if a duplicate test name was found
