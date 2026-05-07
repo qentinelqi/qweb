@@ -100,8 +100,8 @@ CONSOLE_MSG_LIMIT = 1000
 
 _console_messages: dict[str, deque[ConsoleMsg]] = {}
 _js_exceptions: dict[str, deque[ConsoleMsg]] = {}
-_handler_ids = {}
-_js_handler_ids = {}
+_handler_ids: dict[str, Any] = {}
+_js_handler_ids: dict[str, Any] = {}
 
 
 # keyword implemetation functions
