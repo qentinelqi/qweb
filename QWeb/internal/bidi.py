@@ -17,7 +17,15 @@
 from dataclasses import dataclass
 from collections import deque
 from enum import Enum
-from selenium.webdriver.common.bidi.log import JavaScriptLogEntry
+# Name change in Selenium 4.44 nightly
+try:
+    from selenium.webdriver.common.bidi.log import (  # type: ignore[attr-defined]
+        JavaScriptLogEntry,
+    )
+except ImportError:
+    from selenium.webdriver.common.bidi.log import (  # type: ignore[attr-defined, no-redef]
+        JavascriptLogEntry as JavaScriptLogEntry,
+    )
 from QWeb.internal import browser
 from typing import Optional, Dict, Any
 from QWeb.internal.exceptions import QWebDriverError
@@ -96,8 +104,8 @@ CONSOLE_MSG_LIMIT = 1000
 
 _console_messages: dict[str, deque[ConsoleMsg]] = {}
 _js_exceptions: dict[str, deque[ConsoleMsg]] = {}
-_handler_ids = {}
-_js_handler_ids = {}
+_handler_ids: dict[str, Any] = {}
+_js_handler_ids: dict[str, Any] = {}
 
 
 # keyword implemetation functions
