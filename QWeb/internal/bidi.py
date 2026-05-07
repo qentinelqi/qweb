@@ -17,7 +17,11 @@
 from dataclasses import dataclass
 from collections import deque
 from enum import Enum
-from selenium.webdriver.common.bidi.log import JavaScriptLogEntry
+# Name change in Selenium 4.44 nightly
+try:
+    from selenium.webdriver.common.bidi.log import JavaScriptLogEntry
+except ImportError:
+    from selenium.webdriver.common.bidi.log import JavascriptLogEntry as JavaScriptLogEntry
 from QWeb.internal import browser
 from typing import Optional, Dict, Any
 from QWeb.internal.exceptions import QWebDriverError
