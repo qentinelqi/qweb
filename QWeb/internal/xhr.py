@@ -43,8 +43,8 @@ def setup_xhr_monitor() -> bool:
         raise QWebDriverError(e)  # pylint: disable=W0707
 
 
-#TODO: Determine how to install script that evaluates on new document for other browser types (non-chromium)
-def install_xhr_monitor_cdp_OnNewDoc(driver:WebDriver):
+# TODO: Determine how to install script that evaluates on new document for other browser types (non-chromium)
+def install_xhr_monitor_cdp_OnNewDoc(driver: WebDriver):
     return driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": JS_INSTALL_MONITOR_NEWDOC})
 
 
