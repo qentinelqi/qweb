@@ -3,7 +3,7 @@
 // Always returns true on success (even if some patches are skipped).
 // The optional `debug` flag (default: false) is used only for troubleshooting.
 // ...full code below...
-return (function (debug = true) {
+return (function (debug = false) {
 	if (window.__xhrMon && window.__xhrMon.installed) return true;
 
 	// to circumvent any website monkey-patching of native functions
