@@ -50,14 +50,16 @@ def install_xhr_monitor_cdp_OnNewDoc(driver: WebDriver):
 
 def get_light_status(quiet_ms: int = 400) -> Optional[dict]:
     """Full status dict. None on failure."""
+    logger.warn("get_light_status starting")
     try:
         st = javascript.execute_javascript(JS_STATUS_LITE, quiet_ms)
+        logger.warn("return: {repr(st)}")
         if isinstance(st, dict):
             return st
         logger.debug(f"get_light_status: unexpected return {type(st)}")
         return None
     except JavascriptException as e:
-        logger.debug(f"get_light_status failed: {e}")
+        logger.warn(f"get_light_status failed: {e}")
         return None
 
 
