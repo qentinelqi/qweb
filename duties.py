@@ -108,12 +108,12 @@ def acceptance_tests(ctx,
         cmd += ["-s", suite]
 
     cmd += [
-               *listener_cmd,
-               *cmd_exit_on_failure,
-               "-v", f"BROWSER:{browser}",
-               "-v", f"ON_HTTP_SERVER:{on_http_server}",
-               *cmd_excludes,
-               "test/acceptance"
+        *listener_cmd,
+        *cmd_exit_on_failure,
+        "-v", f"BROWSER:{browser}",
+        "-v", f"ON_HTTP_SERVER:{on_http_server}",
+        *cmd_excludes,
+        "test/acceptance"
     ]
     print(f"Running cmd:\n{' '.join(cmd)}\n")
     if on_http_server.capitalize() == "True":
