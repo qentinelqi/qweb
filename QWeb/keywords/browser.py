@@ -425,6 +425,9 @@ def open_browser(url: str,
     is_browser_reused = util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE}")) or False
     if not (is_browser_reused and b_lower == "chrome"):
         driver.get(url)
+    if driver.capabilities['browserName'] in ('chrome', 'edge'):
+        xhr.install_xhr_monitor_cdp_OnNewDoc(driver)
+        #TODO: Determine how to install script that evaluates on new document for other browser types (non-chromium)
     xhr.setup_xhr_monitor()
 
 
