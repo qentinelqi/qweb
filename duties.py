@@ -101,7 +101,7 @@ def acceptance_tests(ctx,
         cmd = [
             python_exe, "-m", "pabot.pabot",
             "--ordering", "test/acceptance/.pabot_order",
-            "--name Acceptance"
+            "--name", "Acceptance"
         ]
         
     if suite is not None:
