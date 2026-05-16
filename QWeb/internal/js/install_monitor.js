@@ -3,7 +3,7 @@
 // Always returns true on success (even if some patches are skipped).
 // The optional `debug` flag (default: false) is used only for troubleshooting.
 // ...full code below...
-return (function (debug = true) {
+return (function (debug = false) {
 	if (window.__xhrMon && window.__xhrMon.installed) return true;
 
 	window.__xhrMon = Object.assign(window.__xhrMon || {}, {
@@ -231,7 +231,7 @@ return (function (debug = true) {
 	try {
 		if (!window.__xhrMon.observerStarted && window.MutationObserver) {
 			const obs = new MutationObserver(function(){ window.__xhrMon.lastMutationTs = performance.now(); });
-			obs.observe(document.documentElement || document.body, {
+			obs.observe(document.documentElement || document.body || document, {
 				childList:true, subtree:true
 			});
 			window.__xhrMon.observerStarted = true;
