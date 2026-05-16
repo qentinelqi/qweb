@@ -39,38 +39,22 @@ return (function (debug = false) {
 						return promise;
 					}
 
-					if (promise && typeof promise.finally === "function") {
-						promise = promise.finally(function() { setTimeout(fetchDone); });
+					/* In case the finally/then callback function runs synchronously upon the call to promise.finally()/promise.then() ...
+					 * The symbol is constructed first, so it is available to the closure(s), but fetchDone is scheduled async via setTimeout.
+					 * This is because fetchDone should not run until AFTER fetchPending array has been populated with the symbol (below), yet we don't
+					 * want to populate it with the symbol until promise.finally/promise.then has completed successfully. */
+					const symbol = Symbol();
+					if (typeof promise.finally === "function") {
+						promise = promise.finally(function() { setTimeout(fetchDone, 0, symbol); });
 					} else {
 						promise = promise.then(
-							function(result) { setTimeout(fetchDone); return result; },
-							function(error) { setTimeout(fetchDone); throw error; }
+							function(result) { setTimeout(fetchDone, 0, symbol); return result; },
+							function(error) { setTimeout(fetchDone, 0, symbol); throw error; }
 						);
 					}
-
-					const symbol = Symbol();
 					fetchPending.push(symbol);
-
 					if (debug) {
 						console.log("XHR monitor: fetch started, pending count:", window.__xhrMon.pending);
-					}
-
-					function fetchDone() {
-						try {
-							const index = fetchPending.indexOf(symbol);
-							if (index > -1) {
-								fetchPending.splice(index, 1);
-								if (debug) {
-									console.log("XHR monitor: fetch ended, pending count:", window.__xhrMon.pending);
-								}
-							} else if (debug) {
-								console.warn("XHR monitor: symbol not found in fetchPending array", symbol, fetchPending);
-							}
-						} catch(e) {
-							if (debug) {
-								console.error("XHR monitor: Error in fetchDone:", e);
-							}
-						}
 					}
 				} catch(e) {
 					if (debug) {
@@ -78,6 +62,24 @@ return (function (debug = false) {
 					}
 				}
 				return promise;
+			}
+
+			function fetchDone(symbol) {
+				try {
+					const index = fetchPending.indexOf(symbol);
+					if (index > -1) {
+						fetchPending.splice(index, 1);
+						if (debug) {
+							console.log("XHR monitor: fetch ended, pending count:", window.__xhrMon.pending);
+						}
+					} else if (debug) {
+						console.warn("XHR monitor: symbol not found in fetchPending array", symbol, fetchPending);
+					}
+				} catch(e) {
+					if (debug) {
+						console.error("XHR monitor: Error in fetchDone:", e);
+					}
+				}
 			}
 		}
 	} catch(e){if (debug) console.warn("XHR monitor: fetch patch failed", e);}
