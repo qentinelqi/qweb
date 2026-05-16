@@ -3,7 +3,7 @@
 // Always returns true on success (even if some patches are skipped).
 // The optional `debug` flag (default: false) is used only for troubleshooting.
 // ...full code below...
-return (function (debug = false) {
+return (function (debug = true) {
 	if (window.__xhrMon && window.__xhrMon.installed) return true;
 
 	window.__xhrMon = Object.assign(window.__xhrMon || {}, {

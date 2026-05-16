@@ -26,7 +26,7 @@ from QWeb.keywords import config
 
 # Install monitor (fetch/XMLHttpRequest + MutationObserver). Idempotent.
 JS_INSTALL_MONITOR = javascript.load_js("install_monitor.js")
-JS_INSTALL_MONITOR_NEWDOC = "(function() {" + JS_INSTALL_MONITOR + "\n}();"
+JS_INSTALL_MONITOR_NEWDOC = "(function() {" + JS_INSTALL_MONITOR + "\n})();"
 
 # Lightweight status
 JS_STATUS_LITE = javascript.load_js("wait_status_lite.js")
