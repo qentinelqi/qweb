@@ -115,7 +115,6 @@ return (function (debug = false) {
 						console.error("XHR monitor: Error in xhr.open:", e);
 					}
 				}
-
 				return returnVal;
 			}
 
@@ -200,7 +199,10 @@ return (function (debug = false) {
 							if (debug) {
 								console.warn("XHR monitor: already-sent request was garbage collected without triggering listener, pending count:", window.__xhrMon.pending);
 							}
-						} else if (_getReadyState.apply(xhr) === 0) {
+							continue;
+						}
+						const readyState = _getReadyState.apply(xhr);
+						if (readyState === 0 || readyState === 4) {
 							xhr.__xhrDone = true;
 							xhrPending.splice(i, 1);
 							if (debug) {
