@@ -42,7 +42,7 @@ return (function (debug = false) {
 					/* In case the finally/then callback function runs synchronously upon the call to promise.finally()/promise.then() ...
 					 * The symbol is constructed first, so it is available to the closure(s), but fetchDone is scheduled async via setTimeout.
 					 * This is because fetchDone should not run until AFTER fetchPending array has been populated with the symbol (below), yet we don't
-					 * want to populate it with the symbol until promise.finally/promise.then has completed successfully. */
+					 * want to populate it with the symbol until promise.finally/promise.then has completed successfully (i.e. without throwing an exception...) */
 					const symbol = Symbol();
 					if (typeof promise.finally === "function") {
 						promise = promise.finally(function() { setTimeout(fetchDone, 0, symbol); });
