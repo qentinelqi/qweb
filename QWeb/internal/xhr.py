@@ -17,6 +17,7 @@
 import time
 from robot.api import logger
 from selenium.common.exceptions import JavascriptException, WebDriverException
+from selenium.webdriver.remote.webdriver import WebDriver
 from typing import Optional
 from QWeb.internal import javascript, util
 from QWeb.internal.exceptions import QWebDriverError
@@ -25,6 +26,7 @@ from QWeb.keywords import config
 
 # Install monitor (fetch/XMLHttpRequest + MutationObserver). Idempotent.
 JS_INSTALL_MONITOR = javascript.load_js("install_monitor.js")
+JS_INSTALL_MONITOR_NEWDOC = "(function() {" + JS_INSTALL_MONITOR + "\n})();"
 
 # Lightweight status
 JS_STATUS_LITE = javascript.load_js("wait_status_lite.js")
@@ -39,6 +41,11 @@ def setup_xhr_monitor() -> bool:
     except JavascriptException as e:
         logger.debug(f"setup_xhr_monitor failed: {e}")
         raise QWebDriverError(e)  # pylint: disable=W0707
+
+
+# TODO: Determine how to install script that evaluates on new document for other browser types (non-chromium)
+def install_xhr_monitor_cdp_OnNewDoc(driver: WebDriver):
+    return driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": JS_INSTALL_MONITOR_NEWDOC})
 
 
 def get_light_status(quiet_ms: int = 400) -> Optional[dict]:

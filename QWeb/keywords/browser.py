@@ -423,6 +423,9 @@ def open_browser(url: str,
     # variable BROWSER_REUSE=True. In that case no URL loaded needed as
     # user wants to continue with the existing browser session
     is_browser_reused = util.par2bool(util.get_rfw_variable_value("${BROWSER_REUSE}")) or False
+    if driver.capabilities['browserName'] in ('chrome', 'edge'):
+        xhr.install_xhr_monitor_cdp_OnNewDoc(driver)
+        # TODO: Determine how to install xhr monitor script so that it evaluates on new document for other browser types (non-chromium)
     if not (is_browser_reused and b_lower == "chrome"):
         driver.get(url)
     xhr.setup_xhr_monitor()
