@@ -45,12 +45,17 @@ return (function (debug = false) {
 				const returnVal = _open.apply(this, arguments);
 				try {
 					if (!this.__xhrOpened) {
-						_addEventListener.call(this, "loadend", done, { once:true });
-						_addEventListener.call(this, "abort", done, { once:true });
-						_addEventListener.call(this, "error", done, { once:true });
-						_addEventListener.call(this, "timeout", done, { once:true });
+						_addEventListener.call(this, "loadend", done);
+						_addEventListener.call(this, "abort", done);
+						_addEventListener.call(this, "error", done);
+						_addEventListener.call(this, "timeout", done);
 						_addEventListener.call(this, "readystatechange", readystatechange);
 						this.__xhrOpened = true;
+					} else {
+						// In case of re-opened XHR, consider the previous request done
+						done.apply(this); //automatically checks if this was actually pending before decrementing
+						this.__xhrSent = false;
+						this.__xhrDone = false;
 					}
 				} catch(e) {
 					if (debug) console.error("XHR monitor: error in open", e);
@@ -103,6 +108,9 @@ return (function (debug = false) {
 			function readystatechange() {
 				const readyState = _getReadyState.apply(this);
 				if (readyState === 4 || readyState === 0) {
+					// readyState === 4 means DONE
+					// readyState === 0 means UNSENT and can also mean aborted or failed
+					// In both cases we consider the request done
 					done.apply(this);
 				}
 			}
