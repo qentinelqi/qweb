@@ -8,13 +8,13 @@ return (function (quietMs) {
 		if (typeof jQuery !== "undefined" && jQuery && typeof jQuery.active === "number") jqActive = jQuery.active;
 	} catch(e){}
 
-	var pending = 0, last = Date.now();
+	var pending = 0, last = performance.now();
 	try {
 		pending = (window.__xhrMon && typeof window.__xhrMon.pending === "number") ? window.__xhrMon.pending : 0;
 		last    = (window.__xhrMon && window.__xhrMon.lastMutationTs) ? window.__xhrMon.lastMutationTs : last;
 	} catch(e){}
 
-	var now = Date.now();
+	var now = performance.now();
 	var domQuiet = (now - last) >= (quietMs || 400);
 	var networkIdle = (pending === 0) && (jqActive === null || jqActive === 0);
 	var idle = ready && networkIdle && domQuiet;

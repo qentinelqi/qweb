@@ -11,67 +11,117 @@ return (function (debug = false) {
 		pending: (window.__xhrMon && typeof window.__xhrMon.pending === "number") ? window.__xhrMon.pending : 0,
 		fetchPatched: false,
 		xhrPatched: false,
-		lastMutationTs: Date.now(),
+		lastMutationTs: performance.now(),
 		observerStarted: false
 	});
 
 	try {
 		if (!window.__xhrMon.fetchPatched && typeof window.fetch === "function") {
-			const _orig = window.fetch;
+			const _fetch = window.fetch;
 			window.fetch = function() {
-				try { window.__xhrMon.pending++; } catch(e) {}
-				const p = _orig.apply(this, arguments);
-				const dec = function(){ try { window.__xhrMon.pending--; } catch(e) {} };
-				return p && typeof p.finally === "function"
-					? p.finally(dec)
-					: p.then(function(r){ dec(); return r; }, function(e){ dec(); throw e; });
+				let p = _fetch.apply(this, arguments);
+				try {
+					const dec = function(){ try { window.__xhrMon.pending--; } catch(e) {} };
+					p = p && typeof p.finally === "function"
+						? p.finally(dec)
+						: p.then(function(r){ dec(); return r; }, function(e){ dec(); throw e; });
+					window.__xhrMon.pending++;
+				} catch(e) {
+					if (debug) console.error("XHR monitor: error in fetch", e);
+				}
+				return p;
 			};
 			window.__xhrMon.fetchPatched = true;
 		}
 	} catch(e){if (debug) console.warn("XHR monitor: fetch patch failed", e);}
 
-		try {
+	try {
 		if (!window.__xhrMon.xhrPatched && window.XMLHttpRequest && window.XMLHttpRequest.prototype) {
 			const _open = XMLHttpRequest.prototype.open;
 			const _send = XMLHttpRequest.prototype.send;
-			XMLHttpRequest.prototype.open = function() { this.__xhrTracked = true; return _open.apply(this, arguments); };
-			XMLHttpRequest.prototype.send = function() {
-				// Check for long-polling in request body
-				let isLongPolling = false;
-				if (arguments[0]) {
-					try {
-						const body = typeof arguments[0] === "string" ? arguments[0] : JSON.stringify(arguments[0]);
-						if (body && body.indexOf('"connectionType":"long-polling"') !== -1) {
-							isLongPolling = true;
-						}
-					} catch(e) {}
+			const _addEventListener = XMLHttpRequest.prototype.addEventListener;
+			const _getReadyState = Object.getOwnPropertyDescriptor(XMLHttpRequest.prototype, "readyState").get;
+			XMLHttpRequest.prototype.open = function() {
+				const returnVal = _open.apply(this, arguments);
+				try {
+					if (!this.__xhrOpened) {
+						_addEventListener.call(this, "loadend", done);
+						_addEventListener.call(this, "abort", done);
+						_addEventListener.call(this, "error", done);
+						_addEventListener.call(this, "timeout", done);
+						_addEventListener.call(this, "readystatechange", readystatechange);
+						this.__xhrOpened = true;
+					} else {
+						// In case of re-opened XHR, consider the previous request done
+						done.apply(this); //automatically checks if this was actually pending before decrementing
+						this.__xhrSent = false;
+						this.__xhrDone = false;
+					}
+				} catch(e) {
+					if (debug) console.error("XHR monitor: error in open", e);
 				}
-				if (this.__xhrTracked && !isLongPolling) {
-					try {
-						window.__xhrMon.pending++;
-						if (debug) {
-							console.log("XHR monitor: waiting for request, pending count:", window.__xhrMon.pending);
-						}
-					} catch(e) {}
-					this.addEventListener("loadend", function(){
+				return returnVal;
+			};
+			XMLHttpRequest.prototype.send = function() {
+				const returnVal = _send.apply(this, arguments);
+				try {
+					// Check for long-polling in request body
+					let isLongPolling = false;
+					if (arguments[0]) {
 						try {
-							window.__xhrMon.pending--;
-							if (debug) {
-								console.log("XHR monitor: request ended, pending count:", window.__xhrMon.pending);
+							const body = typeof arguments[0] === "string" ? arguments[0] : JSON.stringify(arguments[0]);
+							if (body && body.indexOf('"connectionType":"long-polling"') !== -1) {
+								isLongPolling = true;
 							}
 						} catch(e) {}
-					}, { once:true });
+					}
+					if (this.__xhrOpened && !isLongPolling && !this.__xhrSent) {
+						try {
+							this.__xhrSent = true;
+							window.__xhrMon.pending++;
+							if (debug) {
+								console.log("XHR monitor: waiting for request, pending count:", window.__xhrMon.pending);
+							}
+						} catch(e) {
+							if (debug) console.error("XHR monitor: error in send", e);
+						}
+					}
+				} catch(e) {
+					if (debug) console.error("XHR monitor: error in send", e);
 				}
-				return _send.apply(this, arguments);
+				return returnVal;
 			};
+			function done() {
+				try {
+					if (!(this.__xhrOpened && this.__xhrSent) || this.__xhrDone) {
+						return;
+					}
+					this.__xhrDone = true;
+					window.__xhrMon.pending--;
+					if (debug) {
+						console.log("XHR monitor: request ended, pending count:", window.__xhrMon.pending);
+					}
+				} catch(e) {
+					if (debug) console.error("XHR monitor: error in done", e);
+				}
+			}
+			function readystatechange() {
+				const readyState = _getReadyState.apply(this);
+				if (readyState === 4 || readyState === 0) {
+					// readyState === 4 means DONE
+					// readyState === 0 means UNSENT and can also mean aborted or failed
+					// In both cases we consider the request done
+					done.apply(this);
+				}
+			}
 			window.__xhrMon.xhrPatched = true;
 		}
 	} catch(e){ if (debug) console.warn("XHR monitor: xhr patch failed", e);}
 
 	try {
 		if (!window.__xhrMon.observerStarted && window.MutationObserver) {
-			const obs = new MutationObserver(function(){ window.__xhrMon.lastMutationTs = Date.now(); });
-			obs.observe(document.documentElement || document.body, {
+			const obs = new MutationObserver(function(){ window.__xhrMon.lastMutationTs = performance.now(); });
+			obs.observe(document.documentElement || document.body || document, {
 				childList:true, subtree:true
 			});
 			window.__xhrMon.observerStarted = true;
