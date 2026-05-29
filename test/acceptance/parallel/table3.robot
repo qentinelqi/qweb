@@ -78,3 +78,12 @@ Click Cells Duplicated columns
     ClickCell               r2/c?Email    partial_match=True     tag=a
     VerifyAlertText         Row 1: Primary Email address copied!
     CloseAlert              Accept
+
+Get child text with tag
+    UseTable                Firstname
+    ${all_text}=            GetCellText          r2/c4
+    ${button_text}=         GetCellText          r2/c4    tag=button
+    ${link_text}=           GetCellText          r2/c4    tag=a
+    Should Not Be Equal     ${all_text}          ${button_text}
+    Should Be Equal         ${button_text}       Copy email 
+    Should Be equal         ${link_text}         john.doe@example.com
