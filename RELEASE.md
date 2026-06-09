@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.8.1] - 2026-06-09
+
+### Fixed
+- Fixed issue where XHR requests tracking did not revert all pending requests (#214)
+
+### Changed
+- Added *tag* argument to GetCellText for easier extraction of specific child text
+
 ## [3.8.0] - 2026-05-07
 
 ### Added
