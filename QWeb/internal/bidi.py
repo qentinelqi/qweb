@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-from dataclasses import dataclass
+import dataclasses
 from collections import deque
 from enum import Enum
 # Name change in Selenium 4.44 nightly
@@ -75,7 +75,7 @@ level_aliases = {
 }
 
 
-@dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True)
 class ConsoleMsg:
     ts: float
     level: LogLevel

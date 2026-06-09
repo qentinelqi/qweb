@@ -42,46 +42,6 @@ from QWeb.keywords import browser
 str_or_secret = Union[str, RFSecret]
 
 
-@keyword(tags=("Config", "Input"))
-def set_input_handler(input_method: str) -> None:
-    """*DEPRECATED!!* Use keyword `SetConfig` instead.
-
-    Set input handler.
-
-    Default handler is "selenium" which uses Selenium librarys
-    methods clear() and send_keys(). These methods assume that
-    the web element is writable (enabled). Inserts tab character
-    at the end of text.
-
-    Alternative writer "raw" uses pyautogui to input text directly
-    without checking the web element state. This version is intended
-    to be used when the web page doesn't update input element status
-    Selenium compliant way.
-
-    Examples
-    --------
-    .. code-block:: robotframework
-
-         Set input handler    raw
-         Set input handler    selenium
-
-    Parameters
-    ----------
-    input_method : str
-        Input method used by input handler, "selenium" or "raw".
-
-    """
-    input_handler.input_method = input_method
-
-
-@keyword(tags=("Config", "Input"))
-def set_line_break(key: str) -> str:
-    r"""*DEPRECATED!!* Use keyword `SetConfig` instead."""
-    old_line_break_key = input_handler.line_break_key
-    input_handler.line_break_key = key
-    return old_line_break_key
-
-
 secrets.add_filter("Type Secret3", 1, "hint")
 
 

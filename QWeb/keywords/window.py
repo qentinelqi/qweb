@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
-from dataclasses import dataclass
+import dataclasses
 from typing import Union, Optional
 
 from robot.api import logger
@@ -27,7 +27,7 @@ from QWeb.internal.config_defaults import CONFIG
 import platform
 
 
-@dataclass
+@dataclasses.dataclass
 class TabInfo:
     index: int
     handle: str

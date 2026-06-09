@@ -15,14 +15,14 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from dataclasses import dataclass
+import dataclasses
 from typing import Union, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 import os
 import requests
-from importlib.metadata import version, PackageNotFoundError
+import importlib.metadata
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
@@ -42,7 +42,7 @@ from QWeb.internal.browser import (
 from QWeb.internal.exceptions import QWebDriverError, QWebBrowserError
 
 
-@dataclass
+@dataclasses.dataclass
 class BrowserInfo:
     index: int
     name: str
@@ -710,9 +710,9 @@ def verify_links(
 
 def _startup_logging() -> None:
     try:
-        qweb_version = version("QWeb")
+        qweb_version = importlib.metadata.version("QWeb")
         logger.info(f"QWeb version number: {qweb_version}", also_console=True)
-    except PackageNotFoundError:
+    except importlib.metadata.PackageNotFoundError:
         logger.info("Could not find QWeb version number.")
     number_of_open_sessions = _sessions_open()
     if number_of_open_sessions > 0:
