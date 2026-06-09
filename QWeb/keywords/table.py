@@ -24,6 +24,7 @@ are usually refenced by coordinates or unique neighbouring values.
 from typing import Union, List, Optional
 
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
 from robot.api.deco import keyword
 from QWeb.internal import decorators, actions, util
 from QWeb.internal.exceptions import (
@@ -201,7 +202,11 @@ def verify_table(
 @keyword(tags=("Tables", "Getters"))
 @decorators.timeout_decorator
 def get_cell_text(
-    coordinates: str, anchor: str = "1", timeout: Union[int, float, str] = 0, **kwargs
+    coordinates: str,
+    anchor: str = "1",
+    tag: str | None = None,
+    timeout: Union[int, float, str] = 0,
+    **kwargs
 ) -> Union[str, int, float]:
     r"""Get cell text to variable.
 
@@ -237,10 +242,21 @@ def get_cell_text(
     .. code-block:: robotframework
 
         UseTable    MyTable
+
+        #Get value from row 2 / column 3
         ${value}    GetCellText  r2c3
-        ${value}    GetCellText  r-2c5       #Row is second to last. Get value from cell c5
-        ${value}    GetCellText  r?Robot/c5  #Row contains text Robot. Get value from cell c5
-        ${value}    GetCellText  r?Robot/c-1  #Row contains text Robot. Get value from last cell
+
+        #Row is second to last. Get value from column 5
+        ${value}    GetCellText  r-2c5
+
+        #Row contains text Robot. Get value from column 5
+        ${value}    GetCellText  r?Robot/c5
+
+        #Row contains text Robot. Get value from last column
+        ${value}    GetCellText  r?Robot/c-1
+
+        #Get text from a child <a> element (column "Name"/row 3)
+        ${value}    GetCellText  r3/c?Name   tag=a
 
     Parameters
     ----------
@@ -250,6 +266,10 @@ def get_cell_text(
     anchor : str
       If row is located by text which is not unique, use anchor to point correct one.
       Anchor can be some other text in same row or index. Default = 1
+    tag : str
+      If cell contains multiple elements and you want to get text from specific one,
+      use tag to specify which child element you want to get text from.
+      For example tag=a gets text from a child element with tag a.
     timeout : str | int
       How long we search before failing. Default = Search Strategy default timeout (10s)
     kwargs :
@@ -276,6 +296,12 @@ def get_cell_text(
     table = Table.ACTIVE_TABLE.update_table()
 
     table_cell = table.get_table_cell(coordinates, anchor)
+    if tag:
+        try:
+            table_cell = table_cell.find_element(By.XPATH, f".//{tag}")
+        except Exception as e:
+            raise QWebElementNotFoundError(
+                f"Could not find child element with tag {tag} from cell: {e}") from e
     try:
         text = actions.get_element_text(table_cell, timeout=timeout)
         return util.get_substring(text, **kwargs)
