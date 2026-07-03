@@ -659,8 +659,8 @@ def upload_file(
 
        UploadFile   Upload      text.txt
        UploadFile   Foo         C:/path/to/file/test.pdf
-       UploadFile   1           text.txt # Using index as locator, i.e first input element of type file
-       UploadFile   Upload      text.txt   visibility=False  # include invisible file inputs in search
+       UploadFile   1           text.txt # Using index as locator, i.e first file input element
+       UploadFile   Upload      text.txt   visibility=False  # include invisible inputs in search
        UploadFile   //input[@type\="file"]    text.txt  # Upload file with xpath locator
 
     With table(Pick table with use table keyword first):
