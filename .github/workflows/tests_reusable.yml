@@ -55,7 +55,7 @@ jobs:
       DISPLAY: :88
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Dotless RFW suite name BASH
       if: runner.os != 'Windows'
@@ -72,7 +72,7 @@ jobs:
         echo RFW_SUITE_NAME=$suite_name >> $env:GITHUB_ENV
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -251,7 +251,7 @@ jobs:
       
     - name: Archive Robot Framework Tests Report
       if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: test-report-${{ env.RFW_SUITE_NAME }}
         path: ./result
