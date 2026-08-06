@@ -93,6 +93,12 @@ jobs:
         openbox &
         Openbox_PID=$!
         
+    - name: Setup MacOs display resolution
+      if: runner.os == 'macOS'
+      run: |
+        system_profiler SPDisplaysDataType | grep Resolution
+        "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+        system_profiler SPDisplaysDataType | grep Resolution
 
     - name: Setup Windows display resolution
       if: runner.os == 'Windows'
