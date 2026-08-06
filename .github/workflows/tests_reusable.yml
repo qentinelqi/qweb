@@ -96,6 +96,9 @@ jobs:
     - name: Setup MacOs display resolution
       if: runner.os == 'macOS'
       run: |
+        brew install displayplacer
+        DISPLAY_INFO="$(displayplacer list)"
+        echo "$DISPLAY_INFO"
         system_profiler SPDisplaysDataType | grep Resolution
         "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
         system_profiler SPDisplaysDataType | grep Resolution
