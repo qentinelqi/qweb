@@ -19,8 +19,10 @@ Click And Hold with text
     VerifyText          Mouse Click and Hold Test
     MouseDown           Click and Hold Me!  element_type=text
     Sleep               2
+    LogScreenshot
     MouseUp             Click and Hold Me!  element_type=text
     Sleep               1
+    LogScreenshot
     ${ms}=              GetText     millisecondsField   tag=span
     Should Be True      ${ms} > 2000
 
