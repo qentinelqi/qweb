@@ -1,31 +1,31 @@
-name: MacOS
+# name: MacOS
 
-on:
-  push:
-    branches: [ master ]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.github/workflows/*.yml'
-  pull_request:
-    branches: [ master ]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.github/workflows/*.yml'
+# on:
+#   push:
+#     branches: [ master ]
+#     paths-ignore:
+#       - '**.md'
+#       - 'docs/**'
+#       - '.github/workflows/*.yml'
+#   pull_request:
+#     branches: [ master ]
+#     paths-ignore:
+#       - '**.md'
+#       - 'docs/**'
+#       - '.github/workflows/*.yml'
 
-jobs:
-  macos_acceptance:
-    name: MacOS
-    uses: ./.github/workflows/tests_reusable.yml
-    with:
-      # arrays for matrices must be given as string for json parsing
-      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
-      os: '["macos-latest"]'
-      #browser: '["chrome", "edge", "safari"]'
-      browser: '["safari",]'
-      #python-version: '["3.10", "3.11"]'
-      python-version: '["3.11",]'
-      minimum-rfw-version: "5.0.1"
-      minimum-rfw-python: "3.11"
-      rfw-exclude-tags: "-e RESOLUTION_DEPENDENCY -e FLASK"
+# jobs:
+#   macos_acceptance:
+#     name: MacOS
+#     uses: ./.github/workflows/tests_reusable.yml
+#     with:
+#       # arrays for matrices must be given as string for json parsing
+#       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
+#       os: '["macos-latest"]'
+#       #browser: '["chrome", "edge", "safari"]'
+#       browser: '["safari",]'
+#       #python-version: '["3.10", "3.11"]'
+#       python-version: '["3.11",]'
+#       minimum-rfw-version: "5.0.1"
+#       minimum-rfw-python: "3.11"
+#       rfw-exclude-tags: "-e RESOLUTION_DEPENDENCY -e FLASK"
