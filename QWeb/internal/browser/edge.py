@@ -77,10 +77,10 @@ def create_edge_options(edge_args: Optional[list[str]], **kwargs: Any) -> Option
     options = Options()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])  # pylint: disable=no-member
 
-    # app_armor_restricted = user.apparmor_userns_restricted()
-    # if app_armor_restricted:
-    #     logger.info("Linux Edge detected with AppArmor user namespace restrictions enabled.")
-    #     logger.info("Adding --no-sandbox to work around Chromium sandbox initialization.")
+    app_armor_restricted = user.apparmor_userns_restricted()
+    if app_armor_restricted:
+        logger.info("Linux Edge detected with AppArmor user namespace restrictions enabled.")
+        logger.info("Adding --no-sandbox to work around Chromium sandbox initialization.")
     if user.is_root() or user.is_docker():  # or app_armor_restricted:
         options.add_argument("--no-sandbox")  # pylint: disable=no-member
     if edge_args:
