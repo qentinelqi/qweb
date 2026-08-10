@@ -282,7 +282,6 @@ jobs:
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
-        -s Browser_Windowed
         -v BROWSER:${{ matrix.browser }}
         -d result
         --name ${{ env.RFW_SUITE_NAME }}
