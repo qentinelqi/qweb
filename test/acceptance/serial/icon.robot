@@ -90,7 +90,7 @@ Click icon color
 Capture icons and verify them
     [Tags]                  ICON
     [Teardown]              RemoveFiles
-    SetConfig               SearchMode          None
+    ${prev}=                SetConfig               SearchMode          None
     
     CaptureIcon             person     ${BASE_IMAGE_PATH}     capture_icon_1.png
     VerifyIcon              capture_icon_1
@@ -99,6 +99,7 @@ Capture icons and verify them
     CaptureIcon             /html/body/table/tbody/tr[1]/td[6]/img      ${BASE_IMAGE_PATH}
     ...                     capture_icon_3.png
     VerifyIcon              capture_icon_3
+    SetConfig               SearchMode          ${prev}
 
 IsIcon True
     [Tags]                  ICON
