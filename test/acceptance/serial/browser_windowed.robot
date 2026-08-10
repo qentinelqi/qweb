@@ -142,21 +142,21 @@ Open Browser with valid page load strategies
     ${driver}=      Return Browser
     ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
     Should Be Equal As Strings    ${strategy}    normal
-    CloseBrowser
+    CloseAllBrowsers
 
     # Eager
     OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=eager
     ${driver}=      Return Browser
     ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
     Should Be Equal As Strings    ${strategy}    eager
-    CloseBrowser
+    CloseAllBrowsers
 
     # none
     OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=none
     ${driver}=      Return Browser
     ${strategy}=    Evaluate        $driver.capabilities['pageLoadStrategy']
     Should Be Equal As Strings    ${strategy}    none
-    CloseBrowser
+    CloseAllBrowsers
 
 Open Multiple Browsers, use ListBrowsers      
     [tags]          PROBLEM_IN_SAFARI
