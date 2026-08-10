@@ -16,12 +16,8 @@ ${text}    ${EMPTY}
 *** Test Cases ***
 Click And Hold with text
     [tags]              mouse  click_and_hold
-    CloseAllBrowsers
-    Sleep               5
-    Open Browser        ${BASE_URI}/mouse.html   ${BROWSER}
     Sleep               2
     VerifyText          Mouse Click and Hold Test
-    ClickText           Mouse Click and Hold Test
     MouseDown           Click and Hold Me!  element_type=text
     Sleep               2
     LogScreenshot
