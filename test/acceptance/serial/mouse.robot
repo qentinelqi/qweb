@@ -16,6 +16,7 @@ ${text}    ${EMPTY}
 *** Test Cases ***
 Click And Hold with text
     [tags]              mouse  click_and_hold
+    ResetConfig         # reset any previous config changes
     Sleep               2
     VerifyText          Mouse Click and Hold Test
     MouseDown           Click and Hold Me!  element_type=text
