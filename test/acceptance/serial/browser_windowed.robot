@@ -136,7 +136,7 @@ Open Browser with default page load strategy
     CloseAllBrowsers
 
 Open Browser with valid page load strategies
-    [tags]          page_load_strategy
+    [tags]          page_load_strategy    PROBLEM_IN_SAFARI
     [Setup]    No Operation
     OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=normal
     ${driver}=      Return Browser
