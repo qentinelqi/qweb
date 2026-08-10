@@ -93,75 +93,75 @@ jobs:
         openbox &
         Openbox_PID=$!
         
-    - name: Set macOS display resolution
-      if: runner.os == 'macOS'
-      shell: bash
-      run: |
-        set -u
+    # - name: Set macOS display resolution
+    #   if: runner.os == 'macOS'
+    #   shell: bash
+    #   run: |
+    #     set -u
 
-        if ! command -v displayplacer >/dev/null 2>&1; then
-          if ! brew install displayplacer; then
-            echo "::warning::Could not install displayplacer; continuing with the default resolution"
-            exit 0
-          fi
-        fi
+    #     if ! command -v displayplacer >/dev/null 2>&1; then
+    #       if ! brew install displayplacer; then
+    #         echo "::warning::Could not install displayplacer; continuing with the default resolution"
+    #         exit 0
+    #       fi
+    #     fi
 
-        DISPLAY_INFO="$(displayplacer list 2>&1)"
+    #     DISPLAY_INFO="$(displayplacer list 2>&1)"
 
-        DISPLAY_ID="$(
-          sed -n 's/^Persistent screen id: //p' <<< "$DISPLAY_INFO" |
-          head -n 1
-        )"
+    #     DISPLAY_ID="$(
+    #       sed -n 's/^Persistent screen id: //p' <<< "$DISPLAY_INFO" |
+    #       head -n 1
+    #     )"
 
-        if [[ -z "$DISPLAY_ID" ]]; then
-          echo "::warning::Could not determine the macOS display ID; continuing with the default resolution"
-          exit 0
-        fi
+    #     if [[ -z "$DISPLAY_ID" ]]; then
+    #       echo "::warning::Could not determine the macOS display ID; continuing with the default resolution"
+    #       exit 0
+    #     fi
 
-        # Resolutions are tried in order of preference.
-        RESOLUTIONS=(
-          "1920x1080"
-          "1600x1200"
-        )
+    #     # Resolutions are tried in order of preference.
+    #     RESOLUTIONS=(
+    #       "1920x1080"
+    #       "1600x1200"
+    #     )
 
-        SELECTED_RESOLUTION=""
+    #     SELECTED_RESOLUTION=""
 
-        for RESOLUTION in "${RESOLUTIONS[@]}"; do
-          if grep -q "res:${RESOLUTION}" <<< "$DISPLAY_INFO"; then
-            SELECTED_RESOLUTION="$RESOLUTION"
-            break
-          fi
-        done
+    #     for RESOLUTION in "${RESOLUTIONS[@]}"; do
+    #       if grep -q "res:${RESOLUTION}" <<< "$DISPLAY_INFO"; then
+    #         SELECTED_RESOLUTION="$RESOLUTION"
+    #         break
+    #       fi
+    #     done
 
-        if [[ -z "$SELECTED_RESOLUTION" ]]; then
-          echo "::warning::Neither 1920x1080 nor 1600x1200 is available; continuing with the default resolution"
-          exit 0
-        fi
+    #     if [[ -z "$SELECTED_RESOLUTION" ]]; then
+    #       echo "::warning::Neither 1920x1080 nor 1600x1200 is available; continuing with the default resolution"
+    #       exit 0
+    #     fi
 
-        echo "Attempting to set macOS display resolution to ${SELECTED_RESOLUTION}"
+    #     echo "Attempting to set macOS display resolution to ${SELECTED_RESOLUTION}"
 
-        if ! displayplacer \
-          "id:${DISPLAY_ID} res:${SELECTED_RESOLUTION} hz:60 color_depth:7 origin:(0,0) degree:0"
-        then
-          echo "::warning::Failed to set resolution to ${SELECTED_RESOLUTION}; continuing with the current resolution"
-          exit 0
-        fi
+    #     if ! displayplacer \
+    #       "id:${DISPLAY_ID} res:${SELECTED_RESOLUTION} hz:60 color_depth:7 origin:(0,0) degree:0"
+    #     then
+    #       echo "::warning::Failed to set resolution to ${SELECTED_RESOLUTION}; continuing with the current resolution"
+    #       exit 0
+    #     fi
 
-        sleep 2
+    #     sleep 2
 
-        CURRENT_MODE="$(
-          displayplacer list |
-          grep 'current mode' |
-          head -n 1
-        )"
+    #     CURRENT_MODE="$(
+    #       displayplacer list |
+    #       grep 'current mode' |
+    #       head -n 1
+    #     )"
 
-        echo "Current display mode: ${CURRENT_MODE:-unknown}"
+    #     echo "Current display mode: ${CURRENT_MODE:-unknown}"
 
-        if grep -q "res:${SELECTED_RESOLUTION}" <<< "$CURRENT_MODE"; then
-          echo "macOS display resolution successfully set to ${SELECTED_RESOLUTION}"
-        else
-          echo "::warning::Requested ${SELECTED_RESOLUTION}, but displayplacer reports: ${CURRENT_MODE:-unknown}"
-        fi
+    #     if grep -q "res:${SELECTED_RESOLUTION}" <<< "$CURRENT_MODE"; then
+    #       echo "macOS display resolution successfully set to ${SELECTED_RESOLUTION}"
+    #     else
+    #       echo "::warning::Requested ${SELECTED_RESOLUTION}, but displayplacer reports: ${CURRENT_MODE:-unknown}"
+    #     fi
 
     - name: Setup Windows display resolution
       if: runner.os == 'Windows'
