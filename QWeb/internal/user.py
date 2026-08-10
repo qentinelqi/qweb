@@ -38,3 +38,13 @@ def is_docker() -> bool:
         or os.path.isfile(path)
         and any("docker" in line for line in open(path))  # noqa: W503,W1514
     )
+
+def apparmor_userns_restricted() -> bool:
+    path = "/proc/sys/kernel/apparmor_restrict_unprivileged_userns"
+    # 0 - not restricted
+    # 1 - restricted
+    try:
+        with open(path) as f:
+            return f.read().strip() == "1"
+    except OSError:
+        return False
