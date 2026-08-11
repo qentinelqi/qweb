@@ -93,6 +93,7 @@ MouseMove, incorrect
 
 Get and Click coordinates
     [tags]              mouse  coordinates
+    [Setup]             RefreshPage
     VerifyText          Mouse Click and Hold Test
     MouseMove           100     100
     VerifyInputValue    X Coordinate    100
@@ -106,6 +107,7 @@ Get and Click coordinates
 
 Get and Click coordinates using GetWebElement
     [tags]              mouse  coordinates
+    [Setup]             RefreshPage
     VerifyText          Mouse Click and Hold Test
     MouseMove           200     200
     VerifyInputValue    X Coordinate    200
