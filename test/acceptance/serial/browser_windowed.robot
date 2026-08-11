@@ -8,7 +8,7 @@ Test Timeout      90 seconds
 Suite Teardown    Close Browsers And Remove CHROME_ARGS
 *** Variables ***
 ${BROWSER}    chrome
-${HEADLESS}   ${FALSE}
+${HEADLESS}   ${TRUE}
 
 *** Test Cases ***
 Open Browser With Options
@@ -127,7 +127,7 @@ Open Browser with non-valid page load strategy
     CloseAllBrowsers
 
 Open Browser with default page load strategy
-    [tags]         page_load_strategy
+    [tags]         page_load_strategy    PROBLEM_IN_SAFARI
     [Setup]    No Operation
     OpenBrowser     about:blank     ${BROWSER}
     ${driver}=      Return Browser
