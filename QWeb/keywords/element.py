@@ -26,6 +26,8 @@ from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
 from QWeb.internal import element, decorators, actions, text, input_, dropdown, checkbox
 from QWeb.internal.config_defaults import CONFIG
 
+import time
+
 
 @keyword(tags=["Interaction"])
 @decorators.timeout_decorator
@@ -887,6 +889,7 @@ def get_coordinates(
         # scroll element into view and adjust scroll if needed
         scrolled_position = webelement.location_once_scrolled_into_view
         actions.scroll_overlay_adjustment(overlay_offset)
+        time.sleep(0.25)  # wait for the scroll to complete and the page to stabilize
 
     except Exception as e:
         raise QWebValueError(f"Could not scroll element {locator} into view. Error: {e}") from e
