@@ -2,7 +2,7 @@ PyScreeze==0.1.28
 pyperclip==1.9.0
 PyAutoGUI>=0.9.53
 Pillow>=12.2.0
-robotframework>=5.0.1,<8
+robotframework>=7.0,<8
 robotframework-debuglibrary==2.5.0
 selenium>=4.27.0,<5
 pynput==1.8.1
