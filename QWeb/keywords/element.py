@@ -17,6 +17,7 @@
 """Keywords for general elements that are retrieved using XPaths."""
 
 from __future__ import annotations
+import time
 from typing import Union, Optional, Dict
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
@@ -890,6 +891,9 @@ def get_coordinates(
 
     except Exception as e:
         raise QWebValueError(f"Could not scroll element {locator} into view. Error: {e}") from e
+    finally:
+        # wait a bit for the page to settle after scrolling
+        time.sleep(0.25)
 
     # Calculate the coordinates at the center of the element + overlay height
     size = webelement.size
