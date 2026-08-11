@@ -8,7 +8,7 @@ Test Timeout      90 seconds
 Suite Teardown    Close Browsers And Remove CHROME_ARGS
 *** Variables ***
 ${BROWSER}    chrome
-${HEADLESS}   ${TRUE}
+${HEADLESS}   ${FALSE}
 
 *** Test Cases ***
 Open Browser With Options
