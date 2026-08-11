@@ -254,10 +254,6 @@ jobs:
         -o rerun.xml
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
-        ${{ inputs.rfw-exclude-tags }}
-        -e jailed
-        -e PROBLEM_IN_${{ runner.os }}
-        -e PROBLEM_IN_${{ matrix.browser }
         -s Serial
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
