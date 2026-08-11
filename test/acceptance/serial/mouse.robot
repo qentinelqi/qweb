@@ -1,7 +1,8 @@
 *** Settings ***
 Documentation     Tests for Mouse keywords and coordinates
 Library           QWeb
-Suite Setup       OpenBrowser    ${BASE_URI}/mouse.html    ${BROWSER}
+#Suite Setup       OpenBrowser    ${BASE_URI}/mouse.html    ${BROWSER}
+Suite Setup       Reset Settings and open browser
 Suite Teardown    CloseBrowser
 Test Teardown     ClickText           Reset Fields
 Test Timeout      60 seconds
@@ -172,3 +173,8 @@ Right Click button
     VerifyNoText        Option
     RightClick          contextMenuButton   tag=button
     VerifyText          Option 3
+
+*** Keywords ***
+Reset Settings and open browser
+    ResetConfig
+    OpenBrowser    ${BASE_URI}/mouse.html    ${BROWSER}
