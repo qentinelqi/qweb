@@ -26,6 +26,6 @@ jobs:
       browser: '["safari",]'
       #python-version: '["3.10", "3.11"]'
       python-version: '["3.10",]'
-      minimum-rfw-version: "5.0.1"
+      minimum-rfw-version: "7.0"
       minimum-rfw-python: "3.10"
       rfw-exclude-tags: "-e RESOLUTION_DEPENDENCY -e FLASK"
