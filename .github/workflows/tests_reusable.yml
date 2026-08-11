@@ -238,8 +238,8 @@ jobs:
         -e PROBLEM_IN_${{ matrix.browser }}
         -v BROWSER:${{ matrix.browser }}
         -d result
-        -s Browser_Windowed
-        -s Serial
+        -s Icon
+        -s Mouse
         --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
@@ -257,8 +257,8 @@ jobs:
         ${{ inputs.additional-rfw-parameters }}
         -v BROWSER:${{ matrix.browser }}
         -d rerunresult
-        -s Browser_Windowed
-        -s Serial
+        -s Icon
+        -s Mouse
         --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
