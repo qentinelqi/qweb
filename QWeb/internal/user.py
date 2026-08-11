@@ -19,6 +19,7 @@ import os
 
 
 def is_root() -> bool:
+    """Check if running as root user."""
     try:
         # Windows doesn't have getuid. We just assume that user is not root. We
         # most likely won't need proper Windows support here anyway.
@@ -32,9 +33,22 @@ def is_root() -> bool:
 
 
 def is_docker() -> bool:
+    """Check if running inside a Docker container."""
     path = "/proc/self/cgroup"
     return (
         os.path.exists("/.dockerenv")
         or os.path.isfile(path)
         and any("docker" in line for line in open(path))  # noqa: W503,W1514
     )
+
+
+def apparmor_userns_restricted() -> bool:
+    """Check if AppArmor user namespace restrictions are enabled on Linux."""
+    path = "/proc/sys/kernel/apparmor_restrict_unprivileged_userns"
+    # 0 - not restricted
+    # 1 - restricted
+    try:
+        with open(path) as f:
+            return f.read().strip() == "1"
+    except OSError:
+        return False

@@ -131,7 +131,11 @@ def create_chrome_options(chrome_args: Optional[list[str]], **kwargs: Any) -> Op
     if chrome_version:
         options.browser_version = chrome_version
 
-    if user.is_root():
+    apparmor_restricted = user.apparmor_userns_restricted()
+    if apparmor_restricted:
+        logger.info("Linux Chrome detected with AppArmor user namespace restrictions enabled.")
+        logger.info("Adding --no-sandbox to work around Chromium sandbox initialization.")
+    if user.is_root() or apparmor_restricted:
         options.add_argument("no-sandbox")
 
     return options
