@@ -2,7 +2,7 @@ PyScreeze==0.1.28
 pyperclip==1.9.0
 PyAutoGUI>=0.9.53
 Pillow>=12.2.0
-robotframework>=5.0.1,<8
+robotframework>=7.0,<8
 robotframework-debuglibrary==2.5.0
 selenium>=4.27.0,<5
 pynput==1.8.1
@@ -11,7 +11,7 @@ setuptools>=78.1.1
 # v2.0+ not supported yet
 numpy>=2.0.0
 opencv-python==4.11.0.86
-pypdf==6.10.2
+pypdf==6.14.2
 requests==2.33.0
 scipy>= 1.10.0
 scikit-image==0.25.2

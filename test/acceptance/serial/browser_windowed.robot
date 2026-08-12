@@ -122,12 +122,12 @@ Open Browser with driver logging
 
 Open Browser with non-valid page load strategy
     [Setup]    No Operation
-    [tags]         page_load_strategy
+    [tags]         page_load_strategy    PROBLEM_IN_SAFARI
     Run Keyword And Expect Error    ValueError: Strategy can only be one of the following: normal, eager, none*    OpenBrowser     about:blank     ${BROWSER}         page_load_strategy=non-valid
     CloseAllBrowsers
 
 Open Browser with default page load strategy
-    [tags]         page_load_strategy
+    [tags]         page_load_strategy    PROBLEM_IN_SAFARI
     [Setup]    No Operation
     OpenBrowser     about:blank     ${BROWSER}
     ${driver}=      Return Browser
@@ -136,7 +136,7 @@ Open Browser with default page load strategy
     CloseAllBrowsers
 
 Open Browser with valid page load strategies
-    [tags]          page_load_strategy
+    [tags]          page_load_strategy    PROBLEM_IN_SAFARI
     [Setup]    No Operation
     OpenBrowser     about:blank     ${BROWSER}       page_load_strategy=normal
     ${driver}=      Return Browser
