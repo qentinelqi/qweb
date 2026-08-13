@@ -519,7 +519,11 @@ def get_webelement(
                 locator, anchor, **kwargs
             )[0]
         elif element_type.lower() == "css":
-            web_elements = element.get_webelement_by_css(locator, **kwargs)
+            web_element_list = element.get_webelements_by_css(locator, **kwargs)
+            if web_element_list:
+                web_elements = element.get_element_by_index(web_element_list, kwargs["index"])
+            else:
+                web_elements = web_element_list
         else:
             msg = (
                 f"Invalid 'element_type':'{element_type}'!\n"

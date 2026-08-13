@@ -209,8 +209,8 @@ def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
 
 
 @frame.all_frames
-def get_webelement_by_css(css: str, **kwargs: Any) -> Union[WebElement, list[WebElement]]:
-    """Get visible web element that correspond to given css selector.
+def get_webelements_by_css(css: str, **kwargs: Any) -> list[WebElement]:
+    """Get visible web elements that correspond to given css selector.
 
     To check that element is visible it is checked that it has width. This
     does not handle all cases but it is fast so no need to modify if it
@@ -227,21 +227,10 @@ def get_webelement_by_css(css: str, **kwargs: Any) -> Union[WebElement, list[Web
     :obj:`list` of :obj:`WebElement`
         List of visible WebElements.
     """
-    index = kwargs.get("index", 1)
     driver = browser.get_current_browser()
     web_elements = driver.find_elements(By.CSS_SELECTOR, css)
     logger.debug("CSS selector {} matched {} WebElements".format(css, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
-
-    index = int(index) - 1
-    if len(web_elements) >= 1:
-        try:
-            return web_elements[index]
-        except IndexError as ie:
-            raise QWebValueError(
-                f"Used index {index} was greater than amount of found elements."
-            ) from ie
-
     return web_elements
 
 
