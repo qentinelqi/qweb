@@ -12,6 +12,14 @@ OpenBrowser    https://example.com    chrome
 
 Beyond this, `OpenBrowser` supports powerful configuration options.
 
+If a single browser flag contains a comma, quote the whole flag so QWeb keeps it as one option.
+
+```robot
+# Quote the whole flag if the value contains a comma.
+OpenBrowser    about:blank    chrome
+...    "--host-resolver-rules\=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", --proxy-server\=socks5://client-proxy.local:54321
+```
+
 ---
 
 ### 1.1 Using Chrome Preferences (`prefs=`)
