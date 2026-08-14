@@ -384,7 +384,7 @@ def open_browser(url: str,
     if os.getenv("QWEB_HEADLESS"):
         kwargs = {"headless": True}
     if os.getenv("CHROME_ARGS") is not None:
-        option_list.extend(util.parse_option_list(os.getenv("CHROME_ARGS", "")))
+        option_list.extend(util.parse_env_option_list(os.getenv("CHROME_ARGS", "")))
     logger.debug("Options: {}".format(option_list))
 
     # Pass bidi to browser openers if True
