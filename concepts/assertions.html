@@ -1301,7 +1301,7 @@
 <p><strong>Purpose:</strong> Enforce that an element must exist.
 <strong>Behavior:</strong> If the element is not found within the timeout, the <strong>test fails</strong> immediately.</p>
 <p>Use these for your main acceptance criteria.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># The test will STOP here if &quot;Welcome&quot; is not visible</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># The test will STOP here if "Welcome" is not visible</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c">VerifyText</span><span class="p">     </span><span class="c">Welcome to your dashboard</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># You can also verify attributes (like tooltips)</span>
@@ -1311,10 +1311,10 @@
 <p><strong>Purpose:</strong> Enforce that an element must <strong>not</strong> exist.
 <strong>Behavior:</strong> If the element <em>is</em> found, the <strong>test fails</strong>.</p>
 <p>This is the correct way to ensure an action (like "Delete") was successful.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Correct: Fails if &quot;Item 1&quot; is still visible</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Correct: Fails if "Item 1" is still visible</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c">VerifyNoText</span><span class="p">   </span><span class="c">Item 1</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Incorrect: Do NOT use &quot;VerifyText&quot; inside a &quot;Run Keyword And Expect Error&quot; block.</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Incorrect: Do NOT use "VerifyText" inside a "Run Keyword And Expect Error" block.</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Use the dedicated VerifyNo keyword instead.</span>
 </code></pre></div>
 <h2 id="3-boolean-checks-is">3. Boolean Checks (<code>Is...</code>)</h2>
@@ -1332,10 +1332,10 @@
 <p><strong>Purpose:</strong> Extract information from the page into a variable for later use.
 <strong>Behavior:</strong> Returns a value (string, integer, or list) but generally does not enforce success/failure.</p>
 <p>Use these when you need to calculate results or pass data to another keyword.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Example: Get the value currently typed in the &quot;Email&quot; field</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Example: Get the value currently typed in the "Email" field</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c">${current_email}=</span><span class="p">    </span><span class="c">GetInputValue</span><span class="p">    </span><span class="c">Email</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Example: Count how many times the text &quot;Error&quot; appears</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Example: Count how many times the text "Error" appears</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c">${error_count}=</span><span class="p">      </span><span class="c">GetText</span><span class="p">          </span><span class="c">Error</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Example: Get text from a specific table cell</span>

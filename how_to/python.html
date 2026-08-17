@@ -1310,20 +1310,20 @@
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 2. Open Browser</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Note: Drivers are still handled automatically!</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">qweb</span><span class="o">.</span><span class="n">open_browser</span><span class="p">(</span><span class="s2">&quot;https://qentinelqi.github.io/shop&quot;</span><span class="p">,</span> <span class="s2">&quot;chrome&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">qweb</span><span class="o">.</span><span class="n">open_browser</span><span class="p">(</span><span class="s2">"https://qentinelqi.github.io/shop"</span><span class="p">,</span> <span class="s2">"chrome"</span><span class="p">)</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 3. Interact using QWeb keywords (in snake_case)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">qweb</span><span class="o">.</span><span class="n">verify_text</span><span class="p">(</span><span class="s2">&quot;The animal friendly clothing company&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">qweb</span><span class="o">.</span><span class="n">click_text</span><span class="p">(</span><span class="s2">&quot;Scar the Lion&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">qweb</span><span class="o">.</span><span class="n">verify_text</span><span class="p">(</span><span class="s2">"The animal friendly clothing company"</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">qweb</span><span class="o">.</span><span class="n">click_text</span><span class="p">(</span><span class="s2">"Scar the Lion"</span><span class="p">)</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># 4. Assertions</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># These will raise standard Python exceptions if they fail</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">qweb</span><span class="o">.</span><span class="n">verify_text</span><span class="p">(</span><span class="s2">&quot;Add to cart&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">qweb</span><span class="o">.</span><span class="n">verify_text</span><span class="p">(</span><span class="s2">"Add to cart"</span><span class="p">)</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># 5. Get Data</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Keywords that return values work as expected</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">title</span> <span class="o">=</span> <span class="n">qweb</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Page Title is: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Page Title is: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># 6. Teardown</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">qweb</span><span class="o">.</span><span class="n">close_all_browsers</span><span class="p">()</span>

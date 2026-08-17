@@ -1360,7 +1360,7 @@
 <hr />
 <h2 id="3-understanding-element_type">3. Understanding <code>element_type</code></h2>
 <p>When using XPath as a locator, QWeb directly targets the element:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GetAttribute    xpath\=//button[@id=&#39;login&#39;]    disabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GetAttribute    xpath\=//button[@id='login']    disabled
 </code></pre></div>
 <p>In this case, <code>element_type</code> is not needed because the element is explicitly defined.</p>
 <p>However, when using text-based or attribute-based smart locators, QWeb may need help determining which element type you intend to target.</p>
@@ -1419,8 +1419,8 @@
 <li>If you use a smart locator (text/attribute-based), <code>element_type</code> may be required for disambiguation.</li>
 </ul>
 <p>Example using XPath:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>${elem}=    GetWebElement    //*[@class\=&quot;icon_indicator&quot;]
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>${color}=   Evaluate    $elem.value_of_css_property(&quot;color&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>${elem}=    GetWebElement    //*[@class\="icon_indicator"]
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>${color}=   Evaluate    $elem.value_of_css_property("color")
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Log    ${color}
 </code></pre></div>
 <p><code>GetWebElement</code> returns a Selenium <code>WebElement</code> instance, which allows direct interaction using Selenium methods via <code>Evaluate</code>.</p>
@@ -1433,7 +1433,7 @@
 <hr />
 <h3 id="important-return-type-behavior">Important: Return Type Behavior</h3>
 <p>When using XPath:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>${elem}=    GetWebElement    //*[@id=&#39;login&#39;]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>${elem}=    GetWebElement    //*[@id='login']
 </code></pre></div>
 <p>A single <code>WebElement</code> is returned.</p>
 <p>When using smart locators with <code>element_type</code>:</p>

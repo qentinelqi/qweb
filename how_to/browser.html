@@ -1453,12 +1453,17 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>OpenBrowser    https://example.com    chrome
 </code></pre></div>
 <p>Beyond this, <code>OpenBrowser</code> supports powerful configuration options.</p>
+<p>If a single browser flag contains a comma, quote the whole flag so QWeb keeps it as one option.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Quote the whole flag if the value contains a comma.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>OpenBrowser    about:blank    chrome
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>...    "--host-resolver-rules\=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", --proxy-server\=socks5://client-proxy.local:54321
+</code></pre></div>
 <hr />
 <h3 id="11-using-chrome-preferences-prefs">1.1 Using Chrome Preferences (<code>prefs=</code>)</h3>
 <p>Chrome allows fine-grained configuration via preference settings.</p>
 <h4 id="example-download-pdfs-instead-of-opening-in-browser">Example: Download PDFs instead of opening in browser</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>OpenBrowser    about:blank    chrome
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>...    prefs=download.prompt_for_download: False, plugins.always_open_pdf_externally: True
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>OpenBrowser    about:blank    chrome
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>...    prefs=download.prompt_for_download: False, plugins.always_open_pdf_externally: True
 </code></pre></div>
 <p>Useful when:</p>
 <ul>
@@ -1467,8 +1472,8 @@
 </ul>
 <hr />
 <h4 id="example-disable-chrome-autofill-dialogs">Example: Disable Chrome Autofill Dialogs</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>OpenBrowser    about:blank    chrome
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>...    prefs=&quot;autofill.profile_enabled&quot;:false, &quot;autofill.credit_card_enabled&quot;:false
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>OpenBrowser    about:blank    chrome
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>...    prefs="autofill.profile_enabled":false, "autofill.credit_card_enabled":false
 </code></pre></div>
 <p>Useful when:</p>
 <ul>
@@ -1480,7 +1485,7 @@
 <h4 id="window-size">Window Size</h4>
 <p>By default, Chromium-based browsers open maximized.</p>
 <p>To disable automatic maximization:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>OpenBrowser    about:blank    chrome    maximize=False
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>OpenBrowser    about:blank    chrome    maximize=False
 </code></pre></div>
 <p>This is useful when:</p>
 <ul>
@@ -1488,23 +1493,23 @@
 <li>Running controlled viewport tests</li>
 </ul>
 <p>You can also change the window size during runtime using SetConfig:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SetConfig    WindowSize     1920x1080
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SetConfig    WindowSize     1920x1080
 </code></pre></div>
 <h4 id="headless-mode">Headless mode</h4>
 <p>To open browser in headless mode, use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>OpenBrowser   about:blank   Chrome   headless=True
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a># alternative
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>OpenBrowser   about:blank   Chrome   --headless
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>OpenBrowser   about:blank   Chrome   headless=True
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a># alternative
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>OpenBrowser   about:blank   Chrome   --headless
 </code></pre></div>
 <hr />
 <h3 id="13-mobile-emulation">1.3 Mobile Emulation</h3>
 <p>Simulate mobile devices without external tools.</p>
 <h4 id="named-device-profile">Named device profile</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>OpenBrowser    http://google.com    chrome    emulation=iPhone SE
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>OpenBrowser    http://google.com    chrome    emulation=iPhone SE
 </code></pre></div>
 <h4 id="custom-resolution">Custom resolution</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>OpenBrowser    http://google.com    chrome    emulation=375x812
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>OpenBrowser    http://google.com    chrome    emulation=375x812
 </code></pre></div>
 <p>Useful for:</p>
 <ul>
@@ -1513,8 +1518,8 @@
 </ul>
 <h3 id="14-running-on-selenium-grid-remote_url">1.4 Running on Selenium Grid (<code>remote_url=</code>)</h3>
 <p>Execute tests remotely via Selenium Grid.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>OpenBrowser    http://google.com    chrome    remote_url=http://127.0.0.1:4444/wd/hub
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>OpenBrowser    http://google.com    safari    remote_url=http://127.0.0.1:4444/wd/hub
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>OpenBrowser    http://google.com    chrome    remote_url=http://127.0.0.1:4444/wd/hub
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>OpenBrowser    http://google.com    safari    remote_url=http://127.0.0.1:4444/wd/hub
 </code></pre></div>
 <p>Useful when:</p>
 <ul>
@@ -1525,76 +1530,76 @@
 <hr />
 <h2 id="2-navigation-and-urls">2. Navigation and URLs</h2>
 <p>Once the browser is open, you can navigate without having to close and reopen it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>GoTo
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Back
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Forward
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>RefreshPage
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>GoTo
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Back
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Forward
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>RefreshPage
 </code></pre></div>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>GoTo    https://example.com/dashboard
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>RefreshPage
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>GoTo    https://example.com/dashboard
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>RefreshPage
 </code></pre></div>
 <p><strong>Checking State</strong>
 You can retrieve or assert the current URL and Title.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Get values into variables</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c">${title}=</span><span class="p">     </span><span class="c">GetTitle</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c">${url}=</span><span class="p">       </span><span class="c">GetUrl</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c"># Verify state directly</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c">VerifyTitle</span><span class="p">   </span><span class="c">Expected Page Title</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c">VerifyUrl</span><span class="p">     </span><span class="c">https://example.com/login</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Get values into variables</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c">${title}=</span><span class="p">     </span><span class="c">GetTitle</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c">${url}=</span><span class="p">       </span><span class="c">GetUrl</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c"># Verify state directly</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c">VerifyTitle</span><span class="p">   </span><span class="c">Expected Page Title</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c">VerifyUrl</span><span class="p">     </span><span class="c">https://example.com/login</span>
 </code></pre></div>
 <h2 id="3-managing-windows-and-tabs">3. Managing Windows and Tabs</h2>
 <h3 id="switching-browers-windows">Switching Browers &amp; Windows</h3>
 <p>You can open multiple browser instances and move between them.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c">OpenBrowser</span><span class="p">     </span><span class="c">https://example.com</span><span class="p">   </span><span class="c">Chrome</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c">OpenBrowser</span><span class="p">     </span><span class="c">https://www.github.com</span><span class="p">  </span><span class="c">Firefox</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c"># Firefox is now the &quot;active&quot; browser</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c">VerifyText</span><span class="p">      </span><span class="c">GitHub</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c"># Switch by index</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c">SwitchBrowser</span><span class="p">     </span><span class="c">1</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c">VerifyText</span><span class="p">    </span><span class="c">Example Domain</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c"># Switch to latest opened browser (here GitHub)</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c">SwitchBrowser</span><span class="p">   </span><span class="c">NEW</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c">VerifyText</span><span class="p">      </span><span class="c">GitHub</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c">OpenBrowser</span><span class="p">     </span><span class="c">https://example.com</span><span class="p">   </span><span class="c">Chrome</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c">OpenBrowser</span><span class="p">     </span><span class="c">https://www.github.com</span><span class="p">  </span><span class="c">Firefox</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c"># Firefox is now the "active" browser</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c">VerifyText</span><span class="p">      </span><span class="c">GitHub</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c"># Switch by index</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c">SwitchBrowser</span><span class="p">     </span><span class="c">1</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c">VerifyText</span><span class="p">    </span><span class="c">Example Domain</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c"># Switch to latest opened browser (here GitHub)</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c">SwitchBrowser</span><span class="p">   </span><span class="c">NEW</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c">VerifyText</span><span class="p">      </span><span class="c">GitHub</span>
 </code></pre></div>
 <p>When clicking a link opens a new tab, you need to explicitly switch QWeb's focus to it. The easiest and most reliable way is using the <code>NEW</code> argument.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c">ClickText</span><span class="p">       </span><span class="c">Open in new tab</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c">SwitchWindow</span><span class="p">    </span><span class="c">NEW</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c">VerifyText</span><span class="p">      </span><span class="c">Welcome to the new tab!</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c">ClickText</span><span class="p">       </span><span class="c">Open in new tab</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c">SwitchWindow</span><span class="p">    </span><span class="c">NEW</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c">VerifyText</span><span class="p">      </span><span class="c">Welcome to the new tab!</span>
 </code></pre></div>
 You can also switch by index (e.g., <code>SwitchWindow    1</code> for the original tab) or by the internal window handle (<code>ListWindows</code>).</p>
 <h3 id="listing-information">Listing Information</h3>
 <p>If your test gets lost in multiple popups, you can log the current state to your report to debug:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Logs information about all open tabs</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c">ListWindows</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Logs about all opened browser instances</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c">ListBrowsers</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Logs information about all open tabs</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c">ListWindows</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c"># Logs about all opened browser instances</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c">ListBrowsers</span>
 </code></pre></div>
 <h2 id="4-cookies">4. Cookies</h2>
 <p>Managing cookies is crucial for testing varying login states or bypassing repetitive setups.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Read current cookies</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c">${cookies}=</span><span class="p">         </span><span class="c">GetCookies</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c"># Clear state (Great for &#39;Suite Teardown&#39; or &#39;Appstates&#39;)</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c">DeleteAllCookies</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Read current cookies</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c">${cookies}=</span><span class="p">         </span><span class="c">GetCookies</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c"># Clear state (Great for 'Suite Teardown' or 'Appstates')</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c">DeleteAllCookies</span>
 </code></pre></div>
 <h2 id="5-closing-browsers">5. Closing Browsers</h2>
 <p>Always clean up at the end of your tests to prevent memory leaks or zombie processes. This is typically done in your <code>Test Teardown</code> or <code>Suite Teardown</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Closes ONLY the currently active tab/window</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c">CloseWindow</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c"># Closes all other tabs/windows except the first one</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c">CloseOthers</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c"># Closes the active browser application</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c">CloseBrowser</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c"># Closes ALL browsers opened during the test run</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c">CloseAllBrowsers</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Closes ONLY the currently active tab/window</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c">CloseWindow</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># Closes all other tabs/windows except the first one</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c">CloseOthers</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c"># Closes the active browser application</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c">CloseBrowser</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c"># Closes ALL browsers opened during the test run</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c">CloseAllBrowsers</span>
 </code></pre></div>
 
 

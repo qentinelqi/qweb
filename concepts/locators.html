@@ -1328,7 +1328,7 @@ Imagine a "Clear Search" button that is just an 'X' icon but has <code>title="Cl
 <div class="admonition tip">
 <p class="admonition-title">Limiting elements using <strong>tag</strong> attribute</p>
 <p>Narrow your attribute search to specific element types by specifying the tag attribute.
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Matches only elements with tag &quot;custom_input&quot; and attribute value &quot;Reset&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Matches only elements with tag "custom_input" and attribute value "Reset"</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c">ClickItem</span><span class="p">   </span><span class="c">Reset</span><span class="p">    </span><span class="c">tag=custom_input</span>
 </code></pre></div></p>
 <p>Using the tag attribute can also improve search performance.</p>
@@ -1337,7 +1337,7 @@ Imagine a "Clear Search" button that is just an 'X' icon but has <code>title="Cl
 <p><strong>Keywords:</strong> <code>ClickElement</code>, <code>VerifyElement</code></p>
 <p>For the "tricky 10-20%" of elements that have no text and no descriptive attributes, you can fall back to standard XPaths selectors. This gives you full control but makes your tests more brittle to layout changes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Using XPath</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c">ClickElement</span><span class="p">   </span><span class="c">xpath\=//div[@class=&quot;user-menu&quot;]//button</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c">ClickElement</span><span class="p">   </span><span class="c">xpath\=//div[@class="user-menu"]//button</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">XPath does not work inside Shadow DOM</p>

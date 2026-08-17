@@ -1297,13 +1297,13 @@ If your page has ten "Edit" buttons, how does QWeb know which one to click?</p>
 <h2 id="1-text-anchors">1. Text Anchors</h2>
 <p>You can identify an element by its proximity to another unique piece of text.</p>
 <p><strong>Scenario:</strong> A login form where the "Sign In" button is right next to a "Cancel" button.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Clicks the &quot;Sign In&quot; button that is closest to &quot;Cancel&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Clicks the "Sign In" button that is closest to "Cancel"</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c">ClickText</span><span class="p">    </span><span class="c">Sign In</span><span class="p">    </span><span class="c">anchor=Cancel</span>
 </code></pre></div>
 <h2 id="2-numeric-anchors-index">2. Numeric Anchors (Index)</h2>
 <p>If there is no unique text nearby, you can use a numeric index.</p>
 <p><strong>Scenario:</strong> A list of three "Delete" icons.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Clicks the 3rd &quot;Delete&quot; text/icon found on the page</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Clicks the 3rd "Delete" text/icon found on the page</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c">ClickText</span><span class="p">    </span><span class="c">Delete</span><span class="p">    </span><span class="c">anchor=3</span>
 </code></pre></div>
 <h2 id="3-directional-search-searchdirection">3. Directional Search (<code>SearchDirection</code>)</h2>
@@ -1321,7 +1321,7 @@ If your page has ten "Edit" buttons, how does QWeb know which one to click?</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Tell QWeb to look BELOW the anchor text</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c">SetConfig</span><span class="p">    </span><span class="c">SearchDirection</span><span class="p">    </span><span class="c">down</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># This finds the input field under &quot;Email Address&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># This finds the input field under "Email Address"</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c">TypeText</span><span class="p">     </span><span class="c">Email Address</span><span class="p">      </span><span class="c">demo@example.com</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Reset to default when done</span>

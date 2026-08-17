@@ -1291,10 +1291,10 @@
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Syntax: ClickCheckbox    Label    State (On/Off)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Ensure &quot;Subscribe&quot; is checked (clicks only if needed)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Ensure "Subscribe" is checked (clicks only if needed)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c">ClickCheckbox</span><span class="p">    </span><span class="c">Subscribe</span><span class="p">    </span><span class="c">On</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Ensure &quot;Marketing Emails&quot; is unchecked</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Ensure "Marketing Emails" is unchecked</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c">ClickCheckbox</span><span class="p">    </span><span class="c">Marketing Emails</span><span class="p">    </span><span class="c">Off</span>
 </code></pre></div>
 <h3 id="clicktext-simple-toggle"><code>ClickText</code> (Simple Toggle)</h3>
@@ -1304,10 +1304,10 @@
 </code></pre></div>
 <h2 id="2-verifying-state-verifycheckbox">2. Verifying State (<code>VerifyCheckbox</code>)</h2>
 <p>Rather than checking DOM attributes directly via XPath (for example inspecting checked, CSS classes, or aria-checked), use VerifyCheckbox. The keyword encapsulates the logic for determining checkbox state and reduces dependency on implementation details.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify that &quot;Subscribe&quot; is currently checked</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify that "Subscribe" is currently checked</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c">VerifyCheckbox</span><span class="p">    </span><span class="c">Subscribe</span><span class="p">    </span><span class="c">On</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Verify that &quot;Old Newsletter&quot; is NOT checked</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Verify that "Old Newsletter" is NOT checked</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c">VerifyCheckbox</span><span class="p">    </span><span class="c">Old Newsletter</span><span class="p">    </span><span class="c">Off</span>
 </code></pre></div>
 
