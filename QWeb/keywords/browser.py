@@ -84,6 +84,11 @@ def open_browser(url: str,
     Browser options can be set in with an environment variable CHROME_ARGS, for example:
     export CHROME_ARGS="--kiosk, --disable-gpu"
 
+    If a single browser flag contains a comma, quote the whole flag so it stays as one option.
+    For example:
+    OpenBrowser    about:blank    chrome
+    ...            "--host-resolver-rules\=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", --proxy-server\=socks5://client-proxy.local:54321
+
     Examples
     --------
     .. code-block:: robotframework
@@ -123,6 +128,9 @@ def open_browser(url: str,
 
         # Use proxy
         OpenBrowser    http://google.com    chrome    --proxy_server\=http://127.0.0.1:8080
+        # Quote the whole flag if the value contains a comma.
+        OpenBrowser    about:blank    chrome
+        ...            "--host-resolver-rules\=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", --proxy-server\=socks5://client-proxy.local:54321
         OpenBrowser    http://google.com    firefox
         ...            prefs="network.proxy.type":"1","network.proxy.http":"localhost","network.proxy.http_port":"8080"
 
@@ -376,7 +384,7 @@ def open_browser(url: str,
     if os.getenv("QWEB_HEADLESS"):
         kwargs = {"headless": True}
     if os.getenv("CHROME_ARGS") is not None:
-        option_list.extend(os.getenv("CHROME_ARGS", "").split(", "))
+        option_list.extend(util.parse_env_option_list(os.getenv("CHROME_ARGS", "")))
     logger.debug("Options: {}".format(option_list))
 
     # Pass bidi to browser openers if True

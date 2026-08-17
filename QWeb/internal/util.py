@@ -25,6 +25,7 @@ from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
+import csv
 import json
 import platform
 import re
@@ -339,12 +340,59 @@ def initial_logging(capabilities: dict[str, Any]) -> None:
 def option_handler(options: Optional[str]) -> list[str]:
     options2 = []
     if options:
-        options2 += options.split(",")
+        options2 += parse_option_list(options)
 
-    if get_rfw_variable_value("${BROWSER_OPTIONS}"):
-        options2 += get_rfw_variable_value("${BROWSER_OPTIONS}").split(",")
+    browser_options = get_rfw_variable_value("${BROWSER_OPTIONS}")
+    if browser_options:
+        options2 += parse_option_list(browser_options)
 
     return options2
+
+
+def parse_option_list(options: str) -> list[str]:
+    """Parse comma-separated browser options while respecting quoted commas."""
+    parsed = next(csv.reader([options], skipinitialspace=True), [])
+    return [option.strip() for option in parsed if option.strip()]
+
+
+def parse_env_option_list(options: str) -> list[str]:
+    """Parse env-provided browser options using comma-space separators.
+
+    This preserves legacy CHROME_ARGS behavior where commas without a following
+    space are treated as part of a single option value.
+    """
+    option_list = []
+    current_option = []
+    quote_char = None
+
+    for index, char in enumerate(options):
+        if char in {'"', "'"}:
+            if quote_char is None:
+                quote_char = char
+            elif quote_char == char:
+                quote_char = None
+            current_option.append(char)
+            continue
+
+        if (
+            char == ","
+            and quote_char is None
+            and index + 1 < len(options)
+            and options[index + 1].isspace()
+        ):
+            option = "".join(current_option).strip().strip('"').strip("'")
+            if option:
+                option_list.append(option)
+            current_option = []
+            continue
+
+        current_option.append(char)
+
+    option = "".join(current_option).strip().strip('"').strip("'")
+    if option:
+        option_list.append(option)
+
+    return option_list
 
 
 def get_rfw_variable_value(key: str, default_value=None) -> Any:

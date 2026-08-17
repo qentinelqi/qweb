@@ -16,7 +16,7 @@
 # ---------------------------
 
 from QWeb.internal.util import get_substring, set_line_break, prefs_to_dict, xpath_validator,\
-    par2bool
+    par2bool, option_handler, parse_option_list, parse_env_option_list
 from QWeb.internal.exceptions import QWebValueMismatchError
 from unittest.mock import patch
 import pytest
@@ -67,3 +67,43 @@ def test_xpath_validator():
     for x in xpaths:
         assert xpath_validator(x) is True
     assert xpath_validator("div[@bar='bar']") is False
+
+
+def test_option_handler_splits_options():
+    result = option_handler("--kiosk, --disable-gpu")
+    assert result == ["--kiosk", "--disable-gpu"]
+
+
+def test_option_handler_preserves_quoted_commas():
+    result = option_handler(
+        '"--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", '
+        '--proxy-server=socks5://client-proxy.local:54321'
+    )
+    assert result == [
+        "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local",
+        "--proxy-server=socks5://client-proxy.local:54321",
+    ]
+
+
+def test_parse_option_list_preserves_quoted_commas():
+    result = parse_option_list(
+        '"--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", '
+        '--proxy-server=socks5://client-proxy.local:54321'
+    )
+    assert result == [
+        "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local",
+        "--proxy-server=socks5://client-proxy.local:54321",
+    ]
+
+
+def test_parse_env_option_list_preserves_commas_without_spaces():
+    result = parse_env_option_list(
+        'no-sandbox, disable-gpu, disable-impl-side-painting, '
+        '--allow-remote-origins=localhost:8000,localhost:8001'
+    )
+    assert result == [
+        "no-sandbox",
+        "disable-gpu",
+        "disable-impl-side-painting",
+        "--allow-remote-origins=localhost:8000,localhost:8001",
+    ]
