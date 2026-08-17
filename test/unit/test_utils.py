@@ -76,23 +76,23 @@ def test_option_handler_splits_options():
 
 def test_option_handler_preserves_quoted_commas():
     result = option_handler(
-        '"--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.copatunnel.svc.cluster.local", '
-        '--proxy-server=socks5://client-proxy.copatunnel.svc.cluster.local:54321'
+        '"--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", '
+        '--proxy-server=socks5://client-proxy.local:54321'
     )
     assert result == [
-        "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.copatunnel.svc.cluster.local",
-        "--proxy-server=socks5://client-proxy.copatunnel.svc.cluster.local:54321",
+        "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local",
+        "--proxy-server=socks5://client-proxy.local:54321",
     ]
 
 
 def test_parse_option_list_preserves_quoted_commas():
     result = parse_option_list(
-        '"--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.copatunnel.svc.cluster.local", '
-        '--proxy-server=socks5://client-proxy.copatunnel.svc.cluster.local:54321'
+        '"--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local", '
+        '--proxy-server=socks5://client-proxy.local:54321'
     )
     assert result == [
-        "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.copatunnel.svc.cluster.local",
-        "--proxy-server=socks5://client-proxy.copatunnel.svc.cluster.local:54321",
+        "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE client-proxy.local",
+        "--proxy-server=socks5://client-proxy.local:54321",
     ]
 
 
