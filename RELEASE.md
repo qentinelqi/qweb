@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.8.2] - 2026-08-21
+
+
+
+### Fixed
+- Added support for browser options/flags that contain "," to **Open Browser**.
+- issue #224 -> get_webelements_by_css should parse through all frames and return all matches. 
+- Added a minor wait between scrolling and getting coordinates in **Get Coordinates**.
+- Fixed an issue where Chrome or Microsoft Edge could fail to start on some Linux environments with AppArmor user namespace restrictions enabled. QWeb now applies the required Chromium startup workaround automatically.
+
+### Changed
+- Robot FW 7.0 made the lowest tested version
+- Few minor documentation updates
+- Updated minor accepted version of some dependencies to newer version due to vulnerability alerts
+
 ## [3.8.1] - 2026-06-09
 
 ### Fixed
