@@ -78,7 +78,7 @@ See more [examples](#examples).
 
 ---
 ## Requirements
-Python **3.10-3.13** and Robot Framework 7.0 or above.
+Python **3.10-3.14** and Robot Framework 7.0 or above.
 
 
 ## Installation
