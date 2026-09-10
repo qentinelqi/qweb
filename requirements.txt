@@ -8,13 +8,13 @@ selenium>=4.27.0,<5
 pynput==1.8.1
 setuptools>=78.1.1
 # numpy is not QWeb's direct dependency, but opencv's.
-# v2.0+ not supported yet
 numpy>=2.0.0
 opencv-python==4.11.0.86
 pypdf>=6.15.0
 requests==2.33.0
 scipy>= 1.10.0
-scikit-image==0.25.2
+scikit-image==0.25.2; python_version < "3.14"
+scikit-image>=0.26.0; python_version >= "3.14"
 pyobjc-core>=9.2; sys_platform == "darwin"
 pyobjc>=9.2; sys_platform == "darwin"
 
