@@ -116,6 +116,34 @@ def is_tmp_file(filepath: str) -> bool:
 
 
 def get_path(filename: str) -> Path:
+    """Resolve a filename or path to an existing file on disk.
+
+    If ``filename`` is already an existing path, it is returned as-is. Otherwise
+    QWeb searches default folders in the following order.
+
+    **Finding ``files/`` and ``images/`` folders:** QWeb walks a directory tree
+    and uses the first matching folder name it encounters (usually the
+    shallowest). A project normally has one ``files/`` folder and one ``images/``
+    folder. If several exist, only the first match is used — provide a full path
+    to select a file from a specific folder.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}`` (see below)
+    3. ``files/`` and ``images/`` anywhere under ``TEST_WORKSPACE_ROOT`` (when set)
+    4. ``files/`` and ``images/`` anywhere under ``${EXECDIR}``
+    5. ``${base_image_path}`` if set
+
+    **Suite-local folders:** ``${SUITE SOURCE}`` points to the suite file itself.
+    QWeb checks ``files/`` and ``images/`` in the parent directory of the folder
+    that contains the suite file. For example, a suite at
+    ``my_project/tests/smoke/accounts/create_account.robot`` resolves files from
+    ``my_project/tests/smoke/files/``. This lets a nested test folder use its
+    own ``files/`` before a workspace-wide folder.
+
+    Set ``TEST_WORKSPACE_ROOT`` to the project root when running individual test
+    files (for example cloud debug runs) so files are found regardless of
+    ``${EXECDIR}`` depth. When unset, behavior is unchanged.
+    """
     if Path(filename).exists():
         return Path(filename)
     files = Path(BuiltIn().get_variable_value("${SUITE SOURCE}")).parent.parent / "files" / filename
@@ -126,7 +154,21 @@ def get_path(filename: str) -> Path:
     exec_dir = BuiltIn().get_variable_value("${EXECDIR}")
     files_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'files')}/{filename}")
     images_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'images')}/{filename}")
-    paths = [downloads, files, images, files_exec_dir, images_exec_dir]
+    test_workspace_root = os.environ.get("TEST_WORKSPACE_ROOT")
+    if test_workspace_root:
+        test_workspace_files = Path(f"{get_exec_subdir(test_workspace_root, 'files')}/{filename}")
+        test_workspace_images = Path(f"{get_exec_subdir(test_workspace_root, 'images')}/{filename}")
+        paths = [
+            downloads,
+            files,
+            images,
+            test_workspace_files,
+            test_workspace_images,
+            files_exec_dir,
+            images_exec_dir,
+        ]
+    else:
+        paths = [downloads, files, images, files_exec_dir, images_exec_dir]
 
     for path in paths:
         logger.debug(f"{path=}")

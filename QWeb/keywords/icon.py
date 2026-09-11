@@ -44,10 +44,6 @@ def click_icon(
     by comparing them to a reference image. The function searches the current screen content
     for the image specified in the 'image' parameter.
 
-    If reference picture is not stored in default folders (images, files, downloads) then
-    either full path to image should be used or variable BASE_IMAGE_PATH should be defined
-    before using this keyword.
-
     Examples
     --------
     .. code-block:: robotframework
@@ -55,7 +51,7 @@ def click_icon(
         *** Variables ***
         ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}images
 
-    BASE_IMAGE_PATH should lead to the folder where all your reference icons are
+    ``${base_image_path}`` should lead to the folder where reference icons are stored.
 
     .. code-block:: robotframework
 
@@ -66,7 +62,8 @@ def click_icon(
     Parameters
     ----------
     image : str
-        Image name with or without extension
+        Image name with or without extension. See **Default folder resolution**
+        in Notes when not an existing path.
     template_res_w : int
         Reference image resolution / width. 1920 by default and
         image will be scaled to most common resolutions.
@@ -82,6 +79,26 @@ def click_icon(
         and more reliable.
         When set to False, the comparison is done in color, which provides a stricter assessment.
         The default setting is True.
+
+    Notes
+    -----
+    **Default folder resolution:** Reference images are resolved by filename
+    using the same rules as other file keywords. When only a filename is given
+    and it is not an existing path, QWeb searches default folders. Directory
+    walks use the first ``files/`` or ``images/`` folder found — use a full
+    path or set ``${base_image_path}`` when several folders exist or images are
+    stored elsewhere.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${base_image_path}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
@@ -125,10 +142,6 @@ def is_icon(
 ) -> bool:
     r"""Check is the icon on the screen.
 
-    In case you want to use this keyword you always have to have reference images.
-    If reference image are not in default folders (images, files, downloads) then
-    BASE_IMAGE_PATH should be defined in a robot file before using this keyword.
-
     Examples
     --------
     .. code-block:: robotframework
@@ -136,7 +149,7 @@ def is_icon(
         *** Variables ***
         ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}images
 
-    BASE_IMAGE_PATH should lead to the folder where all your reference icons are
+    ``${base_image_path}`` should lead to the folder where reference icons are stored.
 
     .. code-block:: robotframework
 
@@ -149,7 +162,8 @@ def is_icon(
     Parameters
     ----------
     image : str
-        Image name with or without extension
+        Image name with or without extension. See **Default folder resolution**
+        in Notes when not an existing path.
     template_res_w : int
         Reference image resolution / width. 1920 by default and
         image will be scaled to most common resolutions.
@@ -163,6 +177,26 @@ def is_icon(
         and more reliable.
         When set to False, the comparison is done in color, which provides a stricter assessment.
         The default setting is True.
+
+    Notes
+    -----
+    **Default folder resolution:** Reference images are resolved by filename
+    using the same rules as other file keywords. When only a filename is given
+    and it is not an existing path, QWeb searches default folders. Directory
+    walks use the first ``files/`` or ``images/`` folder found — use a full
+    path or set ``${base_image_path}`` when several folders exist or images are
+    stored elsewhere.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${base_image_path}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
@@ -207,10 +241,6 @@ def verify_icon(
     by comparing them to a reference image. The function searches the current screen content
     for the image specified in the 'image' parameter.
 
-    If reference picture is not stored in default folders (images, files, downloads) then
-    either full path to image should be used or variable BASE_IMAGE_PATH should be defined
-    before using this keyword.
-
     LogMatchedIcons configuration can be used to log screenshots of matched images
     to logs. By default matched images are not logged.
 
@@ -221,7 +251,7 @@ def verify_icon(
         *** Variables ***
         ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}images
 
-    BASE_IMAGE_PATH should lead to the folder where all your reference icons are
+    ``${base_image_path}`` should lead to the folder where reference icons are stored.
 
     .. code-block:: robotframework
 
@@ -233,7 +263,8 @@ def verify_icon(
     Parameters
     ----------
     image : str
-        Image name with or without extension
+        Image name with or without extension. See **Default folder resolution**
+        in Notes when not an existing path.
     template_res_w : int
         Reference image resolution / width. 1920 by default and
         image will be scaled to most common resolutions.
@@ -249,6 +280,26 @@ def verify_icon(
         and more reliable.
         When set to False, the comparison is done in color, which provides a stricter assessment.
         The default setting is True.
+
+    Notes
+    -----
+    **Default folder resolution:** Reference images are resolved by filename
+    using the same rules as other file keywords. When only a filename is given
+    and it is not an existing path, QWeb searches default folders. Directory
+    walks use the first ``files/`` or ``images/`` folder found — use a full
+    path or set ``${base_image_path}`` when several folders exist or images are
+    stored elsewhere.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${base_image_path}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
