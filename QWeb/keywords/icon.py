@@ -51,7 +51,7 @@ def click_icon(
         *** Variables ***
         ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}images
 
-    ``${base_image_path}`` should lead to the folder where reference icons are stored.
+    ``${BASE_IMAGE_PATH}`` should lead to the folder where reference icons are stored.
 
     .. code-block:: robotframework
 
@@ -86,18 +86,18 @@ def click_icon(
     using the same rules as other file keywords. When only a filename is given
     and it is not an existing path, QWeb searches default folders. Directory
     walks use the first ``files/`` or ``images/`` folder found — use a full
-    path or set ``${base_image_path}`` when several folders exist or images are
+    path or set ``${BASE_IMAGE_PATH}`` when several folders exist or images are
     stored elsewhere.
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -149,7 +149,7 @@ def is_icon(
         *** Variables ***
         ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}images
 
-    ``${base_image_path}`` should lead to the folder where reference icons are stored.
+    ``${BASE_IMAGE_PATH}`` should lead to the folder where reference icons are stored.
 
     .. code-block:: robotframework
 
@@ -184,18 +184,18 @@ def is_icon(
     using the same rules as other file keywords. When only a filename is given
     and it is not an existing path, QWeb searches default folders. Directory
     walks use the first ``files/`` or ``images/`` folder found — use a full
-    path or set ``${base_image_path}`` when several folders exist or images are
+    path or set ``${BASE_IMAGE_PATH}`` when several folders exist or images are
     stored elsewhere.
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -251,7 +251,7 @@ def verify_icon(
         *** Variables ***
         ${BASE_IMAGE_PATH}          ${CURDIR}${/}..${/}resources${/}images
 
-    ``${base_image_path}`` should lead to the folder where reference icons are stored.
+    ``${BASE_IMAGE_PATH}`` should lead to the folder where reference icons are stored.
 
     .. code-block:: robotframework
 
@@ -287,18 +287,18 @@ def verify_icon(
     using the same rules as other file keywords. When only a filename is given
     and it is not an existing path, QWeb searches default folders. Directory
     walks use the first ``files/`` or ``images/`` folder found — use a full
-    path or set ``${base_image_path}`` when several folders exist or images are
+    path or set ``${BASE_IMAGE_PATH}`` when several folders exist or images are
     stored elsewhere.
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords

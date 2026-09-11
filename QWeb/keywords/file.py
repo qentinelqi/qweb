@@ -64,13 +64,13 @@ def use_pdf(filename: str) -> None:
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -109,13 +109,13 @@ def use_file(filename: str) -> None:
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -432,13 +432,13 @@ def zip_files(name_of_zip: str, files_to_zip: str) -> None:
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
     """
     if not name_of_zip.endswith(".zip"):
@@ -494,13 +494,13 @@ def move_files(files_to_move: str, destination_folder: str) -> None:
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -542,13 +542,13 @@ def verify_file(filename: str) -> Path:
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
     """
     try:
@@ -557,5 +557,6 @@ def verify_file(filename: str) -> Path:
         return path
     except QWebFileNotFoundError as e:
         raise QWebFileNotFoundError(
-            "File not found from default folders. It may not exists or you may need a full path."
+            "File not found from default folders. Use a full path, or set "
+            "%{TEST_WORKSPACE_ROOT} or ${BASE_IMAGE_PATH} if needed"
         ) from e

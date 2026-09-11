@@ -55,11 +55,11 @@ If the given name is not already an existing path, QWeb searches in this order:
 
 1. User Downloads folder
 2. Suite-local `files/` and `images/` near `${SUITE SOURCE}` (see below)
-3. `files/` and `images/` anywhere under `TEST_WORKSPACE_ROOT` (when set)
+3. `files/` and `images/` anywhere under `%{TEST_WORKSPACE_ROOT}` (when set)
 4. `files/` and `images/` anywhere under `${EXECDIR}`
-5. `${base_image_path}` if defined
+5. `${BASE_IMAGE_PATH}` if defined
 
-Step 3 applies when `TEST_WORKSPACE_ROOT` is set (typical for cloud debug runs).
+Step 3 applies when `%{TEST_WORKSPACE_ROOT}` is set (typical for cloud debug runs).
 When the variable is unset, QWeb skips that step.
 
 #### How `files/` and `images/` folders are found
@@ -98,15 +98,15 @@ my_project/
     smoke.robot
 ```
 
-#### Cloud debug runs and `TEST_WORKSPACE_ROOT`
+#### Cloud debug runs and `%{TEST_WORKSPACE_ROOT}`
 
 Full suite runs usually start from the project root and resolve files correctly.
 When a single test file is run in debug mode, `${EXECDIR}` points to that file's
 directory instead of the project root, and the suite-relative lookup above may
 no longer reach your `files/` folder.
 
-Set the `TEST_WORKSPACE_ROOT` environment variable to the project root before
-starting Robot:
+Set the `TEST_WORKSPACE_ROOT` environment variable (available in tests as
+`%{TEST_WORKSPACE_ROOT}`) to the project root before starting Robot:
 
 ```bash
 export TEST_WORKSPACE_ROOT="/home/services/suite/CNS Tests"
@@ -217,7 +217,7 @@ Always rely on QWeb-managed downloads.
 
 1. Store upload files in a suite-local or project-level `files/` directory.
 2. Store reference images in a suite-local or project-level `images/` directory.
-3. Set `TEST_WORKSPACE_ROOT` when debugging individual test files in cloud environments.
+3. Set `%{TEST_WORKSPACE_ROOT}` when debugging individual test files in cloud environments.
 4. Let QWeb manage downloads.
 5. Avoid hardcoded absolute paths — use filenames and default folder resolution instead.
 6. Use `ExpectFileDownload` before triggering the download.

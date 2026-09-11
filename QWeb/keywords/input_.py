@@ -290,13 +290,13 @@ def type_texts(
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -429,13 +429,13 @@ def verify_input_values(
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Related keywords
@@ -751,13 +751,13 @@ def upload_file(
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
-    3. ``files/`` and ``images/`` under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     Suite-local: for
     ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
-    ``my_project/tests/smoke/files/``. Set ``TEST_WORKSPACE_ROOT`` to the
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
     project root when debugging individual test files.
 
     Raises

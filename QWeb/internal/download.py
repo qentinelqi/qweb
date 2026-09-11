@@ -129,9 +129,9 @@ def get_path(filename: str) -> Path:
 
     1. User Downloads folder
     2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}`` (see below)
-    3. ``files/`` and ``images/`` anywhere under ``TEST_WORKSPACE_ROOT`` (when set)
+    3. ``files/`` and ``images/`` anywhere under ``%{TEST_WORKSPACE_ROOT}`` (when set)
     4. ``files/`` and ``images/`` anywhere under ``${EXECDIR}``
-    5. ``${base_image_path}`` if set
+    5. ``${BASE_IMAGE_PATH}`` if set
 
     **Suite-local folders:** ``${SUITE SOURCE}`` points to the suite file itself.
     QWeb checks ``files/`` and ``images/`` in the parent directory of the folder
@@ -140,8 +140,8 @@ def get_path(filename: str) -> Path:
     ``my_project/tests/smoke/files/``. This lets a nested test folder use its
     own ``files/`` before a workspace-wide folder.
 
-    Set ``TEST_WORKSPACE_ROOT`` to the project root when running individual test
-    files (for example cloud debug runs) so files are found regardless of
+    Set ``%{TEST_WORKSPACE_ROOT}`` to the project root when running individual
+    test files (for example cloud debug runs) so files are found regardless of
     ``${EXECDIR}`` depth. When unset, behavior is unchanged.
     """
     if Path(filename).exists():
@@ -151,24 +151,21 @@ def get_path(filename: str) -> Path:
         Path(BuiltIn().get_variable_value("${SUITE SOURCE}")).parent.parent / "images" / filename
     )
     downloads = Path(get_downloads_dir()) / filename
+    paths = [downloads, files, images]
+
+    # get execdir paths
     exec_dir = BuiltIn().get_variable_value("${EXECDIR}")
     files_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'files')}/{filename}")
     images_exec_dir = Path(f"{get_exec_subdir(exec_dir, 'images')}/{filename}")
+
+    # get test workspace paths
     test_workspace_root = os.environ.get("TEST_WORKSPACE_ROOT")
     if test_workspace_root:
         test_workspace_files = Path(f"{get_exec_subdir(test_workspace_root, 'files')}/{filename}")
         test_workspace_images = Path(f"{get_exec_subdir(test_workspace_root, 'images')}/{filename}")
-        paths = [
-            downloads,
-            files,
-            images,
-            test_workspace_files,
-            test_workspace_images,
-            files_exec_dir,
-            images_exec_dir,
-        ]
-    else:
-        paths = [downloads, files, images, files_exec_dir, images_exec_dir]
+        paths.extend([test_workspace_files, test_workspace_images])
+
+    paths.extend([files_exec_dir, images_exec_dir])
 
     for path in paths:
         logger.debug(f"{path=}")
@@ -176,14 +173,15 @@ def get_path(filename: str) -> Path:
             logger.debug(f"Path exists: {path}")
             return path
     try:
-        base_path = BuiltIn().get_variable_value("${base_image_path}")
+        base_path = BuiltIn().get_variable_value("${BASE_IMAGE_PATH}")
         full_path = os.path.join(base_path, "{}".format(filename.lower()))
         if not Path(full_path).exists():
             raise QWebFileNotFoundError("File not found from base image path")
         return Path(full_path)
     except (TypeError, QWebFileNotFoundError) as e:
         raise QWebFileNotFoundError(
-            "File not found from default folders. Set variable for base image path"
+            "File not found from default folders. Use a full path, or set "
+            "%{TEST_WORKSPACE_ROOT} or ${BASE_IMAGE_PATH} if needed"
         ) from e
 
 
