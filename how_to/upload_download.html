@@ -901,10 +901,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-default-folders-recommended" class="md-nav__link">
+  <a href="#resolving-files-by-filename-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Default Folders (Recommended)
+        Resolving Files by Filename (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resolving Files by Filename (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#search-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search order
       
     </span>
   </a>
@@ -912,13 +924,62 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#why-default-folders-matter" class="md-nav__link">
+  <a href="#how-files-and-images-folders-are-found" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Default Folders Matter
+        How files/ and images/ folders are found
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suite-local-files-and-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suite-local files/ and images/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-debug-runs-and-test_workspace_root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud debug runs and %{TEST_WORKSPACE_ROOT}
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-project-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended project layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-avoid-absolute-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why avoid absolute paths
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1377,34 +1438,84 @@ Example of what NOT to do:</p>
 </code></pre></div>
 <p><code>UploadFile</code> targets the underlying <code>&lt;input type="file"&gt;</code> element directly and bypasses the OS dialog entirely.</p>
 </div>
-<h3 id="using-default-folders-recommended">Using Default Folders (Recommended)</h3>
-<p>If you provide only a filename:</p>
+<h3 id="resolving-files-by-filename-recommended">Resolving Files by Filename (Recommended)</h3>
+<p>Pass only a filename when the file lives in a standard project folder:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>UploadFile    Upload Document    invoice.pdf
 </code></pre></div>
-<p>QWeb automatically searches default folders such as:</p>
-<ul>
-<li><code>users/downloads</code></li>
-<li><code>project_dir/files</code></li>
-<li><code>${EXECDIR}/**/files</code></li>
-</ul>
-<p>This allows you to avoid hardcoded absolute paths.</p>
-<h3 id="why-default-folders-matter">Why Default Folders Matter</h3>
+<p>QWeb resolves bare filenames through default folders instead of requiring
+absolute paths. The same resolution applies to other file keywords such as
+<code>VerifyFile</code>, <code>UseFile</code>, <code>UsePdf</code>, <code>ZipFiles</code>, and <code>MoveFiles</code>.</p>
+<h4 id="search-order">Search order</h4>
+<p>If the given name is not already an existing path, QWeb searches in this order:</p>
 <ol>
-<li>Tests remain portable across machines  </li>
-<li>CI/CD pipelines work without path changes  </li>
-<li>No dependency on user profile directories  </li>
-<li>Cleaner repository structure  </li>
-<li>Easier team collaboration  </li>
+<li>User Downloads folder</li>
+<li>Suite-local <code>files/</code> and <code>images/</code> near <code>${SUITE SOURCE}</code> (see below)</li>
+<li><code>files/</code> and <code>images/</code> anywhere under <code>%{TEST_WORKSPACE_ROOT}</code> (when set)</li>
+<li><code>files/</code> and <code>images/</code> anywhere under <code>${EXECDIR}</code></li>
+<li><code>${BASE_IMAGE_PATH}</code> if defined</li>
 </ol>
-<p>Avoid this:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>UploadFile    Upload Document    C:\Users\John\Desktop\invoice.pdf
+<p>Step 3 applies when <code>%{TEST_WORKSPACE_ROOT}</code> is set (typical for cloud debug runs).
+When the variable is unset, QWeb skips that step.</p>
+<h4 id="how-files-and-images-folders-are-found">How <code>files/</code> and <code>images/</code> folders are found</h4>
+<p>QWeb walks a directory tree and uses the <strong>first</strong> folder named <code>files</code> or
+<code>images</code> it encounters (usually the shallowest). Most projects should have one
+<code>files/</code> folder and one <code>images/</code> folder. If several exist, only the first match
+is used — pass a full path when you need a file from a specific folder.</p>
+<h4 id="suite-local-files-and-images">Suite-local <code>files/</code> and <code>images/</code></h4>
+<p><code>${SUITE SOURCE}</code> points to the suite <strong>file</strong>, not its directory. QWeb looks
+for <code>files/</code> and <code>images/</code> in the parent directory of the folder that contains
+the suite file. This allows a nested test folder to use its own files before
+any workspace-wide folder.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>my_project/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  tests/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    smoke/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>      files/
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        invoice.pdf
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      accounts/
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        create_account.robot
 </code></pre></div>
-<p>Absolute paths break in CI and on other developer machines.</p>
+<p>For <code>my_project/tests/smoke/accounts/create_account.robot</code>, QWeb checks
+<code>my_project/tests/smoke/files/</code> first. The same rule applies when <code>files/</code> sits
+at project root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>my_project/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  files/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    invoice.pdf
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  tests/
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    smoke.robot
+</code></pre></div>
+<h4 id="cloud-debug-runs-and-test_workspace_root">Cloud debug runs and <code>%{TEST_WORKSPACE_ROOT}</code></h4>
+<p>Full suite runs usually start from the project root and resolve files correctly.
+When a single test file is run in debug mode, <code>${EXECDIR}</code> points to that file's
+directory instead of the project root, and the suite-relative lookup above may
+no longer reach your <code>files/</code> folder.</p>
+<p>Set the <code>TEST_WORKSPACE_ROOT</code> environment variable (available in tests as
+<code>%{TEST_WORKSPACE_ROOT}</code>) to the project root before starting Robot:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TEST_WORKSPACE_ROOT</span><span class="o">=</span><span class="s2">"/home/services/suite/CNS Tests"</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>robot<span class="w"> </span>Assessment/upload.robot
+</code></pre></div>
+<p>QWeb then searches for <code>files/</code> and <code>images/</code> under that root after Downloads
+and suite-local folders. When the variable is unset, that step is skipped.</p>
+<h4 id="recommended-project-layout">Recommended project layout</h4>
+<p>Store upload and reference files in suite-local or project-level folders:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>project/
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  files/
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    invoice.pdf
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  images/
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    icon.png
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  tests/
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    upload.robot
+</code></pre></div>
+<h4 id="why-avoid-absolute-paths">Why avoid absolute paths</h4>
+<p>Portable tests should not depend on machine-specific locations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># Avoid
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>UploadFile    Upload Document    C:\Users\John\Desktop\invoice.pdf
+</code></pre></div>
+<p>Absolute paths break in CI, cloud runners, and on other developer machines.</p>
 <hr />
 <h3 id="uploading-inside-tables">Uploading Inside Tables</h3>
 <p>If a file input exists inside a table:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>UseTable      Attachments
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>UploadFile    r1c1    document.pdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>UseTable      Attachments
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>UploadFile    r1c1    document.pdf
 </code></pre></div>
 <p>Table coordinate syntax works with <code>UploadFile</code>.</p>
 <hr />
@@ -1419,14 +1530,14 @@ Example of what NOT to do:</p>
 <h3 id="21-expecting-a-download-expectfiledownload">2.1 Expecting a Download (<code>ExpectFileDownload</code>)</h3>
 <p><code>ExpectFileDownload</code> turns on polling for a file download event.<br />
 Run it every time before the action that starts the download and before <code>VerifyFileDownload</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ExpectFileDownload
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ClickText    Download
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>VerifyFileDownload    timeout=20s    # file should be downloaded in 20 seconds
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ExpectFileDownload
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ClickText    Download
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>VerifyFileDownload    timeout=20s    # file should be downloaded in 20 seconds
 </code></pre></div>
 <h3 id="22-verifying-a-download-verifyfiledownload">2.2 Verifying a Download (<code>VerifyFileDownload</code>)</h3>
 <p><code>VerifyFileDownload</code> verifies that a file has been downloaded and returns the downloaded file path.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>${path}=    VerifyFileDownload    timeout=20s
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Log    Downloaded file: ${path}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>${path}=    VerifyFileDownload    timeout=20s
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Log    Downloaded file: ${path}
 </code></pre></div>
 <p>Notes:</p>
 <ul>
@@ -1451,9 +1562,11 @@ Run it every time before the action that starts the download and before <code>Ve
 <hr />
 <h2 id="4-best-practices-for-file-automation">4. Best Practices for File Automation</h2>
 <ol>
-<li>Store upload files in a project <code>files/</code> directory.</li>
+<li>Store upload files in a suite-local or project-level <code>files/</code> directory.</li>
+<li>Store reference images in a suite-local or project-level <code>images/</code> directory.</li>
+<li>Set <code>%{TEST_WORKSPACE_ROOT}</code> when debugging individual test files in cloud environments.</li>
 <li>Let QWeb manage downloads.</li>
-<li>Never hardcode absolute paths.</li>
+<li>Avoid hardcoded absolute paths — use filenames and default folder resolution instead.</li>
 <li>Use <code>ExpectFileDownload</code> before triggering the download.</li>
 <li>Always verify downloads explicitly.</li>
 <li>Clean up downloaded files if needed between test runs.</li>
@@ -1471,6 +1584,14 @@ Run it every time before the action that starts the download and before <code>Ve
 <tr>
 <td><code>UploadFile</code></td>
 <td>Upload file to input type=file</td>
+</tr>
+<tr>
+<td><code>VerifyFile</code></td>
+<td>Verify a file exists and return its resolved path</td>
+</tr>
+<tr>
+<td><code>UseFile</code> / <code>UsePdf</code></td>
+<td>Set active text or PDF file for file keywords</td>
 </tr>
 <tr>
 <td><code>ExpectFileDownload</code></td>
