@@ -274,6 +274,31 @@ def type_texts(
         ...                     Phone=04049292243923     Address=Yellow street 33 C 44
         TypeTexts               ${cool_dict}
 
+    Parameters
+    ----------
+    input_texts : dict or str
+        Robot dictionary or path to a ``.txt``/``.csv`` file. File paths are
+        resolved from default folders when not an existing path. See **Default
+        folder resolution** in Notes.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
+
     Related keywords
     ----------------
     \`PressKey\`, \`TypeSecret\`, \`TypeText\`, \`WriteText\`
@@ -387,6 +412,31 @@ def verify_input_values(
         ${cool_dict}=           Create Dictionary    Name=Jane    Email=janedoe@iddqd.com
         ...                     Phone=04049292243923     Address=Yellow street 33 C 44
         VerifyInputValues       ${cool_dict}
+
+    Parameters
+    ----------
+    input_values : dict or str
+        Robot dictionary or path to a ``.txt``/``.csv`` file. File paths are
+        resolved from default folders when not an existing path. See **Default
+        folder resolution** in Notes.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
@@ -673,8 +723,9 @@ def upload_file(
     ----------
     locator : str
         Input label text, input's attribute value, xpath or index that locates the upload element.
-    filename : file to upload
-        Default folders = users/downloads, project_dir/files or ${EXECDIR}/\*\*/files
+    filename : str
+        File to upload. See **Default folder resolution** in Notes when not an
+        existing path.
     anchor : str
         Index number or text near the input field's locator element.
         If the page contains many places where the locator is then anchor is used
@@ -690,6 +741,24 @@ def upload_file(
         |  Accepted kwargs:
         |       limit_traverse : False. If limit traverse is set to false we are heading up to
         |       fifth parent element if needed when finding relative input element for some label.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
 
     Raises
     ------

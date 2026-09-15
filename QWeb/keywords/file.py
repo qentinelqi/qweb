@@ -52,8 +52,26 @@ def use_pdf(filename: str) -> None:
     Parameters
     ----------
     filename : str
-        Default folders = users/downloads, project_dir/files or ${EXECDIR}/\*\*/files.
-        Path is not needed if file is in default folder.
+        Filename or path. See **Default folder resolution** in Notes when not
+        an existing path.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
@@ -79,8 +97,26 @@ def use_file(filename: str) -> None:
     Parameters
     ----------
     filename : str
-        Default folders = users/downloads, project_dir/files or ${EXECDIR}/\*\*/files.
-        Path is not needed if file is in default folder.
+        Filename or path. See **Default folder resolution** in Notes when not
+        an existing path.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
@@ -383,7 +419,27 @@ def zip_files(name_of_zip: str, files_to_zip: str) -> None:
     name_of_zip : str
         Name of the zip file created.
     files_to_zip : str
-        Files to be zipped, separated by "," in case of multiple files.
+        Files to be zipped, separated by "," in case of multiple files. Each
+        entry is resolved from default folders when not an existing path. See
+        **Default folder resolution** in Notes.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
     """
     if not name_of_zip.endswith(".zip"):
         name_of_zip += ".zip"
@@ -423,9 +479,29 @@ def move_files(files_to_move: str, destination_folder: str) -> None:
     Parameters
     ----------
     files_to_move : str
-        Files to move, separated by "," in case of multiple files.
+        Files to move, separated by "," in case of multiple files. Each entry is
+        resolved from default folders when not an existing path. See **Default
+        folder resolution** in Notes.
     destination_folder : str
         Destination folder of the moved files.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
@@ -441,10 +517,7 @@ def move_files(files_to_move: str, destination_folder: str) -> None:
 
 @keyword(tags=("File", "Verification"))
 def verify_file(filename: str) -> Path:
-    """Verify file exists.
-
-    If reference file are not in default folders (images, files, downloads) then
-    path should be defined. Returns path.
+    """Verify file exists and return its resolved path.
 
     Examples
     --------
@@ -457,7 +530,26 @@ def verify_file(filename: str) -> Path:
     Parameters
     ----------
     filename : str
-        Filename or path to find.
+        Filename or path to find. See **Default folder resolution** in Notes
+        when not an existing path.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
     """
     try:
         path = download.get_path(filename)
@@ -465,5 +557,6 @@ def verify_file(filename: str) -> Path:
         return path
     except QWebFileNotFoundError as e:
         raise QWebFileNotFoundError(
-            "File not found from default folders. It may not exists or you may need a full path."
+            "File not found from default folders. Use a full path, or set "
+            "%{TEST_WORKSPACE_ROOT} or ${BASE_IMAGE_PATH} if needed"
         ) from e

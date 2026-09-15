@@ -1367,6 +1367,31 @@ def verify_any(texts_to_verify: Union[list[str], str], timeout: Union[int, float
         # Follow up to check which state
         ${login}=    IsText       Login
 
+    Parameters
+    ----------
+    texts_to_verify : list or str
+        Comma-separated texts, Robot list, or path to a ``.txt`` file. Text
+        file paths are resolved from default folders when not an existing path.
+        See **Default folder resolution** in Notes.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
+
     Related keywords
     ----------------
     \`VerifyAll\`, \`VerifyFile\`, \`VerifyFileText\`,
@@ -1422,6 +1447,31 @@ def verify_all(texts_to_verify: Union[list[str], str], timeout: Union[int, float
 
         ${cool_list}=    Create List    Cat    Mouse    Dog    Lion    iddqd66402
         VerifyAll      ${cool_list}
+
+    Parameters
+    ----------
+    texts_to_verify : list or str
+        Comma-separated texts, Robot list, or path to a ``.txt`` file. Text
+        file paths are resolved from default folders when not an existing path.
+        See **Default folder resolution** in Notes.
+
+    Notes
+    -----
+    **Default folder resolution:** When only a filename is given and it is not
+    an existing path, QWeb searches default folders. Directory walks use the
+    first ``files/`` or ``images/`` folder found — use a full path when several
+    exist.
+
+    1. User Downloads folder
+    2. Suite-local ``files/`` and ``images/`` near ``${SUITE SOURCE}``
+    3. ``files/`` and ``images/`` under ``%{TEST_WORKSPACE_ROOT}`` (when set)
+    4. ``files/`` and ``images/`` under ``${EXECDIR}``
+    5. ``${BASE_IMAGE_PATH}`` if set
+
+    Suite-local: for
+    ``my_project/tests/smoke/accounts/create_account.robot``, QWeb checks
+    ``my_project/tests/smoke/files/``. Set ``%{TEST_WORKSPACE_ROOT}`` to the
+    project root when debugging individual test files.
 
     Related keywords
     ----------------
