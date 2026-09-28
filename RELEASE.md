@@ -6,9 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.8.3] - 2026-09-28
+
+### Added
+- Added support for Python 3.14.
+- Added `%{TEST_WORKSPACE_ROOT}` as a default folder search location for files and images.
+
+### Changed
+- Clarified the default folder search documentation, including upload and download related guidance.
+
+
 ## [3.8.2] - 2026-08-21
-
-
 
 ### Fixed
 - Added support for browser options/flags that contain "," to **Open Browser**.
