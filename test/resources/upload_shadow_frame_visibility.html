@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File Input Locator Test</title>
+<style>
+ body{font:15px system-ui,sans-serif;max-width:850px;margin:32px auto;padding:0 18px;color:#20242a}section{border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin:14px 0}h1{font-size:24px}h2{font-size:17px;margin:0 0 10px}iframe{width:100%;height:175px;border:1px solid #94a3b8}code{background:#eef2f7;padding:2px 4px}table{border-collapse:collapse;width:100%;margin:16px 0 22px}th,td{border:1px solid #cbd5e1;padding:9px 11px;text-align:left}th{background:#eef2f7}tbody tr:nth-child(even){background:#f8fafc}.visible{color:#146c43;font-weight:600}.hidden{color:#64748b}small{color:#64748b}.result{margin-top:8px;color:#146c43}
+</style>
+</head>
+<body>
+<h1>File input discovery test</h1>
+<p>Test multiple <code>input[type=file]</code> elements in light DOM, nested open shadow DOM and same-origin iframes. All inputs have volatile IDs, no labels, and no stable CSS class. Most file inputs are hidden, but three are visible: top-level light DOM #1, top-level shadow DOM #2, and iframe A light DOM #1.</p>
+<p><strong>Expected order (document order, recursively descending into open shadow roots):</strong> top-level light #1, top-level shadow #2, nested shadow #3, top-level light #4. Each iframe is a separate document: frame A has #1 light and #2 shadow; frame B has #1 nested shadow and #2 light.</p>
+<section aria-labelledby="overview-heading"><h2 id="overview-heading">File input overview</h2>
+<p>Indices below are <strong>1-based and scoped to each document/frame</strong>. The table describes the expected traversal order within each document, including open shadow roots.</p>
+<table><thead><tr><th>Location</th><th>Input index</th><th>Visibility</th></tr></thead><tbody>
+<tr><td>Top-level light DOM</td><td>1</td><td class="visible">Visible</td></tr>
+<tr><td>Top-level open shadow DOM</td><td>2</td><td class="visible">Visible</td></tr>
+<tr><td>Top-level nested open shadow DOM</td><td>3</td><td class="hidden">Hidden</td></tr>
+<tr><td>Top-level light DOM</td><td>4</td><td class="hidden">Hidden</td></tr>
+<tr><td>Iframe A — light DOM</td><td>1</td><td class="visible">Visible</td></tr>
+<tr><td>Iframe A — open shadow DOM</td><td>2</td><td class="hidden">Hidden</td></tr>
+<tr><td>Iframe B — nested open shadow DOM</td><td>1</td><td class="hidden">Hidden</td></tr>
+<tr><td>Iframe B — light DOM</td><td>2</td><td class="hidden">Hidden</td></tr>
+</tbody></table><small>IDs change on refresh. Frame inputs are indexed separately from the top-level document.</small></section>
+<section><h2>Top-level light DOM — input 1</h2><div id="light-first"></div><div class="result" id="result-light-first">No file selected</div></section>
+<section><h2>Top-level open shadow DOM — input 2</h2><div id="shadow-host"></div><div class="result" id="result-shadow">No file selected</div></section>
+<section><h2>Top-level nested open shadow DOM — input 3</h2><div id="nested-host"></div><div class="result" id="result-nested">No file selected</div></section>
+<section><h2>Top-level light DOM — input 4</h2><div id="light-last"></div><div class="result" id="result-light-last">No file selected</div></section>
+<section><h2>Same-origin iframe A</h2><iframe id="frame-a" title="Frame A"></iframe></section>
+<section><h2>Same-origin iframe B</h2><iframe id="frame-b" title="Frame B"></iframe></section>
+<small>Visible inputs: top-level light #1, top-level shadow #2, iframe A light #1. Refresh regenerates IDs. File selection results appear in each section. No external dependencies or server needed.</small>
+<script>
+const makeInput=(doc,output,visible=false)=>{const input=doc.createElement('input');input.type='file';input.id='file_'+crypto.randomUUID().replaceAll('-','');if(!visible)input.style.display='none';input.addEventListener('change',()=>{output.textContent=input.files.length?`Selected: ${Array.from(input.files).map(f=>f.name).join(', ')}`:'No file selected'});return input};
+function addLight(hostId,resultId,visible=false){document.getElementById(hostId).append(makeInput(document,document.getElementById(resultId),visible))}
+addLight('light-first','result-light-first',true);
+const shadow=document.getElementById('shadow-host').attachShadow({mode:'open'});shadow.append(makeInput(document,document.getElementById('result-shadow'),true));
+const outer=document.getElementById('nested-host').attachShadow({mode:'open'});const innerHost=document.createElement('div');outer.append(innerHost);innerHost.attachShadow({mode:'open'}).append(makeInput(document,document.getElementById('result-nested')));
+addLight('light-last','result-light-last');
+function frameHtml(name,reverse){const firstResult=reverse?"r3":"r1",secondResult=reverse?"r4":"r2";return `<!DOCTYPE html><html><head><style>body{font:14px system-ui;padding:8px}.result{color:#146c43;margin:6px 0}</style></head><body><div id="first"></div><div class="result" id="${firstResult}">No file selected</div><div id="second"></div><div class="result" id="${secondResult}">No file selected</div><script>
+const make=(id,visible=false)=>{let i=document.createElement('input');i.type='file';i.id='file_'+crypto.randomUUID().replaceAll('-','');i.hidden=!visible;i.addEventListener('change',()=>document.getElementById(id).textContent='Selected: '+Array.from(i.files).map(f=>f.name).join(', '));return i};
+function light(host,result,visible=false){document.getElementById(host).append(make(result,visible))}
+function shadow(host,result,nested){let root=document.getElementById(host).attachShadow({mode:'open'});if(nested){let child=document.createElement('div');root.append(child);root=child.attachShadow({mode:'open'})}root.append(make(result))}
+${reverse?"shadow('first','r3',true);light('second','r4');":"light('first','r1',true);shadow('second','r2',false);"}
+<\/script></body></html>`}
+document.getElementById('frame-a').srcdoc=frameHtml('A',false);
+document.getElementById('frame-b').srcdoc=frameHtml('B',true);
+</script>
+</body></html>

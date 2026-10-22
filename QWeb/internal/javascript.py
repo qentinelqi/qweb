@@ -16,7 +16,7 @@
 # ---------------------------
 from __future__ import annotations
 import importlib.resources
-from typing import Any, Union
+from typing import Any, Optional, Union
 from selenium.webdriver.remote.webelement import WebElement
 from QWeb.internal import browser
 
@@ -167,9 +167,20 @@ def get_all_frames_from_shadow_dom() -> list[WebElement]:
     return execute_javascript(js)
 
 
-def get_all_input_elements_from_shadow_dom() -> list[WebElement]:
-    """Find all input and textarea elements in shadow DOM (using external JS file, preloaded)."""
+def get_all_input_elements_from_shadow_dom(
+    input_type: Optional[str] = None,
+) -> list[WebElement]:
+    """Find input and textarea elements in the document tree including shadow roots.
+
+    Parameters
+    ----------
+    input_type : str, optional
+        When set (e.g. ``"file"``), only ``INPUT`` elements with that ``type`` are returned.
+        When omitted, all ``INPUT`` and ``TEXTAREA`` elements are returned.
+    """
     js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_ALL_INPUT_ELEMENTS_FROM_SHADOW_DOM_JS
+    if input_type is not None:
+        return execute_javascript(js, input_type)
     return execute_javascript(js)
 
 

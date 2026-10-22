@@ -695,9 +695,11 @@ def upload_file(
 ) -> None:
     r"""Uploads a file to an HTML input element of type ``file``.
 
-    This keyword interacts with native HTML file upload fields by setting the full
-    file path to an ``<input type="file">`` element. The input may be visible or hidden,
-    but it must support direct value assignment via standard browser automation.
+    This keyword sets the full file path on a located ``<input type="file">`` element
+    via standard browser automation (the control does not need to be visible on screen
+    for that step to work). Element search uses the normal visibility rules by default;
+    to include CSS-hidden file inputs when locating the field, pass ``visibility=False``
+    (see Examples).
 
     ⚠️ This keyword only works with standard HTML file uploads where an `<input type="file">`
     element is present. It does not support custom-styled file upload components that do not
@@ -741,6 +743,9 @@ def upload_file(
         |  Accepted kwargs:
         |       limit_traverse : False. If limit traverse is set to false we are heading up to
         |       fifth parent element if needed when finding relative input element for some label.
+        |       visibility : When ``False``, include CSS-hidden file inputs when locating the
+        |       element (default follows ``SetConfig`` ``Visibility``). Upload still works on
+        |       hidden inputs once they are found.
 
     Notes
     -----
