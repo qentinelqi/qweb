@@ -64,7 +64,7 @@ Upload with Index, visible only, shadow dom included
     VerifyElementText   result-shadow           Selected: test2.txt       tag=div
     VerifyElementText   r1                      Selected: test1.txt       tag=div     
 
-    # should fail, only 4 visible in both doms
+    # should fail, only 3 visible in both doms
     Run Keyword And Expect Error    QWebElementNotFoundError*   UploadFile          4     test2.txt   timeout=1
 
 Upload with Index, include non-visible, shadow dom included

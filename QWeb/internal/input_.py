@@ -176,9 +176,10 @@ def get_input_element_by_css_selector(
     if upload:
         try:
             file_index = int(locator) - 1
-            return get_file_input_element_by_index(file_index, **kwargs)
         except ValueError:
             logger.debug("locator was text")
+        else:
+            return get_file_input_element_by_index(file_index, **kwargs)
     if "qweb_old" not in kwargs:
         full_matches, partial_matches = get_input_elements_by_css(locator, **kwargs)
         # backup search via xpath. This is needed due to javascript search not reaching

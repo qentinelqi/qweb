@@ -272,7 +272,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             start = time.time()
             timeout = CONFIG["FrameTimeout"]
             while time.time() < timeout + start:
-                frames = fc.check_frames(driver)
+                frames = fc.check_frames(driver, **kwargs)
                 for frame in frames:
                     web_element = search_from_frames(driver=driver, current_frame=frame)
                     if _is_picked_element(web_element, pick_index) or (
@@ -363,7 +363,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
             start = time.time()
             timeout = CONFIG["FrameTimeout"]
             while time.time() < timeout + start:
-                frames = fc.check_frames(driver)
+                frames = fc.check_frames(driver, **kwargs)
                 for count, frame in enumerate(frames):  # pylint: disable=W0612
                     parent_tree.append(count)
                     web_element = search_from_frames_safari(
