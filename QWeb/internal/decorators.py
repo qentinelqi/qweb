@@ -74,7 +74,6 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                 logger.debug("Got {}. Trying to retry..".format(e))
                 time.sleep(SHORT_DELAY)
             start = time.time()
-            last_not_found: QWebElementNotFoundError | None = None
             while time.time() < timeout + start:
                 try:
                     kwargs["timeout"] = float(timeout + start - time.time())
@@ -82,13 +81,10 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                     return fn(*args, **kwargs)
                 except (QWebUnexpectedConditionError, QWebTimeoutError) as e:
                     logger.debug("Got {}".format(e))
-                except QWebElementNotFoundError as e:
-                    last_not_found = e
-                    time.sleep(SHORT_DELAY)
-                    logger.debug("Got exception: {}. Trying to retry..".format(e))
                 except (
                     InvalidSelectorException,
                     NoSuchElementException,
+                    QWebElementNotFoundError,
                     UnexpectedAlertPresentException,
                     QWebStalingElementError,
                     StaleElementReferenceException,
@@ -120,8 +116,6 @@ def timeout_decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
                 return 0
             if "is_text" in str(fn) or "is_no_text" in str(fn):
                 return False
-            if last_not_found is not None:
-                raise last_not_found
             raise QWebElementNotFoundError(
                 "Unable to find element for locator {} in {} sec".format(locator, timeout)
             )

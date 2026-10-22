@@ -37,7 +37,7 @@ Upload with Index, visible only
     VerifyElementText   r1                      Selected: test2.txt       tag=div   
 
     # should fail, only 2 visible in light-dom
-    Run Keyword And Expect Error    QWebElementNotFoundError*Found 2 file input(s).   UploadFile          3                       test2.txt   timeout=1
+    Run Keyword And Expect Error    QWebElementNotFoundError*   UploadFile          3                       test2.txt   timeout=1
 
 
 Upload with Index, visibility off
@@ -50,7 +50,7 @@ Upload with Index, visibility off
     VerifyElementText   r1                      Selected: test1.txt       tag=div   
 
     # should fail, only 4 in light-dom
-    Run Keyword And Expect Error    QWebElementNotFoundError*Found 4 file input(s).   UploadFile          5     test2.txt   visibility=False    timeout=1
+    Run Keyword And Expect Error    QWebElementNotFoundError*   UploadFile          5     test2.txt   visibility=False    timeout=1
 
 
 Upload with Index, visible only, shadow dom included
@@ -65,7 +65,7 @@ Upload with Index, visible only, shadow dom included
     VerifyElementText   r1                      Selected: test1.txt       tag=div     
 
     # should fail, only 4 visible in both doms
-    Run Keyword And Expect Error    QWebElementNotFoundError*Found 3 file input(s).   UploadFile          4     test2.txt   timeout=1
+    Run Keyword And Expect Error    QWebElementNotFoundError*   UploadFile          4     test2.txt   timeout=1
 
 Upload with Index, include non-visible, shadow dom included
     [Setup]             SetConfig     ShadowDom   On
@@ -81,7 +81,7 @@ Upload with Index, include non-visible, shadow dom included
     VerifyElementText   r4                      Selected: test2.txt       tag=div       
 
     # should fail, only 8 in both doms and all frames
-    Run Keyword And Expect Error    QWebElementNotFoundError*Found 8 file input(s).   UploadFile          9     test2.txt    visibility=False   timeout=1
+    Run Keyword And Expect Error    QWebElementNotFoundError*   UploadFile          9     test2.txt    visibility=False   timeout=1
 
 *** Keywords ***
 SuiteStart

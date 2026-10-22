@@ -267,6 +267,10 @@ def get_file_input_element_by_index(index: int, **kwargs) -> WebElement:
             )
         return elements[index]
 
+    # Cross-frame global index for @all_frames: pick_global_index is the 0-based input to
+    # select; _pick_index_cum is a shared counter updated as each frame's file-input list is
+    # seen (see frame._pick_global_index_from_list). Stop in the matching iframe for upload.
+    # Set only on this kwargs copy — must not leak into unrelated frame/table searches.
     pick_cum = [0]
     kwargs["pick_global_index"] = index
     kwargs["_pick_index_cum"] = pick_cum

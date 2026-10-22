@@ -222,8 +222,14 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
         ) -> Union[List[Any], Any]:
             # Initialize the list to store found elements if continue_search is True
             all_elements = []
+            # Optional global index pick (e.g. file input by numeric UploadFile locator): caller
+            # sets pick_global_index and usually _pick_index_cum on kwargs. Only read cum when
+            # pick mode is on — do not setdefault otherwise (kwargs is forwarded to strict fns).
             pick_index: Optional[int] = kwargs.get("pick_global_index")
-            pick_cum: list[int] = kwargs.setdefault("_pick_index_cum", [0])
+            if pick_index is not None:
+                pick_cum = kwargs.setdefault("_pick_index_cum", [0])
+            else:
+                pick_cum = None  # pick branches unused
             keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
             if keep_frame:
                 return fn(*args, **kwargs)
@@ -248,15 +254,16 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 err = e
                 web_element = None
 
+            immediate: Any = None
             if pick_index is not None and isinstance(web_element, list):
-                picked = _pick_global_index_from_list(
+                immediate = _pick_global_index_from_list(
                     cast(list[WebElement], web_element), pick_index, pick_cum
                 )
-                if picked is not None:
-                    return picked
-            elif is_valid(web_element):
-                if not continue_search:
-                    return web_element
+            elif is_valid(web_element) and not continue_search:
+                immediate = web_element
+            if immediate is not None:
+                return immediate
+            if pick_index is None and is_valid(web_element):
                 if not isinstance(web_element, tuple):
                     web_element = list(web_element)
                 # Accumulate elements if continuing search
@@ -268,12 +275,12 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 frames = fc.check_frames(driver)
                 for frame in frames:
                     web_element = search_from_frames(driver=driver, current_frame=frame)
-                    if _is_picked_element(web_element, pick_index):
+                    if _is_picked_element(web_element, pick_index) or (
+                        is_valid(web_element) and not continue_search
+                    ):
+                        logger.debug(f"Found web element = {web_element}")
                         return web_element
                     if is_valid(web_element):
-                        logger.debug(f"Found web element = {web_element}")
-                        if not continue_search:
-                            return web_element
                         if not isinstance(web_element, tuple):
                             web_element = list(web_element)
                         all_elements.extend(web_element)  # Accumulate elements if continuing search
@@ -290,9 +297,11 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 if err:
                     raise err
 
-                if pick_index is not None:
-                    return None
-                return all_elements if continue_search else web_element
+                return (
+                    None
+                    if pick_index is not None
+                    else (all_elements if continue_search else web_element)
+                )
 
             driver.switch_to.default_content()
             raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
@@ -305,8 +314,14 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
         ) -> Union[List[Any], Any]:
             # Initialize the list to store found elements if continue_search is True
             all_elements = []
+            # Optional global index pick (e.g. file input by numeric UploadFile locator): caller
+            # sets pick_global_index and usually _pick_index_cum on kwargs. Only read cum when
+            # pick mode is on — do not setdefault otherwise (kwargs is forwarded to strict fns).
             pick_index: Optional[int] = kwargs.get("pick_global_index")
-            pick_cum: list[int] = kwargs.setdefault("_pick_index_cum", [0])
+            if pick_index is not None:
+                pick_cum = kwargs.setdefault("_pick_index_cum", [0])
+            else:
+                pick_cum = None  # pick branches unused
             keep_frame = kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])
             if keep_frame:
                 return fn(*args, **kwargs)
@@ -331,16 +346,16 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 err = e
                 web_element = None
 
+            immediate: Any = None
             if pick_index is not None and isinstance(web_element, list):
-                picked = _pick_global_index_from_list(
+                immediate = _pick_global_index_from_list(
                     cast(list[WebElement], web_element), pick_index, pick_cum
                 )
-                if picked is not None:
-                    return picked
-            elif is_valid(web_element):
-                if not continue_search:
-                    return web_element
-
+            elif is_valid(web_element) and not continue_search:
+                immediate = web_element
+            if immediate is not None:
+                return immediate
+            if pick_index is None and is_valid(web_element):
                 if not isinstance(web_element, tuple):
                     web_element = list(web_element)
                 all_elements.extend(web_element)  # Accumulate elements if continuing search
@@ -354,12 +369,12 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                     web_element = search_from_frames_safari(
                         driver=driver, current_frame=count, parent_tree=parent_tree
                     )
-                    if _is_picked_element(web_element, pick_index):
+                    if _is_picked_element(web_element, pick_index) or (
+                        is_valid(web_element) and not continue_search
+                    ):
+                        logger.debug("Found web element = {}".format(web_element))
                         return web_element
                     if is_valid(web_element):
-                        logger.debug("Found web element = {}".format(web_element))
-                        if not continue_search:
-                            return web_element
                         if not isinstance(web_element, tuple):
                             web_element = list(web_element)
                         all_elements.extend(web_element)  # Accumulate elements if continuing search
@@ -379,9 +394,11 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 if err:
                     raise err
 
-                if pick_index is not None:
-                    return None
-                return all_elements if continue_search else web_element
+                return (
+                    None
+                    if pick_index is not None
+                    else (all_elements if continue_search else web_element)
+                )
 
             driver.switch_to.default_content()
             raise QWebTimeoutError("From frame decorator: Unable to locate element in given time")
