@@ -47,7 +47,12 @@ from QWeb.internal.config_defaults import CONFIG
 def _pick_global_index_from_list(
     elements: list[WebElement], pick_index: int, cum: list[int]
 ) -> Optional[WebElement]:
-    """Return element at global pick_index if it falls in this frame's list; else update cum."""
+    """Return element at global pick_index if it falls in this frame's list; else update cum.
+
+    ``cum`` is a one-element list (e.g. ``[0]``) shared with the caller and across frame
+    walks so the running total of elements in prior frames can be updated in place. A plain
+    ``int`` would not work because integers are immutable in Python.
+    """
     if not elements:
         return None
     count = len(elements)
@@ -259,7 +264,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 immediate = _pick_global_index_from_list(
                     cast(list[WebElement], web_element), pick_index, pick_cum
                 )
-            elif is_valid(web_element) and not continue_search:
+            elif pick_index is None and is_valid(web_element) and not continue_search:
                 immediate = web_element
             if immediate is not None:
                 return immediate
@@ -276,7 +281,9 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 for frame in frames:
                     web_element = search_from_frames(driver=driver, current_frame=frame)
                     if _is_picked_element(web_element, pick_index) or (
-                        is_valid(web_element) and not continue_search
+                        pick_index is None
+                        and is_valid(web_element)
+                        and not continue_search
                     ):
                         logger.debug(f"Found web element = {web_element}")
                         return web_element
@@ -351,7 +358,7 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                 immediate = _pick_global_index_from_list(
                     cast(list[WebElement], web_element), pick_index, pick_cum
                 )
-            elif is_valid(web_element) and not continue_search:
+            elif pick_index is None and is_valid(web_element) and not continue_search:
                 immediate = web_element
             if immediate is not None:
                 return immediate
@@ -370,7 +377,9 @@ def all_frames(fn: Callable[..., Any]) -> Callable[..., Any]:
                         driver=driver, current_frame=count, parent_tree=parent_tree
                     )
                     if _is_picked_element(web_element, pick_index) or (
-                        is_valid(web_element) and not continue_search
+                        pick_index is None
+                        and is_valid(web_element)
+                        and not continue_search
                     ):
                         logger.debug("Found web element = {}".format(web_element))
                         return web_element
