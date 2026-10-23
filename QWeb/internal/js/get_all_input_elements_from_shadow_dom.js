@@ -1,10 +1,18 @@
 // get_all_input_elements_from_shadow_dom.js
-// Finds all input and textarea elements in shadow DOM
+// Finds input and textarea elements in the document tree (including shadow roots).
+// Optional arguments[0]: input type filter (e.g. "file"). When set, only matching
+// INPUT elements are returned (TEXTAREA has no type attribute and is omitted).
 // Assumes recursiveWalk (get_recursive_walk.js) is defined in the context
-function find_all_input_elements_from_shadow_dom() {
+function find_all_input_elements_from_shadow_dom(inputType) {
     var results = [];
-    var elem = recursiveWalk(document.body, function(node) {
-        if (node.tagName == "INPUT" || node.tagName == "TEXTAREA") {
+    var typeFilter =
+        inputType != null && inputType !== "" ? String(inputType).toLowerCase() : null;
+    recursiveWalk(document.body, function(node) {
+        if (node.tagName == "INPUT") {
+            if (!typeFilter || (node.type && node.type.toLowerCase() === typeFilter)) {
+                results.push(node);
+            }
+        } else if (node.tagName == "TEXTAREA" && !typeFilter) {
             results.push(node);
         }
     });

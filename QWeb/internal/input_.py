@@ -175,13 +175,11 @@ def get_input_element_by_css_selector(
     upload = kwargs.get("upload")
     if upload:
         try:
-            index = int(locator) - 1
-            kwargs["any_element"] = True
-            input_elements = element.get_elements_by_attributes(**kwargs)
-            if input_elements:
-                return input_elements[index]
+            file_index = int(locator) - 1
         except ValueError:
             logger.debug("locator was text")
+        else:
+            return get_file_input_element_by_index(file_index, **kwargs)
     if "qweb_old" not in kwargs:
         full_matches, partial_matches = get_input_elements_by_css(locator, **kwargs)
         # backup search via xpath. This is needed due to javascript search not reaching
@@ -230,6 +228,61 @@ def get_inputs_including_shadow_dom(locator: str, **kwargs) -> list[WebElement]:
     if shadow_elements:
         logger.debug(f"Found {len(shadow_elements)} inputs when extending search to shadow dom")
     return shadow_elements
+
+
+def _file_inputs_in_current_frame(**kwargs) -> list[WebElement]:
+    """File inputs in the active frame document (driver must already be in that frame)."""
+    shadow_dom = CONFIG["ShadowDOM"]
+    if shadow_dom:
+        elements = javascript.get_all_input_elements_from_shadow_dom("file")
+    else:
+        elements = javascript.get_all_elements('input[type="file"]')
+    if not elements:
+        return []
+    elements = text.filter_by_modal_ancestor(elements)
+    return element.get_visible_elements_from_elements(elements, **kwargs) or []
+
+
+@frame.all_frames
+def _find_file_input_by_global_index(**kwargs) -> Union[list[WebElement], WebElement]:
+    """Per-frame file input list; frame walk uses pick_global_index to return one element."""
+    return _file_inputs_in_current_frame(**kwargs)
+
+
+def get_file_input_element_by_index(index: int, **kwargs) -> WebElement:
+    """Return the file input at ``index`` (0-based) across frames in traversal order.
+
+    Uses cumulative counts per frame and stops in the frame that contains the match so
+    the driver stays in context for upload.
+    """
+    if index < 0:
+        raise QWebElementNotFoundError("File input index must be >= 1 (1-based locator).")
+    kwargs = dict(kwargs)
+    if util.par2bool(kwargs.get("stay_in_current_frame", CONFIG["StayInCurrentFrame"])):
+        elements = _file_inputs_in_current_frame(**kwargs)
+        if index >= len(elements):
+            raise QWebElementNotFoundError(
+                "No file input at index {} (1-based). Found {} file input(s).".format(
+                    index + 1, len(elements)
+                )
+            )
+        return elements[index]
+
+    # Cross-frame global index for @all_frames: pick_global_index is the 0-based input to
+    # select; _pick_index_cum is a shared counter updated as each frame's file-input list is
+    # seen (see frame._pick_global_index_from_list). Stop in the matching iframe for upload.
+    # Set only on this kwargs copy — must not leak into unrelated frame/table searches.
+    pick_cum = [0]
+    kwargs["pick_global_index"] = index
+    kwargs["_pick_index_cum"] = pick_cum
+    result = _find_file_input_by_global_index(**kwargs)
+    if isinstance(result, WebElement):
+        return result
+    raise QWebElementNotFoundError(
+        "No file input at index {} (1-based). Found {} file input(s).".format(
+            index + 1, pick_cum[0]
+        )
+    )
 
 
 def get_input_elements_by_css(locator: str, **kwargs):

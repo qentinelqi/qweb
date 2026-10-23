@@ -32,7 +32,8 @@ def check_frames(driver: WebDriver, **kwargs) -> list[WebElement]:
     frames += driver.find_elements(By.XPATH, "//iframe|//frame")
     shadow_dom = CONFIG["ShadowDOM"]
     if shadow_dom:
-        frames = javascript.get_all_frames_from_shadow_dom()
+        shadow_frames = javascript.get_all_frames_from_shadow_dom()
+        frames = list(dict.fromkeys(list(frames) + shadow_frames))
     visible_only = kwargs.get("visibility", True)
     if not visible_only:
         return frames
