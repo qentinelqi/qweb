@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Visually hidden checkbox inputs</title>
+<style>
+  body { font: 14px sans-serif; margin: 20px; }
+  td, th { padding: 6px 10px; border-bottom: 1px solid #ccc; }
+  .checkbox-container, .forceVirtualCheckbox, .slds-checkbox { position: relative; display: inline-block; width: 16px; height: 16px; }
+  /* The "visually hidden" input: a clipped 1x1 box with opacity 1. */
+  .checkbox-container input, .forceVirtualCheckbox input, .slds-checkbox input { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; clip: rect(0 0 0 0); overflow: hidden; }
+  .faux, .slds-checkbox--faux, .slds-checkbox_faux { display: block; width: 16px; height: 16px; border: 1px solid #555; border-radius: 3px; background: #fff; box-sizing: border-box; }
+  .selected .faux, .selected .slds-checkbox--faux, .selected .slds-checkbox_faux { background: #0b5cab; }
+</style>
+</head>
+<body>
+<!-- A row-selection table that keeps its state in script, the way component frameworks do.
+     Each checkbox is a 1x1 "visually hidden" input with a styled box drawn beside it, and
+     no label. The element that wraps both is what a user clicks: its handler updates the
+     model, and the input only mirrors the model. Writing `.checked` on the input changes
+     nothing the page knows about.
+
+     The first two rows use a generic class. The last two carry the markup of Salesforce's
+     Aura data table (div.forceVirtualCheckbox > input + span.slds-checkbox--faux) and the
+     current SLDS class (slds-checkbox_faux). -->
+<table>
+  <thead><tr><th></th><th>Name</th><th>Company</th></tr></thead>
+  <tbody>
+    <tr data-name="First Lead">
+      <td><span><div class="checkbox-container"><input type="checkbox" aria-label="Select item First Lead"><span class="faux"></span></div></span></td>
+      <td>First Lead</td><td>Acme Solutions</td>
+    </tr>
+    <tr data-name="Other Lead">
+      <td><span><div class="checkbox-container"><input type="checkbox" aria-label="Select item Other Lead"><span class="faux"></span></div></span></td>
+      <td>Other Lead</td><td>Elsewhere Inc</td>
+    </tr>
+    <tr data-name="Aura Lead">
+      <td><span><div class="forceVirtualCheckbox"><input type="checkbox" aria-label="Select item Aura Lead"><span class="slds-checkbox--faux"></span></div></span></td>
+      <td>Aura Lead</td><td>Virtual Data Table Co</td>
+    </tr>
+    <tr data-name="LWC Lead">
+      <td><span><span class="slds-checkbox"><input type="checkbox" aria-label="Select item LWC Lead"><span class="slds-checkbox_faux"></span></span></span></td>
+      <td>LWC Lead</td><td>Current SLDS Ltd</td>
+    </tr>
+  </tbody>
+</table>
+<p><button id="next" type="button">Next</button></p>
+<p id="result">nothing submitted</p>
+<script>
+  var model = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.checkbox-container, .forceVirtualCheckbox, .slds-checkbox'), function (box) {
+    var row = box.closest('tr'), name = row.getAttribute('data-name'), input = box.querySelector('input');
+    box.addEventListener('click', function (e) {
+      if (e.target === input) { return; }          // the input is never the thing a user clicks
+      model[name] = !model[name];
+      input.checked = model[name];                 // the input mirrors the model, not the reverse
+      row.className = model[name] ? 'selected' : '';
+    });
+  });
+  document.getElementById('next').addEventListener('click', function () {
+    var names = Object.keys(model).filter(function (n) { return model[n]; });
+    document.getElementById('result').textContent = names.length
+      ? 'selected: ' + names.join(', ')
+      : 'Select at least one record and try again.';
+  });
+</script>
+</body>
+</html>

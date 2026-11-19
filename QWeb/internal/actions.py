@@ -276,6 +276,27 @@ def wd_click(web_element: WebElement, **kwargs: Any) -> None:
             js_click(web_element)
 
 
+def _is_visually_hidden(checkbox_element: WebElement) -> bool:
+    """Is this a checkbox input the user cannot click.
+
+    True for ``display: none``, ``visibility: hidden``, ``opacity: 0`` and for a
+    box of one pixel or less. One pixel is the common "visually hidden" input:
+    a 1 x 1 px box, clipped and absolutely positioned, kept for the keyboard and
+    for screen readers while an element beside it draws the box the user sees.
+    """
+    js = """
+        var el = arguments[0];
+        var rect = el.getBoundingClientRect();
+        var style = el.ownerDocument.defaultView.getComputedStyle(el);
+        return rect.width <= 1 || rect.height <= 1 || style.display === "none"
+            || style.visibility === "hidden" || style.opacity === "0";
+        """
+    try:
+        return bool(javascript.execute_javascript(js, checkbox_element))
+    except WebDriverException:
+        return False
+
+
 @decorators.timeout_decorator_for_actions
 def checkbox_set(  # pylint: disable=unused-argument
     checkbox_element: WebElement, locator_element: WebElement, value: bool, **kwargs: Any
@@ -290,6 +311,17 @@ def checkbox_set(  # pylint: disable=unused-argument
                 parent_elem = checkbox_element.find_element(By.XPATH, "..")
                 if parent_elem.tag_name.lower() == "label":
                     parent_elem.click()
+                elif _is_visually_hidden(checkbox_element):
+                    # The box the user sees is drawn beside the input, and the
+                    # element that wraps both is what a user clicks. Clicking it
+                    # is a real click, which the page's own code receives.
+                    # Setting `.checked` by script, below, sends no click or
+                    # change event, so a page that tracks its checkboxes in its
+                    # own code is never told.
+                    try:
+                        parent_elem.click()
+                    except WebDriverException as e:
+                        logger.debug(str(e))
                 if checkbox_element.is_selected() != value:
                     javascript.execute_javascript(
                         "arguments[0].checked={}".format("true" if value else "false"),
