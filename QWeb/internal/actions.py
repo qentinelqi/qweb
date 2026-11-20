@@ -37,19 +37,21 @@ from selenium.common.exceptions import (
     JavascriptException,
     MoveTargetOutOfBoundsException,
     NoSuchElementException,
+    StaleElementReferenceException,
     WebDriverException,
 )
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
 from QWeb.internal import browser, checkbox, decorators, javascript, util
+from QWeb.internal.page_node import PageNode
 from QWeb.internal import text as internal_text
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import (
     QWebInvalidElementStateError,
+    QWebStalingElementError,
     QWebTextNotFoundError,
     QWebTimeoutError,
     QWebUnexpectedConditionError,
@@ -276,25 +278,44 @@ def wd_click(web_element: WebElement, **kwargs: Any) -> None:
             js_click(web_element)
 
 
+def _click_checkbox_label(checkbox_element: WebElement, locator_element: WebElement) -> None:
+    """Click the label when the input itself does not change state."""
+    if locator_element:
+        locator_element.click()
+        return
+    try:
+        parent_elem = checkbox_element.find_element("xpath", "..")
+    except WebDriverException:
+        return
+    if parent_elem is not None and str(parent_elem.tag_name).lower() == "label":
+        parent_elem.click()
+
+
 @decorators.timeout_decorator_for_actions
 def checkbox_set(  # pylint: disable=unused-argument
     checkbox_element: WebElement, locator_element: WebElement, value: bool, **kwargs: Any
 ) -> None:
-    if checkbox.is_checked(checkbox_element) != value:
-        try:
-            checkbox_element.click()
-        except WebDriverException:
-            if locator_element:
-                locator_element.click()
-            else:
-                parent_elem = checkbox_element.find_element(By.XPATH, "..")
-                if parent_elem.tag_name.lower() == "label":
-                    parent_elem.click()
-                if checkbox_element.is_selected() != value:
-                    javascript.execute_javascript(
-                        "arguments[0].checked={}".format("true" if value else "false"),
-                        checkbox_element,
-                    )
+    if checkbox.is_checked(checkbox_element) == value:
+        return
+    try:
+        checkbox_element.click()
+    except WebDriverException:
+        _click_checkbox_label(checkbox_element, locator_element)
+    if checkbox.is_checked(checkbox_element) == value:
+        return
+    try:
+        _click_checkbox_label(checkbox_element, locator_element)
+    except WebDriverException:
+        logger.debug("Checkbox label click failed")
+    if checkbox.is_checked(checkbox_element) == value:
+        return
+    try:
+        javascript.execute_javascript(
+            "arguments[0].checked={}".format("true" if value else "false"),
+            checkbox_element,
+        )
+    except WebDriverException:
+        logger.debug("Could not set checkbox state from script")
 
 
 # pylint: disable=too-many-branches
@@ -421,6 +442,9 @@ def get_select_options(
 
 @decorators.timeout_decorator_for_actions
 def hover_to(web_element: WebElement, timeout: int = 0) -> None:  # pylint: disable=unused-argument
+    if isinstance(web_element, PageNode):
+        web_element.hover()
+        return
     driver = browser.get_current_browser()
     # firefox & safari specific fix
     needs_js_scroll = [
@@ -454,6 +478,15 @@ def text_appearance(text: str, **kwargs: Any) -> bool:
         if kwargs["text_appear"] is False:
             return True
         raise QWebValueMismatchError("return value should be true") from te
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if not javascript.is_unwrapped_xpath_error(err):
+            raise
+        options = dict(kwargs)
+        anchor = str(options.pop("anchor", "1"))
+        present = internal_text.shadow_target(
+            "verify-text", text, anchor, **options
+        ) or internal_text.page_has_text(text, anchor, **options)
+        element = present or None
     try:
         if element and kwargs["text_appear"] is True:
             return True

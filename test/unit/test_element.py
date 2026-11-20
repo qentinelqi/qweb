@@ -20,7 +20,8 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebValueError
 from QWeb.internal.element import _overlap, \
                                   _get_closest_ortho_element, \
                                   get_closest_element, \
-                                  get_unique_element_by_xpath, CONFIG
+                                  get_unique_element_by_xpath, \
+                                  _fallback_xpath, CONFIG
 from QWeb.keywords.config import  set_config
 from unittest.mock import patch, MagicMock
 
@@ -276,3 +277,16 @@ def test_get_unique_element_by_xpath_none(patch_webelements):
     patch_webelements.return_value = None
     with pytest.raises(QWebElementNotFoundError):
         get_unique_element_by_xpath(xpath)
+
+
+def test_attribute_xpath_is_only_for_a_plain_tag():
+    item = _fallback_xpath("a", "Richard Brown", True, False)
+    assert item == '//a[@*[contains(normalize-space(.), "Richard Brown")]]'
+
+    typed = _fallback_xpath(
+        'input:not([type="hidden"]),textarea:not([type="hidden"])',
+        "Account Name",
+        True,
+        False,
+    )
+    assert typed.startswith("//input:not")

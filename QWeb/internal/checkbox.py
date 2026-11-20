@@ -19,7 +19,12 @@ from typing import Optional, Any, Union
 from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
-from QWeb.internal.exceptions import QWebInstanceDoesNotExistError, QWebElementNotFoundError
+from QWeb.internal.exceptions import (
+    QWebInstanceDoesNotExistError,
+    QWebElementNotFoundError,
+    QWebSearchingMode,
+)
+from QWeb.internal.page_node import PageNode
 from QWeb.internal import element, text, javascript, util
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
@@ -36,6 +41,8 @@ def is_checked(checkbox_element: WebElement) -> bool:
     -------
     bool
     """
+    if isinstance(checkbox_element, PageNode):
+        return checkbox_element.is_selected()
     js = """
         var checked = function(el) {
             if (el.hasAttribute("aria-checked")) {
@@ -154,3 +161,33 @@ def get_checkbox_by_css_selector(
         logger.debug("Found element {}, index {}".format(checkbox_elements, index))
         return checkbox_elements[index], None
     return None, None
+
+
+def in_page(
+    locator: str, anchor: str, index: int, action: str, **kwargs: Any
+) -> Union[bool, str]:
+    """Click or read a checkbox without handing the node to ChromeDriver."""
+    position = int(index) - 1
+    if position < 0:
+        return False
+    kind = "checkbox-{}".format(action)
+    if locator.startswith("xpath=") or locator.startswith("//") or locator.startswith("("):
+        return element.xpath_in_page(kind, locator, position, **kwargs)
+    anchor_text = "" if str(anchor).isdigit() else str(anchor)
+    partial = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
+    found = javascript.shadow_dom_action(
+        kind,
+        locator,
+        position,
+        partial,
+        "",
+        str(CONFIG["SearchMode"] or ""),
+        str(CONFIG["HighlightColor"] or "blue"),
+        anchor_text,
+        util.par2bool(kwargs.get("visibility", CONFIG["Visibility"])),
+        util.par2bool(kwargs.get("offset", CONFIG["OffsetCheck"])),
+        util.par2bool(kwargs.get("viewport", CONFIG["InViewport"])),
+    )
+    if found == "debug":
+        raise QWebSearchingMode("Element highlighted")
+    return found

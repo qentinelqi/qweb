@@ -25,6 +25,11 @@ text.
 
 from __future__ import annotations
 from typing import Union, Optional
+from selenium.common.exceptions import (
+    JavascriptException,
+    StaleElementReferenceException,
+    WebDriverException,
+)
 from pynput.keyboard import Controller
 import pyperclip
 from QWeb.internal.actions import (
@@ -36,19 +41,32 @@ from QWeb.internal.actions import (
     scroll_dynamic_web_page as _scroll_dynamic_web_page,
     scroll_first_scrollable_parent_element as _scroll_first_scrollable_parent_element,
 )
-from QWeb.internal import element, decorators, util, download, text as internal_text
+from QWeb.internal import element, decorators, util, download, text as internal_text, javascript
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.exceptions import (
     QWebValueError,
     QWebEnvironmentError,
     QWebTimeoutError,
     QWebElementNotFoundError,
+    QWebStalingElementError,
     QWebDriverError,
     QWebInstanceDoesNotExistError,
+    QWebUnexpectedConditionError,
 )
 from robot.api import logger
 from robot.api.deco import keyword
 import os
+
+
+def _shadow_target(kind: str, locator: str, anchor: str, **kwargs) -> bool:
+    """Use the in-page search after ChromeDriver rejects a returned node."""
+    found = internal_text.shadow_target(kind, locator, anchor, **kwargs)
+    if found and "click" in kind and "text" in kwargs:
+        if not _text_appearance(
+            kwargs["text"], text_appear=True, timeout=kwargs.get("interval")
+        ):
+            raise QWebUnexpectedConditionError("Unexpected condition")
+    return found
 
 
 @keyword(tags=("Text", "Verification"))
@@ -153,7 +171,15 @@ def verify_text(
     if window_find:
         web_elements = internal_text.find_text(text)
     else:
-        web_elements = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+        try:
+            web_elements = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+        except (QWebStalingElementError, StaleElementReferenceException) as err:
+            if javascript.is_unwrapped_xpath_error(err) and (
+                _shadow_target("verify-text", text, anchor, **kwargs)
+                or internal_text.page_has_text(text, anchor, **kwargs)
+            ):
+                return
+            raise
     if web_elements:
         return
 
@@ -215,9 +241,14 @@ def verify_no_text(text: str, timeout: Union[int, float, str] = 0, **kwargs) -> 
     \`VerifyText\`
     """
     kwargs["css"] = False
-    web_elements = internal_text.get_element_by_locator_text(
-        text, allow_non_existent=True, **kwargs
-    )
+    try:
+        web_elements = internal_text.get_element_by_locator_text(
+            text, allow_non_existent=True, **kwargs
+        )
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if not javascript.is_unwrapped_xpath_error(err):
+            raise
+        web_elements = internal_text.page_has_text(text, **kwargs)
     if not web_elements:
         return
     raise QWebValueError('Page contained the text "{}" after timeout'.format(text))
@@ -468,9 +499,16 @@ def click_text(
     """
     anchor = str(anchor)
 
-    web_element = internal_text.get_element_by_locator_text(
-        text, anchor, parent=parent, child=child, **kwargs
-    )
+    try:
+        web_element = internal_text.get_element_by_locator_text(
+            text, anchor, parent=parent, child=child, **kwargs
+        )
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if javascript.is_unwrapped_xpath_error(err) and _shadow_target(
+            "click-text", text, anchor, parent=parent, child=child, **kwargs
+        ):
+            return
+        raise
     if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
@@ -647,7 +685,14 @@ def hover_text(
         css=False/off: Use this to bypass css search when finding elements
         by visible text
     """
-    web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+    try:
+        web_element = internal_text.get_element_by_locator_text(text, anchor, **kwargs)
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if javascript.is_unwrapped_xpath_error(err) and _shadow_target(
+            "hover-text", text, anchor, **kwargs
+        ):
+            return
+        raise
     _hover_to(web_element, timeout=timeout)
 
 
@@ -818,9 +863,10 @@ def verify_element_text(
     if strict:  # exact match
         if text_to_find == locator_text:
             return
-        raise QWebValueError(f'"{text_to_find}" != "{locator_text}"')
-    if text_to_find in locator_text:
+    elif text_to_find in locator_text:
         return
+    if strict:
+        raise QWebValueError(f'"{text_to_find}" != "{locator_text}"')
     raise QWebValueError(f'"{text_to_find}" not in "{locator_text}"')
 
 
@@ -915,7 +961,18 @@ def get_text(
         # css=False means we include non-clickable texts
         web_element = internal_text.get_text_using_anchor(locator, anchor, css=False, **kwargs)
     else:
-        web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
+        try:
+            web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
+        except (QWebStalingElementError, StaleElementReferenceException) as err:
+            # ChromeDriver drops a synthetic-shadow node instead of returning it.
+            if not (
+                javascript.is_unwrapped_xpath_error(err) and element.looks_like_xpath(locator)
+            ):
+                raise
+            page_text = element.xpath_in_page("text", locator, anchor_int)
+            if page_text is False:
+                raise
+            return util.get_substring(str(page_text), **kwargs)
     # selenium's .text does not see all texts directly under slots
     # use innerText as a backup
     # note that "" at the end is important so that we don't get None instead of empty string
@@ -999,7 +1056,14 @@ def click_item(
     \`ClickCell\`, \`ClickCheckbox\`, \`ClickIcon\`, \`ClickElement\`,
     \`ClickList\`, \`ClickText\`, \`ClickUntil\`, \`ClickWhile\`, \`VerifyItem\`
     """
-    web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
+    try:
+        web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if javascript.is_unwrapped_xpath_error(err) and _shadow_target(
+            "click-item", text, anchor, **kwargs
+        ):
+            return
+        raise
     if _execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
 
@@ -1072,7 +1136,14 @@ def verify_item(
     ----------------
     \`ClickItemUntil\`, \`ClickItemWhile\`, \`HoverItem\`, \`VerifyItem\`
     """
-    web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
+    try:
+        web_element = internal_text.get_item_using_anchor(text, anchor, **kwargs)
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if javascript.is_unwrapped_xpath_error(err) and _shadow_target(
+            "verify-item", text, anchor, **kwargs
+        ):
+            return
+        raise
     if web_element:
         return
 
@@ -1185,7 +1256,13 @@ def is_item(text: str, anchor: str = "1", timeout: Union[int, float, str] = 0.1,
     try:
         verify_item(text, anchor, timeout, **kwargs)
         return True
-    except QWebElementNotFoundError:
+    except (
+        QWebElementNotFoundError,
+        QWebStalingElementError,
+        StaleElementReferenceException,
+        WebDriverException,
+        JavascriptException,
+    ):
         return False
 
 
@@ -1241,6 +1318,14 @@ def is_no_item(text: str, anchor: str = "1", timeout: Union[int, float, str] = 0
         return True
     except QWebValueError:
         return False
+    except (
+        QWebElementNotFoundError,
+        QWebStalingElementError,
+        StaleElementReferenceException,
+        WebDriverException,
+        JavascriptException,
+    ):
+        return True
 
 
 @keyword(tags=("Text", "Interaction"))

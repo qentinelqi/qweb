@@ -18,12 +18,18 @@
 
 from __future__ import annotations
 from typing import Union, Optional, Dict
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
 from robot.api.deco import keyword
-from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
-from QWeb.internal import element, decorators, actions, text, input_, dropdown, checkbox
+from QWeb.internal.exceptions import (
+    QWebElementNotFoundError,
+    QWebStalingElementError,
+    QWebValueError,
+)
+from QWeb.internal import element, decorators, actions, text, input_, dropdown, checkbox, javascript
+from QWeb.internal.page_node import PageNode
 from QWeb.internal.config_defaults import CONFIG
 
 import time
@@ -99,9 +105,25 @@ def click_element(
                 index
             ]
         else:
-            web_element = element.get_unique_element_by_xpath(xpath, index=index)
+            web_element = _clickable_xpath(xpath, index)
+            if web_element is None:
+                return
     if actions.execute_click_and_verify_condition(web_element, timeout=timeout, js=js, **kwargs):
         return
+
+
+def _clickable_xpath(xpath: str, index: int) -> Optional[WebElement]:
+    """Return the XPath match, or click it in the page when ChromeDriver cannot wrap it."""
+    try:
+        return element.get_unique_element_by_xpath(xpath, index=index)
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        if (
+            javascript.is_unwrapped_xpath_error(err)
+            and element.looks_like_xpath(xpath)
+            and element.xpath_in_page("click", xpath, index)
+        ):
+            return None
+        raise
 
 
 @keyword(tags=["Interaction"])
@@ -347,15 +369,22 @@ def verify_element(xpath: str, timeout: Union[int, float, str] = 0, **kwargs) ->
     \`VerifyItem\`, \`VerifyText\`
     """
     kwargs["element_kw"] = True
+    unwrapped = False
     if "tag" in kwargs:
         web_elements = element.get_visible_elements_from_elements(
             element.get_elements_by_attributes(kwargs.get("tag"), xpath, **kwargs)
         )
     else:
-        web_elements = element.get_webelements(xpath, **kwargs)
+        try:
+            web_elements = element.get_webelements(xpath, **kwargs)
+        except (QWebStalingElementError, StaleElementReferenceException) as err:
+            web_elements = None
+            unwrapped = javascript.is_unwrapped_xpath_error(err)
     if web_elements:
         if CONFIG["SearchMode"]:
             element.draw_borders(web_elements)
+        return
+    if unwrapped and element.looks_like_xpath(xpath) and element.xpath_in_page("exists", xpath, 0):
         return
     raise QWebElementNotFoundError("No matching element found")
 
@@ -409,13 +438,33 @@ def verify_no_element(
     \`VerifyElement\`
     """
     kwargs["element_kw"] = True
+    unwrapped = False
     if "tag" in kwargs:
         web_elements = element.get_visible_elements_from_elements(
             element.get_elements_by_attributes(kwargs.get("tag"), xpath, **kwargs)
         )
     else:
-        web_elements = element.get_webelements(xpath)
-    if not web_elements:
+        try:
+            web_elements = element.get_webelements(xpath)
+        except (QWebStalingElementError, StaleElementReferenceException) as err:
+            web_elements = None
+            unwrapped = javascript.is_unwrapped_xpath_error(err)
+    if (
+        web_elements
+        and element.looks_like_xpath(xpath)
+        and all(isinstance(node, PageNode) for node in web_elements)
+        and not element.xpath_in_page("exists", xpath, 0)
+    ):
+        web_elements = None
+    contained = bool(web_elements)
+    if (
+        unwrapped
+        and not contained
+        and element.looks_like_xpath(xpath)
+        and element.xpath_in_page("exists", xpath, 0)
+    ):
+        contained = True
+    if not contained:
         return
     raise QWebValueError('Page contained element with XPath "{}" after timeout'.format(xpath))
 

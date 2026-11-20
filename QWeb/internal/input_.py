@@ -19,10 +19,15 @@ from typing import Optional, Union
 from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
-from QWeb.internal.exceptions import QWebElementNotFoundError, QWebInstanceDoesNotExistError
-from QWeb.internal import element, text, frame, javascript, util
+from QWeb.internal.exceptions import (
+    QWebElementNotFoundError,
+    QWebInstanceDoesNotExistError,
+    QWebValueMismatchError,
+)
+from QWeb.internal import browser, element, text, frame, javascript, util
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
 
 
 def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs) -> WebElement:
@@ -299,3 +304,169 @@ def get_input_elements_by_css(locator: str, **kwargs):
             if full_matches is not None and el not in list(full_matches):
                 full_matches.append(el)  # type: ignore[union-attr]
     return full_matches, partial_matches
+
+
+def type_in_page(
+    locator: str, input_text: str, anchor: str, index: int, missed: Optional[Exception], **kwargs
+) -> None:
+    """Type through a label XPath when ChromeDriver cannot return the input."""
+    if missed is None:
+        raise QWebElementNotFoundError("No matching input elements found")
+    if element.looks_like_xpath(locator):
+        _type_xpath_in_page(locator, input_text, index, missed, anchor=anchor, **kwargs)
+        return
+    anchor_text = _text_anchor(anchor)
+    for xpath in _label_input_xpaths(locator, anchor_text, int(index)):
+        if _type_one_xpath(xpath, input_text, 0, anchor_text, **kwargs):
+            return
+    raise missed
+
+
+def _text_anchor(anchor: object) -> str:
+    """Return anchor text. A numeric anchor selects by index and is not page text."""
+    value = str(anchor or "")
+    return "" if value.isdigit() else value
+
+
+def _label_input_xpaths(locator: str, anchor_text: str, position: int) -> list[str]:
+    """XPaths that resolve a visible label to its input."""
+    quoted = util.escape_xpath_quotes(locator)
+    text_is = f'normalize-space(translate(., "*", ""))={quoted}'
+    label = f"(self::label or self::span) and {text_is}"
+    if anchor_text:
+        return [
+            f"//label[{text_is}]/following::input[1]",
+            f"//label[{text_is}]/following::textarea[1]",
+            f"//*[{label}]/ancestor::*[.//input][1]//input[1]",
+            f"//*[{label}]/ancestor::*[.//textarea][1]//textarea[1]",
+        ]
+    xpaths = _matching_input_xpath(locator)
+    xpaths.extend(
+        [
+            f"(//label[{text_is}]/following::input)[{position}]",
+            f"(//label[{text_is}]/following::textarea)[{position}]",
+            f"(//*[{label}]/ancestor::*[.//input][1]//input)[{position}]",
+            f"(//*[{label}]/ancestor::*[.//textarea][1]//textarea)[{position}]",
+        ]
+    )
+    return xpaths
+
+
+def _matching_input_xpath(locator: str) -> list[str]:
+    try:
+        return [str(CONFIG["MatchingInputElement"]).format(locator)]
+    except (IndexError, KeyError, ValueError):
+        return []
+
+
+def _type_xpath_in_page(
+    locator: str, input_text: str, index: int, missed: Optional[Exception], **kwargs
+) -> None:
+    """Type into an XPath match that ChromeDriver cannot return as a WebElement."""
+    if not element.looks_like_xpath(locator):
+        raise missed
+    anchor_text = _text_anchor(kwargs.get("anchor"))
+    if _type_one_xpath(locator, input_text, int(index) - 1, anchor_text, **kwargs):
+        return
+    raise missed
+
+
+def _type_one_xpath(xpath: str, input_text: str, index: int, anchor_text: str, **kwargs) -> bool:
+    key = kwargs.get("key", input_handler.line_break_key)
+    send_tab = key == "\ue004"
+    focused = element.xpath_in_page("focus", xpath, index, anchor=anchor_text)
+    if focused is False:
+        return False
+    typed: Union[bool, str]
+    if focused == "debug":
+        typed = "debug"
+    else:
+        typed = _type_into_focused(xpath, input_text, index, anchor_text)
+    if typed is False:
+        return False
+    check = util.par2bool(kwargs.get("check", CONFIG["CheckInputValue"]))
+    expected = str(kwargs.get("expected", input_text))
+    if check and str(typed) != expected:
+        raise QWebValueMismatchError(f'Expected "{expected}" but field contained "{typed}"')
+    if send_tab and focused != "debug":
+        _press_tab(browser.get_current_browser(), xpath, index, anchor_text)
+    return True
+
+
+def _type_into_focused(
+    xpath: str, input_text: str, index: int, anchor_text: str
+) -> Union[bool, str]:
+    """Type with real key events so a combo box opens its list."""
+    driver = browser.get_current_browser()
+    if _dispatch_text(driver, input_text):
+        typed = element.xpath_in_page("value", xpath, index, anchor=anchor_text)
+        if str(typed).strip() == input_text:
+            return typed
+    return element.xpath_in_page(
+        "type", xpath, index, text=input_text, send_tab=False, anchor=anchor_text
+    )
+
+
+def _press_tab(driver: object, xpath: str, index: int, anchor_text: str) -> None:
+    dispatch = getattr(driver, "execute_cdp_cmd", None)
+    if dispatch is not None:
+        try:
+            _key_event(dispatch, "keyDown", "Tab", "Tab", 9, "")
+            _key_event(dispatch, "keyUp", "Tab", "Tab", 9, "")
+            return
+        except Exception as error:  # pylint: disable=broad-exception-caught
+            logger.debug("Tab dispatch failed: {}".format(error))
+    element.xpath_in_page("tab", xpath, index, anchor=anchor_text)
+
+
+def _dispatch_text(driver: object, characters: str) -> bool:
+    """Send trusted key events. A value assignment does not open a combo box."""
+    dispatch = getattr(driver, "execute_cdp_cmd", None)
+    if dispatch is None:
+        return False
+    try:
+        _hold_key(dispatch, "Control", "ControlLeft", 17, 2)
+        _key_event(dispatch, "keyDown", "a", "KeyA", 65, "", 2)
+        _key_event(dispatch, "keyUp", "a", "KeyA", 65, "", 2)
+        _release_key(dispatch, "Control", "ControlLeft", 17)
+        _key_event(dispatch, "keyDown", "Backspace", "Backspace", 8, "")
+        _key_event(dispatch, "keyUp", "Backspace", "Backspace", 8, "")
+        for char in characters:
+            _key_event(dispatch, "keyDown", char, "", 0, char)
+            _key_event(dispatch, "keyUp", char, "", 0, "")
+    except Exception as error:  # pylint: disable=broad-exception-caught
+        logger.debug("Key dispatch failed: {}".format(error))
+        return False
+    return True
+
+
+def _hold_key(dispatch: object, key: str, code: str, codepoint: int, modifiers: int) -> None:
+    _key_event(dispatch, "keyDown", key, code, codepoint, "", modifiers)
+
+
+def _release_key(dispatch: object, key: str, code: str, codepoint: int) -> None:
+    _key_event(dispatch, "keyUp", key, code, codepoint, "")
+
+
+def _key_event(
+    dispatch: object,
+    phase: str,
+    key: str,
+    code: str,
+    codepoint: int,
+    key_text: str,
+    modifiers: int = 0,
+) -> None:
+    dispatch(  # type: ignore[operator]
+        "Input.dispatchKeyEvent",
+        {
+            "type": phase,
+            "key": key,
+            "code": code,
+            "text": key_text,
+            "unmodifiedText": key_text,
+            "windowsVirtualKeyCode": codepoint,
+            "nativeVirtualKeyCode": codepoint,
+            "modifiers": modifiers,
+        },
+    )

@@ -15,13 +15,15 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional, Union
+from typing import Any, Optional, Union
+from selenium.common.exceptions import JavascriptException, WebDriverException
 from selenium.webdriver.remote.webelement import WebElement
 
 from robot.api import logger
-from QWeb.internal.exceptions import QWebElementNotFoundError
+from QWeb.internal.exceptions import QWebElementNotFoundError, QWebStalingElementError
 from QWeb.internal import element, text, javascript, frame
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.page_node import PageNode, list_items_from
 
 
 class List:
@@ -139,15 +141,8 @@ class List:
         else:
             locator_element = text.get_element_by_locator_text(locator, anchor)
 
-        if tag_name not in ["ul", "ol", "dl", "UL", "OL", "DL"]:
-            web_elements = javascript.execute_javascript(
-                'return arguments[0].querySelectorAll("{}")'.format(tag_name), locator_element
-            )
-        else:
-            web_elements = javascript.execute_javascript(
-                'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'.format(tag_name),
-                locator_element,
-            )
+        direct = str(tag_name).lower() not in ["ul", "ol", "dl"]
+        web_elements = _rows_under(locator_element, str(tag_name), direct)
         return web_elements
 
     @staticmethod
@@ -224,3 +219,31 @@ class List:
             self.locator, self.anchor, self.parent, self.child, **self.kwargs
         )
         return active_list
+
+
+def _rows_under(locator_element: Any, tag_name: str, direct: bool) -> list[Any]:
+    """Items of the list that contains the locator text.
+
+    The text match is often the inner span. The list is the ul around it.
+    """
+    if isinstance(locator_element, PageNode):
+        return locator_element.list_items(tag_name, direct)
+    try:
+        if direct:
+            found = javascript.execute_javascript(
+                'return arguments[0].querySelectorAll("{}")'.format(tag_name), locator_element
+            )
+        else:
+            found = javascript.execute_javascript(
+                'return arguments[0].closest("{}").querySelectorAll("li, dt, dd")'.format(tag_name),
+                locator_element,
+            )
+    except (
+        WebDriverException,
+        JavascriptException,
+        QWebStalingElementError,
+    ) as error:
+        if not javascript.is_unwrapped_xpath_error(error):
+            raise
+        return list_items_from(locator_element, tag_name, direct)
+    return list(found or [])

@@ -24,9 +24,8 @@ are usually refenced by coordinates or unique neighbouring values.
 from typing import Union, List, Optional
 
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.common.by import By
 from robot.api.deco import keyword
-from QWeb.internal import decorators, actions, util
+from QWeb.internal import decorators, actions, javascript, util
 from QWeb.internal.exceptions import (
     QWebInstanceDoesNotExistError,
     QWebTimeoutError,
@@ -298,7 +297,7 @@ def get_cell_text(
     table_cell = table.get_table_cell(coordinates, anchor)
     if tag:
         try:
-            table_cell = table_cell.find_element(By.XPATH, f".//{tag}")
+            table_cell = javascript.find_element_by_xpath(table_cell, f".//{tag}")
         except Exception as e:
             raise QWebElementNotFoundError(
                 f"Could not find child element with tag {tag} from cell: {e}") from e

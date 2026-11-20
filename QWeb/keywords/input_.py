@@ -21,6 +21,7 @@ Input elements are those in which one can input text in.
 
 from __future__ import annotations
 from typing import Union
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from robot.api import logger
@@ -33,7 +34,11 @@ except ImportError:
     BUILT_IN_SECRET = False
     RFSecret = str
 from pyautogui import hotkey
-from QWeb.internal.exceptions import QWebFileNotFoundError, QWebValueError
+from QWeb.internal.exceptions import (
+    QWebFileNotFoundError,
+    QWebStalingElementError,
+    QWebValueError,
+)
 from QWeb.internal import javascript, secrets, actions, util
 from QWeb.internal import element, input_, download, decorators
 from QWeb.internal.input_handler import INPUT_HANDLER as input_handler
@@ -242,14 +247,27 @@ def type_text(
     ----------------
     \`PressKey\`, \`TypeSecret\`, \`TypeTexts\`, \`WriteText\`
     """
+    missed = None
     if isinstance(locator, WebElement):
         input_element = locator
     else:
-        input_element = input_.get_input_elements_from_all_documents(
-            locator, anchor, timeout=timeout, index=index, **kwargs
-        )
+        try:
+            input_element = input_.get_input_elements_from_all_documents(
+                locator, anchor, timeout=timeout, index=index, **kwargs
+            )
+        except (
+            QWebStalingElementError,
+            StaleElementReferenceException,
+        ) as err:
+            if not javascript.is_unwrapped_xpath_error(err):
+                raise
+            missed = err
+            input_element = None
     if BUILT_IN_SECRET and isinstance(input_text, RFSecret):
         input_text = input_text.value
+    if input_element is None:
+        input_.type_in_page(str(locator), str(input_text), str(anchor), index, missed, **kwargs)
+        return
     actions.write(input_element, str(input_text), timeout=timeout, **kwargs)
 
 

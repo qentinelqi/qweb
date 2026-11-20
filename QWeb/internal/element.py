@@ -38,6 +38,7 @@ from QWeb.internal.exceptions import (
 )
 from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.page_node import PageNode, hold_xpath_matches
 
 ACTIVE_AREA_FUNCTION: Optional[Callable[..., Any]] = None
 DEFAULT_DISTANCE = 1000000.0  # Just some large number
@@ -179,6 +180,59 @@ def get_unique_element_by_xpath(
     )
 
 
+def looks_like_xpath(xpath: str) -> bool:
+    """True when the locator is an XPath expression rather than visible text."""
+    expression = xpath.split("=", 1)[1] if xpath.startswith("xpath=") else xpath
+    return expression.startswith("//") or expression.startswith("(")
+
+
+@frame.all_frames
+def xpath_in_page(kind: str, xpath: str, index: int = 0, **kwargs: Any) -> Union[bool, str]:
+    """Click, type, or confirm an XPath match without handing the node to ChromeDriver.
+
+    document.evaluate can see nodes that ChromeDriver then marks stale, which
+    discards the whole find result. The action stays in the page.
+    """
+    if xpath.startswith("xpath="):
+        xpath = xpath.split("=", 1)[1]
+    highlight = str(CONFIG["SearchMode"] or "")
+    color = str(CONFIG["HighlightColor"] or "blue")
+    found = javascript.xpath_action(
+        kind,
+        xpath,
+        int(index),
+        str(kwargs.get("text") or ""),
+        highlight,
+        color,
+        bool(kwargs.get("send_tab", False)),
+        str(kwargs.get("anchor") or ""),
+        util.par2bool(kwargs.get("visibility", CONFIG["Visibility"])),
+        util.par2bool(kwargs.get("offset", CONFIG["OffsetCheck"])),
+        util.par2bool(kwargs.get("viewport", CONFIG["InViewport"])),
+    )
+    if found == "debug":
+        raise QWebSearchingMode("Element highlighted")
+    return found
+
+
+def _matches_driver_cannot_wrap(driver: Any, xpath: str, **kwargs: Any) -> list[Any]:
+    """Read XPath matches that the driver dropped or refused to wrap.
+
+    document.evaluate can see a synthetic-shadow node. Returning that node makes
+    ChromeDriver reject the whole result, so the node stays in the page.
+    """
+    try:
+        wrapped = javascript.find_elements_in_page(driver, xpath)
+    except (QWebStalingElementError, StaleElementReferenceException):
+        wrapped = []
+    if wrapped:
+        return wrapped
+    visibility = util.par2bool(kwargs.get("visibility", CONFIG["Visibility"]))
+    offset = util.par2bool(kwargs.get("offset", CONFIG["OffsetCheck"]))
+    viewport = util.par2bool(kwargs.get("viewport", CONFIG["InViewport"]))
+    return hold_xpath_matches(xpath, visibility=visibility, offset=offset, viewport=viewport)
+
+
 @frame.all_frames
 def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
     """Get visible web elements that correspond to given XPath.
@@ -201,7 +255,17 @@ def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
     driver = browser.get_current_browser()
-    web_elements = driver.find_elements(By.XPATH, xpath)
+    dropped = False
+    try:
+        web_elements = javascript.find_elements_by_xpath(driver, xpath)
+    except QWebStalingElementError as error:
+        dropped = javascript.is_unwrapped_xpath_error(error)
+        web_elements = []
+    if not web_elements and dropped:
+        web_elements = _matches_driver_cannot_wrap(driver, xpath, **kwargs)
+    if web_elements and isinstance(web_elements[0], PageNode):
+        logger.trace("XPath {} matched {} in-page nodes".format(xpath, len(web_elements)))
+        return web_elements
     logger.trace("XPath {} matched {} WebElements".format(xpath, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
 
@@ -258,11 +322,11 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
             xpath = xpath.replace("//", ".//", 1)
         else:
             driver = browser.get_current_browser()
-            active_area = driver.find_element(By.XPATH, active_area_xpath)
+            active_area = javascript.find_element_by_xpath(driver, active_area_xpath)
     else:
         driver = browser.get_current_browser()
         try:
-            active_area = driver.find_element(By.XPATH, active_area_xpath)
+            active_area = javascript.find_element_by_xpath(driver, active_area_xpath)
             if active_area is None:
                 logger.debug(
                     "Got None for active area. Is page still loading  or is it missing body tag?"
@@ -274,34 +338,70 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
             return None
 
     try:
-        webelements = active_area.find_elements(By.XPATH, xpath)
+        webelements = javascript.find_elements_by_xpath(active_area, xpath)
 
         logger.trace("XPath {} matched {} webelements".format(xpath, len(webelements)))
         webelements = get_visible_elements_from_elements(webelements, **kwargs)
-    except StaleElementReferenceException as se:
-        raise QWebStalingElementError("Got StaleElementException") from se
+    except (StaleElementReferenceException, QWebStalingElementError) as se:
+        if not javascript.is_unwrapped_xpath_error(se):
+            if isinstance(se, StaleElementReferenceException):
+                raise QWebStalingElementError("Got StaleElementException") from se
+            raise
+        # The driver dropped the XPath result. Evaluate that same expression in
+        # the page and keep the nodes with the normal visibility rules.
+        webelements = _in_page_matches(xpath, active_area, **kwargs)
     except (JavascriptException, InvalidSelectorException) as e:
-        logger.debug("Got {}, returning None".format(e))
-        webelements = None
+        if javascript.is_unwrapped_xpath_error(e):
+            webelements = _in_page_matches(xpath, active_area, **kwargs)
+        else:
+            logger.debug("Got {}, returning None".format(e))
+            webelements = None
     return webelements
 
 
-def get_visible_elements_from_elements(
-    web_elements: list[WebElement], **kwargs: Any
-) -> list[WebElement]:
+def _in_page_matches(
+    xpath: str, context: Optional[WebElement] = None, **kwargs: Any
+) -> list[Any]:
+    """Same XPath and visibility rules, kept even when the driver cannot wrap them.
+
+    querySelectorAll returns the nodes the driver accepts. A synthetic-shadow
+    match is missing from that list, and substituting a parent the driver can
+    wrap would be a different element. The match stays in the page instead.
+    """
+    driver = browser.get_current_browser()
+    try:
+        wrapped = javascript.find_elements_in_page(driver, xpath, context)
+    except (QWebStalingElementError, StaleElementReferenceException, JavascriptException):
+        wrapped = []
+    if wrapped:
+        return get_visible_elements_from_elements(wrapped, **kwargs)
+    visibility = util.par2bool(kwargs.get("visibility", CONFIG["Visibility"]))
+    offset = util.par2bool(kwargs.get("offset", CONFIG["OffsetCheck"]))
+    viewport = util.par2bool(kwargs.get("viewport", CONFIG["InViewport"]))
+    try:
+        return hold_xpath_matches(
+            xpath,
+            visibility=visibility,
+            offset=offset,
+            viewport=viewport,
+            context=context,
+        )
+    except (
+        QWebStalingElementError,
+        StaleElementReferenceException,
+        InvalidSelectorException,
+        JavascriptException,
+    ):
+        return []
+
+
+def _keep_visible(
+    web_elements: list[Any], elem_objects: list[dict], **kwargs: Any
+) -> list[Any]:
     visible_elements = []
     hiding_elements = []
-    vis_check = util.par2bool(kwargs.get("visibility", CONFIG["Visibility"]))
-    if not vis_check:
-        logger.debug("allow invisible elements")
-        return web_elements
     viewport_check = util.par2bool(kwargs.get("viewport", CONFIG["InViewport"]))
-    try:
-        elem_objects = javascript.get_visibility(web_elements)
-        logger.debug("Checking visibility from all found elements: {}".format(len(elem_objects)))
-    except (JavascriptException, StaleElementReferenceException, TypeError) as e:
-        raise QWebStalingElementError("Exception from visibility check: {}".format(e)) from e
-    for el in elem_objects:
+    for element_ref, el in zip(web_elements, elem_objects):
         onscreen = el.get("viewport")
         logger.debug("Is element in viewport: {}".format(onscreen))
         css_visibility = el.get("css")
@@ -313,23 +413,74 @@ def get_visible_elements_from_elements(
         if css_visibility and onscreen:
             if util.par2bool(kwargs.get("offset", CONFIG["OffsetCheck"])):
                 if offset and onscreen:
-                    visible_elements.append(el.get("elem"))
+                    visible_elements.append(element_ref)
                 elif offset:
-                    hiding_elements.append(el.get("elem"))
+                    hiding_elements.append(element_ref)
             elif onscreen:
-                visible_elements.append(el.get("elem"))
+                visible_elements.append(element_ref)
             else:
-                hiding_elements.append(el.get("elem"))
+                hiding_elements.append(element_ref)
         elif css_visibility:
-            hiding_elements.append(el.get("elem"))
+            hiding_elements.append(element_ref)
     logger.debug(
         "found {} visible elements and {} hiding ones".format(
             len(visible_elements), len(hiding_elements)
         )
     )
     if viewport_check:
-        return visible_elements  # type: ignore
-    return visible_elements + hiding_elements  # type: ignore
+        return visible_elements
+    return visible_elements + hiding_elements
+
+
+def get_visible_elements_from_elements(
+    web_elements: list[WebElement], **kwargs: Any
+) -> list[WebElement]:
+    vis_check = util.par2bool(kwargs.get("visibility", CONFIG["Visibility"]))
+    if not vis_check:
+        logger.debug("allow invisible elements")
+        return web_elements
+    flags = _visibility_flags(web_elements)
+    return _keep_visible(web_elements, flags, **kwargs)
+
+
+def _visibility_flags(web_elements: list[Any]) -> list[dict]:
+    """One visibility record per element, in the same order."""
+    real_at = [i for i, item in enumerate(web_elements) if not isinstance(item, PageNode)]
+    real_flags = _real_visibility_flags([web_elements[i] for i in real_at]) if real_at else []
+    flags: list[dict] = []
+    real_pos = 0
+    for item in web_elements:
+        if isinstance(item, PageNode):
+            flags.append(item.shown_flags())
+            continue
+        flags.append(real_flags[real_pos])
+        real_pos += 1
+    return flags
+
+
+def _real_visibility_flags(web_elements: list[Any]) -> list[dict]:
+    try:
+        info = javascript.get_visibility(web_elements)
+        logger.debug("Checking visibility from all found elements: {}".format(len(info)))
+        return list(info)
+    except (JavascriptException, StaleElementReferenceException, TypeError) as error:
+        if not javascript.is_unwrapped_xpath_error(error):
+            raise QWebStalingElementError(
+                "Exception from visibility check: {}".format(error)
+            ) from error
+    flags = []
+    for web_element in web_elements:
+        try:
+            flags.extend(javascript.get_visibility([web_element]))
+        except (JavascriptException, StaleElementReferenceException, TypeError) as item_error:
+            if not javascript.is_unwrapped_xpath_error(item_error):
+                raise QWebStalingElementError(
+                    "Exception from visibility check: {}".format(item_error)
+                ) from item_error
+            # The driver already returned this node. Passing it back into a
+            # script is what ChromeDriver rejects, so the size check cannot run.
+            flags.append({"viewport": True, "css": True, "offset": True})
+    return flags
 
 
 def get_all_inputs_from_shadow_dom() -> list[WebElement]:
@@ -341,11 +492,20 @@ def get_all_dropdowns_from_shadow_dom() -> list[WebElement]:
 
 
 def draw_borders(elements: Union[WebElement, list[WebElement]]) -> None:
-    mode = CONFIG["SearchMode"]
-    color = CONFIG["HighlightColor"]
+    mode = str(CONFIG["SearchMode"] or "")
+    color = str(CONFIG["HighlightColor"] or "blue")
     if not isinstance(elements, list):
         elements = [elements]
     for e in elements:
+        if isinstance(e, PageNode):
+            if mode.lower() == "debug":
+                e.mark(color, "debug")
+                raise QWebSearchingMode("Element highlighted")
+            if mode.lower() == "draw":
+                e.mark(color, "draw")
+            elif mode.lower() == "flash":
+                e.mark(color, "flash")
+            continue
         if mode.lower() == "debug":
             javascript.highlight_element(e, False, color=color)
             raise QWebSearchingMode("Element highlighted")
@@ -622,6 +782,42 @@ def _list_info(candidate_element):
     return candidate_element
 
 
+def _plain_tag_list(css: str) -> bool:
+    """True for ``a`` or ``a, span``. A selector such as ``input:not(...)`` is not."""
+    pieces = [piece.strip() for piece in css.split(",") if piece.strip()]
+    if not pieces:
+        return False
+    return all(piece.replace("-", "").isalnum() for piece in pieces)
+
+
+def _attribute_xpath(css: str, locator: str, partial: bool) -> str:
+    """XPath for tags whose any attribute matches, instead of every tag on the page."""
+    tags = []
+    for piece in css.split(","):
+        name = piece.strip()
+        if name and name.replace("-", "").isalnum():
+            tags.append(name)
+    if not tags:
+        return "//*"
+    quoted = util.escape_xpath_quotes(locator.strip())
+    if partial:
+        test = f"contains(normalize-space(.), {quoted})"
+    else:
+        test = f"normalize-space(.)={quoted}"
+    return " | ".join(f"//{tag}[@*[{test}]]" for tag in tags)
+
+
+def _fallback_xpath(css: str, locator: Optional[str], partial: bool, xpath_search: bool) -> str:
+    if xpath_search:
+        return css
+    # ClickItem tag=a looks up that attribute directly. An input selector is a
+    # different search: turning it into "any input with this attribute" types
+    # into a field that merely contains the label text.
+    if locator and _plain_tag_list(css):
+        return _attribute_xpath(css, locator, partial)
+    return f"//{css}"
+
+
 @frame.all_frames
 def get_elements_by_attributes(
     css: str, locator: Optional[str] = None, **kwargs
@@ -648,9 +844,9 @@ def get_elements_by_attributes(
         # there have been few cases where css search doesn't work
         if len(matches.get("full", [])) == 0 and len(matches.get("partial", [])) == 0:
             try:
-                xpath = css if xpath_search else f"//{css}"
+                xpath = _fallback_xpath(css, locator, partial, xpath_search)
                 driver = browser.get_current_browser()
-                elements = driver.find_elements(By.XPATH, xpath)
+                elements = javascript.find_elements_by_xpath(driver, xpath)
 
                 matches = javascript.get_by_attributes(
                     elements,
@@ -716,7 +912,7 @@ def get_element_from_childnodes(
     # if all else fails, try to find children with xpath
     if not web_elements:
         try:
-            web_elements = locator_element.find_elements(By.XPATH, f".//{css}")
+            web_elements = javascript.find_elements_by_xpath(locator_element, f".//{css}")
         except InvalidSelectorException:
             web_elements = None
     if web_elements:

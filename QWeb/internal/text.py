@@ -15,10 +15,9 @@
 # limitations under the License.
 # ---------------------------
 from __future__ import annotations
-from typing import Optional, Union
+from typing import Any, Optional, Union
 from selenium.webdriver.remote.webelement import WebElement
 
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     InvalidSelectorException,
     JavascriptException,
@@ -33,6 +32,7 @@ from QWeb.internal.exceptions import (
     QWebValueError,
     QWebInstanceDoesNotExistError,
     QWebStalingElementError,
+    QWebSearchingMode,
 )
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.search_strategy import SearchStrategies
@@ -116,11 +116,23 @@ def get_text_elements(text: str, **kwargs) -> Optional[list[WebElement]]:
         web_elements = web_elements + xpath_elements
     shadow_dom = CONFIG["ShadowDOM"]
     if shadow_dom:
-        shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
-        # remove possible stale elements
+        # Light-DOM matches stay. The shadow pass only adds what the light pass missed.
+        try:
+            shadow_elements = get_texts_including_shadow_dom(text, partial, **kwargs)
+        except (
+            WebDriverException,
+            JavascriptException,
+            QWebStalingElementError,
+        ) as shadow_error:
+            logger.debug("Shadow DOM text search skipped: {}".format(shadow_error))
+            shadow_elements = []
         web_elements = util.remove_stale_elements(web_elements)  # type: ignore
-        # remove duplicates
-        web_elements = util.remove_duplicates_from_list(shadow_elements, web_elements)  # type: ignore # pylint: disable=C0301
+        if shadow_elements:
+            if not web_elements:
+                web_elements = []
+            web_elements = util.remove_duplicates_from_list(  # type: ignore
+                shadow_elements, web_elements
+            )
 
     return web_elements
 
@@ -252,6 +264,31 @@ def _get_contains_text_element(text: str, **kwargs) -> list[WebElement]:
     return element.get_webelements_in_active_area(xpath, **kwargs)
 
 
+def page_has_text(text: str, anchor: str = "1", **kwargs) -> bool:
+    """Confirm visible text that document.evaluate can see.
+
+    ChromeDriver drops a synthetic-shadow match instead of returning it.
+    The text check stays in the page. A real shadow root is outside this search.
+    """
+    partial = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
+    quoted = util.escape_xpath_quotes(text)
+    xpaths = [str(CONFIG["TextMatch"]).replace('"{0}"', quoted)]
+    if partial:
+        xpaths.append(str(CONFIG["ContainingTextMatch"]).replace('"{0}"', quoted))
+    if str(anchor).isdigit():
+        index = int(anchor) - 1
+        anchor_text = ""
+    else:
+        index = 0
+        anchor_text = str(anchor)
+    if index < 0:
+        return False
+    for xpath in xpaths:
+        if element.xpath_in_page("exists", xpath, index, anchor=anchor_text, **kwargs):
+            return True
+    return False
+
+
 def filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
     xpath = CONFIG["IsModalXpath"]
     if xpath.startswith("xpath="):
@@ -267,7 +304,7 @@ def filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
 
     # filter elements by modal (dialog etc)
     logger.debug("IsModalXpath filtering on, filtering...")
-    modal_exists = driver.find_elements(By.XPATH, modal_xpath)
+    modal_exists = javascript.find_elements_by_xpath(driver, modal_xpath)
     # no filtering if modal element doesn't exist
     if not modal_exists:
         return elements
@@ -277,7 +314,7 @@ def filter_by_modal_ancestor(elements: list[WebElement]) -> list[WebElement]:
 
     for elem in elements:
         try:
-            elem.find_element(By.XPATH, f"./../ancestor::{xpath}")
+            javascript.find_element_by_xpath(elem, f"./../ancestor::{xpath}")
             elems_in_modal.append(elem)
         except NoSuchElementException:
             logger.debug("Filtering out element, modal open but not under modal")
@@ -364,17 +401,25 @@ def get_item_using_anchor(text: str, anchor: str, **kwargs) -> Optional[WebEleme
         web_elements = _get_item_by_css(text, **kwargs) or _get_item_by_xpath(text, **kwargs)
     else:
         web_elements = element.get_webelements(xpath, **kwargs)
-    # extend search to Shadow DOM
+    # Light DOM matches stay. Shadow DOM only adds matches.
     shadow_dom = CONFIG["ShadowDOM"]
     if shadow_dom:
-        tag = kwargs.get("tag", None)
-        elements = get_items_including_shadow_dom(text, tag)
-
+        shadow_kwargs = dict(kwargs)
+        tag = shadow_kwargs.pop("tag", None)
+        try:
+            elements = get_items_including_shadow_dom(text, tag, **shadow_kwargs) or []
+        except (
+            WebDriverException,
+            JavascriptException,
+            QWebStalingElementError,
+        ) as shadow_error:
+            logger.debug("Shadow DOM item search skipped: {}".format(shadow_error))
+            elements = []
         if web_elements:
             for el in elements:
                 if el not in list(web_elements):
                     web_elements.append(el)
-        else:
+        elif elements:
             web_elements = elements
     if web_elements:
         correct = _get_correct_element(web_elements, str(anchor), **kwargs)
@@ -502,7 +547,7 @@ def get_slot_elements(locator: str,
     # if any other weird characters or combinations that might break xpath,
     # return None instead of throwing an exception
     try:
-        xpath_elements = driver.find_elements(By.XPATH, xpath)
+        xpath_elements = javascript.find_elements_by_xpath(driver, xpath)
     except InvalidSelectorException:
         return None
     return xpath_elements
@@ -529,11 +574,25 @@ def get_clickable_elements(
     # Find text directly in slots with supported parent elements
     xpath_elements = get_slot_elements(locator, partial)
 
-    # Find normal elements via javascript
-    if shadow_dom:
-        js_elements = javascript.get_clickable_from_shadow_dom(locator, partial)
-    else:
+    # Light DOM first. Shadow DOM adds matches; it does not replace the light ones.
+    try:
         js_elements = javascript.get_clickable(locator)
+    except (WebDriverException, JavascriptException, QWebStalingElementError) as light_error:
+        logger.debug("Light DOM clickable search skipped: {}".format(light_error))
+        js_elements = []
+    if shadow_dom:
+        try:
+            shadow_clickable = javascript.get_clickable_from_shadow_dom(locator, partial)
+        except (
+            WebDriverException,
+            JavascriptException,
+            QWebStalingElementError,
+        ) as shadow_error:
+            logger.debug("Shadow DOM clickable search skipped: {}".format(shadow_error))
+            shadow_clickable = []
+        if shadow_clickable:
+            js_elements = list(js_elements or [])
+            util.remove_duplicates_from_list(shadow_clickable, js_elements)
 
     if js_elements:
         logger.debug(f"Found elements by js: {js_elements}")
@@ -562,14 +621,49 @@ def get_texts_including_shadow_dom(locator: str, partial: bool, **kwargs) -> lis
 
 
 @frame.all_frames
-def get_items_including_shadow_dom(text: str, tag: str, **kwargs) -> list[WebElement]:
-    web_elements = element.get_visible_elements_from_elements(
-        javascript.get_item_elements_from_shadow_dom(tag), **kwargs
-    )
+def get_items_including_shadow_dom(text: str, tag: Optional[str], **kwargs) -> list[Any]:
+    partial = util.par2bool(kwargs.get("partial_match", True))
+    found = javascript.get_item_elements_from_shadow_dom(tag, text, partial)
+    web_elements = element.get_visible_elements_from_elements(found, **kwargs)
+    if web_elements:
+        logger.debug(f"Found {len(web_elements)} items when extending search to shadow dom")
+    return web_elements or []
 
-    matches = javascript.get_by_attributes(web_elements, text, False)
-    full, partial = matches.get("full", []), matches.get("partial", [])
-    shadow_elements = full + partial
-    if shadow_elements:
-        logger.debug(f"Found {len(shadow_elements)} items when extending search to shadow dom")
-    return shadow_elements
+
+@frame.all_frames
+def shadow_target(kind: str, text: str, anchor: str = "1", **kwargs) -> bool:
+    """Click or confirm a match that lives in a shadow root ChromeDriver cannot wrap."""
+    if kwargs.get("parent") or kwargs.get("child"):
+        return False
+    anchor_text = ""
+    if str(anchor).isdigit():
+        index = int(anchor) - 1
+        if index < 0:
+            return False
+    else:
+        index = 0
+        anchor_text = str(anchor)
+    partial = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
+    if util.par2bool(kwargs.get("doubleclick", CONFIG["DoubleClick"])):
+        kind = kind.replace("click", "dblclick", 1)
+    tag = str(kwargs.get("tag") or "")
+    highlight = str(CONFIG["SearchMode"] or "")
+    color = str(CONFIG["HighlightColor"] or "blue")
+    found = javascript.shadow_dom_action(
+        kind,
+        text,
+        index,
+        partial,
+        tag,
+        highlight,
+        color,
+        anchor_text,
+        util.par2bool(kwargs.get("visibility", CONFIG["Visibility"])),
+        util.par2bool(kwargs.get("offset", CONFIG["OffsetCheck"])),
+        util.par2bool(kwargs.get("viewport", CONFIG["InViewport"])),
+    )
+    if found == "debug":
+        raise QWebSearchingMode("Element highlighted")
+    if found and "click" in kind:
+        logger.debug(f"Activated '{text}' inside shadow DOM")
+    return bool(found)

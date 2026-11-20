@@ -22,10 +22,41 @@ Checkboxes are those that can be checked/selected and unchecked/unselected.
 from __future__ import annotations
 from typing import Union
 
+from selenium.common.exceptions import StaleElementReferenceException
 from robot.api.deco import keyword
-from QWeb.internal import checkbox, actions, decorators
+from QWeb.internal import checkbox, actions, decorators, javascript
 import QWeb.internal.element
-from QWeb.internal.exceptions import QWebValueError
+from QWeb.internal.exceptions import QWebStalingElementError, QWebValueError
+
+
+def _checkbox_in_page(locator: str, anchor: str, index: int, action: str, err: Exception, **kwargs):
+    """Use the in-page checkbox when ChromeDriver cannot wrap the node."""
+    if not javascript.is_unwrapped_xpath_error(err):
+        raise err
+    found = checkbox.in_page(locator, anchor, index, action, **kwargs)
+    if found is False:
+        raise err
+    return found
+
+
+def _require_status(status: str, enabled: bool) -> None:
+    status = status.lower()
+    if status == "enabled" and not enabled:
+        raise QWebValueError("The checkbox was disabled")
+    if status == "disabled" and enabled:
+        raise QWebValueError("The checkbox was enabled")
+    if status not in ("enabled", "disabled"):
+        raise QWebValueError('Unkown status: "{}"'.format(status))
+
+
+def _require_value(value: str, checked: bool) -> None:
+    value = value.lower()
+    if value == "on" and not checked:
+        raise QWebValueError("The checkbox was not checked.")
+    if value == "off" and checked:
+        raise QWebValueError("The checkbox was checked")
+    if value not in ("on", "off"):
+        raise QWebValueError('Unkown value: "{}"'.format(value))
 
 
 @keyword(tags=("Checkbox", "Interaction"))
@@ -96,9 +127,14 @@ def click_checkbox(
     ----------------
     \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`, \`VerifyCheckboxValue\`
     """
-    checkbox_element, locator_element = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs
-    )
+    try:
+        checkbox_element, locator_element = checkbox.get_checkbox_elements_from_all_documents(
+            locator, anchor=anchor, index=index, **kwargs
+        )
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        action = "on" if value.lower() == "on" else "off"
+        _checkbox_in_page(locator, anchor, index, action, err, **kwargs)
+        return
     if checkbox_element:
         if value.lower() == "on":
             actions.checkbox_set(checkbox_element, locator_element, value=True, timeout=timeout)
@@ -173,18 +209,15 @@ def verify_checkbox_status(
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxValue\`
     """
-    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs
-    )
-    status = status.lower()
-    if status.lower() == "enabled":
-        if not QWeb.internal.element.is_enabled(checkbox_element):
-            raise QWebValueError("The checkbox was disabled")
-    elif status.lower() == "disabled":
-        if QWeb.internal.element.is_enabled(checkbox_element):
-            raise QWebValueError("The checkbox was enabled")
-    else:
-        raise QWebValueError('Unkown status: "{}"'.format(status))
+    try:
+        checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
+            locator, anchor=anchor, index=index, **kwargs
+        )
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        enabled = bool(_checkbox_in_page(locator, anchor, index, "enabled", err, **kwargs))
+        _require_status(status, enabled)
+        return
+    _require_status(status, QWeb.internal.element.is_enabled(checkbox_element))
 
 
 @keyword(tags=("Checkbox", "Verification"))
@@ -252,18 +285,15 @@ def verify_checkbox_value(
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckbox\`, \`VerifyCheckboxStatus\`
     """
-    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs
-    )
-    value = value.lower()
-    if value.lower() == "on":
-        if not checkbox.is_checked(checkbox_element):
-            raise QWebValueError("The checkbox was not checked.")
-    elif value.lower() == "off":
-        if checkbox.is_checked(checkbox_element):
-            raise QWebValueError("The checkbox was checked")
-    else:
-        raise QWebValueError('Unkown value: "{}"'.format(value))
+    try:
+        checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
+            locator, anchor=anchor, index=index, **kwargs
+        )
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        checked = bool(_checkbox_in_page(locator, anchor, index, "state", err, **kwargs))
+        _require_value(value, checked)
+        return
+    _require_value(value, checkbox.is_checked(checkbox_element))
 
 
 @keyword(tags=("Checkbox", "Verification"))
@@ -321,8 +351,12 @@ def verify_checkbox(
     ----------------
     \`ClickCheckbox\`, \`VerifyCheckboxStatus\`, \`VerifyCheckboxValue\`
     """
-    checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
-        locator, anchor=anchor, index=index, **kwargs
-    )
+    try:
+        checkbox_element, _ = checkbox.get_checkbox_elements_from_all_documents(
+            locator, anchor=anchor, index=index, **kwargs
+        )
+    except (QWebStalingElementError, StaleElementReferenceException) as err:
+        _checkbox_in_page(locator, anchor, index, "exists", err, **kwargs)
+        return
     if checkbox_element:
         return

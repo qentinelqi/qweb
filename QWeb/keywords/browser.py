@@ -18,8 +18,6 @@ from __future__ import annotations
 import dataclasses
 from typing import Union, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-
 import os
 import requests
 import importlib.metadata
@@ -27,7 +25,7 @@ from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from QWeb.keywords import window
-from QWeb.internal import browser, xhr, exceptions, util
+from QWeb.internal import browser, javascript, xhr, exceptions, util
 from QWeb.internal.config_defaults import CONFIG
 from QWeb.internal.decorators import get_timeout
 from QWeb.internal.browser import (
@@ -66,7 +64,9 @@ def return_browser() -> WebDriver:
     ----------------
     \`GetWebElement\`
     """
-    return browser.get_current_browser()
+    driver = browser.get_current_browser()
+    javascript.install_xpath_search(driver)
+    return driver
 
 
 @keyword(tags=("Browser", "Interaction"))
@@ -675,7 +675,7 @@ def verify_links(
     if url != "current":
         window.go_to(url)
     driver = browser.get_current_browser()
-    elements = driver.find_elements(By.XPATH, "//a[@href]")
+    elements = javascript.find_elements_by_xpath(driver, "//a[@href]")
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
