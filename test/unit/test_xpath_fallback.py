@@ -28,6 +28,25 @@ def _unwrapped():
     return StaleElementReferenceException("stale element not found in the current frame")
 
 
+def test_indexed_list_is_only_a_parenthesized_position():
+    sales = (
+        '(//a[@data-label="Sales"])[1] | '
+        '(//a[@role="option" and @data-label]/*[.="Sales"])[1]'
+    )
+    parsed = javascript.indexed_lists(sales)
+    assert parsed is not None
+    inners, position = parsed
+    assert position == 1
+    assert inners == [
+        '//a[@data-label="Sales"]',
+        '//a[@role="option" and @data-label]/*[.="Sales"]',
+    ]
+    label = '//label[normalize-space(.)="Account Name"]/following::input[1]'
+    assert javascript.indexed_lists(label) is None
+    union = '(//input[@placeholder="Account Name"] | //textarea)[1]'
+    assert javascript.indexed_lists(union) is None
+
+
 def test_driver_result_is_returned_without_javascript():
     driver = _Driver()
     driver.find_elements.return_value = ["anchor"]

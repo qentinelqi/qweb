@@ -807,12 +807,58 @@ def _attribute_xpath(css: str, locator: str, partial: bool) -> str:
     return " | ".join(f"//{tag}[@*[{test}]]" for tag in tags)
 
 
+def _attribute_matches(
+    css: str, locator: Optional[str], partial: bool
+) -> tuple[list[Any], list[Any]]:
+    xpath_search = css.startswith("xpath=") or css.startswith("//")
+    matches: dict[str, list[Any]] = {"full": [], "partial": []}
+    needle = str(locator).replace("'", "\\'")
+    if not xpath_search:
+        matches = _read_css_attributes(css, needle, partial)
+    if not matches.get("full") and not matches.get("partial"):
+        matches = _read_xpath_attributes(css, locator, needle, partial, xpath_search)
+    found = matches.get("full", []), matches.get("partial", [])
+    logger.debug("attrfunc full {}, partial {}".format(len(found[0]), len(found[1])))
+    return found
+
+
+def _read_css_attributes(css: str, needle: str, partial: bool) -> dict[str, list[Any]]:
+    try:
+        elements = javascript.get_all_elements(css)
+        return javascript.get_by_attributes(elements, needle, partial)
+    except (
+        WebDriverException,
+        JavascriptException,
+        StaleElementReferenceException,
+        QWebStalingElementError,
+        AttributeError,
+    ):
+        return {"full": [], "partial": []}
+
+
+def _read_xpath_attributes(
+    css: str, locator: Optional[str], needle: str, partial: bool, xpath_search: bool
+) -> dict[str, list[Any]]:
+    try:
+        xpath = _fallback_xpath(css, locator, partial, xpath_search)
+        driver = browser.get_current_browser()
+        elements = javascript.find_elements_by_xpath(driver, xpath)
+        return javascript.get_by_attributes(elements, needle, partial)
+    except (
+        InvalidSelectorException,
+        WebDriverException,
+        JavascriptException,
+        StaleElementReferenceException,
+        QWebStalingElementError,
+        AttributeError,
+    ):
+        return {"full": [], "partial": []}
+
+
 def _fallback_xpath(css: str, locator: Optional[str], partial: bool, xpath_search: bool) -> str:
     if xpath_search:
         return css
-    # ClickItem tag=a looks up that attribute directly. An input selector is a
-    # different search: turning it into "any input with this attribute" types
-    # into a field that merely contains the label text.
+    # Plain tag=a looks the attribute up directly. An input selector must not.
     if locator and _plain_tag_list(css):
         return _attribute_xpath(css, locator, partial)
     return f"//{css}"
@@ -826,45 +872,16 @@ def get_elements_by_attributes(
     partial = util.par2bool(kwargs.get("partial_match", CONFIG["PartialMatch"]))
     if "tag" in kwargs:
         css = str(kwargs.get("tag"))
-    try:
-        xpath_search = css.startswith("xpath=") or css.startswith("//")
-        if not xpath_search:
-            elements = javascript.get_all_elements(css)
-            if any_element:
-                return elements
-            matches = javascript.get_by_attributes(
-                elements,
-                locator.replace("'", "\\'"),  # type: ignore[union-attr]
-                partial,
-            )
-        else:
-            matches = {"full": [], "partial": []}
-
-        # try with xpath if no matches and tag is givenor if css contains xpath
-        # there have been few cases where css search doesn't work
-        if len(matches.get("full", [])) == 0 and len(matches.get("partial", [])) == 0:
-            try:
-                xpath = _fallback_xpath(css, locator, partial, xpath_search)
-                driver = browser.get_current_browser()
-                elements = javascript.find_elements_by_xpath(driver, xpath)
-
-                matches = javascript.get_by_attributes(
-                    elements,
-                    locator.replace("'", "\\'"),  # type: ignore[union-attr]
-                    partial,
-                )
-            except InvalidSelectorException:
-                matches = {"full": [], "partial": []}
-
-        logger.debug(
-            "attrfunc found full matches: {}, partial matches: {}".format(
-                matches.get("full", []), matches.get("partial", [])
-            )
-        )
-        full_matches, partial_matches = matches.get("full", []), matches.get("partial", [])
-    except (WebDriverException, JavascriptException, AttributeError) as e:
-        logger.debug("Got exception from get elements by attributes: {}".format(e))
+    xpath_search = css.startswith("xpath=") or css.startswith("//")
+    if any_element and not xpath_search:
+        try:
+            return javascript.get_all_elements(css)
+        except (WebDriverException, JavascriptException, AttributeError):
+            return []
+    if locator is None:
         full_matches, partial_matches = [], []
+    else:
+        full_matches, partial_matches = _attribute_matches(css, locator, partial)
 
     if "element_kw" not in kwargs:
         return full_matches, partial_matches

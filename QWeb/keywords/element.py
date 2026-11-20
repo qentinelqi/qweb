@@ -115,7 +115,12 @@ def click_element(
 def _clickable_xpath(xpath: str, index: int) -> Optional[WebElement]:
     """Return the XPath match, or click it in the page when ChromeDriver cannot wrap it."""
     try:
-        return element.get_unique_element_by_xpath(xpath, index=index)
+        found = element.get_unique_element_by_xpath(xpath, index=index)
+    except QWebElementNotFoundError:
+        better = _on_screen_indexed_target(xpath, index)
+        if better is not None:
+            return better
+        raise
     except (QWebStalingElementError, StaleElementReferenceException) as err:
         if (
             javascript.is_unwrapped_xpath_error(err)
@@ -124,6 +129,23 @@ def _clickable_xpath(xpath: str, index: int) -> Optional[WebElement]:
         ):
             return None
         raise
+    # (//a[@data-label='x'])[1] is the first node in the document. A closed
+    # menu can leave that node behind the one that is open. Only a click
+    # looks for the on-screen match, and only when this one is covered.
+    if index == 0 and javascript.indexed_lists(xpath):
+        flags = javascript.on_top_flags([found])
+        if flags and not flags[0]:
+            better = javascript.preferred_indexed_target(xpath)
+            if better is not None:
+                return better
+    return found
+
+
+def _on_screen_indexed_target(xpath: str, index: int) -> Optional[WebElement]:
+    """On-screen ``(//a)[n]`` match when the document's first match is gone."""
+    if index != 0 or not javascript.indexed_lists(xpath):
+        return None
+    return javascript.preferred_indexed_target(xpath)
 
 
 @keyword(tags=["Interaction"])

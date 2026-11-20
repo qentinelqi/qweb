@@ -138,15 +138,40 @@ def get_by_attributes(
     reals = [item for item in elements if not isinstance(item, PageNode)]
     found: dict[str, list[Any]] = {"full": [], "partial": []}
     if reals:
-        matched = execute_javascript(js, reals, needle, partial_match)
-        if isinstance(matched, dict):
-            found["full"] = list(matched.get("full") or [])
-            found["partial"] = list(matched.get("partial") or [])
+        matched = _attribute_matches(js, reals, needle, partial_match)
+        found["full"] = list(matched.get("full") or [])
+        found["partial"] = list(matched.get("partial") or [])
     for node in pages:
         kind = _page_attribute_kind(node, needle, partial_match)
         if kind:
             found[kind].append(node)
     return found
+
+
+def _attribute_matches(
+    script: str, elements: list[Any], needle: str, partial_match: bool
+) -> dict[str, list[Any]]:
+    """Match attributes. One node the driver rejects does not hide the others."""
+    try:
+        matched = execute_javascript(script, elements, needle, partial_match)
+    except (WebDriverException, JavascriptException, StaleElementReferenceException) as error:
+        if not is_unwrapped_xpath_error(error) or len(elements) == 1:
+            if is_unwrapped_xpath_error(error):
+                return {"full": [], "partial": []}
+            raise
+        full: list[Any] = []
+        partial: list[Any] = []
+        for item in elements:
+            one = _attribute_matches(script, [item], needle, partial_match)
+            full.extend(one.get("full") or [])
+            partial.extend(one.get("partial") or [])
+        return {"full": full, "partial": partial}
+    if not isinstance(matched, dict):
+        return {"full": [], "partial": []}
+    return {
+        "full": list(matched.get("full") or []),
+        "partial": list(matched.get("partial") or []),
+    }
 
 
 def _page_attribute_kind(node: PageNode, locator: str, partial_match: bool) -> Optional[str]:
@@ -384,6 +409,59 @@ def is_unwrapped_xpath_error(error: BaseException) -> bool:
     return "qweb-xpath-unwrapped" in message or "stale element not found" in message
 
 
+_ON_TOP_JS = """
+function qwebParent(node) {
+    if (!node) {
+        return null;
+    }
+    if (node.parentElement) {
+        return node.parentElement;
+    }
+    var root = node.getRootNode ? node.getRootNode() : null;
+    return root && root.host ? root.host : null;
+}
+function qwebOnTop(el) {
+    if (!el || !el.getBoundingClientRect) {
+        return false;
+    }
+    var rect = el.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) {
+        return false;
+    }
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    if (x < 0 || y < 0 || x >= window.innerWidth || y >= window.innerHeight) {
+        return false;
+    }
+    var hit = document.elementFromPoint(x, y);
+    if (!hit) {
+        return false;
+    }
+    if (hit === el || (el.contains && el.contains(hit)) ||
+        (hit.contains && hit.contains(el))) {
+        return true;
+    }
+    var node = el;
+    for (var i = 0; i < 8 && node; i++) {
+        var box = node.getBoundingClientRect();
+        var local = box.height > 0 && box.height < 240 &&
+            box.width < window.innerWidth * 0.9;
+        if (local && node.contains && node.contains(hit)) {
+            return true;
+        }
+        node = qwebParent(node);
+    }
+    return false;
+}
+var nodes = arguments[0] || [];
+var flags = [];
+for (var n = 0; n < nodes.length; n++) {
+    flags.push(!!nodes[n] && qwebOnTop(nodes[n]));
+}
+return flags;
+"""
+
+
 def _top_level_union_parts(xpath: str) -> list[str]:
     """Split an XPath union on ``|`` that is not inside quotes or brackets."""
     parts: list[str] = []
@@ -420,6 +498,88 @@ def _top_level_union_parts(xpath: str) -> list[str]:
     if tail:
         parts.append(tail)
     return parts or [xpath]
+
+
+def _result_index(part: str) -> Optional[tuple[str, int]]:
+    """``(//a)[2]`` is the second result. ``following::input[1]`` is not."""
+    text = part.strip()
+    if len(text) < 4 or not text.endswith("]"):
+        return None
+    cursor = len(text) - 2
+    while cursor >= 0 and text[cursor].isdigit():
+        cursor -= 1
+    if cursor < 1 or text[cursor] != "[" or text[cursor - 1] != ")":
+        return None
+    wrapped = text[:cursor].strip()
+    if len(wrapped) < 2 or not wrapped.startswith("(") or not wrapped.endswith(")"):
+        return None
+    body = wrapped[1:-1].strip()
+    if len(_top_level_union_parts(body)) != 1:
+        return None
+    return body, int(text[cursor + 1 : -1])
+
+
+def indexed_lists(xpath: str) -> Optional[tuple[list[str], int]]:
+    """Inner expressions and the shared ``[n]`` of a ``(//a)[n] | (//b)[n]`` union."""
+    inners: list[str] = []
+    position: Optional[int] = None
+    for part in _top_level_union_parts(xpath):
+        split = _result_index(part)
+        if split is None:
+            return None
+        inner, number = split
+        if position is None:
+            position = number
+        elif number != position:
+            return None
+        inners.append(inner)
+    if not inners or position is None:
+        return None
+    return inners, position
+
+
+def on_top_flags(elements: list[Any]) -> list[bool]:
+    """True when the center of the element is the thing on screen there."""
+    if not elements:
+        return []
+    try:
+        flags = execute_javascript(_ON_TOP_JS, list(elements))
+    except (WebDriverException, JavascriptException, StaleElementReferenceException, TypeError):
+        return [True] * len(elements)
+    if not isinstance(flags, list) or len(flags) != len(elements):
+        return [True] * len(elements)
+    return [bool(flag) for flag in flags]
+
+
+def preferred_indexed_target(xpath: str) -> Any:
+    """The on-screen ``[n]`` match when the document's first match is covered.
+
+    ``(//a[@data-label='x'])[1]`` stays the first match for every other search.
+    A click uses this only after that first match is not the element on screen.
+    """
+    parsed = indexed_lists(xpath)
+    if parsed is None:
+        return None
+    inners, position = parsed
+    if position < 1:
+        return None
+    driver = browser.get_current_browser()
+    matches: list[Any] = []
+    for inner in inners:
+        try:
+            matches.extend(find_elements_by_xpath(driver, inner))
+        except (
+            QWebStalingElementError,
+            StaleElementReferenceException,
+            JavascriptException,
+            InvalidSelectorException,
+            WebDriverException,
+        ):
+            continue
+    visible = [item for item, shown in zip(matches, on_top_flags(matches)) if shown]
+    if len(visible) < position:
+        return None
+    return visible[position - 1]
 
 
 def _evaluate_xpath(
