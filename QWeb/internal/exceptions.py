@@ -105,3 +105,10 @@ class QWebBrowserError(QWebException):
 
 class QWebIconNotFoundError(QWebException):
     """Raise when picture/icon is not found with image recognition."""
+
+
+class QWebInvalidSelectorError(QWebException):
+    """Raise when a locator has invalid syntax, e.g. a malformed CSS selector.
+
+    Not retried by timeout decorators: invalid syntax can't become valid by waiting.
+    """
