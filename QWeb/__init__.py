@@ -22,7 +22,14 @@ from typing import Any, Callable
 
 try:
     from robot.api import logger
-    from robot.libraries import Dialogs
+
+    # robot.libraries.Dialogs needs tkinter, which is missing from many Python
+    # builds (e.g. pyenv/Homebrew on macOS). It is only used for the DEV_MODE
+    # pause, so keep the rest of the library usable without it.
+    try:
+        from robot.libraries import Dialogs
+    except ImportError:  # includes ModuleNotFoundError
+        Dialogs = None  # type: ignore[assignment]
     from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
     from robot.utils import timestr_to_secs as _timestr_to_secs
 
@@ -381,6 +388,12 @@ class QWeb:
 
                 devmode = util.par2bool(util.get_rfw_variable_value("${DEV_MODE}", False))
                 if devmode and not config.get_config("Debug_Run"):
+                    if Dialogs is None:
+                        logger.warn(
+                            "DEV_MODE pause on failure requires tkinter, which is not "
+                            "available in this Python installation. Skipping pause."
+                        )
+                        raise
                     Dialogs.pause_execution(
                         "Keyword {} {} {} failed. \n" "Got {}".format(
                             str(keyword_method).split(" ")[1].upper(), str(args), str(kwargs), e
