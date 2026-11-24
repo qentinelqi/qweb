@@ -300,16 +300,12 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
     :obj:`list` of :obj:`WebElement`
         List of visible WebElements.
     """
-    by = By.XPATH
-    css_locator: Optional[Locator] = None
-    if is_css_locator(xpath):
-        by = By.CSS_SELECTOR
-        css_locator = parse_locator(xpath)
+    css_locator = parse_locator(xpath) if is_css_locator(xpath) else None
     active_area_xpath = CONFIG["ActiveAreaXpath"]
     if ACTIVE_AREA_FUNCTION is not None:
         active_area = ACTIVE_AREA_FUNCTION()  # pylint:disable=E1102
         if active_area:
-            if by == By.XPATH:
+            if css_locator is None:
                 xpath = xpath.replace("//", ".//", 1)
         else:
             driver = browser.get_current_browser()
@@ -329,18 +325,24 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
             return None
 
     try:
-        if css_locator is not None:
-            webelements = get_css_elements(active_area, css_locator, **kwargs)
-        else:
-            webelements = active_area.find_elements(by, xpath)
-            logger.trace("{} {} matched {} webelements".format(by, xpath, len(webelements)))
-            webelements = get_visible_elements_from_elements(webelements, **kwargs)
+        webelements = _find_visible_in_root(active_area, xpath, css_locator, **kwargs)
     except StaleElementReferenceException as se:
         raise QWebStalingElementError("Got StaleElementException") from se
     except (JavascriptException, InvalidSelectorException) as e:
         logger.debug("Got {}, returning None".format(e))
         webelements = None
     return webelements
+
+
+def _find_visible_in_root(
+    root: WebElement, xpath: str, css_locator: Optional[Locator], **kwargs: Any
+) -> list[WebElement]:
+    """Find visible elements under root by parsed css= locator or by XPath."""
+    if css_locator is not None:
+        return get_css_elements(root, css_locator, **kwargs)
+    webelements = root.find_elements(By.XPATH, xpath)
+    logger.trace("XPath {} matched {} webelements".format(xpath, len(webelements)))
+    return get_visible_elements_from_elements(webelements, **kwargs)
 
 
 def get_css_elements(

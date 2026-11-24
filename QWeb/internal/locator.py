@@ -114,7 +114,7 @@ def parse_locator(locator: str) -> Locator:
         browser (empty selector, misplaced or malformed text filter).
     """
     if is_css_locator(locator):
-        selector = locator.strip()[len(_CSS_PREFIX) :].strip()
+        selector = locator.strip().split("=", 1)[1].strip()
         return _parse_css(selector, locator)
     if locator.startswith(_XPATH_PREFIX):
         return Locator(XPATH, locator.split("=", 1)[1], locator)
@@ -125,12 +125,24 @@ def _invalid(raw: str, reason: str) -> QWebInvalidSelectorError:
     return QWebInvalidSelectorError(f"Invalid CSS selector in locator '{raw}': {reason}")
 
 
-# pylint: disable=too-many-branches
-def _parse_css(selector: str, raw: str) -> Locator:
-    if not selector:
-        raise _invalid(raw, "selector is empty")
+_DEPTH_CHANGE = {"(": 1, "[": 1, ")": -1, "]": -1}
 
-    filters: list[tuple[int, str, int]] = []  # (start index, kind, nesting depth)
+
+def _filter_kind_at(selector: str, pos: int) -> Optional[str]:
+    """Return the filter kind if a :has-text( / :text-is( token starts at pos."""
+    for token, kind in _FILTER_TOKENS.items():
+        if selector.startswith(token, pos):
+            return kind
+    return None
+
+
+def _scan_selector(selector: str) -> tuple[list[tuple[int, str, int]], bool]:
+    """Find text filter tokens outside quotes and CSS escapes.
+
+    Returns a list of (start index, kind, nesting depth) and whether the selector has
+    a top-level comma (selector list).
+    """
+    filters: list[tuple[int, str, int]] = []
     has_top_level_comma = False
     depth = 0
     quote: Optional[str] = None
@@ -141,23 +153,34 @@ def _parse_css(selector: str, raw: str) -> Locator:
             i += 2  # CSS escape, skip next character
             continue
         if quote:
-            if char == quote:
-                quote = None
+            quote = None if char == quote else quote
         elif char in ("'", '"'):
             quote = char
         else:
-            for token, kind in _FILTER_TOKENS.items():
-                if selector.startswith(token, i):
-                    filters.append((i, kind, depth))
-                    break
-            if char in "([":
-                depth += 1
-            elif char in ")]":
-                depth -= 1
-            elif char == "," and depth == 0:
-                has_top_level_comma = True
+            kind = _filter_kind_at(selector, i)
+            if kind:
+                filters.append((i, kind, depth))
+            depth += _DEPTH_CHANGE.get(char, 0)
+            has_top_level_comma = has_top_level_comma or (char == "," and depth == 0)
         i += 1
+    return filters, has_top_level_comma
 
+
+def _filter_base(base: str, raw: str, token: str) -> str:
+    """Return the selector part before the text filter, ready for querySelectorAll."""
+    if not base.strip():
+        raise _invalid(raw, f'{token}) needs a selector before it, e.g. css=*{token}"text")')
+    if base != base.rstrip() or base.rstrip().endswith(_COMBINATORS):
+        # "div :has-text(...)" means any descendant of div, like "div *"
+        base = base + "*"
+    return base.strip()
+
+
+def _parse_css(selector: str, raw: str) -> Locator:
+    if not selector:
+        raise _invalid(raw, "selector is empty")
+
+    filters, has_top_level_comma = _scan_selector(selector)
     if not filters:
         return Locator(CSS, selector, raw)
     if len(filters) > 1:
@@ -173,18 +196,12 @@ def _parse_css(selector: str, raw: str) -> Locator:
     text, end = _read_filter_argument(selector, start + len(token), raw, token)
     if selector[end:].strip():
         raise _invalid(raw, f"{token}) is only allowed at the end of the selector")
-
-    base = selector[:start]
-    if not base.strip():
-        raise _invalid(raw, f'{token}) needs a selector before it, e.g. css=*{token}"text")')
-    if base != base.rstrip() or base.rstrip().endswith(_COMBINATORS):
-        # "div :has-text(...)" means any descendant of div, like "div *"
-        base = base + "*"
+    base = _filter_base(selector[:start], raw, token)
 
     normalized = normalize_text(text)
     if not normalized:
         raise _invalid(raw, f"{token}) text is empty")
-    return Locator(CSS, base.strip(), raw, TextFilter(kind, normalized))
+    return Locator(CSS, base, raw, TextFilter(kind, normalized))
 
 
 def _read_filter_argument(selector: str, pos: int, raw: str, token: str) -> tuple[str, int]:

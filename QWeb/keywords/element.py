@@ -255,8 +255,8 @@ def get_element_count(
     Parameters
     ----------
     locator : str
-        XPath, CSS selector with css= prefix (see `CSS locators <#css-locators>`_) or some attribute value
-        of element. Every equal sign "=" in the locator must be escaped with a "\\".
+        XPath, CSS selector with css= prefix (see `CSS locators <#css-locators>`_)
+        or some attribute value of element. Every equal sign "=" in the locator must be escaped with a "\\".
     timeout : str | int
         How long we try to find text before failing. Default 10 (seconds)
     Accepted kwargs:

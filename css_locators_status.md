@@ -68,7 +68,19 @@ Remove or move this file and the spec before opening the PR.
   - [x] mirrored in `docs/concepts/locators.md`: family table and reasons at the top, Item attribute list corrected, the "Summary" section replaced by "5. Keywords that work with several locator types" (the table moved to the top)
   - [x] checks: libdoc `-F REST` with 0 system messages and the table renders; dry run of the new examples and of all 35 `css\=` doc examples passes; ruff and mypy pass
   - [x] commit (see `git log`)
-- [ ] **Phase 8:** full lint (ruff, mypy, flake8, pylint on 3.11) and the full acceptance run
+- [x] **Phase 8: full lint and acceptance run**
+  - [x] ruff check, mypy, flake8 (E9/F63/F7/F82) and pylint 2.17.7 on Python 3.11 (installed in pyenv 3.11.15 for this) all pass; pylint gives 10.00/10 with no messages, same as master. Fixed one long docstring line
+  - [x] flake8 complexity (non-blocking CI step): split `locator._parse_css` (was 20) and moved the search out of `element.get_webelements_in_active_area` (was 12), so neither is flagged now. The E203 slice is gone. The remaining new note, `QWeb._run_on_failure_decorator` (11), comes from the merged tkinter fix, not this work
+  - [x] full acceptance run with pabot and the CI suite ordering (Chrome, macOS, `-b debug.txt`): 505/516 pass. All 11 failures are environmental or flaky: 10 fail the same way on master (Dragdrop ×6, Browser Windowed ×3, Input Windowed ×1), and "Verify File Download Slow Bandwidth" timed out only under parallel load and passes when run alone
+  - [x] after the refactor: css, Element, Shadow Dom, Selectors, Frame and Download suites pass (105 tests); unit tests (114) pass; libdoc `-F REST` has 0 system messages
+  - [x] commit (see `git log`)
+
+## Before opening the PR
+
+* Remove or move `css_locators_spec.md` and this file.
+* Add a changelog entry: new `css=` locators, `:has-text` / `:text-is`, Shadow DOM support for `css=`, `element_type=css` deprecated, and `element_type=css` with an invalid selector now failing at once.
+* After the next `duty docs` build, click a `CSS locators` link in a keyword's docs in `docs/QWeb.html` (not verified in a browser here).
+* Not tested on Firefox, Edge or Safari; CI covers them.
 
 ## Decisions made during implementation
 
