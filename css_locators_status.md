@@ -20,13 +20,13 @@ Remove or move this file and the spec before opening the PR.
 
 ## Phases
 
-- [ ] **Phase 1: parser, exception, unit tests**
+- [x] **Phase 1: parser, exception, unit tests**
   - [x] `QWebInvalidSelectorError` in `QWeb/internal/exceptions.py`
   - [x] `parse_locator` in `QWeb/internal/locator.py`
   - [x] unit tests in `test/unit/test_locator.py`
   - [x] ruff check and ruff format pass on the new files
   - [x] pytest passes (112 unit tests on 3.13); mypy and ruff are clean except the local `Dialogs` change
-  - [ ] commit
+  - [x] commit (19f33b3)
 - [ ] **Phase 2:** light-DOM CSS in the element search, syntax check before the frame search (fails at once), not-found retries, frames, `tag=` / `selector=` ignored with a warning, acceptance tests
 - [ ] **Phase 3:** `:has-text` / `:text-is` filter in JS, innermost wins, acceptance tests
 - [ ] **Phase 4:** Shadow DOM CSS search and tests
