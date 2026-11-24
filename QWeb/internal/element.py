@@ -348,10 +348,15 @@ def get_css_elements(
 ) -> list[WebElement]:
     """Find visible elements for a parsed css= locator under search_root.
 
+    With SetConfig ShadowDOM on, open shadow roots under search_root are searched too.
     Applies the same visibility rules as XPath searches, then the optional
     :has-text() / :text-is() filter (innermost match wins).
     """
-    web_elements = search_root.find_elements(By.CSS_SELECTOR, locator.value)
+    if CONFIG["ShadowDOM"]:
+        root = search_root if isinstance(search_root, WebElement) else None
+        web_elements = javascript.get_css_elements_from_shadow_dom(locator.value, root)
+    else:
+        web_elements = search_root.find_elements(By.CSS_SELECTOR, locator.value)
     logger.trace("CSS selector {} matched {} WebElements".format(locator.value, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
     text_filter = locator.text_filter

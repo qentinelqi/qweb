@@ -47,6 +47,7 @@ _GET_ALL_INPUT_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_all_input_elements_fro
 _GET_ALL_DROPDOWN_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_all_dropdown_elements_shadow_dom.js')
 _GET_ITEM_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_item_elements_from_shadow_dom.js')
 _FILTER_BY_TEXT_JS = load_js('filter_by_text.js')
+_GET_CSS_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_css_elements_from_shadow_dom.js')
 
 
 def execute_javascript(script: str, *args) -> Any:
@@ -93,6 +94,16 @@ def get_by_attributes(
     """Return web element by its attribute value (using external JS file, preloaded)."""
     js = _GET_BY_ATTRIBUTES_JS
     return execute_javascript(js, elements, locator.replace("'", "\\'"), partial_match)
+
+
+def get_css_elements_from_shadow_dom(
+    selector: str, root: Optional[WebElement] = None
+) -> list[WebElement]:
+    """Find elements matching CSS selector under root (default: document), including
+    open shadow roots. Each tree is queried separately, so selectors don't cross shadow
+    boundaries (using external JS file, preloaded)."""
+    js = _GET_RECURSIVE_WALK_JS + "\n" + _GET_CSS_ELEMENTS_FROM_SHADOW_DOM_JS
+    return execute_javascript(js, root, selector)
 
 
 def filter_elements_by_text(

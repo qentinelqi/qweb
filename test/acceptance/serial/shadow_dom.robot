@@ -200,6 +200,63 @@ Chrome via aria-label
     
     LogScreenshot
 
+CSS locators need ShadowDOM setting
+    [Documentation]             css= locators reach shadow content only with ShadowDOM on
+    [Setup]                     Run Keywords                SetConfig    ShadowDOM    False
+    ...                         AND                         GoTo         ${BASE_URI}/shadow_dom.html
+    VerifyNoElement             css\=#myButton             timeout=1s
+    VerifyElement               css\=#normalbutton
+    SetConfig                   ShadowDOM                   True
+    VerifyElement               css\=#myButton
+    VerifyElement               css\=#normalbutton         # light DOM still found
+
+CSS locators in Shadow DOM
+    [Setup]                     Run Keywords                SetConfig    ShadowDOM    True
+    ...                         AND                         GoTo         ${BASE_URI}/shadow_dom.html
+    VerifyNoText                This should be hidden       timeout=1s
+    ClickElement                css\=#myButton
+    VerifyText                  This should be hidden
+    ClickElement                css\=#shadowClickTarget > button.notthere, #shadowClickTarget > button
+    VerifyNoText                This should be hidden       timeout=1s
+    ${count}=                   GetElementCount             css\=textarea
+    Should Be Equal As Integers    ${count}                 2
+    ${placeholder}=             GetAttribute                css\=#shadowInputTarget input    placeholder
+    Should Be Equal             ${placeholder}              What's your name
+
+CSS text filters in Shadow DOM
+    [Setup]                     Run Keywords                SetConfig    ShadowDOM    True
+    ...                         AND                         GoTo         ${BASE_URI}/shadow_dom.html
+    ClickElement                css\=button:has-text("Click me")
+    VerifyText                  This should be hidden
+    VerifyElement               css\=#shadowLocalTarget > div:text-is("Local Target in Shadow DOM")
+    VerifyElement               css\=div:has-text('Double quote: 50"')
+    # "In both DOM" is a span in the light DOM and a div in the shadow DOM
+    ${count}=                   GetElementCount             css\=*:text-is("In both DOM")
+    Should Be Equal As Integers    ${count}                 2
+
+CSS selectors don't cross shadow boundaries
+    [Documentation]             Documents the limit: each tree is queried on its own
+    [Setup]                     Run Keywords                SetConfig    ShadowDOM    True
+    ...                         AND                         GoTo         ${BASE_URI}/shadow_dom.html
+    VerifyElement               css\=#buttonShadowRoot
+    VerifyNoElement             css\=#buttonShadowRoot #myButton    timeout=1s
+    VerifyNoElement             css\=click-component > div        timeout=1s
+
+Invalid CSS fails at once in Shadow DOM
+    [Setup]                     Run Keywords                SetConfig    ShadowDOM    True
+    ...                         AND                         GoTo         ${BASE_URI}/shadow_dom.html
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebInvalidSelectorError: *
+    ...                         ClickElement                css\=button[               timeout=10s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} < 5
+
+XPath unchanged with ShadowDOM on
+    [Setup]                     Run Keywords                SetConfig    ShadowDOM    True
+    ...                         AND                         GoTo         ${BASE_URI}/shadow_dom.html
+    VerifyNoElement             //button[@id\="myButton"]    timeout=1s
+    VerifyElement               //button[@id\="normalbutton"]
+
 *** Keywords ***
 Shadow Teardown
     SetConfig                   ShadowDOM                   False

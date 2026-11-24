@@ -44,7 +44,11 @@ Remove or move this file and the spec before opening the PR.
   - [x] removed the Phase 2 "not supported yet" error
   - [x] 10 new acceptance tests (cards, nested cards, quotes, whitespace, case and `PartialMatch`/`CaseInsensitive`, timeout, misplaced filter, frame, XPath unaffected); the css, Element, Selectors and Frame suites pass (83 tests); unit tests, ruff and mypy pass
   - [x] commit (see `git log`)
-- [ ] **Phase 4:** Shadow DOM CSS search and tests
+- [x] **Phase 4: Shadow DOM CSS search**
+  - [x] `QWeb/internal/js/get_css_elements_from_shadow_dom.js` + `javascript.get_css_elements_from_shadow_dom`: `recursiveWalk` collects the search root and every open shadow root under it, then runs `querySelectorAll` on each tree separately
+  - [x] `element.get_css_elements` uses it when `ShadowDOM` is on (the root is the active-area element, or the document in the frame search); otherwise `By.CSS_SELECTOR`. Visibility and text filters apply the same way
+  - [x] 6 new tests in `test/acceptance/serial/shadow_dom.robot`: setting off/on, click/count/attribute, text filters, boundary limit, invalid syntax at once, XPath unchanged. The suite passes (16 tests); css + Element (65) and unit tests pass; ruff and mypy pass
+  - [x] commit (see `git log`)
 - [ ] **Phase 5:** route `element_type=css` through the new path, with a deprecation warning
 - [ ] **Phase 6:** docstrings, `docs/concepts/locators.md`, `docs/concepts/shadow_dom.md`
 - [ ] **Phase 7: locator guide in the keyword documentation** (requested by the user; done after all features)
@@ -86,3 +90,5 @@ These are not in the spec; review them.
 * **Where `tag=` / `selector=` are dropped:** in `QWeb._xpath_decorator`, the outermost keyword wrapper, so the warning is logged once per keyword call, not once per retry. It's limited to the keywords in `locator.CSS_LOCATOR_KEYWORDS` from `QWeb.keywords.element`, and it's skipped when `element_type` is given.
 * **Filter order:** visibility check first, then the text filter and innermost-wins. A hidden inner match therefore doesn't remove its visible outer match.
 * **For the Phase 6 docs:** (1) two or more spaces inside a filter text must be written with `${SPACE}`, because Robot Framework splits arguments on runs of spaces. (2) ClickElement clicks the center of the matched element, so clicking an outer card whose center is covered by a nested card hits the nested one. This is normal Selenium click behavior, the same as with XPath.
+* **Shadow DOM result order:** light-DOM matches of the search root come first, then each shadow tree in walk order. `index` counts in that order.
+* **Shadow DOM search root:** when the active area is an element, the walk starts there and also covers the element's own shadow root, if it has one.
