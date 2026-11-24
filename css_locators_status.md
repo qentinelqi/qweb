@@ -56,7 +56,7 @@ Remove or move this file and the spec before opening the PR.
   - Keep and cross-link the existing Anchors and Shadow DOM sections. Shadow DOM: Text and Item work there, and `css=` works with basic selectors; XPath doesn't.
   - Show one short example per family, with escaped `=`.
   - Check that libdoc renders it: `python -m robot.libdoc QWeb <out>/QWeb.html`, then open the HTML.
-  - Open question for the user: mirror the guide in `docs/concepts/locators.md` (the mkdocs site), or keep that page as it is with only the Phase 6 updates?
+  - Mirror the guide in `docs/concepts/locators.md` (the mkdocs site), as the user decided. Same content, adapted to Markdown; keep the two in sync.
 - [ ] **Phase 8:** full lint (ruff, mypy, flake8, pylint on 3.11) and the full acceptance run
 
 ## Decisions made during implementation
