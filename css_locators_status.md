@@ -49,7 +49,12 @@ Remove or move this file and the spec before opening the PR.
   - [x] `element.get_css_elements` uses it when `ShadowDOM` is on (the root is the active-area element, or the document in the frame search); otherwise `By.CSS_SELECTOR`. Visibility and text filters apply the same way
   - [x] 6 new tests in `test/acceptance/serial/shadow_dom.robot`: setting off/on, click/count/attribute, text filters, boundary limit, invalid syntax at once, XPath unchanged. The suite passes (16 tests); css + Element (65) and unit tests pass; ruff and mypy pass
   - [x] commit (see `git log`)
-- [ ] **Phase 5:** route `element_type=css` through the new path, with a deprecation warning
+- [x] **Phase 5: `element_type=css` deprecated**
+  - [x] the `get_webelement` branch prefixes the locator with `css=` (unless it already has one) and uses `element.get_webelements`. So it fails at once on invalid syntax and supports text filters and Shadow DOM. `element.get_webelements_by_css` is no longer used; it's kept for external callers
+  - [x] deprecation warning once per run (`_warn_element_type_css_deprecated` in `QWeb/keywords/element.py`)
+  - [x] marked as deprecated in the GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates docstrings; the CSS examples now use `css\=` with escaped `=` (the old examples had unescaped `=`, which Robot Framework would treat as a named argument)
+  - [x] 2 new tests in `css_locators.robot`; the existing `element_type=css` tests in `element.robot` pass unchanged (css + Element: 67 tests); unit tests, ruff and mypy pass
+  - [x] commit (see `git log`)
 - [ ] **Phase 6:** docstrings, `docs/concepts/locators.md`, `docs/concepts/shadow_dom.md`
 - [ ] **Phase 7: locator guide in the keyword documentation** (requested by the user; done after all features)
   - Where: the library intro docstring in `QWeb/__init__.py` (section `.. _Locators:` "Locator strategies", ~line 118), which libdoc shows at the top of the keyword docs. Rework that section; don't add a second one.
@@ -92,3 +97,4 @@ These are not in the spec; review them.
 * **For the Phase 6 docs:** (1) two or more spaces inside a filter text must be written with `${SPACE}`, because Robot Framework splits arguments on runs of spaces. (2) ClickElement clicks the center of the matched element, so clicking an outer card whose center is covered by a nested card hits the nested one. This is normal Selenium click behavior, the same as with XPath.
 * **Shadow DOM result order:** light-DOM matches of the search root come first, then each shadow tree in walk order. `index` counts in that order.
 * **Shadow DOM search root:** when the active area is an element, the walk starts there and also covers the element's own shadow root, if it has one.
+* **Changelog note (behavior change):** `element_type=css` with an invalid selector now fails at once instead of waiting for the timeout.

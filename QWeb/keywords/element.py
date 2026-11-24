@@ -21,12 +21,27 @@ from typing import Union, Optional, Dict
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
+from robot.api import logger
 from robot.api.deco import keyword
 from QWeb.internal.exceptions import QWebValueError, QWebElementNotFoundError
 from QWeb.internal import element, decorators, actions, text, input_, dropdown, checkbox
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.locator import is_css_locator
 
 import time
+
+_ELEMENT_TYPE_CSS_WARNED = False
+
+
+def _warn_element_type_css_deprecated() -> None:
+    """Log the element_type=css deprecation warning once per run."""
+    global _ELEMENT_TYPE_CSS_WARNED  # pylint: disable=global-statement
+    if not _ELEMENT_TYPE_CSS_WARNED:
+        _ELEMENT_TYPE_CSS_WARNED = True
+        logger.warn(
+            "element_type=css is deprecated, use the css\\= prefix instead, "
+            "e.g. GetWebElement    css\\=button.primary"
+        )
 
 
 @keyword(tags=["Interaction"])
@@ -468,7 +483,10 @@ def get_webelement(
 
     .. code-block:: robotframework
 
-        ${elem}      GetWebelement          input[type=button]:nth-child(10)    element_type=css
+        ${elem}      GetWebelement          css\=input[type\=button]:nth-child(10)
+
+    .. note:: ``element_type=css`` is deprecated. It still works, but logs a warning.
+       Use the ``css\=`` prefix instead, without element_type.
 
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Qwords like ClickText/Item, TypeText, Dropdown etc.
@@ -482,7 +500,8 @@ def get_webelement(
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown or css).
+        (available types: text, input, checkbox, item, dropdown;
+        css is deprecated, use the css\= prefix in locator instead).
     all_frames : bool
         In cases where list is expected to be returned, traverse through all frames
         (True) or stop on the first frame which contains matching elements (False).
@@ -519,7 +538,10 @@ def get_webelement(
                 locator, anchor, **kwargs
             )[0]
         elif element_type.lower() == "css":
-            web_element_list = element.get_webelements_by_css(locator, **kwargs)
+            # Deprecated: same search as a css= locator without element_type
+            _warn_element_type_css_deprecated()
+            css_locator = locator if is_css_locator(locator) else f"css={locator}"
+            web_element_list = element.get_webelements(css_locator, **kwargs)
             if web_element_list:
                 web_elements = element.get_element_by_index(web_element_list, kwargs["index"])
             else:
@@ -595,7 +617,10 @@ def get_attribute(
 
     .. code-block:: robotframework
 
-        ${attribute_value}  GetAttribute          input[type=button]   value    element_type=css
+        ${attribute_value}  GetAttribute          css\=input[type\=button]   value
+
+    .. note:: ``element_type=css`` is deprecated. It still works, but logs a warning.
+       Use the ``css\=`` prefix instead, without element_type.
 
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Qwords like ClickText/Item, TypeText, Dropdown etc.
@@ -611,7 +636,8 @@ def get_attribute(
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown or css).
+        (available types: text, input, checkbox, item, dropdown;
+        css is deprecated, use the css\= prefix in locator instead).
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :
@@ -696,7 +722,10 @@ def verify_attribute(
 
     .. code-block:: robotframework
 
-        VerifyAttribute          input[type=button]   value    Click Me     element_type=css
+        VerifyAttribute          css\=input[type\=button]   value    Click Me
+
+    .. note:: ``element_type=css`` is deprecated. It still works, but logs a warning.
+       Use the ``css\=`` prefix instead, without element_type.
 
     All flags are available for using (timeout, anchor, index, visibility, parent, child etc.).
     in same way as you are using those with Pacewords like ClickText/Item, TypeText, Dropdown etc.
@@ -734,7 +763,8 @@ def verify_attribute(
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown or css).
+        (available types: text, input, checkbox, item, dropdown;
+        css is deprecated, use the css\= prefix in locator instead).
     timeout : int
         How long we wait element to appear. Default=10 sec
     kwargs :
@@ -847,7 +877,8 @@ def get_coordinates(
         Used when element_type is defined. Default=1 (first match)
     element_type : string
         Define element type/preferred searching method
-        (available types: text, input, checkbox, item, dropdown or css).
+        (available types: text, input, checkbox, item, dropdown;
+        css is deprecated, use the css\= prefix in locator instead).
     overlay_offset: int
         A positive integer representing the offset to adjust the scroll position
         if a top bar or overlay obscures the element.

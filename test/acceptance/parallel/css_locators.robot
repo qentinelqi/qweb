@@ -180,6 +180,27 @@ Text Filter Has No Effect On XPath
     VerifyElement               //div[contains(., "Alpha")][@class\="card"]
     VerifyNoElement             //div[contains(., ':has-text("Alpha")')]
 
+Deprecated Element Type CSS Still Works
+    ${elem}=                    GetWebElement               li.item                     element_type=css    index=2
+    Should Be Equal             ${elem.text}                Item 2
+    ${elem}=                    GetWebElement               css\=li.item                element_type=css    index=3
+    Should Be Equal             ${elem.text}                Item 3
+    ${value}=                   GetAttribute                button.primary              data-id             element_type=css
+    Should Be Equal             ${value}                    save-btn
+    VerifyAttribute             button[data-id\="save-btn"]    class                   primary             element_type=css
+    &{coords}=                  GetCoordinates              button.primary              element_type=css
+    Should Be True              ${coords}[x] > 0
+    # same path as css=, so text filters work too
+    ${elem}=                    GetWebElement               div.card:text-is("Hello")    element_type=css
+    Should Be Equal             ${elem.get_attribute("id")}    card-hello
+
+Deprecated Element Type CSS Fails At Once On Invalid Selector
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebInvalidSelectorError: *
+    ...                         GetWebElement               div[                        element_type=css    timeout=10s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} < 5
+
 *** Keywords ***
 Invalid Selector Should Fail At Once
     [Arguments]                 ${keyword}
