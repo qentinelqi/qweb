@@ -63,21 +63,11 @@ Remove or move this file and the spec before opening the PR.
   - [x] checks: libdoc `-F REST` builds without docutils system messages; the intro heading and the `css-locators` id exist, and all 10 keyword links point to `#css-locators`; a dry run of all 35 `css\=` doc examples passes; unit tests, ruff and mypy pass
   - [ ] not verified: clicking the links in a real browser. The browser pane can't open local files here, so check the links in `docs/QWeb.html` after the next `duty docs` build
   - [x] commit (see `git log`)
-- [ ] **Phase 7: locator guide in the keyword documentation** (requested by the user; done after all features)
-  - Where: the library intro docstring in `QWeb/__init__.py` (section `.. _Locators:` "Locator strategies", ~line 118), which libdoc shows at the top of the keyword docs. Rework that section; don't add a second one.
-  - Explain the idea first: QWeb has **separate keyword families per locator type**, so the locator string needs no type prefix and QWeb never guesses. Each family has search rules suited to its type, and the keyword name tells the reader what is being matched.
-  - **\*Text** (ClickText, VerifyText, HoverText, IsText, GetText, ClickWhile/ClickUntil, …): visible UI text. Clickable elements are preferred for click keywords, plus `anchor`, `PartialMatch` and `CaseInsensitive`. The preferred locator type.
-  - **\*Item** (ClickItem, VerifyItem, HoverItem, IsItem, ClickItemWhile/ClickItemUntil): one attribute value of an element without visible text: `title`, `alt`, `aria-label`, `data-tooltip`, `tooltip`, `data-icon` (see `text.get_item_using_anchor`). Typical for icons and image buttons.
-  - **\*Element** (ClickElement, VerifyElement, VerifyNoElement, IsElement, RightClick, HoverElement, GetElementCount): an exact technical locator, XPath (default) or `css\=`. Escape every `=`. Also `tag=`, to match any attribute value on a given tag.
-  - **\*Icon:** image comparison (keep the existing part).
-  - **Keywords that work with several types:**
-    * GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates take XPath or `css\=` by default, and text, item, input, dropdown or checkbox with `element_type`.
-    * The input, dropdown and checkbox keywords (TypeText, DropDown, ClickCheckbox, …) take a label text, an attribute value or an XPath.
-  - Add a short "which one to use" order: Text → Item → Element (CSS or XPath) → Icon.
-  - Keep and cross-link the existing Anchors and Shadow DOM sections. Shadow DOM: Text and Item work there, and `css=` works with basic selectors; XPath doesn't.
-  - Show one short example per family, with escaped `=`.
-  - Check that libdoc renders it: `python -m robot.libdoc QWeb <out>/QWeb.html`, then open the HTML.
-  - Mirror the guide in `docs/concepts/locators.md` (the mkdocs site), as the user decided. Same content, adapted to Markdown; keep the two in sync.
+- [x] **Phase 7: locator guide** (requested by the user)
+  - [x] "Locator strategies" in the `QWeb/__init__.py` intro reworked: a "One keyword family per locator type" table (Text / Item / Element / Icon) and the reasons (search rules per type, no prefix or guessing, readable intent, settings per family), then the order of preference. The Item description now matches the code: any attribute value of common tags (`text._get_item_by_css`), plus `tag`. New "Keywords that work with several locator types" part (input/dropdown/checkbox keywords, GetWebElement and friends with `element_type`, *Element with `tag`). Fixed the `hrrps://` typo in an existing example
+  - [x] mirrored in `docs/concepts/locators.md`: family table and reasons at the top, Item attribute list corrected, the "Summary" section replaced by "5. Keywords that work with several locator types" (the table moved to the top)
+  - [x] checks: libdoc `-F REST` with 0 system messages and the table renders; dry run of the new examples and of all 35 `css\=` doc examples passes; ruff and mypy pass
+  - [x] commit (see `git log`)
 - [ ] **Phase 8:** full lint (ruff, mypy, flake8, pylint on 3.11) and the full acceptance run
 
 ## Decisions made during implementation

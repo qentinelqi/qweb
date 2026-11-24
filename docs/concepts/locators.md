@@ -2,6 +2,23 @@
 
 QWeb is designed to be **text-first**. Unlike traditional automation that relies heavily on HTML structure (IDs, Classes, XPaths), QWeb encourages you to interact with elements the way a human user does: by reading the screen.
 
+## One keyword family per locator type
+
+QWeb has a separate keyword family for each kind of locator, and the end of the keyword name tells which one is used:
+
+| Suffix | Locator | Example keywords |
+| :--- | :--- | :--- |
+| **...Text** | Visible UI text | `ClickText`, `VerifyText`, `HoverText` |
+| **...Item** | An attribute value (title, alt, id, ...) | `ClickItem`, `VerifyItem`, `HoverItem` |
+| **...Element** | XPath, or CSS selector with `css\=` | `ClickElement`, `VerifyElement` |
+| **...Icon** | Reference image | `ClickIcon`, `VerifyIcon` |
+
+This is why a QWeb locator needs no prefix or type hint, and QWeb never has to guess whether `Save` is a text, an attribute value or a selector:
+
+*   **Search rules per type:** each family has search rules made for its locator type. `...Text` keywords prefer clickable elements when clicking, `...Item` keywords look through attribute values of elements without visible text, and `...Element` keywords match exactly what the XPath or CSS selector says.
+*   **Readable intent:** the keyword name tells the reader what is being matched. `ClickText    Save` and `ClickItem    Save` read differently, and a change from one to the other is visible in the test.
+*   **Meaningful settings:** settings and arguments stay meaningful for their family, for example `PartialMatch` for texts or `index` for XPath and CSS matches.
+
 To write reliable and maintainable tests, follow this hierarchy of strategies:
 
 ## 1. Text Locators (Preferred)
@@ -33,14 +50,14 @@ VerifyText     Welcome to your dashboard
 
 ## 2. Item Locators (Attributes)
 
-**Keywords:** `ClickItem`, `VerifyItem`, `HoverItem`
+**Keywords:** `ClickItem`, `VerifyItem`, `VerifyNoItem`, `HoverItem`, `IsItem`, `ClickItemWhile`, `ClickItemUntil`
 
-When an element has no visible text (like an icon, a trash can button, or a logo), use **Item** keywords. These keywords look for relevant HTML attributes that describe the element, such as:
+When an element has no visible text (like an icon, a trash can button, or a logo), use **Item** keywords. These keywords match any attribute value of common elements such as links, buttons, images, icons and list items. Typical attributes that describe an element are:
 
 *   `title` (Tooltip text)
 *   `alt` (Image description)
-*   `value` (Input button text)
-*   `placeholder` (Input hint text)
+*   `aria-label` (Accessible name)
+*   `data-icon`, `id`, or any other attribute
 
 **Example:**
 Imagine a "Clear Search" button that is just an 'X' icon but has `title="Clear"`.
@@ -139,14 +156,18 @@ ClickIcon      user_avatar.png
 **Maintainability:** Requires recapturing assets and revalidating across environments.
 
 
-## Summary: Naming Conventions
+## 5. Keywords that work with several locator types
 
-QWeb keywords are named consistently to help you choose the right strategy:
+Some keywords are not tied to one family:
 
-| Suffix | Strategy | Example |
-| :--- | :--- | :--- |
-| **...Text** | Visible UI Text | `ClickText`, `VerifyText` |
-| **...Item** | Attributes (Title/Alt) | `ClickItem`, `IsItem` |
-| **...Element** | XPath or CSS (`css\=`) | `ClickElement`, `VerifyElement` |
-| **...Icon** | Image / Bitmap | `ClickIcon`, `VerifyIcon` |
+*   **Input, dropdown and checkbox keywords** (`TypeText`, `VerifyInputValue`, `DropDown`, `VerifySelectedOption`, `ClickCheckbox`, ...) find the field by its label text, by an attribute value such as a placeholder, or by an XPath (`//` or `xpath\=` prefix).
+*   **`GetWebElement`, `GetAttribute`, `VerifyAttribute` and `GetCoordinates`** use an XPath or a `css\=` locator by default. With `element_type` they search like the other families: `element_type=text`, `item`, `input`, `dropdown` or `checkbox`.
+*   **...Element keywords** also accept an attribute value with `tag`, e.g. `ClickElement    click_me    tag=button`.
 
+```robotframework
+TypeText            Username                       myusername@test.com    # label text
+TypeText            xpath\=//input[@id\="user"]    myusername@test.com
+${elem}=            GetWebElement                  Log In                 element_type=text
+${elem}=            GetWebElement                  css\=button.login
+${value}=           GetAttribute                   Country                value    element_type=dropdown
+```

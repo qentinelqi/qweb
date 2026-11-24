@@ -130,8 +130,34 @@ class QWeb:
     usually a small portion of test cases / steps. If you notice yourself using xpaths in most
     steps, please consider re-factoring your test script implementation!
 
-    Here are four ways of finding elements. These are presented in order of preference of using
-    them:
+    **One keyword family per locator type**
+
+    QWeb has a separate keyword family for each kind of locator, and the end of the keyword name
+    tells which one is used:
+
+    =============  ==========================================  ==================================
+    Keywords       Locator                                     Examples
+    =============  ==========================================  ==================================
+    **\*Text**     Visible UI text                             ClickText, VerifyText, HoverText
+    **\*Item**     An attribute value (title, alt, id, ...)    ClickItem, VerifyItem, HoverItem
+    **\*Element**  XPath, or CSS selector with ``css\=``       ClickElement, VerifyElement
+    **\*Icon**     Reference image                             ClickIcon, VerifyIcon
+    =============  ==========================================  ==================================
+
+    This is why a QWeb locator needs no prefix or type hint, and QWeb never has to guess whether
+    ``Save`` is a text, an attribute value or a selector:
+
+    - Each family has search rules made for its locator type. **\*Text** keywords prefer
+      clickable elements when clicking and support textual anchors, **\*Item** keywords look
+      through attribute values of elements without visible text, and **\*Element** keywords
+      match exactly what the XPath or CSS selector says.
+    - The keyword name tells the reader what is being matched. ``ClickText    Save`` and
+      ``ClickItem    Save`` read differently, and a change from one to the other is visible in
+      the test.
+    - Settings and arguments stay meaningful for their family, for example ``PartialMatch`` for
+      texts or ``index`` for XPath and CSS matches.
+
+    Use them in this order of preference:
 
     **Text**
 
@@ -148,11 +174,15 @@ class QWeb:
             # finds input field based on label
             TypeText            Username        myusername@test.com
 
-    **Attribute values**
+    **Attribute values (Item)**
 
     If there is no visible UI text available, it's possible to find elements using any attribute
     value the element has. In the simplest form you can hover over an element and see the alt
-    text/title value, if available.
+    text/title value, if available. **\*Item** keywords (ClickItem, VerifyItem, VerifyNoItem,
+    HoverItem, IsItem, ClickItemWhile, ClickItemUntil) match any attribute value of common
+    elements such as links, buttons, images, icons and list items. Typical targets are icons and
+    image buttons with a ``title``, ``alt``, ``aria-label`` or ``data-icon`` attribute. Use
+    ``tag`` to limit the search to one element type.
 
     Examples:
 
@@ -160,15 +190,17 @@ class QWeb:
 
         *** Test Cases ***
         Example test case using attribute values as locators
-            OpenBrowser    hrrps://www.google.com      chrome
+            OpenBrowser    https://www.google.com      chrome
             # finds input field based on attribute title value
             TypeText            Search                     Copado Robotic Testing
             ClickItem           Clear search
+            ClickItem           Reset       tag=custom_button
 
-    **Xpaths and CSS selectors**
+    **Xpaths and CSS selectors (Element)**
 
     Xpaths and CSS selectors (with the ``css\=`` prefix, see `Css_locators`_) are also supported as
-    locators. These are mostly used by QWords ending with ***Element**.
+    locators. These are mostly used by QWords ending with ***Element**. A locator without a
+    prefix is an XPath. Every equal sign ``=`` in the locator must be escaped with a backslash.
 
     .. code-block:: robotframework
 
@@ -202,6 +234,27 @@ class QWeb:
 
     .. note:: Keywords for using icons/images have a naming convention **\*Icon**.
       (ClickIcon, VerifyIcon etc.)
+
+    **Keywords that work with several locator types**
+
+    Some keywords are not tied to one family:
+
+    - Input, dropdown and checkbox keywords (TypeText, VerifyInputValue, DropDown,
+      VerifySelectedOption, ClickCheckbox, ...) find the field by its label text, by an attribute
+      value such as a placeholder, or by an XPath (``//`` or ``xpath\=`` prefix).
+    - GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates use an XPath or a
+      ``css\=`` locator by default. With ``element_type`` they search like the other families:
+      ``element_type=text``, ``item``, ``input``, ``dropdown`` or ``checkbox``.
+    - **\*Element** keywords also accept an attribute value with ``tag``, e.g.
+      ``ClickElement    click_me    tag=button``.
+
+    .. code-block:: robotframework
+
+        TypeText            Username                  myusername@test.com   # label text
+        TypeText            xpath\=//input[@id\="user"]    myusername@test.com
+        ${elem}=            GetWebElement             Log In          element_type=text
+        ${elem}=            GetWebElement             css\=button.login
+        ${value}=           GetAttribute              Country         value    element_type=dropdown
 
     .. _Anchors:
 
