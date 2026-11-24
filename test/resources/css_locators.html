@@ -32,12 +32,29 @@
   <div class="hidden-el">Hidden element</div>
   <div id="late-container"></div>
 
+  <div id="cards">
+    <div class="card" id="card-alpha">Alpha</div>
+    <div class="card" id="card-hello">Hello</div>
+    <div class="card" id="card-hello-world">Hello world</div>
+    <div class="card" id="card-outer">Outer
+      <div class="card" id="card-inner">Hello nested</div>
+    </div>
+    <div class="card" id="card-spaces">  Multi
+         space   text  </div>
+  </div>
+  <p class="quote" id="quote-double">Say "hi"</p>
+  <p class="quote" id="quote-single">It's</p>
+  <p class="lower" id="lower">hello lower</p>
+
   <iframe src="./css_locators_frame.html" title="css frame"></iframe>
 
   <script>
     function setResult(text) {
       document.getElementById("result").innerText = text;
     }
+    document.getElementById("cards").addEventListener("click", function (event) {
+      setResult("Clicked card: " + event.target.closest(".card").id);
+    });
     setTimeout(function () {
       var late = document.createElement("div");
       late.id = "late";

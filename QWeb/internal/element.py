@@ -19,6 +19,7 @@ from typing import Optional, Callable, Any, Union
 
 import math
 from robot.api import logger
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
@@ -199,11 +200,6 @@ def check_css_syntax(locator: Locator) -> None:
     QWebInvalidSelectorError
         Selector is not valid CSS. Not retried by the timeout decorator.
     """
-    if locator.text_filter is not None:
-        # Implemented in phase 3 of css= support
-        raise QWebInvalidSelectorError(
-            f"Text filters (:has-text, :text-is) are not supported yet: '{locator.raw}'"
-        )
     error = javascript.get_css_selector_error(locator.value)
     if error:
         raise QWebInvalidSelectorError(f"Invalid CSS selector in locator '{locator.raw}': {error}")
@@ -250,10 +246,7 @@ def _get_webelements_from_frames(xpath: str, **kwargs: Any) -> list[WebElement]:
     """
     driver = browser.get_current_browser()
     if is_css_locator(xpath):
-        selector = parse_locator(xpath).value
-        web_elements = driver.find_elements(By.CSS_SELECTOR, selector)
-        logger.trace("CSS selector {} matched {} WebElements".format(selector, len(web_elements)))
-        return get_visible_elements_from_elements(web_elements, **kwargs)
+        return get_css_elements(driver, parse_locator(xpath), **kwargs)
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
     web_elements = driver.find_elements(By.XPATH, xpath)
@@ -308,9 +301,10 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
         List of visible WebElements.
     """
     by = By.XPATH
+    css_locator: Optional[Locator] = None
     if is_css_locator(xpath):
         by = By.CSS_SELECTOR
-        xpath = parse_locator(xpath).value
+        css_locator = parse_locator(xpath)
     active_area_xpath = CONFIG["ActiveAreaXpath"]
     if ACTIVE_AREA_FUNCTION is not None:
         active_area = ACTIVE_AREA_FUNCTION()  # pylint:disable=E1102
@@ -335,16 +329,42 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
             return None
 
     try:
-        webelements = active_area.find_elements(by, xpath)
-
-        logger.trace("{} {} matched {} webelements".format(by, xpath, len(webelements)))
-        webelements = get_visible_elements_from_elements(webelements, **kwargs)
+        if css_locator is not None:
+            webelements = get_css_elements(active_area, css_locator, **kwargs)
+        else:
+            webelements = active_area.find_elements(by, xpath)
+            logger.trace("{} {} matched {} webelements".format(by, xpath, len(webelements)))
+            webelements = get_visible_elements_from_elements(webelements, **kwargs)
     except StaleElementReferenceException as se:
         raise QWebStalingElementError("Got StaleElementException") from se
     except (JavascriptException, InvalidSelectorException) as e:
         logger.debug("Got {}, returning None".format(e))
         webelements = None
     return webelements
+
+
+def get_css_elements(
+    search_root: Union[WebDriver, WebElement], locator: Locator, **kwargs: Any
+) -> list[WebElement]:
+    """Find visible elements for a parsed css= locator under search_root.
+
+    Applies the same visibility rules as XPath searches, then the optional
+    :has-text() / :text-is() filter (innermost match wins).
+    """
+    web_elements = search_root.find_elements(By.CSS_SELECTOR, locator.value)
+    logger.trace("CSS selector {} matched {} WebElements".format(locator.value, len(web_elements)))
+    web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
+    text_filter = locator.text_filter
+    if text_filter is not None and web_elements:
+        web_elements = javascript.filter_elements_by_text(
+            web_elements, text_filter.kind, text_filter.text
+        )
+        logger.trace(
+            ':{}("{}") kept {} WebElements'.format(
+                text_filter.kind, text_filter.text, len(web_elements)
+            )
+        )
+    return web_elements
 
 
 def get_visible_elements_from_elements(

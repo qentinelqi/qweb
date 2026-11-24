@@ -38,7 +38,12 @@ Remove or move this file and the spec before opening the PR.
   - [x] the css, Element, Selectors, Frame and Text suites pass (133 tests); unit tests, ruff check, mypy and flake8 (E9/F) pass
   - [x] all parallel suites: 415/420 pass with pabot; the same 5 fail without these changes (environment: screenshot paths under pabot, the debugfile test needs `-b debug.txt`, and ClearKey/PressKey hotkeys on macOS)
   - [x] commit (72a1fd9)
-- [ ] **Phase 3:** `:has-text` / `:text-is` filter in JS, innermost wins, acceptance tests
+- [x] **Phase 3: `:has-text` / `:text-is` filters**
+  - [x] `QWeb/internal/js/filter_by_text.js` + `javascript.filter_elements_by_text`: normalized `innerText`, case-sensitive, substring or exact match, innermost wins; one JS call for all candidates
+  - [x] `element.get_css_elements(search_root, locator)`: `find_elements(By.CSS_SELECTOR)` → visibility check → text filter. Used by both the frame search and the active-area search
+  - [x] removed the Phase 2 "not supported yet" error
+  - [x] 10 new acceptance tests (cards, nested cards, quotes, whitespace, case and `PartialMatch`/`CaseInsensitive`, timeout, misplaced filter, frame, XPath unaffected); the css, Element, Selectors and Frame suites pass (83 tests); unit tests, ruff and mypy pass
+  - [x] commit (see `git log`)
 - [ ] **Phase 4:** Shadow DOM CSS search and tests
 - [ ] **Phase 5:** route `element_type=css` through the new path, with a deprecation warning
 - [ ] **Phase 6:** docstrings, `docs/concepts/locators.md`, `docs/concepts/shadow_dom.md`
@@ -79,3 +84,5 @@ These are not in the spec; review them.
 * **Error message wording:** for `css=`, the inner messages of `get_unique_element_by_xpath` say "Locator css=… did not find any elements". XPath messages are unchanged.
 * **CSS in the active area:** CSS is searched with `active_area.find_elements(By.CSS_SELECTOR, …)`, with no `.//` rewrite like XPath gets.
 * **Where `tag=` / `selector=` are dropped:** in `QWeb._xpath_decorator`, the outermost keyword wrapper, so the warning is logged once per keyword call, not once per retry. It's limited to the keywords in `locator.CSS_LOCATOR_KEYWORDS` from `QWeb.keywords.element`, and it's skipped when `element_type` is given.
+* **Filter order:** visibility check first, then the text filter and innermost-wins. A hidden inner match therefore doesn't remove its visible outer match.
+* **For the Phase 6 docs:** (1) two or more spaces inside a filter text must be written with `${SPACE}`, because Robot Framework splits arguments on runs of spaces. (2) ClickElement clicks the center of the matched element, so clicking an outer card whose center is covered by a nested card hits the nested one. This is normal Selenium click behavior, the same as with XPath.

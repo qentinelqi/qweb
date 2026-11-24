@@ -46,6 +46,7 @@ _GET_ALL_FRAMES_FROM_SHADOW_DOM_JS = load_js('get_all_frames_from_shadow_dom.js'
 _GET_ALL_INPUT_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_all_input_elements_from_shadow_dom.js')
 _GET_ALL_DROPDOWN_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_all_dropdown_elements_shadow_dom.js')
 _GET_ITEM_ELEMENTS_FROM_SHADOW_DOM_JS = load_js('get_item_elements_from_shadow_dom.js')
+_FILTER_BY_TEXT_JS = load_js('filter_by_text.js')
 
 
 def execute_javascript(script: str, *args) -> Any:
@@ -92,6 +93,16 @@ def get_by_attributes(
     """Return web element by its attribute value (using external JS file, preloaded)."""
     js = _GET_BY_ATTRIBUTES_JS
     return execute_javascript(js, elements, locator.replace("'", "\\'"), partial_match)
+
+
+def filter_elements_by_text(
+    web_elements: list[WebElement], kind: str, text: str
+) -> list[WebElement]:
+    """Keep elements whose normalized innerText matches text, innermost match wins.
+
+    kind is "has-text" (substring) or "text-is" (exact). Matching is case-sensitive.
+    """
+    return execute_javascript(_FILTER_BY_TEXT_JS, web_elements, kind, text)
 
 
 def get_css_selector_error(selector: str) -> Optional[str]:

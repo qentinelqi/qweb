@@ -114,6 +114,72 @@ XPath Still Works
     VerifyText                  Clicked: item 2
     VerifyElement               xpath=//*[@id\="user-menu"]
 
+Has Text Filter Clicks Matching Card
+    ClickElement                css\=div.card:has-text("Hello")
+    VerifyText                  Clicked card: card-hello
+    ClickElement                css\=div.card:has-text("Hello")    index=2
+    VerifyText                  Clicked card: card-hello-world
+
+Has Text Is Substring And Text Is Is Exact
+    ${count}=                   GetElementCount             css\=div.card:has-text("Hello")
+    Should Be Equal As Integers    ${count}                 3
+    ${count}=                   GetElementCount             css\=div.card:text-is("Hello")
+    Should Be Equal As Integers    ${count}                 1
+    ClickElement                css\=div.card:text-is("Hello world")
+    VerifyText                  Clicked card: card-hello-world
+
+Innermost Match Wins
+    # outer card contains the inner card's text too, but only the inner one is kept
+    ${count}=                   GetElementCount             css\=div.card:has-text("Hello nested")
+    Should Be Equal As Integers    ${count}                 1
+    ClickElement                css\=div.card:has-text("Hello nested")
+    VerifyText                  Clicked card: card-inner
+    # inner card doesn't contain "Outer", so the outer card is the only match
+    # (checked by id: clicking the outer card's center would hit the inner card)
+    ${id}=                      GetAttribute                css\=div.card:has-text("Outer")    id
+    Should Be Equal             ${id}                       card-outer
+
+Text Filter Normalizes Whitespace
+    VerifyElement               css\=div.card:text-is("Multi space text")
+    VerifyElement               css\=div.card:has-text("${SPACE}${SPACE}Multi${SPACE}${SPACE}${SPACE}space${SPACE}")
+
+Text Filter With Quotes
+    VerifyElement               css\=p.quote:has-text('Say "hi"')
+    VerifyElement               css\=p.quote:has-text("Say \\"hi\\"")
+    VerifyElement               css\=p.quote:text-is("It's")
+
+Text Filter Is Case Sensitive And Ignores Match Settings
+    [Teardown]                  Run Keywords                SetConfig    CaseInsensitive    False
+    ...                         AND                         SetConfig    PartialMatch       True
+    VerifyNoElement             css\=p.lower:has-text("Hello")
+    SetConfig                   CaseInsensitive             True
+    VerifyNoElement             css\=p.lower:has-text("Hello")
+    SetConfig                   PartialMatch                False
+    ${count}=                   GetElementCount             css\=div.card:has-text("Hello")
+    Should Be Equal As Integers    ${count}                 3
+
+Text Filter With No Match Waits For Timeout
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebElementNotFoundError: *:has-text("Nope")*
+    ...                         VerifyElement               css\=div.card:has-text("Nope")    timeout=2s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} >= 1.5
+
+Misplaced Text Filter Fails At Once
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebInvalidSelectorError: *only allowed at the end*
+    ...                         ClickElement                css\=div.card:has-text("Hello") > span    timeout=10s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} < 5
+
+Text Filter In Frame
+    ClickElement                css\=button:has-text("In frame")
+    VerifyText                  Frame clicked
+
+Text Filter Has No Effect On XPath
+    VerifyElement               //div[contains(., "Alpha")][@class\="card"]
+    VerifyNoElement             //div[contains(., ':has-text("Alpha")')]
+
 *** Keywords ***
 Invalid Selector Should Fail At Once
     [Arguments]                 ${keyword}
