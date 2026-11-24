@@ -94,6 +94,18 @@ def get_by_attributes(
     return execute_javascript(js, elements, locator.replace("'", "\\'"), partial_match)
 
 
+def get_css_selector_error(selector: str) -> Optional[str]:
+    """Return the browser's error message if selector is not valid CSS, otherwise None.
+
+    Uses an empty document fragment, so nothing on the page is searched.
+    """
+    js = (
+        "try { document.createDocumentFragment().querySelector(arguments[0]); return null; }"
+        " catch (e) { return (e && e.message) ? e.message : String(e); }"
+    )
+    return execute_javascript(js, selector)
+
+
 def get_all_elements(css: str) -> list[WebElement]:
     """Return all web elements for given css-locator.
     Parameters

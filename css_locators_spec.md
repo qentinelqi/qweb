@@ -45,7 +45,7 @@ Out of scope for v1, possible follow-up: the other keywords that accept XPath as
 
 * The first argument keeps its current name (`xpath` or `locator`) and stays required. Signatures in libdoc and RobotCode don't change.
 * `css\=` must be escaped. An unescaped `ClickElement    css=div.card` is rejected by Robot Framework before QWeb runs: "expected 1 to 4 non-named arguments, got 0". QWeb can't improve that message, so the keyword docs must state the escaping rule clearly.
-* Only the first `=` needs escaping: `css\=input[name="q"]` works. Split on the first `=` only.
+* **Every** `=` in the locator must be escaped, not only the one after `css`: `css\=input[name\="q"]`. The keywords accept `**kwargs`, so Robot Framework treats any unescaped `=` as a named argument and rejects the call ("expected 1 to 4 non-named arguments, got 0"). The same rule already applies to XPath (`//button[@id\="save"]`). Verified with a Robot Framework 7.4.1 dry run.
 * The argument's docstring changes to "XPath expression, or a CSS selector with the `css\=` prefix".
 * In new documentation, show bare XPath and `css\=`. Keep `xpath\=` working, but don't feature the unescaped named form `xpath=`.
 
@@ -76,15 +76,15 @@ GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates already accept `
 CSS Locators In Element Keywords
     ClickElement     css\=button.primary
     VerifyElement    css\=#user-menu > li:nth-child(2)
-    ClickElement     css\=input[name="email"]
+    ClickElement     css\=input[name\="email"]
     ClickElement     css\=li.item    index=2
     ${count}=        GetElementCount    css\=li.item
 
 XPath Still Works
-    ClickElement     //button[@id="save"]
-    ClickElement     (//li[@class="item"])[2]
-    ClickElement     xpath\=//div[@class="user-menu"]//button
-    ClickElement     xpath=//div[@class="user-menu"]//button
+    ClickElement     //button[@id\="save"]
+    ClickElement     (//li[@class\="item"])[2]
+    ClickElement     xpath\=//div[@class\="user-menu"]//button
+    ClickElement     xpath=//div[@class\="user-menu"]//button
 ```
 
 ## Text filters inside the `css=` locator
@@ -173,7 +173,7 @@ With `SetConfig    ShadowDOM    True`, `css=` locators also search open shadow r
 ### Edge cases
 
 * Leading or trailing whitespace around the locator and the selector is stripped.
-* `=` inside the selector, as in `css\=input[name="q"]`: split on the first `=` only.
+* `=` inside the selector, as in `css\=input[name\="q"]`: Robot Framework removes the backslashes, and QWeb splits on the first `=` only.
 * `tag=` combined with `css=`. `tag=` switches to attribute search, where the locator is an attribute value. With a `css=` locator, ignore `tag=`, use the CSS selector, and log a warning: "tag= is ignored with a css= locator; put the tag in the selector, e.g. css\=button.primary". The keyword must not fall into the attribute search.
 * `selector=` combined with `css=`. `_xpath_decorator` in `QWeb/__init__.py` would build `//*[@attr="css=…"]` from it. For the in-scope keywords only, when the first argument starts with `css=`, skip the XPath building, drop `selector=`, and log a warning: "selector= is ignored with a css= locator". All other keywords keep today's behavior.
 * Hidden elements follow the same visibility rules as XPath: `Visibility`, `InViewport`, `OffsetCheck`.
@@ -200,7 +200,7 @@ With `SetConfig    ShadowDOM    True`, `css=` locators also search open shadow r
 * `QWeb/internal/javascript.py` and new files in `QWeb/internal/js/`: the Shadow DOM CSS search and the text filter.
 * `QWeb/internal/exceptions.py`: `QWebInvalidSelectorError`.
 * `QWeb/keywords/element.py`: docstrings, and the `element_type=css` deprecation and routing.
-* `QWeb/__init__.py`: `_xpath_decorator` skips `selector=` for `css=` locators on the in-scope keywords. Don't stage the unrelated local `Dialogs` import change in this file.
+* `QWeb/__init__.py`: `_xpath_decorator` skips `selector=` for `css=` locators on the in-scope keywords.
 * `docs/concepts/locators.md` and `docs/concepts/shadow_dom.md`.
 * Tests: see below.
 

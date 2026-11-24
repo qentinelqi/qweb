@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------
+import inspect
 import time
 import traceback
 import types
@@ -34,7 +35,7 @@ try:
     from robot.utils import timestr_to_secs as _timestr_to_secs
 
     from QWeb import custom_config
-    from QWeb.internal import util
+    from QWeb.internal import locator, util
     from QWeb.internal.config_defaults import CONFIG
     from QWeb.keywords import (
         ajax,
@@ -423,9 +424,16 @@ class QWeb:
         locator.
         """
 
+        uses_css_locator = (
+            keyword_method.__module__ == "QWeb.keywords.element"
+            and keyword_method.__name__ in locator.CSS_LOCATOR_KEYWORDS
+        )
+
         @wraps(keyword_method)  # Preserves docstring of the original method.
         def create_xpath(*args: Any, **kwargs: Any) -> Callable[..., Any]:
             """Handle xpath before passing it to keyword."""
+            if uses_css_locator:
+                QWeb._drop_kwargs_ignored_with_css(keyword_method, args, kwargs)
             args_list = list(args)
             if "selector" in kwargs:
                 attr_value = str(args_list[0])
@@ -435,6 +443,34 @@ class QWeb:
             return keyword_method(*args, **kwargs)
 
         return create_xpath
+
+    @staticmethod
+    def _drop_kwargs_ignored_with_css(
+        keyword_method: Callable[..., Any], args: tuple, kwargs: dict
+    ) -> None:
+        """Remove selector= and tag= when an *Element keyword gets a css= locator.
+
+        Both would turn the locator into an attribute search, so they are ignored
+        with a warning. Not applied when element_type is given (locator is then
+        a text, input label etc.).
+        """
+        if not any(name in kwargs for name in locator.IGNORED_WITH_CSS):
+            return
+        try:
+            bound = inspect.signature(keyword_method).bind_partial(*args, **kwargs)
+        except TypeError:
+            return  # let the keyword report the argument error
+        first_arg = next(iter(bound.arguments.values()), None)
+        if not locator.is_css_locator(first_arg) or bound.arguments.get("element_type"):
+            return
+        for name in locator.IGNORED_WITH_CSS:
+            if name in kwargs:
+                del kwargs[name]
+                logger.warn(
+                    f"{name}= is ignored with a css= locator ({first_arg}). "
+                    "Put the tag or attribute in the selector instead, "
+                    'e.g. css\\=button.primary or css\\=[data-id\\="x"].'
+                )
 
     def _is_run_on_failure_keyword(self, method: Callable[..., Any]) -> bool:
         """Helper function to find out if method name is the

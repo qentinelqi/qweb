@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CSS locators</title>
+  <style>
+    iframe { border: solid 2px gray; width: 600px; height: 120px; }
+    .hidden-el { display: none; }
+  </style>
+</head>
+<body>
+  <h1>CSS locators</h1>
+  <p id="result">Nothing clicked</p>
+
+  <button class="primary" data-id="save-btn" onclick="setResult('Clicked: Save')">Save</button>
+  <button class="secondary" onclick="setResult('Clicked: Cancel')">Cancel</button>
+
+  <ul id="user-menu">
+    <li onclick="setResult('Clicked: Profile')">Profile</li>
+    <li onclick="setResult('Clicked: Settings')">Settings</li>
+  </ul>
+
+  <ul id="items">
+    <li class="item" onclick="setResult('Clicked: item 1')">Item 1</li>
+    <li class="item" onclick="setResult('Clicked: item 2')">Item 2</li>
+    <li class="item" onclick="setResult('Clicked: item 3')">Item 3</li>
+  </ul>
+
+  <input type="text" name="email" placeholder="Email">
+  <div id="context" oncontextmenu="setResult('Right clicked'); return false;">Right click me</div>
+  <div id="hover" onmouseover="setResult('Hovered')">Hover me</div>
+  <div class="hidden-el">Hidden element</div>
+  <div id="late-container"></div>
+
+  <iframe src="./css_locators_frame.html" title="css frame"></iframe>
+
+  <script>
+    function setResult(text) {
+      document.getElementById("result").innerText = text;
+    }
+    setTimeout(function () {
+      var late = document.createElement("div");
+      late.id = "late";
+      late.innerText = "Late element";
+      document.getElementById("late-container").appendChild(late);
+    }, 1000);
+  </script>
+</body>
+</html>

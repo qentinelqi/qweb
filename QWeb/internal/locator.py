@@ -41,6 +41,26 @@ _FILTER_TOKENS = {":has-text(": HAS_TEXT, ":text-is(": TEXT_IS}
 _COMBINATORS = (">", "+", "~")
 
 
+# Keywords in QWeb.keywords.element that accept css= locators
+CSS_LOCATOR_KEYWORDS = frozenset(
+    {
+        "click_element",
+        "right_click",
+        "hover_element",
+        "is_element",
+        "verify_element",
+        "verify_no_element",
+        "get_element_count",
+        "get_webelement",
+        "get_attribute",
+        "verify_attribute",
+        "get_coordinates",
+    }
+)
+# kwargs that would turn the locator into an attribute search; ignored with css=
+IGNORED_WITH_CSS = ("selector", "tag")
+
+
 @dataclass(frozen=True)
 class TextFilter:
     """Text filter parsed from ``:has-text("...")`` or ``:text-is("...")``.

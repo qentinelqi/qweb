@@ -35,9 +35,11 @@ from QWeb.internal.exceptions import (
     QWebStalingElementError,
     QWebValueError,
     QWebSearchingMode,
+    QWebInvalidSelectorError,
 )
 from QWeb.internal import browser, javascript, util
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.locator import Locator, parse_locator, is_css_locator
 
 ACTIVE_AREA_FUNCTION: Optional[Callable[..., Any]] = None
 DEFAULT_DISTANCE = 1000000.0  # Just some large number
@@ -160,7 +162,12 @@ def get_unique_element_by_xpath(
     index : int (Optional)
         Index of element to return if there are multiple.
     """
-    if xpath.startswith("xpath="):
+    locator_name = "XPath"
+    if is_css_locator(xpath):
+        parsed = parse_locator(xpath)
+        check_css_syntax(parsed)
+        locator_name = "Locator"
+    elif xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
     try:
         index = int(index)
@@ -173,34 +180,82 @@ def get_unique_element_by_xpath(
             draw_borders(elements[index])
         return elements[index]
     elif not elements:
-        raise QWebElementNotFoundError("XPath {} did not find any elements".format(xpath))
+        raise QWebElementNotFoundError(
+            "{} {} did not find any elements".format(locator_name, xpath)
+        )
     raise QWebValueError(
-        f"XPath {xpath} matched {len(elements)} elements." f"Used index was {index+1}"
+        f"{locator_name} {xpath} matched {len(elements)} elements." f"Used index was {index+1}"
     )
 
 
-@frame.all_frames
-def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
-    """Get visible web elements that correspond to given XPath.
+def check_css_syntax(locator: Locator) -> None:
+    """Fail at once if a css= locator has invalid syntax.
 
-    To check that element is visible it is checked that it has width. This
-    does not handle all cases but it is fast so no need to modify if it
-    works. Replace the visibility check using WebElement's is_displayed
-    method if necessary.
+    Called before the frame search: the syntax is the same in every frame, and raising
+    inside a child frame would leave the driver in that frame.
+
+    Raises
+    ------
+    QWebInvalidSelectorError
+        Selector is not valid CSS. Not retried by the timeout decorator.
+    """
+    if locator.text_filter is not None:
+        # Implemented in phase 3 of css= support
+        raise QWebInvalidSelectorError(
+            f"Text filters (:has-text, :text-is) are not supported yet: '{locator.raw}'"
+        )
+    error = javascript.get_css_selector_error(locator.value)
+    if error:
+        raise QWebInvalidSelectorError(f"Invalid CSS selector in locator '{locator.raw}': {error}")
+
+
+def get_webelements(xpath: str, **kwargs: Any) -> list[WebElement]:
+    """Get visible web elements that correspond to given XPath or css= locator.
 
     Parameters
     ----------
     xpath : str
-        XPath expression without xpath= prefix.
+        XPath expression (with or without xpath= prefix) or CSS selector with css= prefix.
 
     Returns
     -------
     :obj:`list` of :obj:`WebElement`
         List of visible WebElements.
     """
+    if is_css_locator(xpath):
+        check_css_syntax(parse_locator(xpath))
+    return _get_webelements_from_frames(xpath, **kwargs)
+
+
+@frame.all_frames
+def _get_webelements_from_frames(xpath: str, **kwargs: Any) -> list[WebElement]:
+    """Get visible web elements that correspond to given XPath or css= locator.
+
+    To check that element is visible it is checked that it has width. This
+    does not handle all cases but it is fast so no need to modify if it
+    works. Replace the visibility check using WebElement's is_displayed
+    method if necessary.
+
+    Use get_webelements, which checks css= syntax before the frame search.
+
+    Parameters
+    ----------
+    xpath : str
+        XPath expression (with or without xpath= prefix) or CSS selector with css= prefix.
+
+    Returns
+    -------
+    :obj:`list` of :obj:`WebElement`
+        List of visible WebElements.
+    """
+    driver = browser.get_current_browser()
+    if is_css_locator(xpath):
+        selector = parse_locator(xpath).value
+        web_elements = driver.find_elements(By.CSS_SELECTOR, selector)
+        logger.trace("CSS selector {} matched {} WebElements".format(selector, len(web_elements)))
+        return get_visible_elements_from_elements(web_elements, **kwargs)
     if xpath.startswith("xpath="):
         xpath = xpath.split("=", 1)[1]
-    driver = browser.get_current_browser()
     web_elements = driver.find_elements(By.XPATH, xpath)
     logger.trace("XPath {} matched {} WebElements".format(xpath, len(web_elements)))
     web_elements = get_visible_elements_from_elements(web_elements, **kwargs)
@@ -244,18 +299,24 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
     Parameters
     ----------
     xpath : str
-        Xpath expression without xpath= prefix.
+        Xpath expression without xpath= prefix, or CSS selector with css= prefix.
+        CSS selectors are searched under the active area element as they are.
 
     Returns
     -------
     :obj:`list` of :obj:`WebElement`
         List of visible WebElements.
     """
+    by = By.XPATH
+    if is_css_locator(xpath):
+        by = By.CSS_SELECTOR
+        xpath = parse_locator(xpath).value
     active_area_xpath = CONFIG["ActiveAreaXpath"]
     if ACTIVE_AREA_FUNCTION is not None:
         active_area = ACTIVE_AREA_FUNCTION()  # pylint:disable=E1102
         if active_area:
-            xpath = xpath.replace("//", ".//", 1)
+            if by == By.XPATH:
+                xpath = xpath.replace("//", ".//", 1)
         else:
             driver = browser.get_current_browser()
             active_area = driver.find_element(By.XPATH, active_area_xpath)
@@ -274,9 +335,9 @@ def get_webelements_in_active_area(xpath: str, **kwargs: Any) -> Optional[list[W
             return None
 
     try:
-        webelements = active_area.find_elements(By.XPATH, xpath)
+        webelements = active_area.find_elements(by, xpath)
 
-        logger.trace("XPath {} matched {} webelements".format(xpath, len(webelements)))
+        logger.trace("{} {} matched {} webelements".format(by, xpath, len(webelements)))
         webelements = get_visible_elements_from_elements(webelements, **kwargs)
     except StaleElementReferenceException as se:
         raise QWebStalingElementError("Got StaleElementException") from se

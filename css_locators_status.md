@@ -8,7 +8,8 @@ Remove or move this file and the spec before opening the PR.
 1. Read the spec, then this file.
 2. Check `git log --oneline master..support_css_selectors` for the phase commits.
 3. Continue with the first unchecked phase below.
-4. Never stage the user's local change in `QWeb/__init__.py` (commented-out `Dialogs` import). When a phase changes that file, stage only your own lines, e.g. with `git diff QWeb/__init__.py > p.patch`, edit the patch, then `git apply --cached p.patch`.
+4. The user's old local `Dialogs` workaround in `QWeb/__init__.py` is gone: the optional-tkinter fix is merged (59c2b5d). `QWeb/__init__.py` can be committed normally.
+5. Don't run `ruff format` on whole files: it reformats unrelated existing code, which the spec forbids. Format only new files, or check that `git diff` shows only your own lines.
 
 ## Environment
 
@@ -16,7 +17,8 @@ Remove or move this file and the spec before opening the PR.
 * QWeb is installed with `pip install -e .`, so Selenium and the other runtime dependencies are there.
 * pylint 2.17.7, as pinned in `requirements_test.txt`, crashes on Python 3.13 (astroid `visit_typealias`). CI runs static analysis on Python 3.11, so run pylint there, or treat a pylint crash on 3.13 as an environment issue.
 * Python 3.11.15 has Robot Framework 7.4.1 and QWeb, but no test tools.
-* Acceptance tests need Chrome and chromedriver.
+* Chrome 158 and Selenium Manager's chromedriver work. Run acceptance suites from the repo root through the top suite, so `__init__.robot` sets `${BASE_URI}`:
+  `python -m robot -d <out> -v BROWSER:chrome --suite "Css Locators" test/acceptance`
 
 ## Phases
 
@@ -27,7 +29,15 @@ Remove or move this file and the spec before opening the PR.
   - [x] ruff check and ruff format pass on the new files
   - [x] pytest passes (112 unit tests on 3.13); mypy and ruff are clean except the local `Dialogs` change
   - [x] commit (19f33b3)
-- [ ] **Phase 2:** light-DOM CSS in the element search, syntax check before the frame search (fails at once), not-found retries, frames, `tag=` / `selector=` ignored with a warning, acceptance tests
+- [ ] **Phase 2: light-DOM CSS search**
+  - [x] `get_webelements` is a wrapper that checks `css=` syntax, then calls the frame-decorated `_get_webelements_from_frames`
+  - [x] `get_unique_element_by_xpath` checks the syntax, then `get_webelements_in_active_area` searches with `By.CSS_SELECTOR`
+  - [x] `javascript.get_css_selector_error`: syntax check on an empty document fragment, in the current frame, with no frame switching
+  - [x] `tag=` / `selector=` dropped with a warning in `QWeb._xpath_decorator` (`_drop_kwargs_ignored_with_css`)
+  - [x] test page `test/resources/css_locators.html` (+ `css_locators_frame.html`) and suite `test/acceptance/parallel/css_locators.robot` (18 tests)
+  - [x] the css, Element, Selectors, Frame and Text suites pass (133 tests); unit tests, ruff check, mypy and flake8 (E9/F) pass
+  - [x] all parallel suites: 415/420 pass with pabot; the same 5 fail without these changes (environment: screenshot paths under pabot, the debugfile test needs `-b debug.txt`, and ClearKey/PressKey hotkeys on macOS)
+  - [ ] commit
 - [ ] **Phase 3:** `:has-text` / `:text-is` filter in JS, innermost wins, acceptance tests
 - [ ] **Phase 4:** Shadow DOM CSS search and tests
 - [ ] **Phase 5:** route `element_type=css` through the new path, with a deprecation warning
@@ -49,3 +59,8 @@ These are not in the spec; review them.
 * **Space or combinator before the filter:** `div :has-text("x")` and `div > :has-text("x")` mean any descendant or child, so the parser turns them into `div *` and `div > *`.
 * **Text normalization:** the filter text is normalized in the parser (trimmed, whitespace collapsed). The element text will be normalized the same way in JS (Phase 3).
 * **Syntax checked by the browser:** the parser only checks the prefix and the text-filter syntax. Whether the CSS selector itself is valid (e.g. `div[`) is checked by the browser in Phase 2.
+* **Escaping (spec corrected):** every `=` in a locator must be escaped, not only the first: `css\=input[name\="q"]`. The keywords take `**kwargs`, so Robot Framework treats any unescaped `=` as a named argument. Confirmed with a dry run; the same applies to bare XPath.
+* **Text filters before Phase 3:** a `css=` locator with `:has-text` / `:text-is` raises `QWebInvalidSelectorError` ("not supported yet") in `check_css_syntax`, so a filter is never silently ignored. Phase 3 replaces this.
+* **Error message wording:** for `css=`, the inner messages of `get_unique_element_by_xpath` say "Locator css=… did not find any elements". XPath messages are unchanged.
+* **CSS in the active area:** CSS is searched with `active_area.find_elements(By.CSS_SELECTOR, …)`, with no `.//` rewrite like XPath gets.
+* **Where `tag=` / `selector=` are dropped:** in `QWeb._xpath_decorator`, the outermost keyword wrapper, so the warning is logged once per keyword call, not once per retry. It's limited to the keywords in `locator.CSS_LOCATOR_KEYWORDS` from `QWeb.keywords.element`, and it's skipped when `element_type` is given.
