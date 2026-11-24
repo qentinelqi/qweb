@@ -62,17 +62,50 @@ ClickItem      Clear
 
     Using the tag attribute can also improve search performance.
 
-## 3. Element Locators (XPath)
+## 3. Element Locators (XPath or CSS)
 
-**Keywords:** `ClickElement`, `VerifyElement`
+**Keywords:** `ClickElement`, `VerifyElement`, `VerifyNoElement`, `IsElement`, `RightClick`, `HoverElement`, `GetElementCount` (and `GetWebElement`, `GetAttribute`, `VerifyAttribute`, `GetCoordinates`)
 
-For the "tricky 10-20%" of elements that have no text and no descriptive attributes, you can fall back to standard XPaths selectors. This gives you full control but makes your tests more brittle to layout changes.
+For the "tricky 10-20%" of elements that have no text and no descriptive attributes, you can fall back to standard XPath or CSS selectors. This gives you full control but makes your tests more brittle to layout changes.
+
+A locator without a prefix is an XPath. Start the locator with `css\=` to use a CSS selector.
 
 ```robotframework
 # Using XPath
-ClickElement   xpath\=//div[@class="user-menu"]//button
+ClickElement   //div[@class\="user-menu"]//button
+ClickElement   xpath\=//div[@class\="user-menu"]//button
 
+# Using CSS
+ClickElement   css\=div.user-menu button
+ClickElement   css\=input[name\="email"]
+ClickElement   css\=li.item    index=2
 ```
+
+A `css\=` locator works like an XPath locator: the keyword waits until the timeout, uses the same visibility rules, searches all frames and picks a match with `index`. `ClickElement` clicks the matched element itself; it doesn't look for a clickable parent or child. A selector with invalid syntax (for example `css\=div[`) fails at once instead of waiting for the timeout.
+
+### Text filters in CSS locators
+
+Plain CSS can't match text, so a `css\=` locator can end with one text filter:
+
+*   `:has-text("...")`: the element's visible text **contains** the given text.
+*   `:text-is("...")`: the element's whole visible text **equals** the given text.
+
+```robotframework
+ClickElement    css\=div.card:has-text("Hello")
+VerifyElement   css\=button:text-is("Save")
+VerifyElement   css\=p:has-text('Say "hi"')
+```
+
+*   Matching is always **case-sensitive**, and whitespace is trimmed and collapsed before comparing. The `PartialMatch` and `CaseInsensitive` settings and the `partial_match` argument don't affect text filters.
+*   If one match contains another (a card inside a card), only the **innermost** match is kept. `index` is applied after that.
+*   The filter must be the **last** part of the selector, only one filter is allowed, and it can't be combined with a selector list (`a, b`).
+*   The text can be in double or single quotes. To escape a quote inside the same kind of quotes, write `\\"` in Robot Framework source. Write two or more consecutive spaces as `${SPACE}`.
+
+!!! note "tag and selector arguments"
+    `tag=` and `selector=` are ignored with a `css\=` locator (a warning is logged). Put the tag or attribute in the selector instead: `css\=button[data-id\="save"]`.
+
+!!! note "element_type=css is deprecated"
+    `GetWebElement    button.primary    element_type=css` still works but logs a deprecation warning. Use `GetWebElement    css\=button.primary` instead.
 
 !!! warning "XPath does not work inside Shadow DOM"
     XPath selectors cannot cross Shadow DOM boundaries.
@@ -80,7 +113,7 @@ ClickElement   xpath\=//div[@class="user-menu"]//button
     This is a **browser-level technical limitation**, not a QWeb restriction.  
     All modern browsers isolate Shadow DOM trees from XPath evaluation by design.
 
-    Use QWeb Item selectors or text-based locators when working with [Shadow DOM ](shadow_dom.md) content.
+    Use QWeb Item selectors, text-based locators or `css\=` locators when working with [Shadow DOM ](shadow_dom.md) content. With `SetConfig    ShadowDOM    True`, `css\=` locators search every open shadow root, but a single selector can't cross a shadow boundary.
 
 
 **Accuracy:** Deterministic and precise if the XPath targets the correct element.  
@@ -88,7 +121,7 @@ ClickElement   xpath\=//div[@class="user-menu"]//button
 **Maintainability:** Debugging and repairing XPath usually takes longer than changing text or an attribute.
 
 !!! tip "Syntax Note"
-    When using XPaths in Robot Framework, you often need to escape the equals sign (`\=`) if it's part of the locator string.
+    Escape **every** equals sign in an XPath or CSS locator with a backslash (`\=`), including the one in the `xpath\=` and `css\=` prefixes. Otherwise Robot Framework reads the locator as a named argument and the keyword fails with an argument error.
 
 ## 4. Image Locators (Bitmap)
 
@@ -114,6 +147,6 @@ QWeb keywords are named consistently to help you choose the right strategy:
 | :--- | :--- | :--- |
 | **...Text** | Visible UI Text | `ClickText`, `VerifyText` |
 | **...Item** | Attributes (Title/Alt) | `ClickItem`, `IsItem` |
-| **...Element** | XPath | `ClickElement`, `VerifyElement` |
+| **...Element** | XPath or CSS (`css\=`) | `ClickElement`, `VerifyElement` |
 | **...Icon** | Image / Bitmap | `ClickIcon`, `VerifyIcon` |
 

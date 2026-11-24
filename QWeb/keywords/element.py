@@ -53,7 +53,7 @@ def click_element(
     index: int = 1,
     **kwargs,
 ) -> None:
-    r"""Click element specified by xpath.
+    r"""Click element specified by XPath or CSS selector.
 
     Examples
     --------
@@ -62,6 +62,9 @@ def click_element(
         ClickElement          click_me      tag=button
         ClickElement          //*[@id\="click_me"]
         ClickElement          xpath\=//*[@id\="click_me"]
+        ClickElement          css\=button.primary
+        ClickElement          css\=li.item    index=2
+        ClickElement          css\=div.card:has-text("Hello")
         # using WebElement instance
         ${elem}=              GetWebElement    Click Me    element_type=text
         ClickElement          ${elem}
@@ -82,7 +85,8 @@ def click_element(
     Parameters
     ----------
     xpath : str | selenium.webdriver.remote.webelement.WebElement
-        Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
+        XPath expression with or without xpath= prefix, or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_). Every equal sign "=" in the locator must be escaped
         with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     timeout : int
@@ -136,11 +140,13 @@ def right_click(
         RightClick          click_me      tag=button
         RightClick          //*[@id\="click_me"]
         RightClick          xpath\=//*[@id\="click_me"]
+        RightClick          css\=#click_me
 
     Parameters
     ----------
     xpath : str
-        Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
+        XPath expression with or without xpath= prefix, or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_). Every equal sign "=" in the locator must be escaped
         with a "\\".
     timeout : int
         How long we wait before failing.
@@ -175,19 +181,21 @@ def hover_element(
     index: int = 1,
     **kwargs,
 ) -> None:
-    r"""Hover the element specified by the xpath selector.
+    r"""Hover the element specified by XPath or CSS selector.
 
     Examples
     --------
     .. code-block:: robotframework
 
         HoverElement          //*[@id\="hover_me"]
-        HoverElement          xpath\=//*[@id="hover_me"]
+        HoverElement          xpath\=//*[@id\="hover_me"]
+        HoverElement          css\=#hover_me
 
     Parameters
     ----------
     xpath : str | selenium.webdriver.remote.webelement.WebElement
-        Xpath expression with or without xpath= prefix. The equal sign "=" must be escaped
+        XPath expression with or without xpath= prefix, or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_). Every equal sign "=" in the locator must be escaped
         with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     timeout : int
@@ -241,13 +249,14 @@ def get_element_count(
     .. code-block:: robotframework
 
         ${COUNT}    GetElementCount       //*[@id\="Foo"]
+        ${COUNT}    GetElementCount       css\=li.item
         ${COUNT}    GetElementCount       Foo    tag=div
 
     Parameters
     ----------
     locator : str
-        Xpath or some attribute value of element. When using XPaths, the equal sign "=" must be
-        escaped with a "\\".
+        XPath, CSS selector with css= prefix (see `CSS locators <#css-locators>`_) or some attribute value
+        of element. Every equal sign "=" in the locator must be escaped with a "\\".
     timeout : str | int
         How long we try to find text before failing. Default 10 (seconds)
     Accepted kwargs:
@@ -282,11 +291,14 @@ def is_element(
 
         $note_visible=  IsElement        Paused
         $note_visible=  IsElement        Paused     5s
+        $note_visible=  IsElement        css\=#note.paused
 
     Parameters
     ----------
     xpath : str
-        Xpath to be searched from the screen.
+        XPath expression with or without xpath= prefix, or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_). Every equal sign "=" in the locator must be escaped
+        with a "\\".
 
     timeout : str | int
         How long we wait for text to appear before returning. Default 0.1s
@@ -326,6 +338,8 @@ def verify_element(xpath: str, timeout: Union[int, float, str] = 0, **kwargs) ->
     .. code-block:: robotframework
 
        VerifyElement          //*[@id\="wait_me"]
+       VerifyElement          css\=#wait_me
+       VerifyElement          css\=div.card:text-is("Hello")
 
     This keyword has timeout functionality. If the element is not visible after
     given timeout, error is raised.
@@ -338,7 +352,9 @@ def verify_element(xpath: str, timeout: Union[int, float, str] = 0, **kwargs) ->
     Parameters
     ----------
     xpath : str
-        Xpath expression without xpath= prefix. The equal sign "=" must be escaped with a "\\".
+        XPath expression with or without xpath= prefix, or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_). Every equal sign "=" in the locator must be escaped
+        with a "\\".
     timeout : str | int
         Timeout for finding the element. If the element is not visible after
         given timeout, error is raised. The str is converted to integer
@@ -389,6 +405,7 @@ def verify_no_element(
     .. code-block:: robotframework
 
         VerifyNoElement          //*[@id\="do_not_wait_me"]
+        VerifyNoElement          css\=#do_not_wait_me
 
     This keyword has timeout functionality. If the element is still visible after
     given timeout, error is raised.
@@ -401,7 +418,9 @@ def verify_no_element(
     Parameters
     ----------
     xpath : str
-        Xpath expression without xpath= prefix. The equal sign "=" must be escaped with a "\\".
+        XPath expression with or without xpath= prefix, or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_). Every equal sign "=" in the locator must be escaped
+        with a "\\".
     timeout : str | int
         Timeout for the element to disappear. If the element is visible after
         given timeout, error is raised. The str is converted to integer
@@ -458,6 +477,7 @@ def get_webelement(
         ${list of elems}    GetWebelement          click_me      tag=button
         ${list of elems}    GetWebelement          //*[@id\="click_me"]
         ${list of elems}    GetWebelement          xpath\=//*[@id\="click_me"]
+        ${list of elems}    GetWebelement          css\=button.primary
         # return elements only from the first frame with matching elements
         ${list of elems}    GetWebelement          xpath\=//*[@id\="click_me"]   all_frames=False
 
@@ -494,8 +514,9 @@ def get_webelement(
     Parameters
     ----------
     locator : str
-        Visible text, attribute value or Xpath expression with or without xpath= prefix.
-        The equal sign "=" must be escaped with a "\\".
+        Visible text, attribute value, Xpath expression with or without xpath= prefix,
+        or CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        Every equal sign "=" in the locator must be escaped with a "\\".
     anchor : int
         Used when element_type is defined. Default=1 (first match)
     element_type : string
@@ -592,6 +613,7 @@ def get_attribute(
         ${attribute_value}  GetAttribute            click_me     id         tag=button
         ${attribute_value}  GetAttribute            //*[@id\="click_me"]    id
         ${attribute_value}  GetAttribute            xpath\=//*[@id\="click_me"] name
+        ${attribute_value}  GetAttribute            css\=#click_me    name
         # Get id attribute value from 3rd matching element
         ${attribute_value}  GetAttribute            //button    id  index=3
 
@@ -628,8 +650,9 @@ def get_attribute(
     Parameters
     ----------
     locator : str
-        Visible text, attribute value or Xpath expression with or without xpath= prefix.
-        The equal sign "=" must be escaped with a "\\".
+        Visible text, attribute value, Xpath expression with or without xpath= prefix,
+        or CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        Every equal sign "=" in the locator must be escaped with a "\\".
     attribute: str
         Attribute which value we want to get.
     anchor : int
@@ -698,6 +721,7 @@ def verify_attribute(
 
         VerifyAttribute     click_me                        id    my_button   tag=button
         VerifyAttribute     //*[@id\="click_me"]            name    click_here
+        VerifyAttribute     css\=#click_me                  name    click_here
         VerifyAttribute     xpath\=//*[@id\="click_me"]     name    click_here
 
     GetAttribute using element_type attribute to locate element.
@@ -753,8 +777,9 @@ def verify_attribute(
     Parameters
     ----------
     locator : str
-        Visible text, attribute value or Xpath expression with or without xpath= prefix.
-        The equal sign "=" must be escaped with a "\\".
+        Visible text, attribute value, Xpath expression with or without xpath= prefix,
+        or CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        Every equal sign "=" in the locator must be escaped with a "\\".
     attribute: str
         Attribute which value we want to get.
     value: str
@@ -828,6 +853,7 @@ def get_coordinates(
 
         &{coords}=    GetCoordinates          //*[@id\="click_me"]
         &{coords}=    GetCoordinates          xpath\=//*[@id\="click_me"]
+        &{coords}=    GetCoordinates          css\=#click_me
 
 
     Using element_type attribute to locate element.
@@ -871,7 +897,8 @@ def get_coordinates(
     Parameters
     ----------
     locator : str
-        Visible text, attribute value Xpath expression or WebElement.
+        Visible text, attribute value, Xpath expression, CSS selector with css= prefix
+        or WebElement.
         See GetWebElement for more information.
     anchor : int
         Used when element_type is defined. Default=1 (first match)

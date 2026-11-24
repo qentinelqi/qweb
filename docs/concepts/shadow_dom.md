@@ -30,16 +30,32 @@ Interact with Shadow DOM
 
 Because Shadow DOMs are designed to be isolated, **XPaths do not work** inside them.
 
-When testing Shadow DOM elements, you **must** use QWeb's native locators:
+When testing Shadow DOM elements, use QWeb's native locators or CSS locators:
 
 *   ✅ `ClickText`, `VerifyText`
 *   ✅ `ClickItem`, `VerifyItem` (attributes)
-*   ❌ `ClickElement xpath=...` (Will fail)
+*   ✅ `ClickElement css\=...` (basic selectors, see below)
+*   ❌ `ClickElement xpath\=...` (Will fail)
 
 ```robotframework
 # GOOD
 ClickText      Save Settings
+ClickElement   css\=button#save
 
 # BAD (Will not find element inside Shadow DOM)
-ClickElement   xpath=//button[@id='save']
+ClickElement   xpath\=//button[@id\='save']
 ```
+
+### CSS locators in Shadow DOM
+
+With `ShadowDOM` on, `css\=` locators search the main document and every **open** shadow root. Each tree is searched on its own, so a single selector can't cross a shadow boundary:
+
+```robotframework
+SetConfig      ShadowDOM    True
+ClickElement   css\=button.save                 # finds the button inside a component's shadow root
+ClickElement   css\=button:has-text("Save")     # text filters work too
+VerifyNoElement    css\=my-component button.save    # doesn't match: crosses the shadow boundary
+```
+
+*   Closed shadow roots, `::part()` and `::slotted()` are not supported.
+*   Matches in the main document come first, then matches in shadow roots in document order; `index` counts in that order.

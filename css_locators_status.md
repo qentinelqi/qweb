@@ -17,6 +17,7 @@ Remove or move this file and the spec before opening the PR.
 * QWeb is installed with `pip install -e .`, so Selenium and the other runtime dependencies are there.
 * pylint 2.17.7, as pinned in `requirements_test.txt`, crashes on Python 3.13 (astroid `visit_typealias`). CI runs static analysis on Python 3.11, so run pylint there, or treat a pylint crash on 3.13 as an environment issue.
 * Python 3.11.15 has Robot Framework 7.4.1 and QWeb, but no test tools.
+* docutils 0.23 was installed in pyenv 3.13.14 (needed for `libdoc -F REST`, as used by `duties.py`).
 * Chrome 158 and Selenium Manager's chromedriver work. Run acceptance suites from the repo root through the top suite, so `__init__.robot` sets `${BASE_URI}`:
   `python -m robot -d <out> -v BROWSER:chrome --suite "Css Locators" test/acceptance`
 
@@ -55,7 +56,13 @@ Remove or move this file and the spec before opening the PR.
   - [x] marked as deprecated in the GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates docstrings; the CSS examples now use `css\=` with escaped `=` (the old examples had unescaped `=`, which Robot Framework would treat as a named argument)
   - [x] 2 new tests in `css_locators.robot`; the existing `element_type=css` tests in `element.robot` pass unchanged (css + Element: 67 tests); unit tests, ruff and mypy pass
   - [x] commit (see `git log`)
-- [ ] **Phase 6:** docstrings, `docs/concepts/locators.md`, `docs/concepts/shadow_dom.md`
+- [x] **Phase 6: docs**
+  - [x] new library intro section "CSS locators" (`.. _Css_locators:`, before Shadow DOM in `QWeb/__init__.py`): prefix, escaping, behavior, `tag`/`selector`, deprecation, text filters, Shadow DOM. Also a feature-list entry, the "Xpaths and CSS selectors" subsection with its caution, and the Shadow DOM section text and tip
+  - [x] docstrings of the 11 keywords: `css\=` examples, locator parameter text, links `` `CSS locators <#css-locators>`_ `` (libdoc doesn't link backtick names to reST sections). Summaries of ClickElement and HoverElement; HoverElement's unescaped `=` example fixed
+  - [x] `docs/concepts/locators.md` (XPath or CSS section, text filters, notes, escaping tip, table) and `docs/concepts/shadow_dom.md` (CSS in Shadow DOM, fixed escaping in examples)
+  - [x] checks: libdoc `-F REST` builds without docutils system messages; the intro heading and the `css-locators` id exist, and all 10 keyword links point to `#css-locators`; a dry run of all 35 `css\=` doc examples passes; unit tests, ruff and mypy pass
+  - [ ] not verified: clicking the links in a real browser. The browser pane can't open local files here, so check the links in `docs/QWeb.html` after the next `duty docs` build
+  - [x] commit (see `git log`)
 - [ ] **Phase 7: locator guide in the keyword documentation** (requested by the user; done after all features)
   - Where: the library intro docstring in `QWeb/__init__.py` (section `.. _Locators:` "Locator strategies", ~line 118), which libdoc shows at the top of the keyword docs. Rework that section; don't add a second one.
   - Explain the idea first: QWeb has **separate keyword families per locator type**, so the locator string needs no type prefix and QWeb never guesses. Each family has search rules suited to its type, and the keyword name tells the reader what is being matched.

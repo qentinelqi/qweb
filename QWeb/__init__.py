@@ -88,6 +88,8 @@ class QWeb:
     - **Intuitive Syntax**: User-friendly syntax for writing and maintaining complex test cases.
     - **Smart locators**: Interact with web elements using natural language locators.
       | `Locators`_
+    - **CSS locators**: Use CSS selectors with the ``css\=`` prefix, including text filters.
+      | `Css_locators`_
     - **Anchors**: Used to pinpoint specific instances of web elements with the same locator.
       | `Anchors`_
     - **Visibility**: By default interacting with visible elements only, but allowing access to
@@ -163,10 +165,10 @@ class QWeb:
             TypeText            Search                     Copado Robotic Testing
             ClickItem           Clear search
 
-    **Xpaths**
+    **Xpaths and CSS selectors**
 
-    Xpaths are also supported as locators. These are mostly used by QWords ending with
-    ***Element**.
+    Xpaths and CSS selectors (with the ``css\=`` prefix, see `Css_locators`_) are also supported as
+    locators. These are mostly used by QWords ending with ***Element**.
 
     .. code-block:: robotframework
 
@@ -176,9 +178,11 @@ class QWeb:
             VerifyElement       //ul[@class\="product-list"]
             ClickText           Our Story
             VerifyNoElement     xpath\=//ul[@class\="product-list"]
+            VerifyElement       css\=ul.product-list > li
 
-    .. caution:: Xpath locators or keywords using them do not work in Shadow DOM. If your
-       web application uses Shadow DOM’s, use **\*Text** and **\*Item** keywords instead.
+    .. caution:: Xpath locators do not work in Shadow DOM. If your web application uses
+       Shadow DOM’s, use **\*Text** and **\*Item** keywords, or ``css\=`` locators with
+       basic selectors (see `Css_locators`_).
 
     **Icons / images**
 
@@ -211,6 +215,69 @@ class QWeb:
         ClickText    Login      anchor=Cancel  # Textual anchor
         ClickText    Login      anchor=3       # Numeric anchor
 
+    .. _Css_locators:
+
+    CSS locators
+    ------------
+    Keywords ending with **\*Element** (ClickElement, VerifyElement, VerifyNoElement, IsElement,
+    RightClick, HoverElement, GetElementCount) as well as GetWebElement, GetAttribute,
+    VerifyAttribute and GetCoordinates accept a CSS selector when the locator starts with
+    ``css\=``. A locator without a prefix is still an XPath.
+
+    .. code-block:: robotframework
+
+        ClickElement      css\=button.primary
+        VerifyElement     css\=#user-menu > li:nth-child(2)
+        ClickElement      css\=input[name\="email"]
+        ClickElement      css\=li.item          index=2
+
+    .. important:: Every equal sign ``=`` in the locator must be escaped with a backslash,
+       including the one after ``css``: ``css\=input[name\="email"]``. Otherwise Robot Framework
+       reads the locator as a named argument. The same rule applies to XPaths.
+
+    A ``css\=`` locator works like an XPath locator: the keyword waits until the timeout, uses the
+    same visibility rules, searches all frames and picks a match with ``index``. ClickElement
+    clicks the matched element itself; it doesn't look for a clickable parent or child.
+    A valid selector that matches nothing is retried until the timeout, but a selector with
+    invalid syntax (for example ``css\=div[``) fails at once.
+
+    The ``tag`` and ``selector`` arguments are ignored with a ``css\=`` locator, with a warning
+    in the log. Put the tag or attribute into the selector instead, e.g.
+    ``css\=button[data-id\="save"]``. ``element_type=css`` still works but is deprecated.
+
+    **Text filters**
+
+    Plain CSS can't match text, so a ``css\=`` locator can end with one text filter:
+
+    - ``:has-text("...")``: the element's visible text contains the given text.
+    - ``:text-is("...")``: the element's whole visible text equals the given text.
+
+    .. code-block:: robotframework
+
+        ClickElement      css\=div.card:has-text("Hello")
+        VerifyElement     css\=button:text-is("Save")
+        VerifyElement     css\=p:has-text('Say "hi"')
+
+    - Matching is always case-sensitive. Whitespace in the element's text is trimmed and
+      collapsed before comparing. The ``PartialMatch`` and ``CaseInsensitive`` settings and the
+      ``partial_match`` argument don't affect text filters. (Anchor texts still follow them.)
+    - If one match contains another, for example a card inside a card, only the innermost one
+      is kept. ``index`` is applied after that.
+    - The filter must be the last part of the selector. Only one filter is allowed per locator,
+      and it can't be combined with a selector list (``css\=a, b:has-text("x")``).
+    - The text can be in double or single quotes. Inside the quotes a backslash escapes the
+      next character; in Robot Framework source write it as ``\\``, e.g.
+      ``:has-text("Say \\"hi\\"")``. Write two or more consecutive spaces as ``${SPACE}``.
+
+    **Shadow DOM**
+
+    With ``SetConfig    ShadowDOM    True``, ``css\=`` locators also search open shadow roots.
+    Each shadow tree is searched on its own, so a selector can't cross a shadow boundary:
+    ``css\=button.save`` finds a button inside a component's shadow root, but
+    ``css\=my-component button.save`` doesn't. Closed shadow roots, ``::part()`` and
+    ``::slotted()`` are not supported. Matches in the main document come first, then matches in
+    shadow roots in document order; ``index`` counts in that order.
+
     .. _Shadow_dom:
 
     Shadow DOM
@@ -218,7 +285,7 @@ class QWeb:
     Shadow DOM is a web standard that allows for encapsulation of styling and markup in web
     components. It's like a lightweight document inside the main document, with its own set of
     elements. Elements inside a shadow DOM are not directly accessible using traditional locators
-    like XPath or CSS selectors.
+    like XPath, and a plain CSS selector only searches one tree at a time.
 
     Special methods or settings are often required in automation frameworks to interact with
     elements inside a shadow DOM. QWeb provides support for elements inside a shadow DOM, which are
@@ -230,7 +297,8 @@ class QWeb:
 
     .. tip::
        Any QWeb keyword accepting locator as a **text** or **attribute value** will work with
-       elements inside a shadow DOM.
+       elements inside a shadow DOM. ``css\=`` locators work too, as long as the selector
+       doesn't cross a shadow boundary (see `Css_locators`_).
 
     .. important:: SetConfig ShadowDOM    True    must be used to enable element search inside
        a shadow DOM
