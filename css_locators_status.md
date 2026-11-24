@@ -29,7 +29,7 @@ Remove or move this file and the spec before opening the PR.
   - [x] ruff check and ruff format pass on the new files
   - [x] pytest passes (112 unit tests on 3.13); mypy and ruff are clean except the local `Dialogs` change
   - [x] commit (19f33b3)
-- [ ] **Phase 2: light-DOM CSS search**
+- [x] **Phase 2: light-DOM CSS search**
   - [x] `get_webelements` is a wrapper that checks `css=` syntax, then calls the frame-decorated `_get_webelements_from_frames`
   - [x] `get_unique_element_by_xpath` checks the syntax, then `get_webelements_in_active_area` searches with `By.CSS_SELECTOR`
   - [x] `javascript.get_css_selector_error`: syntax check on an empty document fragment, in the current frame, with no frame switching
@@ -37,7 +37,7 @@ Remove or move this file and the spec before opening the PR.
   - [x] test page `test/resources/css_locators.html` (+ `css_locators_frame.html`) and suite `test/acceptance/parallel/css_locators.robot` (18 tests)
   - [x] the css, Element, Selectors, Frame and Text suites pass (133 tests); unit tests, ruff check, mypy and flake8 (E9/F) pass
   - [x] all parallel suites: 415/420 pass with pabot; the same 5 fail without these changes (environment: screenshot paths under pabot, the debugfile test needs `-b debug.txt`, and ClearKey/PressKey hotkeys on macOS)
-  - [ ] commit
+  - [x] commit (72a1fd9)
 - [ ] **Phase 3:** `:has-text` / `:text-is` filter in JS, innermost wins, acceptance tests
 - [ ] **Phase 4:** Shadow DOM CSS search and tests
 - [ ] **Phase 5:** route `element_type=css` through the new path, with a deprecation warning
