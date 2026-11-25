@@ -233,6 +233,7 @@ jobs:
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -e smoke
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -275,6 +276,7 @@ jobs:
         --ordering test/acceptance/.pabot_order
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -e smoke
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -296,6 +298,7 @@ jobs:
         --exitonfailure
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -e smoke
         -e jailed 
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
