@@ -266,20 +266,22 @@ Secret
     GoTo                    ${BASE_URI}/input.html
     # Testing purposes only
     ${SECRET}               Set Variable            sdfpv98xddv097vsdxv97
+    ${SECRET2}              Set Variable            fdfsdf98723fdkjc9vsdv222
+    ${SECRET3}              Set Variable            223423423423423432
     # Recommended, secret is provided as variable OUTSIDE of the test script and version control.
     TypeSecret              end-key          Qentinel       ${SECRET}
     Verify Input Value      end-key          Qentinel       ${SECRET}
     # Not recommended, secret is stored in script.
     # Safari workaround, use get coordinates to put the input to top
     GetCoordinates          First input             element_type=input
-    TypeSecret              First input             fdfsdf98723fdkjc9vsdv222
-    Verify Input Value      First input             fdfsdf98723fdkjc9vsdv222
+    TypeSecret              First input             ${SECRET2}
+    Verify Input Value      First input             ${SECRET2}
     # Try multiple parameters
     # Safari GH action fails at 'Verify Input Value' without refresh
     # can not reproduce locally
     RefreshPage
-    TypeSecret              First input             223423423423423432      end-key                 2
-    Verify Input Value      First input             223423423423423432      end-key                 2
+    TypeSecret              First input             ${SECRET3}      end-key                 2
+    Verify Input Value      First input             ${SECRET3}      end-key                 2
 
 Secret Without Debug Logs When Debugfile Option Used
     [documentation]         Test secrets when -b/--debugfile option is used.
