@@ -3,7 +3,7 @@ Documentation                   Tests for text keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 ${BASE_URI}/shadow_dom.html           ${BROWSER}  #--headless
 Suite Teardown                  Shadow Teardown
-Test Timeout                    60 seconds
+#Tst Timeout                    60 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
@@ -140,12 +140,17 @@ Dropdown with shadow DOM
 
 External site with shadow DOM
     [tags]                      shadow_dom
-    [Setup]                     SetConfig                   ShadowDOM                   False
+    [Setup]                     SetConfig                   ShadowDOM                   True
     GoTo                        https://developer.servicenow.com/dev.do
     # dismiss cookie dialog
     ${cookie_dialog}=           IsText                      Required Only               timeout=5
     Run Keyword If              ${cookie_dialog}            ClickText                   Required Only
     Run Keyword If              ${cookie_dialog}            ClickText                   Close
+
+    SetConfig                   ShadowDOM                   False
+
+    # Dismiss new dialog
+    Run Keyword And Ignore Error  ClickText     Remind me later               timeout=3
 
     ${error}=                   Run Keyword and Expect Error                            *
     ...                         VerifyText                  Sign In                     partial_match=False         timeout=3
