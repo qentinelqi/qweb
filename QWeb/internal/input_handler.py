@@ -18,6 +18,7 @@ from __future__ import annotations
 from typing import Optional, Any, Callable, Union
 import os
 import pyperclip
+import time
 from pyautogui import KEY_NAMES
 from robot.api import logger
 from selenium.webdriver.remote.webelement import WebElement
@@ -77,6 +78,7 @@ class InputHandler:
         else:
             input_element.send_keys(*[key for key in clear_key if key is not None])
         try:
+            time.sleep(0.2)
             write(input_element, input_text)
         # workaround for Firefox shadow dom inputs not always being reachable
         except ElementNotInteractableException as e:
