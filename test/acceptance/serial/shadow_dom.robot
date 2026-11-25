@@ -3,7 +3,7 @@ Documentation                   Tests for text keywords
 Library                         QWeb
 Suite Setup                     OpenBrowser                 ${BASE_URI}/shadow_dom.html           ${BROWSER}  #--headless
 Suite Teardown                  Shadow Teardown
-#Tst Timeout                    60 seconds
+Test Timeout                    60 seconds
 
 *** Variables ***
 ${BROWSER}                      chrome
