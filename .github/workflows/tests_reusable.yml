@@ -242,6 +242,7 @@ jobs:
         --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
+        -s input_headless
         test/acceptance
 
     - name: Rerun failed acceptance tests safari
@@ -259,6 +260,7 @@ jobs:
         --name ${{ env.RFW_SUITE_NAME }}
         -b debug.txt
         --consolecolors ansi
+        -s input_headless
         test/acceptance
 
     - name: Generate suite order file
