@@ -13,6 +13,11 @@ NAMES: list[str] = ["safari", "sf"]
 open_windows: list[str] = []
 
 
+def is_safari() -> bool:
+    driver = browser.get_current_browser()
+    return driver.capabilities["browserName"].lower() in NAMES
+
+
 def open_browser(
     port: int = 0,
     driver_path: str = "",

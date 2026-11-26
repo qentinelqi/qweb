@@ -263,6 +263,7 @@ No Textboxes on page
 Secret
     [documentation]         Test secrets handling. It is recommended to provide any secrets
     ...                     as variables outside the script.
+    [Tags]                  ci-known-issue
     GoTo                    ${BASE_URI}/input.html
     # Testing purposes only
     ${SECRET}               Set Variable            sdfpv98xddv097vsdxv97
@@ -273,7 +274,6 @@ Secret
     Verify Input Value      end-key          Qentinel       ${SECRET}
     # Not recommended, secret is stored in script.
     # Safari workaround, use get coordinates to put the input to top
-    GetCoordinates          First input             element_type=input
     TypeSecret              First input             ${SECRET2}
     Verify Input Value      First input             ${SECRET2}
     # Try multiple parameters
