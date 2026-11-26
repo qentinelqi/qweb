@@ -88,8 +88,6 @@ class QWeb:
     - **Intuitive Syntax**: User-friendly syntax for writing and maintaining complex test cases.
     - **Smart locators**: Interact with web elements using natural language locators.
       | `Locators`_
-    - **CSS locators**: Use CSS selectors with the ``css\=`` prefix, including text filters.
-      | `Css_locators`_
     - **Anchors**: Used to pinpoint specific instances of web elements with the same locator.
       | `Anchors`_
     - **Visibility**: By default interacting with visible elements only, but allowing access to
@@ -256,18 +254,6 @@ class QWeb:
         ${elem}=            GetWebElement             css\=button.login
         ${value}=           GetAttribute              Country         value    element_type=dropdown
 
-    .. _Anchors:
-
-    Anchors
-    -------
-    When a locator identifies multiple elements, ``anchors`` can be used to pinpoint a
-    specific instance. Anchor can be another nearby text or a numeric index.
-
-    .. code-block:: robotframework
-
-        ClickText    Login      anchor=Cancel  # Textual anchor
-        ClickText    Login      anchor=3       # Numeric anchor
-
     .. _Css_locators:
 
     CSS locators
@@ -330,6 +316,18 @@ class QWeb:
     ``css\=my-component button.save`` doesn't. Closed shadow roots, ``::part()`` and
     ``::slotted()`` are not supported. Matches in the main document come first, then matches in
     shadow roots in document order; ``index`` counts in that order.
+
+    .. _Anchors:
+
+    Anchors
+    -------
+    When a locator identifies multiple elements, ``anchors`` can be used to pinpoint a
+    specific instance. Anchor can be another nearby text or a numeric index.
+
+    .. code-block:: robotframework
+
+        ClickText    Login      anchor=Cancel  # Textual anchor
+        ClickText    Login      anchor=3       # Numeric anchor
 
     .. _Shadow_dom:
 
