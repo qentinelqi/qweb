@@ -24,7 +24,7 @@ jobs:
       os: '["macos-latest-large"]'
       browser: '["safari",]'
       #browser: '["chrome", "edge", "safari"]'
-      python-version: '["3.11","3.12]'
+      python-version: '["3.11","3.12"]'
       minimum-rfw-version: "7.0"
       minimum-rfw-python: "3.11"
       rfw-exclude-tags: "-e RESOLUTION_DEPENDENCY -e FLASK"
