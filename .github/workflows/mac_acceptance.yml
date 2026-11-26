@@ -21,7 +21,7 @@ jobs:
     with:
       # arrays for matrices must be given as string for json parsing
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676
-      os: '["macos-latest-large"]'
+      os: '["macos-latest"]'
       browser: '["safari",]'
       #browser: '["chrome", "edge", "safari"]'
       python-version: '["3.11","3.12"]'

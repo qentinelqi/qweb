@@ -6,6 +6,7 @@ Test Setup          GoTo    ${BASE_URI}/items.html
 Suite Teardown      CloseBrowser
 Library             Dialogs
 Test Timeout        60 seconds
+Test Tags           ci-known-issue  # current GitHub Mac image has some issues
 
 *** Variables ***
 ${BROWSER}                  chrome
