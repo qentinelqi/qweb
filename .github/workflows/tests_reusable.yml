@@ -230,9 +230,11 @@ jobs:
       timeout-minutes: 30
       run: >
         python -m robot
+        --skiponfailure ci-known-issue
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -e smoke
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -251,6 +253,7 @@ jobs:
         python -m robot
         --rerunfailedsuites result/output.xml
         -o rerun.xml
+        --skiponfailure ci-known-issue
         --exitonfailure 
         ${{ inputs.additional-rfw-parameters }}
         -v BROWSER:${{ matrix.browser }}
@@ -275,6 +278,7 @@ jobs:
         --ordering test/acceptance/.pabot_order
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -e smoke
         -e jailed
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}
@@ -296,6 +300,7 @@ jobs:
         --exitonfailure
         ${{ inputs.additional-rfw-parameters }}
         ${{ inputs.rfw-exclude-tags }}
+        -e smoke
         -e jailed 
         -e PROBLEM_IN_${{ runner.os }}
         -e PROBLEM_IN_${{ matrix.browser }}

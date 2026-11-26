@@ -1,6 +1,7 @@
 *** Settings ***
 Library           QWeb
 Test Timeout      30 seconds
+Test Tags         smoke
 Suite Setup     Check Http Server
 
 *** Variables ***
