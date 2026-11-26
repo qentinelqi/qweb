@@ -75,6 +75,12 @@ Remove or move this file and the spec before opening the PR.
   - [x] after the refactor: css, Element, Shadow Dom, Selectors, Frame and Download suites pass (105 tests); unit tests (114) pass; libdoc `-F REST` has 0 system messages
   - [x] commit (see `git log`)
 
+## Rebase on master (2026-11-26)
+
+* Rebased onto `origin/master` b04292e (PRs #233 virtual checkbox fallback and #234 test fixes) with no conflicts. History is now linear: the tkinter merge commit is gone and its commit (`Make robot Dialogs import optional…`) sits in the chain. The old tip is kept as the local branch `support_css_selectors-before-rebase`.
+* After the rebase: 123 unit tests; ruff, mypy, flake8 (E9/F) and pylint (3.11) pass; Css Locators, Element, Shadow Dom, Virtual Checkbox, Checkbox, Input Headless, Selectors, Frame and Text pass, except 3 Element tests in a combined single-process run.
+* Those 3 (Hover Element by WebElement instance, GetAttributeOK, VerifyAttributeOK) also fail on clean `origin/master` when Checkbox runs before Element in one process. `checkbox.robot` leaves `SetConfig CssSelectors off` at the end of a test, which breaks item lookups in later suites. With pabot (CI) each suite has its own process. Element passes 37/37 alone. This is an existing test-isolation issue, not part of this branch.
+
 ## Before opening the PR
 
 * Remove or move `css_locators_spec.md` and this file.
