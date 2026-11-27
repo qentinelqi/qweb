@@ -216,6 +216,7 @@ CSS locators in Shadow DOM
     VerifyNoText                This should be hidden       timeout=1s
     ClickElement                css\=#myButton
     VerifyText                  This should be hidden
+    # selector list: first alternative matches nothing, second finds the button
     ClickElement                css\=#shadowClickTarget > button.notthere, #shadowClickTarget > button
     VerifyNoText                This should be hidden       timeout=1s
     ${count}=                   GetElementCount             css\=textarea

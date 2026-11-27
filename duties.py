@@ -86,6 +86,7 @@ def acceptance_tests(ctx,
         f"PROBLEM_IN_{browser.upper()}",
         "FLASK",
         "RESOLUTION_DEPENDENCY",
+        "smoke",
         "jailed",
         "WITH_DEBUGFILE"
     ]
