@@ -118,8 +118,8 @@ VerifyElement   css\=p:has-text('Say "hi"')
 *   The filter must be the **last** part of the selector, only one filter is allowed, and it can't be combined with a selector list (`a, b`).
 *   The text can be in double or single quotes. To escape a quote inside the same kind of quotes, write `\\"` in Robot Framework source. Write two or more consecutive spaces as `${SPACE}`.
 
-!!! note "tag and selector arguments"
-    `tag=` and `selector=` are ignored with a `css\=` locator (a warning is logged). Put the tag or attribute in the selector instead: `css\=button[data-id\="save"]`.
+!!! note "tag argument"
+    `tag=` is ignored with a `css\=` locator (a warning is logged). Put the tag or attribute in the selector instead: `css\=button[data-id\="save"]`.
 
 !!! note "element_type=css is deprecated"
     `GetWebElement    button.primary    element_type=css` still works but logs a deprecation warning. Use `GetWebElement    css\=button.primary` instead.

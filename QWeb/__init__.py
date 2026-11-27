@@ -280,8 +280,8 @@ class QWeb:
     A valid selector that matches nothing is retried until the timeout, but a selector with
     invalid syntax (for example ``css\=div[``) fails at once.
 
-    The ``tag`` and ``selector`` arguments are ignored with a ``css\=`` locator, with a warning
-    in the log. Put the tag or attribute into the selector instead, e.g.
+    The ``tag`` argument is ignored with a ``css\=`` locator, with a warning in the log.
+    Put the tag or attribute into the selector instead, e.g.
     ``css\=button[data-id\="save"]``. ``element_type=css`` still works but is deprecated.
 
     **Text filters**

@@ -113,3 +113,4 @@ These are not in the spec; review them.
 * **Shadow DOM result order:** light-DOM matches of the search root come first, then each shadow tree in walk order. `index` counts in that order.
 * **Shadow DOM search root:** when the active area is an element, the walk starts there and also covers the element's own shadow root, if it has one.
 * **Changelog note (behavior change):** `element_type=css` with an invalid selector now fails at once instead of waiting for the timeout.
+* **`selector=` not in the docs:** it's an undocumented global kwarg (`QWeb._xpath_decorator`, only shown in one UseList example), so the CSS docs don't mention it. The code still ignores it for `css=` locators and logs a warning.
