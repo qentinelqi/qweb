@@ -152,8 +152,9 @@ def type_text(
     locator : str | selenium.webdriver.remote.webelement.WebElement
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use an XPath (// or xpath= prefix)
-        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
-        then the matched element itself is used and index selects the match.
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        An XPath or CSS selector must match the input field itself (input, textarea
+        or editable element), not its label; index selects the match.
         When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     input_text : str
@@ -354,8 +355,9 @@ def verify_input_value(
     locator : str
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use an XPath (// or xpath= prefix)
-        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
-        then the matched element itself is used and index selects the match.
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        An XPath or CSS selector must match the input field itself (input, textarea
+        or editable element), not its label; index selects the match.
         When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
     expected_value : str
         Text that the input field should contain.
@@ -503,8 +505,9 @@ def verify_input_status(
     locator : str
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use an XPath (// or xpath= prefix)
-        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
-        then the matched element itself is used and index selects the match.
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        An XPath or CSS selector must match the input field itself (input, textarea
+        or editable element), not its label; index selects the match.
         When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
     status : str
         Status for the input field. Either enabled, readonly or disabled.
@@ -647,8 +650,9 @@ def get_input_value(
     locator : str
         Text that locates the input field. The input field that is closest
         to the text is selected. Also one can use an XPath (// or xpath= prefix)
-        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
-        then the matched element itself is used and index selects the match.
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        An XPath or CSS selector must match the input field itself (input, textarea
+        or editable element), not its label; index selects the match.
         When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
     anchor : str
         Index number or text near the input field's locator element.
@@ -733,6 +737,7 @@ def upload_file(
     locator : str
         Input label text, input's attribute value, xpath, CSS selector with css= prefix
         (see `CSS locators <#css-locators>`_) or index that locates the upload element.
+        An XPath or CSS selector must match the file input itself.
     filename : str
         File to upload. See **Default folder resolution** in Notes when not an
         existing path.
