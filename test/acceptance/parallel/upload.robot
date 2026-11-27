@@ -29,6 +29,11 @@ Upload with xpath
     ExecuteJavaScript   return document.querySelector('#myFile3').value   $value
     ShouldBeEqual       ${value}                       C:\fakepath\test2.txt
 
+Upload with css
+    UploadFile          css\=#myFile3                   test1.txt
+    ExecuteJavaScript   return document.querySelector('#myFile3').value   $value
+    ShouldBeEqual       ${value}                       C:\fakepath\test1.txt
+
 Upload with Index, visible only
     GoTo                ${BASE_URI}/upload_shadow_frame_visibility.html
     UploadFile          1                       test1.txt

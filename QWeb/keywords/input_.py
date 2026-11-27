@@ -151,9 +151,10 @@ def type_text(
     ----------
     locator : str | selenium.webdriver.remote.webelement.WebElement
         Text that locates the input field. The input field that is closest
-        to the text is selected. Also one can use xpath by adding xpath= prefix
-        and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
+        to the text is selected. Also one can use an XPath (// or xpath= prefix)
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
+        then the matched element itself is used and index selects the match.
+        When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
         Can also be a WebElement instance returned by GetWebElement keyword or javascript.
     input_text : str
         Text that will be written in the input field
@@ -224,6 +225,7 @@ def type_text(
     -------------
     .. code-block:: robotframework
 
+        TypeText            css\=input[name\="company"]    Qentinel
         TypeText            company     Qentinel    clear_key={BACKSPACE}
         TypeText            company     Qentinel    clear_key={CONTROL + a}
         # same thing with using SetConfig
@@ -351,9 +353,10 @@ def verify_input_value(
     ----------
     locator : str
         Text that locates the input field. The input field that is closest
-        to the text is selected. Also one can use xpath by adding xpath= prefix
-        and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
+        to the text is selected. Also one can use an XPath (// or xpath= prefix)
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
+        then the matched element itself is used and index selects the match.
+        When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
     expected_value : str
         Text that the input field should contain.
     anchor : str
@@ -499,9 +502,10 @@ def verify_input_status(
     ----------
     locator : str
         Text that locates the input field. The input field that is closest
-        to the text is selected. Also one can use xpath by adding xpath= prefix
-        and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
+        to the text is selected. Also one can use an XPath (// or xpath= prefix)
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
+        then the matched element itself is used and index selects the match.
+        When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
     status : str
         Status for the input field. Either enabled, readonly or disabled.
     anchor : str
@@ -576,7 +580,8 @@ def verify_input_element(
     Parameters
     ----------
     locator : str
-        Text that locates the element.
+        Text that locates the element, an XPath or a CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_).
     anchor : str
         Text near the checkbox's locator element. If the page contains many
         places where the locator text is then anchor is used to get the
@@ -641,9 +646,10 @@ def get_input_value(
     ----------
     locator : str
         Text that locates the input field. The input field that is closest
-        to the text is selected. Also one can use xpath by adding xpath= prefix
-        and then the xpath. Error is raised if the xpath matches to multiple
-        elements. When using XPaths, the equal sign "=" must be escaped with a "\\".
+        to the text is selected. Also one can use an XPath (// or xpath= prefix)
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_);
+        then the matched element itself is used and index selects the match.
+        When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
     anchor : str
         Index number or text near the input field's locator element.
         If the page contains many places where the locator is then anchor is used
@@ -714,6 +720,7 @@ def upload_file(
        UploadFile   1           text.txt # Using index as locator, i.e first file input element
        UploadFile   Upload      text.txt   visibility=False  # include invisible inputs in search
        UploadFile   //input[@type\="file"]    text.txt  # Upload file with xpath locator
+       UploadFile   css\=input[type\="file"]    text.txt  # Upload file with css locator
 
     With table(Pick table with use table keyword first):
 
@@ -724,7 +731,8 @@ def upload_file(
     Parameters
     ----------
     locator : str
-        Input label text, input's attribute value, xpath or index that locates the upload element.
+        Input label text, input's attribute value, xpath, CSS selector with css= prefix
+        (see `CSS locators <#css-locators>`_) or index that locates the upload element.
     filename : str
         File to upload. See **Default folder resolution** in Notes when not an
         existing path.
@@ -809,6 +817,7 @@ def press_key(
         PressKey    text_field     {CONTROL + C}    # Copy selected text
         PressKey    other_field    {CONTROL + V}    # Paste copied text
         PressKey    text_field     {PASTE}          # Paste copied text
+        PressKey    css\=#search    {ENTER}
 
         # Send ESC keypress without locator and let OS decide how it's consumed
         # on Windows this opens task manager

@@ -87,6 +87,8 @@ Invalid CSS Selector Fails At Once
     GetElementCount
     GetWebElement
     GetText
+    GetInputValue
+    VerifyInputElement
 
 Empty CSS Selector Fails At Once
     Run Keyword And Expect Error    QWebInvalidSelectorError: *selector is empty*
@@ -222,6 +224,61 @@ VerifyElementText With Invalid CSS Fails At Once
     ${start}=                   Evaluate                    time.time()                 modules=time
     Run Keyword And Expect Error    QWebInvalidSelectorError: Invalid CSS selector*div[*
     ...                         VerifyElementText           css\=div[                   Save    timeout=10s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} < 5
+
+TypeText With CSS
+    TypeText                    css\=input[name\="name"]    Robot
+    VerifyInputValue            css\=input[name\="name"]    Robot
+    TypeText                    css\=input.name             Nick                        index=2
+    VerifyInputValue            css\=input[name\="nickname"]    Nick
+    TypeText                    css\=#notes                 Some notes
+    VerifyInputValue            css\=#notes                 Some notes
+    TypeText                    css\=#editable              Editable text
+    VerifyText                  Editable text
+    TypeText                    css\=#frame-input           In frame
+    VerifyInputValue            css\=#frame-input           In frame
+    # label text and xpath work as before
+    TypeText                    Name                        By label
+    VerifyInputValue            //input[@name\="name"]      By label
+
+TypeText With CSS And CssSelectors Off
+    [Setup]                     Run Keywords                Go To    ${BASE_URI}/css_locators.html
+    ...                         AND                         SetConfig    CssSelectors    False
+    [Teardown]                  SetConfig                   CssSelectors                True
+    TypeText                    css\=#notes                 No css selectors
+    VerifyInputValue            css\=#notes                 No css selectors
+
+TypeSecret With CSS
+    TypeSecret                  css\=input[name\="nickname"]    secret
+    ${value}=                   GetInputValue               css\=input[name\="nickname"]
+    Should Be Equal             ${value}                    secret
+
+Input Getters And Verifiers With CSS
+    ${value}=                   GetInputValue               css\=input.name
+    Should Be Equal             ${value}                    Initial
+    VerifyInputElement          css\=#notes
+    VerifyInputStatus           css\=input[name\="name"]    Enabled
+    VerifyInputStatus           css\=#locked                Disabled
+    ${elem}=                    GetWebElement               css\=#notes                 element_type=input
+    Should Be Equal             ${elem.get_attribute("id")}    notes
+
+PressKey With CSS
+    TypeText                    css\=input[name\="name"]    abc
+    PressKey                    css\=input[name\="name"]    {BACKSPACE}
+    VerifyInputValue            css\=input[name\="name"]    ab
+
+TypeText With Missing CSS Element Waits For Timeout
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebElementNotFoundError: *css=#missing*
+    ...                         TypeText                    css\=#missing               text    timeout=2s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} >= 1.5
+
+TypeText With Invalid CSS Fails At Once
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebInvalidSelectorError: Invalid CSS selector*div[*
+    ...                         TypeText                    css\=div[                   text    timeout=10s
     ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
     Should Be True              ${elapsed} < 5
 

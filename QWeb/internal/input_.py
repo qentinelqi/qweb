@@ -23,6 +23,12 @@ from QWeb.internal.exceptions import QWebElementNotFoundError, QWebInstanceDoesN
 from QWeb.internal import element, text, frame, javascript, util
 from QWeb.internal.table import Table
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.locator import is_css_locator
+
+
+def is_xpath_or_css_locator(locator: str) -> bool:
+    """True if locator is an XPath (//, (// or xpath= prefix) or a css= locator."""
+    return is_css_locator(locator) or locator.startswith(("xpath=", "//", "(//"))
 
 
 def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs) -> WebElement:
@@ -32,20 +38,17 @@ def get_input_element_by_locator(locator: str, anchor: Union[str, int], **kwargs
     ----------
     locator : str
         Text that locates the input field. The input field that is closest
-        to the text is selected. Also one can use xpath by adding xpath= prefix
-        and then the xpath. Error is raised if the xpath matches to multiple
-        elements.
+        to the text is selected. Also one can use xpath (// or xpath= prefix)
+        or a CSS selector (css= prefix); then the matched element itself is used
+        and anchor is the index of the match.
     anchor : str
         Text near the input field's locator element. If the page contains
         many places where the locator is then anchor is used to get the
         one that is closest to it.
     """
-    if locator.startswith("xpath=") or locator.startswith("//") or locator.startswith("(//"):
-        if locator.startswith("xpath="):
-            xpath = locator.split("=", 1)[1]
-        else:
-            xpath = locator
-        input_element = element.get_unique_element_by_xpath(xpath, index=anchor, **kwargs)
+    if is_xpath_or_css_locator(locator):
+        # handles the xpath= and css= prefixes
+        input_element = element.get_unique_element_by_xpath(locator, index=anchor, **kwargs)
     else:  # Search using text
         input_xpath = CONFIG["MatchingInputElement"].format(locator)
         input_elements = element.get_webelements_in_active_area(input_xpath, **kwargs)
@@ -117,7 +120,7 @@ def get_input_elements_from_all_documents(
         'textarea:not([type="hidden"]),[contenteditable="true"]'
     )
     kwargs["css"] = kwargs.get("css", css)
-    if Table.is_table_coordinates(locator):
+    if not is_xpath_or_css_locator(locator) and Table.is_table_coordinates(locator):
         table = Table.ACTIVE_TABLE.update_table()
         if table is None:
             raise QWebInstanceDoesNotExistError("Table has not been defined with UseTable keyword")
@@ -129,7 +132,7 @@ def get_input_elements_from_all_documents(
             return input_elements[int(index)]
         raise QWebElementNotFoundError("No matching table input found")
     css_selector = CONFIG["CssSelectors"]
-    if not css_selector or locator.startswith("xpath=") or locator.startswith("//"):
+    if not css_selector or is_xpath_or_css_locator(locator):
         input_element = get_input_element_by_locator(locator, index, **kwargs)
     else:
         logger.debug("Uses CSS-selectors to locate element")

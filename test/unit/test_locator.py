@@ -172,10 +172,31 @@ def test_normalize_text():
         ("QWeb.keywords.element", "click_element"),
         ("QWeb.keywords.text", "get_text"),
         ("QWeb.keywords.text", "verify_element_text"),
+        ("QWeb.keywords.input_", "type_text"),
+        ("QWeb.keywords.input_", "upload_file"),
     ],
 )
 def test_css_locator_keywords(module, name):
     assert name in CSS_LOCATOR_KEYWORDS[module]
+
+
+@pytest.mark.parametrize(
+    "value, expected",
+    [
+        ("css=#notes", True),
+        ("//input", True),
+        ("(//input)[2]", True),
+        ("xpath=//input", True),
+        ("Username", False),
+        ("r1c1", False),
+        ("r1/c2", False),
+    ],
+)
+def test_input_lookup_detects_xpath_and_css(value, expected):
+    # pylint: disable=import-outside-toplevel
+    from QWeb.internal.input_ import is_xpath_or_css_locator
+
+    assert is_xpath_or_css_locator(value) is expected
 
 
 def test_tag_is_dropped_for_css_locator_in_text_keywords():

@@ -237,9 +237,12 @@ class QWeb:
 
     Some keywords are not tied to one family:
 
-    - Input, dropdown and checkbox keywords (TypeText, VerifyInputValue, DropDown,
-      VerifySelectedOption, ClickCheckbox, ...) find the field by its label text, by an attribute
-      value such as a placeholder, or by an XPath (``//`` or ``xpath\=`` prefix).
+    - Input keywords (TypeText, TypeSecret, VerifyInputValue, VerifyInputStatus,
+      VerifyInputElement, GetInputValue, UploadFile, PressKey) find the field by its label text,
+      by an attribute value such as a placeholder, by an XPath (``//`` or ``xpath\=`` prefix) or
+      by a ``css\=`` locator.
+    - Dropdown and checkbox keywords (DropDown, VerifySelectedOption, ClickCheckbox, ...) find
+      the field by its label text, by an attribute value or by an XPath.
     - GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates use an XPath or a
       ``css\=`` locator by default. With ``element_type`` they search like the other families:
       ``element_type=text``, ``item``, ``input``, ``dropdown`` or ``checkbox``.
@@ -252,6 +255,7 @@ class QWeb:
 
         TypeText            Username                  myusername@test.com   # label text
         TypeText            xpath\=//input[@id\="user"]    myusername@test.com
+        TypeText            css\=input#user          myusername@test.com
         ${elem}=            GetWebElement             Log In          element_type=text
         ${elem}=            GetWebElement             css\=button.login
         ${price}=           GetText                   css\=#cart .total
@@ -263,9 +267,11 @@ class QWeb:
     ------------
     Keywords ending with **\*Element** (ClickElement, VerifyElement, VerifyNoElement, IsElement,
     RightClick, HoverElement, GetElementCount) as well as GetWebElement, GetAttribute,
-    VerifyAttribute, GetCoordinates, GetText and VerifyElementText accept a CSS selector when the
-    locator starts with ``css\=``. Without a prefix, a locator is still an XPath for the
-    **\*Element** keywords, and a text or an XPath for GetText and VerifyElementText.
+    VerifyAttribute, GetCoordinates, GetText, VerifyElementText and the input keywords (TypeText,
+    TypeSecret, VerifyInputValue, VerifyInputStatus, VerifyInputElement, GetInputValue,
+    UploadFile, PressKey) accept a CSS selector when the locator starts with ``css\=``.
+    Without a prefix, a locator is still an XPath for the **\*Element** keywords, and a text,
+    an attribute value or an XPath for the other keywords.
 
     .. code-block:: robotframework
 
@@ -275,6 +281,7 @@ class QWeb:
         ClickElement      css\=li.item          index=2
         ${total}=         GetText               css\=#cart .total
         VerifyElementText css\=li.item          Item 2    anchor=2
+        TypeText          css\=input[name\="email"]    user@example.com
 
     .. important:: Every equal sign ``=`` in the locator must be escaped with a backslash,
        including the one after ``css``: ``css\=input[name\="email"]``. Otherwise Robot Framework
@@ -282,8 +289,10 @@ class QWeb:
 
     A ``css\=`` locator works like an XPath locator: the keyword waits until the timeout, uses the
     same visibility rules, searches all frames and picks a match with ``index`` (``anchor`` in
-    GetText and VerifyElementText, where it must be a number). ClickElement
-    clicks the matched element itself; it doesn't look for a clickable parent or child.
+    GetText and VerifyElementText, where it must be a number). The matched element itself is
+    used: ClickElement doesn't look for a clickable parent or child, and TypeText doesn't look
+    for the closest input field, so the selector must match the input, textarea or editable
+    element.
     A valid selector that matches nothing is retried until the timeout, but a selector with
     invalid syntax (for example ``css\=div[``) fails at once.
 

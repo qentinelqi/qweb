@@ -59,6 +59,19 @@ CSS_LOCATOR_KEYWORDS = {
         }
     ),
     "QWeb.keywords.text": frozenset({"get_text", "verify_element_text"}),
+    # these share the input field lookup (internal input_.get_input_elements_from_all_documents)
+    "QWeb.keywords.input_": frozenset(
+        {
+            "type_text",
+            "type_secret",
+            "verify_input_value",
+            "verify_input_status",
+            "verify_input_element",
+            "get_input_value",
+            "upload_file",
+            "press_key",
+        }
+    ),
 }
 # kwargs that would turn the locator into an attribute search; ignored with css=
 IGNORED_WITH_CSS = ("selector", "tag")

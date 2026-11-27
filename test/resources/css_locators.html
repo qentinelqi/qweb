@@ -27,6 +27,13 @@
   </ul>
 
   <input type="text" name="email" placeholder="Email">
+  <form id="profile">
+    <label>Name <input type="text" class="name" name="name" value="Initial"></label>
+    <input type="text" class="name" name="nickname">
+    <textarea id="notes"></textarea>
+    <input type="text" id="locked" value="Locked" disabled>
+    <div id="editable" contenteditable="true"></div>
+  </form>
   <div id="context" oncontextmenu="setResult('Right clicked'); return false;">Right click me</div>
   <div id="hover" onmouseover="setResult('Hovered')">Hover me</div>
   <div class="hidden-el">Hidden element</div>

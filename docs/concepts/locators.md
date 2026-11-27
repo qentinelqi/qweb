@@ -85,7 +85,7 @@ ClickItem      Clear
 
 For the "tricky 10-20%" of elements that have no text and no descriptive attributes, you can fall back to standard XPath or CSS selectors. This gives you full control but makes your tests more brittle to layout changes.
 
-A locator without a prefix is an XPath. Start the locator with `css\=` to use a CSS selector. `GetText` and `VerifyElementText` accept `css\=` locators too (see section 5).
+A locator without a prefix is an XPath. Start the locator with `css\=` to use a CSS selector. `GetText`, `VerifyElementText` and the input keywords accept `css\=` locators too (see section 5).
 
 ```robotframework
 # Using XPath
@@ -160,7 +160,8 @@ ClickIcon      user_avatar.png
 
 Some keywords are not tied to one family:
 
-*   **Input, dropdown and checkbox keywords** (`TypeText`, `VerifyInputValue`, `DropDown`, `VerifySelectedOption`, `ClickCheckbox`, ...) find the field by its label text, by an attribute value such as a placeholder, or by an XPath (`//` or `xpath\=` prefix).
+*   **Input keywords** (`TypeText`, `TypeSecret`, `VerifyInputValue`, `VerifyInputStatus`, `VerifyInputElement`, `GetInputValue`, `UploadFile`, `PressKey`) find the field by its label text, by an attribute value such as a placeholder, by an XPath (`//` or `xpath\=` prefix) or by a `css\=` locator. With an XPath or `css\=` locator the matched element itself is used, so it must be the input, textarea or editable element; `index` picks the match.
+*   **Dropdown and checkbox keywords** (`DropDown`, `VerifySelectedOption`, `ClickCheckbox`, ...) find the field by its label text, by an attribute value or by an XPath.
 *   **`GetWebElement`, `GetAttribute`, `VerifyAttribute` and `GetCoordinates`** use an XPath or a `css\=` locator by default. With `element_type` they search like the other families: `element_type=text`, `item`, `input`, `dropdown` or `checkbox`.
 *   **`GetText` and `VerifyElementText`** find the element by its text, by an attribute value with `tag`, by an XPath (containing `//`) or by a `css\=` locator. With a `css\=` locator, `anchor` is the index of the match and `tag` is ignored.
 *   **...Element keywords** also accept an attribute value with `tag`, e.g. `ClickElement    click_me    tag=button`.
@@ -168,6 +169,7 @@ Some keywords are not tied to one family:
 ```robotframework
 TypeText            Username                       myusername@test.com    # label text
 TypeText            xpath\=//input[@id\="user"]    myusername@test.com
+TypeText            css\=input#user                myusername@test.com
 ${elem}=            GetWebElement                  Log In                 element_type=text
 ${elem}=            GetWebElement                  css\=button.login
 ${price}=           GetText                        css\=#cart .total
