@@ -38,6 +38,7 @@ from QWeb.internal.actions import (
 )
 from QWeb.internal import element, decorators, util, download, text as internal_text
 from QWeb.internal.config_defaults import CONFIG
+from QWeb.internal.locator import is_css_locator
 from QWeb.internal.exceptions import (
     QWebValueError,
     QWebEnvironmentError,
@@ -793,12 +794,16 @@ def verify_element_text(
 
         VerifyElementText       //input[@value\="Button3"]      ButtonText
         VerifyElementText       ipsum    dolore
+        VerifyElementText       css\=#cart .total               42.00
+        VerifyElementText       css\=li.item                    Item 2      anchor=2
 
     Parameters
     ----------
     locator : str
-        Visible text, some attribute of wanted element or Xpath expression without xpath= prefix.
-        When using XPaths, the equal sign "=" must be escaped with a "\\".
+        Visible text, some attribute of wanted element (with tag), Xpath expression
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
+        tag is ignored with a css= locator.
     text_to_find : str
         The text we are trying to verify from the element.
     timeout : int
@@ -839,6 +844,8 @@ def get_text(
     .. code-block:: robotframework
 
         GetText          //*[@id\="click_me"]
+        GetText          css\=#cart .total
+        GetText          css\=li.item      anchor=2      # second match
         #uses text as a locator:
         GetText          click_me       between=click???me #returns _
         #uses any attribute of some div as locator:
@@ -869,8 +876,10 @@ def get_text(
     Parameters
     ----------
     locator : str
-        Visible text, some attribute of wanted element or Xpath expression without xpath= prefix.
-        When using XPaths, the equal sign "=" must be escaped with a "\\".
+        Visible text, some attribute of wanted element (with tag), Xpath expression
+        or a CSS selector with css= prefix (see `CSS locators <#css-locators>`_).
+        When using XPaths or CSS selectors, every equal sign "=" must be escaped with a "\\".
+        tag is ignored with a css= locator.
     timeout : int
         How long we wait that element is found before failing.
     anchor : str
@@ -911,11 +920,11 @@ def get_text(
             raise QWebValueError(
                 "Only index is allowed anchor when searching element by it's attribute"
             ) from e
-    elif "//" not in locator:
+    elif is_css_locator(locator) or "//" in locator:
+        web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
+    else:
         # css=False means we include non-clickable texts
         web_element = internal_text.get_text_using_anchor(locator, anchor, css=False, **kwargs)
-    else:
-        web_element = element.get_unique_element_by_xpath(locator, index=anchor_int, **kwargs)
     # selenium's .text does not see all texts directly under slots
     # use innerText as a backup
     # note that "" at the end is important so that we don't get None instead of empty string

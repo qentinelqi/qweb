@@ -86,6 +86,7 @@ Invalid CSS Selector Fails At Once
     IsElement
     GetElementCount
     GetWebElement
+    GetText
 
 Empty CSS Selector Fails At Once
     Run Keyword And Expect Error    QWebInvalidSelectorError: *selector is empty*
@@ -179,6 +180,50 @@ Text Filter In Frame
 Text Filter Has No Effect On XPath
     VerifyElement               //div[contains(., "Alpha")][@class\="card"]
     VerifyNoElement             //div[contains(., ':has-text("Alpha")')]
+
+GetText With CSS
+    ${text}=                    GetText                     css\=button.primary
+    Should Be Equal             ${text}                     Save
+    ${text}=                    GetText                     css\=li.item               anchor=2
+    Should Be Equal             ${text}                     Item 2
+    ${text}=                    GetText                     css\=div.card:text-is("Hello world")
+    Should Be Equal             ${text}                     Hello world
+    ${text}=                    GetText                     css\=#card-hello-world     from_start=5
+    Should Be Equal             ${text}                     Hello
+    ${text}=                    GetText                     css\=#frame-result
+    Should Be Equal             ${text}                     Frame not clicked
+    # text and xpath locators work as before
+    ${text}=                    GetText                     Hello world
+    Should Be Equal             ${text}                     Hello world
+    ${text}=                    GetText                     //li[@class\="item"][3]
+    Should Be Equal             ${text}                     Item 3
+
+GetText With CSS Ignores Tag
+    ${text}=                    GetText                     css\=button.primary         tag=div
+    Should Be Equal             ${text}                     Save
+
+GetText With Missing CSS Element Waits For Timeout
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebElementNotFoundError: *css=#missing*
+    ...                         GetText                     css\=#missing               timeout=2s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} >= 1.5
+
+VerifyElementText With CSS
+    VerifyElementText           css\=button.primary         Save
+    VerifyElementText           css\=#card-hello-world      world
+    VerifyElementText           css\=#card-hello-world      Hello world                 strict=True
+    VerifyElementText           css\=li.item                Item 3                      anchor=3
+    VerifyElementText           css\=button.primary         Save                        tag=div
+    Run Keyword And Expect Error    QWebValueError: "Hello" != "Hello world"
+    ...                         VerifyElementText           css\=#card-hello-world      Hello    strict=True    timeout=1s
+
+VerifyElementText With Invalid CSS Fails At Once
+    ${start}=                   Evaluate                    time.time()                 modules=time
+    Run Keyword And Expect Error    QWebInvalidSelectorError: Invalid CSS selector*div[*
+    ...                         VerifyElementText           css\=div[                   Save    timeout=10s
+    ${elapsed}=                 Evaluate                    time.time() - ${start}      modules=time
+    Should Be True              ${elapsed} < 5
 
 Deprecated Element Type CSS Still Works
     ${elem}=                    GetWebElement               li.item                     element_type=css    index=2

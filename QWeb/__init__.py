@@ -243,6 +243,8 @@ class QWeb:
     - GetWebElement, GetAttribute, VerifyAttribute and GetCoordinates use an XPath or a
       ``css\=`` locator by default. With ``element_type`` they search like the other families:
       ``element_type=text``, ``item``, ``input``, ``dropdown`` or ``checkbox``.
+    - GetText and VerifyElementText find the element by its text, by an attribute value with
+      ``tag``, by an XPath (containing ``//``) or by a ``css\=`` locator.
     - **\*Element** keywords also accept an attribute value with ``tag``, e.g.
       ``ClickElement    click_me    tag=button``.
 
@@ -252,6 +254,7 @@ class QWeb:
         TypeText            xpath\=//input[@id\="user"]    myusername@test.com
         ${elem}=            GetWebElement             Log In          element_type=text
         ${elem}=            GetWebElement             css\=button.login
+        ${price}=           GetText                   css\=#cart .total
         ${value}=           GetAttribute              Country         value    element_type=dropdown
 
     .. _Css_locators:
@@ -260,8 +263,9 @@ class QWeb:
     ------------
     Keywords ending with **\*Element** (ClickElement, VerifyElement, VerifyNoElement, IsElement,
     RightClick, HoverElement, GetElementCount) as well as GetWebElement, GetAttribute,
-    VerifyAttribute and GetCoordinates accept a CSS selector when the locator starts with
-    ``css\=``. A locator without a prefix is still an XPath.
+    VerifyAttribute, GetCoordinates, GetText and VerifyElementText accept a CSS selector when the
+    locator starts with ``css\=``. Without a prefix, a locator is still an XPath for the
+    **\*Element** keywords, and a text or an XPath for GetText and VerifyElementText.
 
     .. code-block:: robotframework
 
@@ -269,13 +273,16 @@ class QWeb:
         VerifyElement     css\=#user-menu > li:nth-child(2)
         ClickElement      css\=input[name\="email"]
         ClickElement      css\=li.item          index=2
+        ${total}=         GetText               css\=#cart .total
+        VerifyElementText css\=li.item          Item 2    anchor=2
 
     .. important:: Every equal sign ``=`` in the locator must be escaped with a backslash,
        including the one after ``css``: ``css\=input[name\="email"]``. Otherwise Robot Framework
        reads the locator as a named argument. The same rule applies to XPaths.
 
     A ``css\=`` locator works like an XPath locator: the keyword waits until the timeout, uses the
-    same visibility rules, searches all frames and picks a match with ``index``. ClickElement
+    same visibility rules, searches all frames and picks a match with ``index`` (``anchor`` in
+    GetText and VerifyElementText, where it must be a number). ClickElement
     clicks the matched element itself; it doesn't look for a clickable parent or child.
     A valid selector that matches nothing is retried until the timeout, but a selector with
     invalid syntax (for example ``css\=div[``) fails at once.
@@ -543,9 +550,8 @@ class QWeb:
         locator.
         """
 
-        uses_css_locator = (
-            keyword_method.__module__ == "QWeb.keywords.element"
-            and keyword_method.__name__ in locator.CSS_LOCATOR_KEYWORDS
+        uses_css_locator = keyword_method.__name__ in locator.CSS_LOCATOR_KEYWORDS.get(
+            keyword_method.__module__, ()
         )
 
         @wraps(keyword_method)  # Preserves docstring of the original method.
@@ -567,7 +573,7 @@ class QWeb:
     def _drop_kwargs_ignored_with_css(
         keyword_method: Callable[..., Any], args: tuple, kwargs: dict
     ) -> None:
-        """Remove selector= and tag= when an *Element keyword gets a css= locator.
+        """Remove selector= and tag= when a keyword gets a css= locator.
 
         Both would turn the locator into an attribute search, so they are ignored
         with a warning. Not applied when element_type is given (locator is then

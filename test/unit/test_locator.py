@@ -22,6 +22,7 @@ from QWeb.internal.exceptions import (
     QWebElementNotFoundError,
 )
 from QWeb.internal.locator import (
+    CSS_LOCATOR_KEYWORDS,
     parse_locator,
     is_css_locator,
     normalize_text,
@@ -163,3 +164,32 @@ def test_is_css_locator(value, expected):
 def test_normalize_text():
     assert normalize_text("  a \n\t b  ") == "a b"
     assert normalize_text("") == ""
+
+
+@pytest.mark.parametrize(
+    "module, name",
+    [
+        ("QWeb.keywords.element", "click_element"),
+        ("QWeb.keywords.text", "get_text"),
+        ("QWeb.keywords.text", "verify_element_text"),
+    ],
+)
+def test_css_locator_keywords(module, name):
+    assert name in CSS_LOCATOR_KEYWORDS[module]
+
+
+def test_tag_is_dropped_for_css_locator_in_text_keywords():
+    # pylint: disable=import-outside-toplevel,protected-access
+    from QWeb import QWeb
+    from QWeb.keywords import text
+
+    kwargs = {"tag": "div", "between": "a???b"}
+    QWeb._drop_kwargs_ignored_with_css(text.get_text, ("css=#price",), kwargs)
+    assert kwargs == {"between": "a???b"}
+    kwargs = {"tag": "div"}
+    QWeb._drop_kwargs_ignored_with_css(text.verify_element_text, ("css=#p", "x"), kwargs)
+    assert not kwargs
+    # text locators keep tag= (attribute search)
+    kwargs = {"tag": "div"}
+    QWeb._drop_kwargs_ignored_with_css(text.get_text, ("someattr",), kwargs)
+    assert kwargs == {"tag": "div"}

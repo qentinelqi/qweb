@@ -185,7 +185,7 @@ def get_unique_element_by_xpath(
             "{} {} did not find any elements".format(locator_name, xpath)
         )
     raise QWebValueError(
-        f"{locator_name} {xpath} matched {len(elements)} elements." f"Used index was {index+1}"
+        f"{locator_name} {xpath} matched {len(elements)} elements. " f"Used index was {index + 1}"
     )
 
 
